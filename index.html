@@ -346,6 +346,7 @@ wallet += Number(data.amount);
 
 localStorage.setItem("wallet",wallet);
 localStorage.setItem("coin_wallet",wallet);
+localStorage.setItem("balance",wallet);
   
 await updateDoc(doc(db,"giftcodes",d.id),{used:true});
 
