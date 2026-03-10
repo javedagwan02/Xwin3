@@ -350,8 +350,13 @@ localStorage.setItem("balance",wallet);
   
   const userEmail = localStorage.getItem("userEmail");
 
-await updateDoc(doc(db,"users",userEmail),{
+const q2 = query(collection(db,"users"), where("email","==",userEmail));
+const snap2 = await getDocs(q2);
+
+snap2.forEach(async (u)=>{
+await updateDoc(doc(db,"users",u.id),{
 balance: wallet
+});
 });
   
 await updateDoc(doc(db,"giftcodes",d.id),{used:true});
