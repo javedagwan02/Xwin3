@@ -348,6 +348,12 @@ localStorage.setItem("wallet",wallet);
 localStorage.setItem("coin_wallet",wallet);
 localStorage.setItem("balance",wallet);
   
+  const userEmail = localStorage.getItem("userEmail");
+
+await updateDoc(doc(db,"users",userEmail),{
+balance: wallet
+});
+  
 await updateDoc(doc(db,"giftcodes",d.id),{used:true});
 
 alert("₹"+data.amount+" Added to Wallet");
