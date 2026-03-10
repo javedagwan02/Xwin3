@@ -90,7 +90,28 @@ box-shadow: 0 6px 14px rgba(0,0,0,0.4);
 cursor: pointer;
 z-index: 9999;
 }
+<div id="giftIcon" onclick="openGiftBox()">🎁</div>
 
+<style>
+#giftIcon{
+  position: fixed;
+  right: 16px;
+  bottom: 160px;
+  width: 56px;
+  height: 56px;
+  background: #ff3b3b;
+  color: #fff;
+  font-size: 26px;
+  border-radius: 50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow:0 6px 14px rgba(0,0,0,0.4);
+  cursor:pointer;
+  z-index:9999;
+}
+</style>
+  
 /* POPUP */
 .deposit-popup{
 position:fixed;inset:0;background:rgba(0,0,0,.75);
