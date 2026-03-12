@@ -162,6 +162,8 @@ const db = getFirestore(app);
 const userEmail = localStorage.getItem("userEmail");
 let wallet = 0;
 let uid = "";
+  
+let dailyWin = parseInt(localStorage.getItem("dailyWin") || "0");
 
 /* GAME COUNT (NEW USER LOGIC) */
 let spinCount = Number(localStorage.getItem("spin_count") || 0);
@@ -247,16 +249,25 @@ stopBtn.onclick = async ()=>{
   }
 
   let resultText="";
-  if(win){
-    const winAmt = bet * 2;
-    wallet += winAmt;
-    await saveWallet();
-    resultText = `🎉 YOU WIN ₹${winAmt}`;
-    addHistory("WIN", winAmt);
-  }else{
-    resultText = "❌ YOU LOST";
-    addHistory("LOSE", bet);
-  }
+if(win && dailyWin < 100){
+
+  const winAmt = bet * 2;
+
+  dailyWin += winAmt;
+  localStorage.setItem("dailyWin", dailyWin);
+
+  wallet += winAmt;
+  await saveWallet();
+
+  resultText = `🎉 YOU WIN ₹${winAmt}`;
+  addHistory("WIN", winAmt);
+
+}else{
+
+  resultText = "❌ YOU LOST";
+  addHistory("LOSE", bet);
+
+}
 
   renderWallet();
   popupText.innerText = resultText;
