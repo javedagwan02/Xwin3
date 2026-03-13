@@ -231,11 +231,16 @@ function spin(){
       if(b.type==="HIGH"&&result>=19) win=true;
 
       if(win){
-        let w=b.amt*2;
-        state.wallet+=w;
-        syncWallet();
-        b.res="WIN ₹"+w;
-        popupMsg(`🎉 ${result} → WIN ₹${w}`,"win");
+  let w = b.amt*2;
+
+  w = addWinAmount(w);   // ⭐ daily limit apply
+
+  state.wallet += w;
+  syncWallet();
+
+  b.res = "WIN ₹"+w;
+  popupMsg(`🎉 ${result} → WIN ₹${w}`,"win");
+      }
       }else{
         b.res="LOSS";
         popupMsg(`❌ ${result} → LOSS`,"lose");
