@@ -134,6 +134,7 @@ font-size:14px;
 max-height:120px;
 overflow:auto;
 }
+
 .popup-bg{
 position:fixed;
 inset:0;
@@ -161,7 +162,7 @@ padding:10px 20px;
 border-radius:10px;
 font-weight:bold;
 }
-  
+
 </style>
 </head>
 
@@ -204,6 +205,13 @@ font-weight:bold;
 
 </div>
 
+<div class="popup-bg" id="popupBg">
+<div class="popup-box">
+<div id="popupText"></div>
+<button onclick="closePopup()">OK</button>
+</div>
+</div>
+
 <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
@@ -219,10 +227,10 @@ projectId:"colourcash-ea60e"
 const db = getFirestore(app);
 
 const userEmail = localStorage.getItem("userEmail");
-let userDocId="";
-let wallet=0;
 
-/* LOAD WALLET FROM FIREBASE */
+let wallet=0;
+let userDocId="";
+let rewardValue=0;
 
 async function loadWallet(){
 
@@ -240,108 +248,87 @@ document.getElementById("wallet").innerText = wallet;
 }
 
 loadWallet();
-  
-let rewardValue = 0;
 
-function selectPlan(amt,reward){
+window.selectPlan=function(amt,reward){
 
-document.getElementById("amount").value = amt;
-rewardValue = reward;
+document.getElementById("amount").value=amt;
+rewardValue=reward;
 
 }
 
-async function invest(){
+window.invest=async function(){
 
-let amt = Number(document.getElementById("amount").value);
+let amt=Number(document.getElementById("amount").value);
 
-if(wallet < amt){
+if(wallet<amt){
 showPopup("Low Wallet Balance");
 return;
 }
 
-wallet -= amt;
+wallet-=amt;
 
 await updateDoc(doc(db,"users",userDocId),{
-balance: wallet
+balance:wallet
 });
 
-document.getElementById("wallet").innerText = wallet;
+document.getElementById("wallet").innerText=wallet;
 
-let unlock = Date.now() + (10*60*60*1000);
+let unlock=Date.now()+(10*60*60*1000);
 
-localStorage.setItem("investAmount",amt);
-localStorage.setItem("investReward",rewardValue);
 localStorage.setItem("unlockTime",unlock);
+localStorage.setItem("investReward",rewardValue);
 
 showPopup("Investment Started 🚀");
 
 }
 
-function updateTimer(){
+async function updateTimer(){
 
-let unlock = Number(localStorage.getItem("unlockTime")) || 0;
+let unlock=Number(localStorage.getItem("unlockTime"))||0;
 
-if(!unlock) return;
+if(!unlock)return;
 
-let diff = unlock - Date.now();
+let diff=unlock-Date.now();
 
-if(diff <= 0){
+if(diff<=0){
 
-let reward = Number(localStorage.getItem("investReward")) || 0;
+let reward=Number(localStorage.getItem("investReward"))||0;
 
-wallet += reward;
+wallet+=reward;
 
 await updateDoc(doc(db,"users",userDocId),{
-balance: wallet
+balance:wallet
 });
 
-document.getElementById("wallet").innerText = wallet;
+document.getElementById("wallet").innerText=wallet;
 
 showPopup("💰 Reward ₹"+reward+" Added");
-  
+
 localStorage.removeItem("unlockTime");
-
-location.reload();
-
-return;
 
 }
 
-let h = Math.floor(diff/3600000);
-let m = Math.floor((diff%3600000)/60000);
-let s = Math.floor((diff%60000)/1000);
+let h=Math.floor(diff/3600000);
+let m=Math.floor((diff%3600000)/60000);
+let s=Math.floor((diff%60000)/1000);
 
-document.getElementById("timer").innerText =
+document.getElementById("timer").innerText=
 h+"h "+m+"m "+s+"s";
 
 }
 
 setInterval(updateTimer,1000);
 
-let history = localStorage.getItem("investHistory") || "";
-document.getElementById("history").innerHTML =
-"<b>Investment History</b><br>"+history;
-function showPopup(msg){
-
-document.getElementById("popupText").innerText = msg;
+window.showPopup=function(msg){
+document.getElementById("popupText").innerText=msg;
 document.getElementById("popupBg").style.display="flex";
-
 }
 
-function closePopup(){
-
+window.closePopup=function(){
 document.getElementById("popupBg").style.display="none";
-
 }
-  
+
 </script>
-  
-<div class="popup-bg" id="popupBg">
-<div class="popup-box">
-<div id="popupText"></div>
-<button onclick="closePopup()">OK</button>
-</div>
-</div>
-  
+
 </body>
 </html>
