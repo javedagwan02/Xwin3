@@ -277,7 +277,15 @@ let unlock=Date.now()+(10*60*60*1000);
 
 localStorage.setItem("unlockTime",unlock);
 localStorage.setItem("investReward",rewardValue);
+let history = localStorage.getItem("investHistory") || "";
 
+history = "Invested ₹"+amt+" → ₹"+rewardValue+"<br>" + history;
+
+localStorage.setItem("investHistory",history);
+
+document.getElementById("history").innerHTML =
+"<b>Investment History</b><br>"+history;
+  
 showPopup("Investment Started 🚀");
 
 }
@@ -318,8 +326,13 @@ h+"h "+m+"m "+s+"s";
 }
 
 setInterval(updateTimer,1000);
+  
+let history = localStorage.getItem("investHistory") || "";
 
+document.getElementById("history").innerHTML =
+"<b>Investment History</b><br>"+history;
 window.showPopup=function(msg){
+  
 document.getElementById("popupText").innerText=msg;
 document.getElementById("popupBg").style.display="flex";
 }
