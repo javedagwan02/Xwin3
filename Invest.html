@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Invest Game</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+body{
+margin:0;
+font-family:Arial;
+background:#0f172a;
+color:#fff;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+}
+
+.box{
+background:#1e293b;
+padding:25px;
+border-radius:16px;
+width:320px;
+text-align:center;
+}
+
+input{
+width:100%;
+padding:12px;
+margin-top:12px;
+border-radius:10px;
+border:none;
+font-size:16px;
+}
+
+button{
+width:100%;
+padding:12px;
+margin-top:15px;
+border:none;
+border-radius:10px;
+background:#22c55e;
+color:#000;
+font-size:16px;
+font-weight:bold;
+}
+
+.timer{
+margin-top:15px;
+font-size:18px;
+color:#facc15;
+}
+</style>
+</head>
+
+<body>
+
+<div class="box">
+
+<h2>💰 Invest Game</h2>
+
+<p>Invest ₹1000 → Receive ₹1500 after 10 hours</p>
+
+<input type="number" id="amount" placeholder="Enter amount">
+
+<button onclick="invest()">Invest</button>
+
+<div class="timer" id="timer"></div>
+
+<button onclick="claim()" id="claimBtn" style="display:none">Claim Reward</button>
+
+</div>
+
+<script>
+
+function invest(){
+
+let amt = Number(document.getElementById("amount").value);
+
+if(amt <= 0){
+alert("Enter amount");
+return;
+}
+
+let unlock = Date.now() + (10 * 60 * 60 * 1000); // 10 hours
+
+localStorage.setItem("investAmount", amt);
+localStorage.setItem("unlockTime", unlock);
+
+alert("Investment started");
+
+}
+
+function claim(){
+
+let amt = Number(localStorage.getItem("investAmount")) || 0;
+
+let reward = amt * 1.5;
+
+let wallet = Number(localStorage.getItem("wallet")) || 0;
+
+wallet += reward;
+
+localStorage.setItem("wallet", wallet);
+
+alert("₹"+reward+" added to wallet");
+
+localStorage.removeItem("investAmount");
+localStorage.removeItem("unlockTime");
+
+location.reload();
+
+}
+
+setInterval(()=>{
+
+let unlock = localStorage.getItem("unlockTime");
+
+if(!unlock) return;
+
+let diff = unlock - Date.now();
+
+if(diff <= 0){
+
+document.getElementById("timer").innerText="Ready to claim";
+
+document.getElementById("claimBtn").style.display="block";
+
+}else{
+
+let h = Math.floor(diff/3600000);
+let m = Math.floor(diff%3600000/60000);
+let s = Math.floor(diff%60000/1000);
+
+document.getElementById("timer").innerText =
+h+"h "+m+"m "+s+"s";
+
+}
+
+},1000);
+
+</script>
+
+</body>
+</html>
