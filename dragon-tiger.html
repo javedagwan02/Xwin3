@@ -414,9 +414,25 @@ else{
 
  saveHistory(win);
 
- setTimeout(()=>location.reload(),2500);
+ setTimeout(()=>resetGame(),2500);
 }
+function resetGame(){
+  bets = {DRAGON:0,TIGER:0,TIE:0};
 
+  document.querySelectorAll(".bet-amt").forEach(b=>{
+    b.style.display="none";
+    b.innerText="";
+  });
+
+  document.querySelectorAll(".card,.tie").forEach(x=>x.classList.remove("active"));
+
+  topDragon.classList.remove("flip");
+  topTiger.classList.remove("flip");
+
+  popup.style.display="none";
+
+  startTimer(); // 🔁 restart timer
+}
 /* ===== RESULT HISTORY JS ===== */
 function saveHistory(result){
  let h=JSON.parse(localStorage.getItem("dt_history")||"[]");
