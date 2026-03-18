@@ -207,12 +207,13 @@ async function clickCell(i,el){
     el.innerText="💎";
     opened++;
     calcMultiplier();
+
     // ✅ AUTO CASHOUT FIX
-const safe = 25 - mines;
+    const safe = 25 - mines;
 
-if(opened >= safe){
-  cashOut();
-
+    if(opened >= safe){
+      cashOut();
+    }
   }
 
 }
