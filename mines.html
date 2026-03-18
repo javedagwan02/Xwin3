@@ -173,10 +173,8 @@ async function startGame(){
  const ref = doc(db, "settings", "houseEdge");
  const snap = await getDoc(ref);
 
- let chance = 50;
- if(snap.exists()){
-   chance = snap.data().mines ?? 50;
- }
+ let chance = Number(snap.data().mines ?? 50);
+console.log("MINES VALUE:", chance);
 
  if(chance === 0){
    safeLimit = 0;
