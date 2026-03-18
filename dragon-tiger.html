@@ -286,7 +286,7 @@ let selectedChip=0;
 let phase="bet";
 let timer=15;
 let bets={DRAGON:0,TIGER:0,TIE:0};
-
+let intervalId;
 const CARDS=[
 {n:"A",v:14},{n:"K",v:13},{n:"Q",v:12},{n:"J",v:11},
 {n:"10",v:10},{n:"9",v:9},{n:"8",v:8},{n:"7",v:7},
@@ -323,25 +323,34 @@ document.querySelectorAll(".chip").forEach(c=>{
 });
 
 function startTimer(){
- betStatus.innerText="START BETTING (10)";
- timer=15;
- phase="bet";
 
- const t=setInterval(()=>{
-  timer--;
+  clearInterval(intervalId); // 🔥 PURANA TIMER BAND
 
-  if(timer>5){
-    phase="bet";
-    betStatus.innerText="START BETTING ("+(timer-5)+")";
-  }else if(timer>0){
-    phase="lock";
-    betStatus.innerText="BET LOCK ("+timer+")";
-    document.querySelectorAll(".chip").forEach(c=>c.classList.add("locked"));
-  }else{
-    clearInterval(t);
-    showResult();
-  }
- },1000);
+  betStatus.innerText="START BETTING (10)";
+  timer=15;
+  phase="bet";
+
+  // chips unlock kar
+  document.querySelectorAll(".chip").forEach(c=>c.classList.remove("locked"));
+
+  intervalId = setInterval(()=>{
+    timer--;
+
+    if(timer>5){
+      phase="bet";
+      betStatus.innerText="START BETTING ("+(timer-5)+")";
+    }
+    else if(timer>0){
+      phase="lock";
+      betStatus.innerText="BET LOCK ("+timer+")";
+      document.querySelectorAll(".chip").forEach(c=>c.classList.add("locked"));
+    }
+    else{
+      clearInterval(intervalId); // 🔥 IMPORTANT
+      showResult();
+    }
+
+  },1000);
 }
 
 async function showResult(){
@@ -417,6 +426,7 @@ else{
  setTimeout(()=>resetGame(),2500);
 }
 function resetGame(){
+  clearInterval(intervalId); // ✅ YAHA ADD KAR
   bets = {DRAGON:0,TIGER:0,TIE:0};
 
   document.querySelectorAll(".bet-amt").forEach(b=>{
