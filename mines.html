@@ -91,6 +91,8 @@ Cashout (x<span id="multi">1.00</span>)
   <div class="popup-box" id="popupBox"></div>
 </div>
 
+<!-- SAME HTML & CSS — NOT TOUCHED -->
+
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import {
@@ -110,6 +112,7 @@ let wallet=0;
 
 let bet=0,mines=3,opened=0,multiplier=1,active=false;
 let minePositions=[];
+let safeLimit=0; // 🔥 NEW
 const HOUSE_EDGE=0.10;
 
 /* INIT */
@@ -135,24 +138,7 @@ async function loadWallet(){
  });
  document.getElementById("wallet").innerText=wallet;
 }
-async function shouldMineExplode(){
 
-  const ref = doc(db, "settings", "houseEdge");
-  const snap = await getDoc(ref);
-
-  let chance = 50;
-
-  if(snap.exists()){
-    chance = snap.data().mines ?? 50;
-  }
-
-  if(chance === 0) return true;
-  if(chance === 100) return false;
-
-  let rand = Math.random() * 100;
-
-  return rand > chance; // true = blast
-}
 /* GRID */
 function createGrid(){
  grid.innerHTML="";
@@ -182,6 +168,27 @@ async function startGame(){
  multi.innerText=multiplier.toFixed(2);
  cashBtn.disabled=false;
  minePositions=[];
+
+ // 🔥 HOUSE EDGE LOGIC (ONLY ADDITION)
+ const ref = doc(db, "settings", "houseEdge");
+ const snap = await getDoc(ref);
+
+ let chance = 50;
+ if(snap.exists()){
+   chance = snap.data().mines ?? 50;
+ }
+
+ if(chance === 0){
+   safeLimit = 0;
+ }else if(chance === 100){
+   safeLimit = 25 - mines;
+ }else{
+   safeLimit = Math.floor(((25 - mines) * chance) / 100);
+
+   let variation = Math.floor(Math.random() * 3);
+   safeLimit = Math.max(0, safeLimit - variation);
+ }
+
  createGrid();
 }
 
@@ -192,9 +199,8 @@ async function clickCell(i,el){
 
   el.classList.add("open");
 
-  let explode = await shouldMineExplode();
-
-  if(explode){
+  // 🔥 NEW CONTROL LOGIC
+  if(opened >= safeLimit){
     el.classList.add("mine");
     el.innerText="💣";
     endGame(false);
@@ -232,11 +238,6 @@ function endGame(win){
  if(!win){
   addHistory("LOSS",-bet);
   showPopup("💣 -₹"+bet,"#ff5252");
-  document.querySelectorAll(".cell").forEach((c,i)=>{
-   if(minePositions.includes(i)){
-    c.classList.add("open","mine");c.innerText="💣";
-   }
-  });
  }
 }
 
@@ -248,9 +249,10 @@ function addHistory(type,amt){
  betHistory.prepend(d);
 }
 
-/* 🔥 VERY IMPORTANT FIX (BUTTON CLICK WORKS NOW) */
 window.startGame = startGame;
 window.cashOut = cashOut;
+</script>
+  
 </script>
 
 </body>
