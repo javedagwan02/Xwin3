@@ -135,7 +135,24 @@ async function loadWallet(){
  });
  document.getElementById("wallet").innerText=wallet;
 }
+async function shouldMineExplode(){
 
+  const ref = doc(db, "settings", "houseEdge");
+  const snap = await getDoc(ref);
+
+  let chance = 50;
+
+  if(snap.exists()){
+    chance = snap.data().mines ?? 50;
+  }
+
+  if(chance === 0) return true;
+  if(chance === 100) return false;
+
+  let rand = Math.random() * 100;
+
+  return rand > chance; // true = blast
+}
 /* GRID */
 function createGrid(){
  grid.innerHTML="";
@@ -165,25 +182,29 @@ async function startGame(){
  multi.innerText=multiplier.toFixed(2);
  cashBtn.disabled=false;
  minePositions=[];
-
- while(minePositions.length<mines){
-  let r=Math.floor(Math.random()*25);
-  if(!minePositions.includes(r)) minePositions.push(r);
- }
  createGrid();
 }
 
 /* CELL */
-function clickCell(i,el){
- if(!active||el.classList.contains("open"))return;
- el.classList.add("open");
- if(minePositions.includes(i)){
-  el.classList.add("mine");el.innerText="💣";
-  endGame(false);
- }else{
-  el.classList.add("safe");el.innerText="💎";
-  opened++;calcMultiplier();
- }
+async function clickCell(i,el){
+
+  if(!active || el.classList.contains("open")) return;
+
+  el.classList.add("open");
+
+  let explode = await shouldMineExplode();
+
+  if(explode){
+    el.classList.add("mine");
+    el.innerText="💣";
+    endGame(false);
+  }else{
+    el.classList.add("safe");
+    el.innerText="💎";
+    opened++;
+    calcMultiplier();
+  }
+
 }
 
 /* MULTIPLIER */
