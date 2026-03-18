@@ -10,7 +10,6 @@ body{
   font-family:Arial;
   background:#e6f0fa;
 }
-
 .header{
   background:#ff6b6b;
   padding:15px;
@@ -19,31 +18,25 @@ body{
   font-size:20px;
   font-weight:bold;
 }
-
 .container{
   padding:15px;
 }
-
 .card{
   background:#fff;
   border-radius:16px;
   padding:15px;
   box-shadow:0 4px 10px rgba(0,0,0,0.1);
 }
-
 .row{
   margin-bottom:14px;
 }
-
 .label{
   font-size:14px;
   margin-bottom:5px;
 }
-
 input[type=range]{
   width:100%;
 }
-
 .value{
   float:right;
   font-weight:bold;
@@ -59,7 +52,18 @@ input[type=range]{
 <div class="card" id="gameList"></div>
 </div>
 
-<script>
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+const app = initializeApp({
+  apiKey:"AIzaSyBx3J9aGn_98rTPgurMMKw_GR3puIMj4Ms",
+  authDomain:"colourcash-ea60e.firebaseapp.com",
+  projectId:"colourcash-ea60e"
+});
+
+const db = getFirestore(app);
 
 const games = [
 "WIN GO","MINES","AVIATOR","DRAGON TIGER","ROULETTE",
@@ -68,6 +72,29 @@ const games = [
 "HORSE RACE","GANESH SLOTS","KENO","FATE SHIFT",
 "HILO","DRAGON TOWER","BALLOON CRASH"
 ];
+
+const gameKeys = {
+  "WIN GO":"wingo",
+  "MINES":"mines",
+  "AVIATOR":"aviator",
+  "DRAGON TIGER":"dragonTiger",
+  "ROULETTE":"roulette",
+  "AVIATOR REAL":"aviatorReal",
+  "COIN FLIP":"coinFlip",
+  "TREASURE":"treasure",
+  "CHICKEN ROAD":"chickenRoad",
+  "DICE ROLL":"dice",
+  "PLINKO":"plinko",
+  "DRAX TURBO":"draxTurbo",
+  "SPIN STOP":"spinStop",
+  "HORSE RACE":"horseRace",
+  "GANESH SLOTS":"ganeshSlots",
+  "KENO":"keno",
+  "FATE SHIFT":"fateShift",
+  "HILO":"hilo",
+  "DRAGON TOWER":"dragonTower",
+  "BALLOON CRASH":"balloonCrash"
+};
 
 const container = document.getElementById("gameList");
 
@@ -84,8 +111,16 @@ games.forEach(game => {
   let slider = div.querySelector("input");
   let value = div.querySelector(".value");
 
-  slider.oninput = () => {
+  slider.oninput = async () => {
+
     value.innerText = slider.value + "%";
+
+    const key = gameKeys[game];
+
+    await setDoc(doc(db, "settings", "houseEdge"), {
+      [key]: Number(slider.value)
+    }, { merge: true });
+
   };
 
   container.appendChild(div);
