@@ -175,7 +175,7 @@ body{
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import {
   getFirestore, collection, query, where,
-  getDocs, doc, updateDoc
+  getDocs, doc, updateDoc, getDoc
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 /* FIREBASE */
@@ -199,7 +199,19 @@ async function loadWallet(){
 }
 loadWallet();
 
-/* GAME CONFIG (UNCHANGED) */
+/* 🔥 HOUSE EDGE */
+async function getChance(){
+ try{
+   const ref = doc(db,"settings","houseEdge");
+   const snap = await getDoc(ref);
+   if(snap.exists()){
+     return Number(snap.data().tower ?? 50);
+   }
+ }catch(e){}
+ return 50;
+}
+
+/* GAME CONFIG */
 const cfg={
  easy:{bombs:1,m:[1.12,1.28,1.50,1.85,2.30]},
  medium:{bombs:1,m:[1.25,1.55,2.00,2.80,4.00]},
@@ -212,6 +224,7 @@ let mode="easy", step=0, bet=10, open=true;
 const tower=document.getElementById("tower");
 const multi=document.getElementById("multi");
 
+/* BUILD */
 function build(){
  tower.innerHTML="";
  for(let r=0;r<5;r++){
@@ -223,7 +236,8 @@ function build(){
   arr.forEach(t=>{
    const d=document.createElement("div");
    d.className="box";
-   d.onclick=()=>openBox(d,t,r);
+   d.dataset.type=t; // 🔥 store original
+   d.onclick=()=>openBox(d,r);
    tower.appendChild(d);
   });
  }
@@ -231,7 +245,9 @@ function build(){
 }
 build();
 
-async function openBox(el,type,row){
+/* 🎯 OPEN BOX WITH CONTROL */
+async function openBox(el,row){
+
  if(row!==step||!open||balance<bet)return;
  open=false;
 
@@ -239,40 +255,79 @@ async function openBox(el,type,row){
  bal.innerText=balance;
  await updateDoc(doc(db,"users",uid),{balance});
 
+ let chance = await getChance();
+
+ let type;
+
+ // 🟢 ALWAYS WIN
+ if(chance >= 100){
+   type = "safe";
+ }
+
+ // 🔴 ALWAYS LOSS
+ else if(chance <= 0){
+   type = "bomb";
+ }
+
+ // 🎲 RANDOM
+ else{
+   let rand = Math.random()*100;
+   if(rand < chance){
+     type = "safe";
+   }else{
+     type = "bomb";
+   }
+ }
+
  el.classList.add(type);
- el.innerText=type==="safe"?"💎":"🐉";
+ el.innerText = type==="safe" ? "💎" : "🐉";
 
  if(type==="safe"){
   step++;
-  if(step>=5){cashout.click();return;}
+
+  if(step>=5){
+    cashout.click();
+    return;
+  }
+
   multi.innerText=cfg[mode].m[step].toFixed(2)+"x";
   open=true;
+
  }else{
   show("YOU LOSE",false);
   reset();
  }
 }
 
+/* CASHOUT */
 cashout.onclick=async ()=>{
  if(step===0)return;
+
  const win=Math.floor(bet*cfg[mode].m[step-1]);
+
  balance+=win;
  bal.innerText=balance;
  await updateDoc(doc(db,"users",uid),{balance});
+
  show("YOU WIN ₹"+win,true);
  reset();
 };
 
+/* RESET */
 function reset(){
- step=0;open=true;
+ step=0;
+ open=true;
  setTimeout(build,400);
 }
 
+/* BET */
 minus.onclick=()=>{if(bet>10){bet-=10;betText.innerText="Bet ₹"+bet}}
 plus.onclick=()=>{bet+=10;betText.innerText="Bet ₹"+bet}
 
+/* MODE */
 modeBtn.onclick=()=>modePopup.style.display="flex";
 modePopup.onclick=()=>modePopup.style.display="none";
+
 document.querySelectorAll(".mode-item").forEach(i=>{
  i.onclick=e=>{
   e.stopPropagation();
@@ -293,9 +348,10 @@ function show(t,w){
  setTimeout(()=>popup.style.display="none",1800);
 }
 
-/* 🔥 FAKE LIVE HISTORY */
+/* 🔥 FAKE HISTORY */
 const liveBox=document.getElementById("liveHistory");
 const fake=[200,450,850,1200,3850,8000,12500,640,2100];
+
 setInterval(()=>{
  const d=document.createElement("div");
  d.innerText="User won ₹"+fake[Math.floor(Math.random()*fake.length)];
@@ -303,7 +359,7 @@ setInterval(()=>{
  if(liveBox.children.length>5)
    liveBox.removeChild(liveBox.lastChild);
 },1200);
-</script>
+   </script>
 
 </body>
 </html>
