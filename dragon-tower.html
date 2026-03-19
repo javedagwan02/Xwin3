@@ -171,7 +171,7 @@ body{
 
 <div class="popup" id="popup"><div id="popupText"></div></div>
 
-<script type="module">
+ <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import {
   getFirestore, collection, query, where,
@@ -211,7 +211,7 @@ async function getChance(){
  return 50;
 }
 
-/* GAME CONFIG */
+/* CONFIG */
 const cfg={
  easy:{bombs:1,m:[1.12,1.28,1.50,1.85,2.30]},
  medium:{bombs:1,m:[1.25,1.55,2.00,2.80,4.00]},
@@ -221,32 +221,64 @@ const cfg={
 };
 
 let mode="easy", step=0, bet=10, open=true;
+let resultMap=[];
+
 const tower=document.getElementById("tower");
 const multi=document.getElementById("multi");
 
-/* BUILD */
-function build(){
- tower.innerHTML="";
- for(let r=0;r<5;r++){
-  let arr=[
-   ...Array(3-cfg[mode].bombs).fill("safe"),
-   ...Array(cfg[mode].bombs).fill("bomb")
-  ].sort(()=>Math.random()-.5);
+/* 🔥 BUILD WITH CONTROL */
+async function build(){
 
-  arr.forEach(t=>{
+ let chance = await getChance();
+
+ tower.innerHTML="";
+ resultMap=[];
+
+ for(let r=0;r<5;r++){
+
+  let arr;
+
+  // 🟢 ALWAYS SAFE
+  if(chance >= 100){
+    arr = ["safe","safe","safe"];
+  }
+
+  // 🔴 ALWAYS BOMB (1 safe only to keep playable)
+  else if(chance <= 0){
+    arr = ["bomb","bomb","safe"];
+  }
+
+  // 🎲 NORMAL MODE
+  else{
+    arr=[
+     ...Array(3-cfg[mode].bombs).fill("safe"),
+     ...Array(cfg[mode].bombs).fill("bomb")
+    ];
+  }
+
+  arr.sort(()=>Math.random()-.5);
+  resultMap[r]=arr;
+
+  arr.forEach((t,i)=>{
    const d=document.createElement("div");
    d.className="box";
-   d.dataset.type=t; // 🔥 store original
-   d.onclick=()=>openBox(d,r);
+   d.dataset.row=r;
+   d.dataset.index=i;
+   d.onclick=()=>openBox(d);
    tower.appendChild(d);
   });
  }
+
  multi.innerText=cfg[mode].m[step].toFixed(2)+"x";
 }
+
 build();
 
-/* 🎯 OPEN BOX WITH CONTROL */
-async function openBox(el,row){
+/* 🎯 OPEN BOX */
+async function openBox(el){
+
+ let row = Number(el.dataset.row);
+ let index = Number(el.dataset.index);
 
  if(row!==step||!open||balance<bet)return;
  open=false;
@@ -255,29 +287,7 @@ async function openBox(el,row){
  bal.innerText=balance;
  await updateDoc(doc(db,"users",uid),{balance});
 
- let chance = await getChance();
-
- let type;
-
- // 🟢 ALWAYS WIN
- if(chance >= 100){
-   type = "safe";
- }
-
- // 🔴 ALWAYS LOSS
- else if(chance <= 0){
-   type = "bomb";
- }
-
- // 🎲 RANDOM
- else{
-   let rand = Math.random()*100;
-   if(rand < chance){
-     type = "safe";
-   }else{
-     type = "bomb";
-   }
- }
+ let type = resultMap[row][index];
 
  el.classList.add(type);
  el.innerText = type==="safe" ? "💎" : "🐉";
@@ -359,7 +369,7 @@ setInterval(()=>{
  if(liveBox.children.length>5)
    liveBox.removeChild(liveBox.lastChild);
 },1200);
-   </script>
+ </script>
 
 </body>
 </html>
