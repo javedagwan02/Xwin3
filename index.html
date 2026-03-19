@@ -122,6 +122,121 @@ flex-shrink:0;
   top:0;
   left:0;
 }
+  /* ===== ALL GAME CARDS ===== */
+
+.coinflip-card{
+  background: linear-gradient(135deg,#f5c76a,#cfd3d6);
+  position: relative;
+  overflow: hidden;
+}
+
+.treasure-card{
+  background: linear-gradient(135deg,#7b3f00,#3b1f00);
+  position: relative;
+  overflow: hidden;
+}
+
+.chicken-card{
+  background: linear-gradient(135deg,#f7971e,#ffd200);
+  position: relative;
+  overflow: hidden;
+}
+
+.dice-card{
+  background: linear-gradient(135deg,#ff3b3b,#b30000);
+  position: relative;
+  overflow: hidden;
+}
+
+.plinko-card{
+  background: linear-gradient(135deg,#1aa7a1,#0b6f7a);
+  position: relative;
+  overflow: hidden;
+}
+
+.drax-card{
+  background: linear-gradient(135deg,#ff4fd8,#8f2bff);
+  position: relative;
+  overflow: hidden;
+}
+
+.spinstop-card{
+  background: linear-gradient(135deg,#ff5fa2,#ff2f92);
+  position: relative;
+  overflow: hidden;
+}
+
+.horserace-card{
+  background: linear-gradient(135deg,#0f9b6c,#0a6b4a);
+  position: relative;
+  overflow: hidden;
+}
+
+.ganesh-card{
+  background: linear-gradient(135deg,#8e0000,#ff4d4d);
+  position: relative;
+  overflow: hidden;
+}
+
+.keno-card{
+  background: linear-gradient(135deg,#111,#333);
+  position: relative;
+  overflow: hidden;
+}
+
+.fateshift-card{
+  background: linear-gradient(135deg,#6a00ff,#b100ff);
+  position: relative;
+  overflow: hidden;
+}
+
+.hilo-card{
+  background: linear-gradient(135deg,#00c6ff,#0072ff);
+  position: relative;
+  overflow: hidden;
+}
+
+.dragontower-card{
+  background: linear-gradient(135deg,#ff7a18,#ff3d00);
+  position: relative;
+  overflow: hidden;
+}
+
+.balloon-card{
+  background: linear-gradient(135deg,#ff4fd8,#00c6ff);
+  position: relative;
+  overflow: hidden;
+}
+
+.invest-card{
+  background: linear-gradient(135deg,#FFD700,#FFA500);
+  position: relative;
+  overflow: hidden;
+}
+
+/* ===== COMMON IMAGE STYLE ===== */
+.coinflip-card img,
+.treasure-card img,
+.chicken-card img,
+.dice-card img,
+.plinko-card img,
+.drax-card img,
+.spinstop-card img,
+.horserace-card img,
+.ganesh-card img,
+.keno-card img,
+.fateshift-card img,
+.hilo-card img,
+.dragontower-card img,
+.balloon-card img,
+.invest-card img{
+  position:absolute;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  top:0;
+  left:0;
+}
   
   background-color: #21cbf3;
   position: relative;
@@ -340,52 +455,89 @@ font-size:16px;
 </div>
   
 <div class="game-card roulette-card" onclick="openGame('roulette.html')">
-  <img src="images/roulette.png">
+  <img src="images/27709-removebg-preview.png">
 </div>
 
-<div class="game-card aviator" onclick="openGame('aviator-game.html')"><div class="icon">✈️💯</div><h3>AVIATOR REAL WIN</h3><p>Crash Multiplier • 1000x</p></div>
-
-<div class="game-card coinflip" onclick="openGame('coinflip.html')"><div class="icon">🪙</div><h3>COIN FLIP</h3><p>Head · Tail</p></div>
-
-<div class="game-card treasure" onclick="openGame('treasure.html')"><div class="icon">💎</div><h3>TREASURE</h3><p>High Risk • High Reward</p></div>
-
-<div class="game-card chicken" onclick="openGame('chicken-road.html')"><div class="icon">🐔</div><h3>CHICKEN ROAD</h3><p>High Risk • High Reward</p></div>
-
-<div class="game-card dice" onclick="openGame('dice.html')"><div class="icon">🎲</div><h3>DICE ROLL</h3><p>Quick Win • Lucky Roll</p></div>
-
-<div class="game-card plinko" onclick="openGame('plinko.html')"><div class="icon">⚪</div><h3>PLINKO</h3><p>Low • Medium • High Risk</p></div>
-
-<div class="game-card draxturbo" onclick="openGame('drax-turbo-drive.html')">
-<img src="images/bmw.png" class="drax-logo">
-<h3>DRAX TURBO DRIVE</h3>
-<p>Mercedes 5x · Audi 10x · BMW 20x</p>
+  <!-- AVIATOR REAL -->
+<div class="game-card aviator-card" onclick="openGame('aviator-game.html')">
+  <img src="images/27761-removebg-preview.png">
 </div>
 
-<div class="game-card spinstop" onclick="openGame('spin-stop.html')"><div class="icon">⏹️</div><h3>SPIN STOP</h3><p>2x Only • Manual Stop</p></div>
-
-<div class="game-card horserace" onclick="openGame('horse-race.html')"><div class="icon">🐎</div><h3>HORSE RACE</h3><p>High Risk • High Reward</p></div>
-
-<div class="game-card ganeshslots" onclick="openGame('ganesh-slots.html')">
-<img src="images/symbols/scatter.png">
-<h3>GANESH SLOTS</h3>
-<p>Lucky Lines • Multipliers</p>
+<!-- COIN FLIP -->
+<div class="game-card coinflip-card" onclick="openGame('coinflip.html')">
+  <img src="images/27710-removebg-preview.png">
 </div>
 
-<div class="game-card keno" onclick="openGame('keno.html')"><div class="icon">🔥</div><h3>KENO</h3><p>Select Numbers • Big Multipliers</p></div>
-
-<div class="game-card fateshift" onclick="openGame('fate-shift.html')"><div class="icon">⚡</div><h3>FATE SHIFT</h3><p>Auto / Manual Shift • Smart Risk</p></div>
-
-<div class="game-card hilo" onclick="openGame('hilo.html')"><div class="icon">⬆️⬇️</div><h3>HILO</h3><p>High / Low • Card Guess</p></div>
-
-<div class="game-card dragontower" onclick="openGame('dragon-tower.html')"><div class="icon">🐲🏗️</div><h3>DRAGON TOWER</h3><p>Climb & Win • Risk Levels</p></div>
-
-<div class="game-card ballooncrash" onclick="openGame('balloon-crash.html')"><div class="icon">🎈💥</div><h3>BALLOON CRASH</h3><p>Cash Out Before Pop</p></div>
-
-<div class="game-card investgame" onclick="openGame('draxbet-invest.html')">
-<div class="icon">💰🚀</div>
-<h3>INVEST GAME</h3>
-<p>Earn Passive Income</p>
+<!-- TREASURE -->
+<div class="game-card treasure-card" onclick="openGame('treasure.html')">
+  <img src="images/27711-removebg-preview.png">
 </div>
+
+<!-- CHICKEN -->
+<div class="game-card chicken-card" onclick="openGame('chicken-road.html')">
+  <img src="images/27712-removebg-preview.png">
+</div>
+
+<!-- DICE -->
+<div class="game-card dice-card" onclick="openGame('dice.html')">
+  <img src="images/27713-removebg-preview.png">
+</div>
+
+<!-- PLINKO -->
+<div class="game-card plinko-card" onclick="openGame('plinko.html')">
+  <img src="images/27714-removebg-preview.png">
+</div>
+
+<!-- DRAX -->
+<div class="game-card drax-card" onclick="openGame('drax-turbo-drive.html')">
+  <img src="images/27715-removebg-preview.png">
+</div>
+
+<!-- SPIN STOP -->
+<div class="game-card spinstop-card" onclick="openGame('spin-stop.html')">
+  <img src="images/27716-removebg-preview.png">
+</div>
+
+<!-- HORSE RACE -->
+<div class="game-card horserace-card" onclick="openGame('horse-race.html')">
+  <img src="images/27717-removebg-preview.png">
+</div>
+
+<!-- GANESH -->
+<div class="game-card ganesh-card" onclick="openGame('ganesh-slots.html')">
+  <img src="images/27718-removebg-preview.png">
+</div>
+
+<!-- KENO -->
+<div class="game-card keno-card" onclick="openGame('keno.html')">
+  <img src="images/27719-removebg-preview.png">
+</div>
+
+<!-- FATE SHIFT -->
+<div class="game-card fateshift-card" onclick="openGame('fate-shift.html')">
+  <img src="images/27720-removebg-preview.png">
+</div>
+
+<!-- HILO -->
+<div class="game-card hilo-card" onclick="openGame('hilo.html')">
+  <img src="images/27721-removebg-preview.png">
+</div>
+
+<!-- DRAGON TOWER -->
+<div class="game-card dragontower-card" onclick="openGame('dragon-tower.html')">
+  <img src="images/27722-removebg-preview.png">
+</div>
+
+<!-- BALLOON -->
+<div class="game-card balloon-card" onclick="openGame('balloon-crash.html')">
+  <img src="images/27723-removebg-preview.png">
+</div>
+
+<!-- INVEST -->
+<div class="game-card invest-card" onclick="openGame('draxbet-invest.html')">
+  <img src="images/27724-removebg-preview.png">
+</div>
+
   
 </div>
 <div class="spacer"></div>
