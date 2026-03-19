@@ -2,86 +2,51 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>PUBG & FREE FIRE</title>
 
 <style>
-html,body{
+body{
   margin:0;
-  padding:0;
-  height:100%;
-  background:#0b0f1a;
   font-family:Arial;
+  background:#0b0f1a;
   color:#fff;
-  overflow:hidden;
-}
-
-/* APP FULL SCREEN */
-.app{
-  height:100vh;
-  display:flex;
-  flex-direction:column;
 }
 
 /* TOP */
 .top{
   text-align:center;
-  padding:10px;
+  padding:8px;
   background:#111827;
+  position:relative;
 }
 
-.title{
-  font-size:20px;
-  font-weight:bold;
+.wallet{
+  position:absolute;
+  right:10px;
+  top:8px;
+  font-size:14px;
 }
 
 /* CARDS */
 .cards{
   display:flex;
   justify-content:center;
-  align-items:center;
-  gap:15px;
-  margin-top:10px;
+  gap:10px;
+  margin-top:8px;
 }
 
-/* FLIP */
-.flip{
-  width:70px;
-  height:90px;
-  perspective:1000px;
-}
-
-.inner{
-  width:100%;
-  height:100%;
-  position:relative;
-  transform-style:preserve-3d;
-  transition:0.6s;
-}
-
-.flip.active .inner{
-  transform:rotateY(180deg);
-}
-
-.front,.back{
-  position:absolute;
-  width:100%;
-  height:100%;
+.card{
+  width:60px;
+  height:80px;
+  background:#fff;
+  color:#000;
   border-radius:10px;
   display:flex;
   align-items:center;
   justify-content:center;
-  font-size:24px;
-  font-weight:bold;
-  backface-visibility:hidden;
-}
-
-.front{ background:#444; }
-.back{
-  background:#fff;
-  color:#000;
-  transform:rotateY(180deg);
+  font-size:22px;
 }
 
 /* HISTORY */
@@ -89,153 +54,107 @@ html,body{
   display:flex;
   justify-content:center;
   gap:5px;
-  padding:5px;
+  margin:5px;
 }
 
 .history div{
-  width:24px;
-  height:24px;
+  width:22px;
+  height:22px;
   border-radius:50%;
   background:#333;
-  font-size:12px;
   display:flex;
   align-items:center;
   justify-content:center;
+  font-size:12px;
 }
 
-/* GAME AREA */
-.table{
-  flex:1;
-  display:flex;
-  flex-direction:column;
-  justify-content:space-between;
-  padding:10px;
-}
-
-/* BIG TIE */
-.tie-big{
+/* TIE BAR */
+.tie{
   background:#3cd070;
-  padding:10px;
-  border-radius:8px;
   text-align:center;
+  padding:8px;
+  margin:8px;
+  border-radius:8px;
+}
+
+/* BET AREA */
+.bet{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  padding:10px;
+}
+
+.box{
+  height:140px;
+  background:#1f2937;
+  border-radius:10px;
   position:relative;
+  display:flex;
+  align-items:flex-end;
+  justify-content:center;
+  padding-bottom:8px;
 }
 
 .amount{
   position:absolute;
   top:5px;
-  right:10px;
-  font-size:12px;
+  right:5px;
   background:#000;
   padding:3px 6px;
   border-radius:6px;
-}
-
-/* BET BOX */
-.bet{
-  flex:1;
-  display:grid;
-  grid-template-columns:1fr 0.6fr 1fr;
-  gap:8px;
-  margin-top:10px;
-}
-
-.box{
-  background:#1f2937;
-  border-radius:10px;
-  display:flex;
-  align-items:flex-end;
-  justify-content:center;
-  position:relative;
-  font-size:14px;
-  padding-bottom:8px;
-}
-
-.center{
-  background:#065f46;
-  display:flex;
-  align-items:center;
-  justify-content:center;
+  font-size:12px;
 }
 
 /* CHIPS */
 .chips{
-  position:fixed;
-  bottom:50px;
-  width:100%;
   display:flex;
   justify-content:center;
   gap:10px;
+  margin-top:10px;
 }
 
 .chips div{
   background:#333;
   padding:10px;
   border-radius:50%;
-  cursor:pointer;
 }
 
 /* TIMER */
 .timer{
-  position:fixed;
-  bottom:10px;
-  width:100%;
   text-align:center;
+  margin-top:5px;
 }
 </style>
 </head>
 
 <body>
 
-<div class="app">
+<div class="top">
+  <b>PUBG & FREE FIRE</b>
+  <div class="wallet">₹ <span id="wallet">1000</span></div>
 
-  <div class="top">
-    <div class="title">PUBG & FREE FIRE</div>
+  <div class="cards">
+    <div class="card" id="pCard">?</div>
+    <div>VS</div>
+    <div class="card" id="fCard">?</div>
+  </div>
+</div>
 
-    <div class="cards">
-      <div class="flip" id="pFlip">
-        <div class="inner">
-          <div class="front">?</div>
-          <div class="back" id="pCard">K</div>
-        </div>
-      </div>
+<div class="history" id="history"></div>
 
-      <div>VS</div>
+<div class="tie">Tie</div>
 
-      <div class="flip" id="fFlip">
-        <div class="inner">
-          <div class="front">?</div>
-          <div class="back" id="fCard">A</div>
-        </div>
-      </div>
-    </div>
+<div class="bet">
+
+  <div class="box" onclick="betPlace('PUBG')">
+    <div class="amount" id="pubgAmt">0</div>
+    PUBG
   </div>
 
-  <div class="history" id="history"></div>
-
-  <div class="table">
-
-    <div class="tie-big" onclick="betPlace('TIE')">
-      Tie
-      <div class="amount" id="tieAmt">0</div>
-    </div>
-
-    <div class="bet">
-
-      <div class="box" onclick="betPlace('PUBG')">
-        <div class="amount" id="pubgAmt">0</div>
-        PUBG
-      </div>
-
-      <div class="box center">TIE</div>
-
-      <div class="box" onclick="betPlace('FREE')">
-        <div class="amount" id="freeAmt">0</div>
-        FREE FIRE
-      </div>
-
-    </div>
-
+  <div class="box" onclick="betPlace('FREE')">
+    <div class="amount" id="freeAmt">0</div>
+    FREE FIRE
   </div>
 
 </div>
@@ -246,30 +165,41 @@ html,body{
   <div onclick="setAmt(50)">50</div>
   <div onclick="setAmt(100)">100</div>
   <div onclick="setAmt(500)">500</div>
+  <div onclick="setAmt(1000)">1000</div>
 </div>
 
 <div class="timer">Time: <span id="time">20</span></div>
 
 <script>
 
-let time=20;
+let wallet=1000;
 let chip=0;
 
 let pubg=0;
 let free=0;
-let tie=0;
 
-/* CHIP SELECT */
+let time=20;
+
+/* CHIP */
 function setAmt(a){
   chip=a;
 }
 
 /* BET */
 function betPlace(type){
+
   if(time<=3){
     alert("Bet Closed");
     return;
   }
+
+  if(wallet<chip){
+    alert("Low Balance");
+    return;
+  }
+
+  wallet-=chip;
+  document.getElementById("wallet").innerText=wallet;
 
   if(type=="PUBG"){
     pubg+=chip;
@@ -280,20 +210,15 @@ function betPlace(type){
     free+=chip;
     document.getElementById("freeAmt").innerText=free;
   }
-
-  if(type=="TIE"){
-    tie+=chip;
-    document.getElementById("tieAmt").innerText=tie;
-  }
 }
 
-/* RANDOM CARD */
+/* CARD */
 function rand(){
   let arr=["A","K","Q","J","10","9"];
   return arr[Math.floor(Math.random()*arr.length)];
 }
 
-/* RESULT LOGIC */
+/* RESULT */
 function res(p,f){
   let order=["A","K","Q","J","10","9"];
   if(order.indexOf(p)<order.indexOf(f)) return "PUBG";
@@ -309,36 +234,30 @@ setInterval(()=>{
 
   if(time==0){
 
-    document.getElementById("pFlip").classList.remove("active");
-    document.getElementById("fFlip").classList.remove("active");
+    let p=rand();
+    let f=rand();
 
-    setTimeout(()=>{
+    document.getElementById("pCard").innerText=p;
+    document.getElementById("fCard").innerText=f;
 
-      let p=rand();
-      let f=rand();
+    let r=res(p,f);
 
-      document.getElementById("pCard").innerText=p;
-      document.getElementById("fCard").innerText=f;
+    let h=document.createElement("div");
+    h.innerText=r[0];
+    document.getElementById("history").prepend(h);
 
-      document.getElementById("pFlip").classList.add("active");
-      document.getElementById("fFlip").classList.add("active");
+    // WIN LOGIC
+    if(r=="PUBG") wallet+=pubg*2;
+    if(r=="FREE") wallet+=free*2;
 
-      let r=res(p,f);
+    document.getElementById("wallet").innerText=wallet;
 
-      let h=document.createElement("div");
-      h.innerText=r[0];
-      document.getElementById("history").prepend(h);
+    // RESET
+    pubg=0;
+    free=0;
 
-      // RESET
-      pubg=0;
-      free=0;
-      tie=0;
-
-      document.getElementById("pubgAmt").innerText=0;
-      document.getElementById("freeAmt").innerText=0;
-      document.getElementById("tieAmt").innerText=0;
-
-    },400);
+    document.getElementById("pubgAmt").innerText=0;
+    document.getElementById("freeAmt").innerText=0;
 
     time=20;
   }
