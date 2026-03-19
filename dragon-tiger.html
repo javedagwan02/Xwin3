@@ -83,6 +83,21 @@ body{
   transform:rotateY(180deg);
 }
 
+/* TIMER CIRCLE */
+.circle-timer{
+  width:60px;
+  height:60px;
+  border-radius:50%;
+  border:4px solid #00ffcc;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  margin:10px auto;
+  font-weight:bold;
+  font-size:18px;
+  box-shadow:0 0 10px #00ffcc;
+}
+
 /* HISTORY */
 .history{
   display:flex;
@@ -120,7 +135,7 @@ body{
 
 .box{
   width:45%;
-  height:160px;
+  height:180px;
   background:#1f2937;
   border-radius:14px;
   display:flex;
@@ -161,11 +176,10 @@ body{
   font-weight:bold;
 }
 
-/* TIMER */
+/* TIMER TEXT */
 .timer{
   text-align:center;
-  margin:10px;
-  font-size:18px;
+  margin:5px;
 }
 </style>
 </head>
@@ -176,13 +190,13 @@ body{
 
   <div class="header">
     <b>PUBG & FREE FIRE</b>
-    <div class="wallet">₹ <span id="wallet">1000</span></div>
+    <div class="wallet">₹ <span id="wallet">2000</span></div>
 
     <div class="cards">
       <div class="flip" id="pFlip">
         <div class="inner">
           <div class="front">?</div>
-          <div class="back" id="pCard">K</div>
+          <div class="back" id="pCard"></div>
         </div>
       </div>
 
@@ -191,15 +205,24 @@ body{
       <div class="flip" id="fFlip">
         <div class="inner">
           <div class="front">?</div>
-          <div class="back" id="fCard">A</div>
+          <div class="back" id="fCard"></div>
         </div>
       </div>
     </div>
+
+    <!-- 🔥 TIMER CIRCLE -->
+    <div class="circle-timer">
+      <span id="time">20</span>
+    </div>
+
   </div>
 
   <div class="history" id="history"></div>
 
-  <div class="tie">Tie (9x)</div>
+  <div class="tie" onclick="betPlace('TIE')">
+    Tie (9x)
+    <div class="amount" id="tieAmt">0</div>
+  </div>
 
   <div class="bet">
     <div class="box" onclick="betPlace('PUBG')">
@@ -214,7 +237,7 @@ body{
   </div>
 
   <!-- CHIPS -->
-  <div class="chips" id="chips">
+  <div class="chips">
     <div onclick="setAmt(10,this)">10</div>
     <div onclick="setAmt(50,this)">50</div>
     <div onclick="setAmt(100,this)">100</div>
@@ -222,7 +245,7 @@ body{
     <div onclick="setAmt(1000,this)">1000</div>
   </div>
 
-  <div class="timer">Time: <span id="time">20</span></div>
+  <div class="timer">Time: <span id="time2">20</span></div>
 
 </div>
 
@@ -233,10 +256,11 @@ let chip = 0;
 
 let pubg = 0;
 let free = 0;
+let tie = 0;
 
 let time = 20;
 
-/* CHIP SELECT */
+/* CHIP */
 window.setAmt = (a, el) => {
   chip = a;
   document.querySelectorAll(".chips div").forEach(e=>e.classList.remove("active"));
@@ -261,6 +285,11 @@ window.betPlace = (type) => {
     free += chip;
     document.getElementById("freeAmt").innerText = free;
   }
+
+  if(type=="TIE"){
+    tie += chip;
+    document.getElementById("tieAmt").innerText = tie;
+  }
 };
 
 /* RANDOM */
@@ -277,12 +306,11 @@ function result(p,f){
   return "TIE";
 }
 
-/* MAIN LOOP */
+/* LOOP */
 function startRound(){
 
   time = 20;
 
-  // RESET CARDS TO HIDDEN
   document.getElementById("pFlip").classList.remove("active");
   document.getElementById("fFlip").classList.remove("active");
 
@@ -292,6 +320,7 @@ function startRound(){
   const timer = setInterval(()=>{
 
     document.getElementById("time").innerText = time;
+    document.getElementById("time2").innerText = time;
 
     time--;
 
@@ -299,14 +328,12 @@ function startRound(){
 
       clearInterval(timer);
 
-      // GENERATE RESULT
       const p = rand();
       const f = rand();
 
       document.getElementById("pCard").innerText = p;
       document.getElementById("fCard").innerText = f;
 
-      // FLIP SHOW RESULT
       document.getElementById("pFlip").classList.add("active");
       document.getElementById("fFlip").classList.add("active");
 
@@ -320,25 +347,25 @@ function startRound(){
       // WIN
       if(r=="PUBG") wallet += pubg * 2;
       if(r=="FREE") wallet += free * 2;
+      if(r=="TIE") wallet += tie * 9;
 
       document.getElementById("wallet").innerText = wallet;
 
-      // RESET BET
+      // RESET
       pubg = 0;
       free = 0;
+      tie = 0;
 
       document.getElementById("pubgAmt").innerText = 0;
       document.getElementById("freeAmt").innerText = 0;
+      document.getElementById("tieAmt").innerText = 0;
 
-      // SHOW RESULT 2 SEC → THEN HIDE + NEXT ROUND
       setTimeout(()=>{
-
-        // FLIP BACK (HIDE)
         document.getElementById("pFlip").classList.remove("active");
         document.getElementById("fFlip").classList.remove("active");
 
         setTimeout(()=>{
-          startRound(); // NEXT ROUND 🔥
+          startRound();
         },600);
 
       },2000);
@@ -347,7 +374,6 @@ function startRound(){
   },1000);
 }
 
-/* START GAME */
 startRound();
 
 </script>
