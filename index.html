@@ -108,6 +108,20 @@ flex-shrink:0;
   top:0;
   left:0;
 } 
+  .roulette-card{
+  background: linear-gradient(135deg,#1abc9c,#16a085);
+  position: relative;
+  overflow: hidden;
+}
+
+.roulette-card img{
+  position:absolute;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  top:0;
+  left:0;
+}
   
   background-color: #21cbf3;
   position: relative;
@@ -325,7 +339,9 @@ font-size:16px;
   <img src="images/27708-removebg-preview.png">
 </div>
   
-<div class="game-card roulette" onclick="openGame('roulette.html')"><div class="icon">🎡</div><h3>ROULETTE</h3><p>Classic Casino Wheel</p></div>
+<div class="game-card roulette-card" onclick="openGame('roulette.html')">
+  <img src="images/roulette.png">
+</div>
 
 <div class="game-card aviator" onclick="openGame('aviator-game.html')"><div class="icon">✈️💯</div><h3>AVIATOR REAL WIN</h3><p>Crash Multiplier • 1000x</p></div>
 
