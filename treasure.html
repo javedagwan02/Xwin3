@@ -137,7 +137,7 @@ body{
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getFirestore, getDocs, collection, query, where, doc, updateDoc } 
+import { getFirestore, getDocs, collection, query, where, doc, updateDoc, getDoc } 
 from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 /* FIREBASE */
@@ -148,6 +148,18 @@ const app = initializeApp({
 });
 const db = getFirestore(app);
 const userEmail = localStorage.getItem("userEmail");
+
+/* ===== HOUSE EDGE ===== */
+async function getChance(){
+  const ref = doc(db,"settings","houseEdge");
+  const snap = await getDoc(ref);
+
+  let chance = 50; // default
+  if(snap.exists()){
+    chance = Number(snap.data().treasure ?? 50);
+  }
+  return chance;
+}
 
 /* GAME STATE */
 let wallet = 0;
@@ -206,12 +218,38 @@ startBtn.onclick=async()=>{
   currentWin=bet;
   gameActive=true;
 
+  let chance = await getChance(); // 🔥 FIREBASE CONTROL
+
   chestData=[];
+
   for(let i=0;i<20;i++){
-    const r=Math.random();
-    if(r<0.40) chestData.push("BOOM");
-    else if(r<0.70) chestData.push("EMPTY");
-    else chestData.push("2X");
+
+    // 🔴 ALWAYS LOSS
+    if(chance === 0){
+      chestData.push("BOOM");
+    }
+
+    // 🟢 ALWAYS WIN
+    else if(chance === 100){
+      chestData.push("2X");
+    }
+
+    // 🎲 CONTROLLED RANDOM
+    else{
+      let r = Math.random()*100;
+
+      if(r < chance){
+        // USER SAFE / WIN SIDE
+        if(Math.random() < 0.6){
+          chestData.push("2X");
+        }else{
+          chestData.push("EMPTY");
+        }
+      }else{
+        // USER LOSS SIDE
+        chestData.push("BOOM");
+      }
+    }
   }
 
   startBtn.innerText="₹ "+currentWin;
@@ -226,11 +264,16 @@ function openChest(i,el){
   el.classList.add("disabled");
 
   const type=chestData[i];
+
   if(type==="BOOM"){
     el.innerText="💣";
     setTimeout(endGame,600);
   }
-  if(type==="EMPTY") el.innerText="📦";
+
+  if(type==="EMPTY"){
+    el.innerText="📦";
+  }
+
   if(type==="2X"){
     el.innerText="2×";
     currentWin*=2;
@@ -242,8 +285,10 @@ function openChest(i,el){
 cashoutBtn.onclick=async()=>{
   wallet+=currentWin;
   await saveWallet();
+
   winAmt.innerText=currentWin;
   popup.style.display="flex";
+
   endGame();
 };
 
@@ -263,6 +308,7 @@ document.getElementById("plus").onclick=()=>{
   if(bet+10<=wallet) bet+=10;
   render();
 };
+
 document.getElementById("minus").onclick=()=>{
   if(gameActive) return;
   if(bet>10) bet-=10;
@@ -276,12 +322,12 @@ function render(){
   initBoard();
 }
 
-/* OK BUTTON */
+/* POPUP */
 function closePopup(){
   popup.style.display="none";
 }
+window.closePopup = closePopup;
 
-  window.closePopup = closePopup;
 /* INIT */
 loadWallet();
 </script>
