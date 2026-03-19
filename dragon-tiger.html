@@ -92,6 +92,11 @@ body{
 }
 
 .front{background:#444;}
+  .front img{
+  width:70%;
+  height:70%;
+  object-fit:contain;
+  }
 .back{
   background:#fff;
   color:#000;
@@ -208,23 +213,35 @@ body{
     <b>PUBG & FREE FIRE</b>
     <div class="wallet">₹ <span id="wallet">2000</span></div>
 
-    <div class="cards">
-      <div class="flip" id="pFlip">
-        <div class="inner">
-          <div class="front">?</div>
-          <div class="back" id="pCard"></div>
-        </div>
-      </div>
+  <div class="flip" id="pFlip">
+  <div class="inner">
+    
+    <!-- FRONT (IMAGE) -->
+    <div class="front">
+      <img src="images/27681-removebg-preview.png">
+    </div>
+
+    <!-- BACK (RESULT) -->
+    <div class="back" id="pCard"></div>
+
+  </div>
+  </div>
 
       <div>VS</div>
 
       <div class="flip" id="fFlip">
-        <div class="inner">
-          <div class="front">?</div>
-          <div class="back" id="fCard"></div>
-        </div>
-      </div>
+  <div class="inner">
+    
+    <!-- FRONT (IMAGE) -->
+    <div class="front">
+      <img src="images/27682-removebg-preview.png">
     </div>
+
+    <!-- BACK (RESULT) -->
+    <div class="back" id="fCard"></div>
+
+  </div>
+      </div>
 
     <!-- 🔥 TIMER CIRCLE -->
     <div class="circle-timer">
@@ -330,9 +347,9 @@ function startRound(){
   document.getElementById("pFlip").classList.remove("active");
   document.getElementById("fFlip").classList.remove("active");
 
-  document.getElementById("pCard").innerText = "?";
-  document.getElementById("fCard").innerText = "?";
-
+  document.getElementById("pCard").innerText = "";
+document.getElementById("fCard").innerText = "";
+  
   const timer = setInterval(()=>{
 
     document.getElementById("time").innerText = time;
