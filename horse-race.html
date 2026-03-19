@@ -115,7 +115,7 @@ body{margin:0;font-family:Arial;background:#1b5e20;color:#fff}
  <div class="popup" id="popup"><h2 id="popupText"></h2></div>
 </div>
 
- <script type="module">
+  <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import {
   getFirestore, getDocs, collection, query, where,
@@ -235,33 +235,43 @@ function buildUI(){
  });
 }
 
-/* 🔥 RACE (CONTROLLED) */
+/* 🔥 RACE (FINAL FIXED) */
 async function startRace(){
 
  let chance = await getChance();
 
+ let totalBet = 0;
  let userHorse = null;
+
  for(let id in horseBets){
    if(horseBets[id] > 0){
+     totalBet += horseBets[id];
      userHorse = Number(id);
-     break;
    }
  }
 
  let winner;
 
- if(chance >= 100){
-   winner = userHorse || 1;
+ if(totalBet === 0){
+   winner = horses[Math.floor(Math.random()*horses.length)].id;
  }
+
+ else if(chance >= 100){
+   winner = userHorse;
+ }
+
  else if(chance <= 0){
-   winner = horses.find(h=>h.id != userHorse)?.id || 1;
+   let loseHorses = horses.filter(h=>h.id !== userHorse);
+   winner = loseHorses[Math.floor(Math.random()*loseHorses.length)].id;
  }
+
  else{
    let rand = Math.random()*100;
    if(rand < chance){
-     winner = userHorse || 1;
+     winner = userHorse;
    }else{
-     winner = horses.find(h=>h.id != userHorse)?.id || 1;
+     let loseHorses = horses.filter(h=>h.id !== userHorse);
+     winner = loseHorses[Math.floor(Math.random()*loseHorses.length)].id;
    }
  }
 
@@ -335,7 +345,7 @@ await loadWallet();
 await loadHistory();
 buildUI();
 syncTimer();
- </script>
+  </script>
   
 </body>
 </html>
