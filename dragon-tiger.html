@@ -14,7 +14,6 @@ body{
   color:#fff;
 }
 
-/* CONTAINER */
 .app{
   max-width:420px;
   margin:auto;
@@ -47,16 +46,41 @@ body{
   margin-top:10px;
 }
 
-.card{
-  width:70px;
-  height:90px;
-  background:#fff;
-  color:#000;
-  border-radius:10px;
+.flip{
+  width:80px;
+  height:100px;
+  perspective:1000px;
+}
+
+.inner{
+  width:100%;
+  height:100%;
+  position:relative;
+  transform-style:preserve-3d;
+  transition:0.6s;
+}
+
+.flip.active .inner{
+  transform:rotateY(180deg);
+}
+
+.front,.back{
+  position:absolute;
+  width:100%;
+  height:100%;
+  border-radius:12px;
   display:flex;
   align-items:center;
   justify-content:center;
-  font-size:24px;
+  font-size:26px;
+  backface-visibility:hidden;
+}
+
+.front{background:#444;}
+.back{
+  background:#fff;
+  color:#000;
+  transform:rotateY(180deg);
 }
 
 /* HISTORY */
@@ -70,24 +94,24 @@ body{
 .history div{
   width:22px;
   height:22px;
-  background:#333;
   border-radius:50%;
+  background:#333;
   display:flex;
   align-items:center;
   justify-content:center;
-  font-size:12px;
 }
 
-/* TIE BAR */
+/* TIE */
 .tie{
   background:#3cd070;
   text-align:center;
-  padding:10px;
+  padding:12px;
   margin:10px;
-  border-radius:8px;
+  border-radius:10px;
+  font-size:16px;
 }
 
-/* BET AREA */
+/* BET BOX */
 .bet{
   display:flex;
   justify-content:space-around;
@@ -95,24 +119,25 @@ body{
 }
 
 .box{
-  width:40%;
-  height:130px;
+  width:45%;
+  height:160px;
   background:#1f2937;
-  border-radius:10px;
+  border-radius:14px;
   display:flex;
   align-items:flex-end;
   justify-content:center;
   position:relative;
-  padding-bottom:8px;
+  font-size:16px;
+  padding-bottom:10px;
 }
 
 .amount{
   position:absolute;
-  top:5px;
-  right:5px;
+  top:6px;
+  right:6px;
   background:#000;
-  padding:3px 6px;
-  border-radius:6px;
+  padding:4px 8px;
+  border-radius:8px;
   font-size:12px;
 }
 
@@ -121,20 +146,26 @@ body{
   display:flex;
   justify-content:center;
   gap:10px;
-  margin-bottom:10px;
 }
 
 .chips div{
   background:#333;
-  padding:10px;
+  padding:12px;
   border-radius:50%;
   cursor:pointer;
+}
+
+.chips .active{
+  background:#ffd700;
+  color:#000;
+  font-weight:bold;
 }
 
 /* TIMER */
 .timer{
   text-align:center;
-  margin-bottom:10px;
+  margin:10px;
+  font-size:18px;
 }
 </style>
 </head>
@@ -143,27 +174,34 @@ body{
 
 <div class="app">
 
-  <!-- HEADER -->
   <div class="header">
     <b>PUBG & FREE FIRE</b>
     <div class="wallet">₹ <span id="wallet">1000</span></div>
 
     <div class="cards">
-      <div class="card" id="pCard">?</div>
+      <div class="flip" id="pFlip">
+        <div class="inner">
+          <div class="front">?</div>
+          <div class="back" id="pCard">K</div>
+        </div>
+      </div>
+
       <div>VS</div>
-      <div class="card" id="fCard">?</div>
+
+      <div class="flip" id="fFlip">
+        <div class="inner">
+          <div class="front">?</div>
+          <div class="back" id="fCard">A</div>
+        </div>
+      </div>
     </div>
   </div>
 
-  <!-- HISTORY -->
   <div class="history" id="history"></div>
 
-  <!-- TIE -->
   <div class="tie">Tie (9x)</div>
 
-  <!-- BET -->
   <div class="bet">
-
     <div class="box" onclick="betPlace('PUBG')">
       <div class="amount" id="pubgAmt">0</div>
       PUBG
@@ -173,16 +211,15 @@ body{
       <div class="amount" id="freeAmt">0</div>
       FREE FIRE
     </div>
-
   </div>
 
   <!-- CHIPS -->
-  <div class="chips">
-    <div onclick="setAmt(10)">10</div>
-    <div onclick="setAmt(50)">50</div>
-    <div onclick="setAmt(100)">100</div>
-    <div onclick="setAmt(500)">500</div>
-    <div onclick="setAmt(1000)">1000</div>
+  <div class="chips" id="chips">
+    <div onclick="setAmt(10,this)">10</div>
+    <div onclick="setAmt(50,this)">50</div>
+    <div onclick="setAmt(100,this)">100</div>
+    <div onclick="setAmt(500,this)">500</div>
+    <div onclick="setAmt(1000,this)">1000</div>
   </div>
 
   <div class="timer">Time: <span id="time">20</span></div>
@@ -199,9 +236,12 @@ let free=0;
 
 let time=20;
 
-/* CHIP */
-function setAmt(a){
+/* CHIP SELECT */
+function setAmt(a,el){
   chip=a;
+
+  document.querySelectorAll(".chips div").forEach(e=>e.classList.remove("active"));
+  el.classList.add("active");
 }
 
 /* BET */
@@ -231,7 +271,7 @@ function betPlace(type){
   }
 }
 
-/* CARD */
+/* CARD RANDOM */
 function rand(){
   let arr=["A","K","Q","J","10","9"];
   return arr[Math.floor(Math.random()*arr.length)];
@@ -253,31 +293,40 @@ setInterval(()=>{
 
   if(time==0){
 
-    let p=rand();
-    let f=rand();
+    document.getElementById("pFlip").classList.remove("active");
+    document.getElementById("fFlip").classList.remove("active");
 
-    document.getElementById("pCard").innerText=p;
-    document.getElementById("fCard").innerText=f;
+    setTimeout(()=>{
 
-    let r=res(p,f);
+      let p=rand();
+      let f=rand();
 
-    let h=document.createElement("div");
-    h.innerText=r[0];
-    document.getElementById("history").prepend(h);
+      document.getElementById("pCard").innerText=p;
+      document.getElementById("fCard").innerText=f;
 
-    // WIN LOGIC
-    if(r=="PUBG") wallet+=pubg*2;
-    if(r=="FREE") wallet+=free*2;
-    if(r=="TIE") wallet+=(pubg+free)*0 + (0); // optional
+      document.getElementById("pFlip").classList.add("active");
+      document.getElementById("fFlip").classList.add("active");
 
-    document.getElementById("wallet").innerText=wallet;
+      let r=res(p,f);
 
-    // RESET
-    pubg=0;
-    free=0;
+      let h=document.createElement("div");
+      h.innerText=r[0];
+      document.getElementById("history").prepend(h);
 
-    document.getElementById("pubgAmt").innerText=0;
-    document.getElementById("freeAmt").innerText=0;
+      // WIN
+      if(r=="PUBG") wallet+=pubg*2;
+      if(r=="FREE") wallet+=free*2;
+
+      document.getElementById("wallet").innerText=wallet;
+
+      // RESET
+      pubg=0;
+      free=0;
+
+      document.getElementById("pubgAmt").innerText=0;
+      document.getElementById("freeAmt").innerText=0;
+
+    },400);
 
     time=20;
   }
