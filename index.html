@@ -680,6 +680,48 @@ return 1 ; // almost always lose
 
 return originalRandom();
 }
+let currentSlide = 0;
+const track = document.getElementById("bannerTrack");
+const slides = document.querySelectorAll("#bannerTrack img");
+const totalSlides = slides.length;
+
+function updateSlide(){
+  track.style.transform = `translateX(-${currentSlide * 100}%)`;
+}
+
+// 🔥 AUTO SLIDE (2 sec)
+setInterval(()=>{
+  currentSlide++;
+  if(currentSlide >= totalSlides){
+    currentSlide = 0;
+  }
+  updateSlide();
+},2000);
+
+// 👉 TOUCH SLIDE (manual mobile swipe)
+let startX = 0;
+
+track.addEventListener("touchstart",(e)=>{
+  startX = e.touches[0].clientX;
+});
+
+track.addEventListener("touchend",(e)=>{
+  let endX = e.changedTouches[0].clientX;
+
+  if(startX - endX > 50){
+    // swipe left
+    currentSlide++;
+  }else if(endX - startX > 50){
+    // swipe right
+    currentSlide--;
+  }
+
+  if(currentSlide < 0) currentSlide = totalSlides - 1;
+  if(currentSlide >= totalSlides) currentSlide = 0;
+
+  updateSlide();
+});
+
 
 </script>
 
