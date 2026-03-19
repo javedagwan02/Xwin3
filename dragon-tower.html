@@ -171,7 +171,7 @@ body{
 
 <div class="popup" id="popup"><div id="popupText"></div></div>
 
- <script type="module">
+  <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import {
   getFirestore, collection, query, where,
@@ -221,64 +221,32 @@ const cfg={
 };
 
 let mode="easy", step=0, bet=10, open=true;
-let resultMap=[];
 
 const tower=document.getElementById("tower");
 const multi=document.getElementById("multi");
 
-/* 🔥 BUILD WITH CONTROL */
-async function build(){
-
- let chance = await getChance();
-
+/* BUILD (UI ONLY) */
+function build(){
  tower.innerHTML="";
- resultMap=[];
 
  for(let r=0;r<5;r++){
-
-  let arr;
-
-  // 🟢 ALWAYS SAFE
-  if(chance >= 100){
-    arr = ["safe","safe","safe"];
-  }
-
-  // 🔴 ALWAYS BOMB (1 safe only to keep playable)
-  else if(chance <= 0){
-    arr = ["bomb","bomb","safe"];
-  }
-
-  // 🎲 NORMAL MODE
-  else{
-    arr=[
-     ...Array(3-cfg[mode].bombs).fill("safe"),
-     ...Array(cfg[mode].bombs).fill("bomb")
-    ];
-  }
-
-  arr.sort(()=>Math.random()-.5);
-  resultMap[r]=arr;
-
-  arr.forEach((t,i)=>{
+  for(let i=0;i<3;i++){
    const d=document.createElement("div");
    d.className="box";
    d.dataset.row=r;
-   d.dataset.index=i;
    d.onclick=()=>openBox(d);
    tower.appendChild(d);
-  });
+  }
  }
 
  multi.innerText=cfg[mode].m[step].toFixed(2)+"x";
 }
-
 build();
 
-/* 🎯 OPEN BOX */
+/* 🎯 MAIN CONTROL LOGIC */
 async function openBox(el){
 
  let row = Number(el.dataset.row);
- let index = Number(el.dataset.index);
 
  if(row!==step||!open||balance<bet)return;
  open=false;
@@ -287,7 +255,24 @@ async function openBox(el){
  bal.innerText=balance;
  await updateDoc(doc(db,"users",uid),{balance});
 
- let type = resultMap[row][index];
+ let chance = await getChance();
+ let type;
+
+ // 🟢 ALWAYS WIN
+ if(chance >= 100){
+   type = "safe";
+ }
+
+ // 🔴 ALWAYS LOSS
+ else if(chance <= 0){
+   type = "bomb";
+ }
+
+ // 🎲 CONTROLLED RANDOM
+ else{
+   let rand = Math.random()*100;
+   type = rand < chance ? "safe" : "bomb";
+ }
 
  el.classList.add(type);
  el.innerText = type==="safe" ? "💎" : "🐉";
@@ -369,7 +354,7 @@ setInterval(()=>{
  if(liveBox.children.length>5)
    liveBox.removeChild(liveBox.lastChild);
 },1200);
- </script>
+  </script>
 
 </body>
 </html>
