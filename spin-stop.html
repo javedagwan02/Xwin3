@@ -180,18 +180,29 @@ async function saveWallet(){
   await updateDoc(doc(db,"users",uid), { balance: wallet });
 }
 
-/* 🔥 HOUSE EDGE */
+/* 🔥 HOUSE EDGE (FIXED + SAFE) */
 async function getChance(){
-  const ref = doc(db,"settings","houseEdge");
-  const snap = await getDoc(ref);
+  try{
+    const ref = doc(db,"settings","houseEdge");
+    const snap = await getDoc(ref);
 
-  let chance = 50;
-  if(snap.exists()){
-    chance = Number(snap.data().spin ?? 50);
+    if(snap.exists()){
+      let val = snap.data().spin;
+
+      if(val === undefined) return 50;
+
+      val = Number(val);
+
+      console.log("SPIN CHANCE:", val); // DEBUG
+
+      return val;
+    }
+
+    return 50;
+  }catch(e){
+    console.log("ERROR:", e);
+    return 50;
   }
-
-  console.log("SPIN CHANCE:", chance);
-  return chance;
 }
 
 /* UI */
@@ -213,6 +224,7 @@ let spinning = false;
 
 spinBtn.onclick = async ()=>{
   const bet = Number(document.getElementById("bet").value);
+
   if(bet<=0 || bet>wallet) return alert("Low balance");
 
   wallet -= bet;
@@ -252,7 +264,7 @@ stopBtn.onclick = async ()=>{
     win = true;
   }
 
-  // 🎲 RANDOM CONTROL
+  // 🎲 RANDOM
   else{
     let rand = Math.random()*100;
     win = rand < chance;
@@ -268,7 +280,6 @@ stopBtn.onclick = async ()=>{
 
     resultText = `🎉 YOU WIN ₹${winAmt}`;
     addHistory("WIN", winAmt);
-
   }else{
     resultText = "❌ YOU LOST";
     addHistory("LOSE", bet);
