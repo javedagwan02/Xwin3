@@ -19,7 +19,13 @@ body{margin:0;font-family:Arial;background:#0e3b2f;color:#fff}
 .wheel{
   width:300px;height:300px;border-radius:50%;
   border:14px solid #111;
-  background:repeating-conic-gradient(#c62828 0deg 10deg,#111 10deg 20deg);
+  background: conic-gradient(
+  #2e7d32 0deg 10deg,
+  #c62828 10deg 20deg,
+  #111 20deg 30deg,
+  #c62828 30deg 40deg,
+  #111 40deg 50deg
+);
   box-shadow:inset 0 0 25px rgba(0,0,0,.9);
   transition:transform 4.5s cubic-bezier(.22,.61,.36,1);
   position:relative;
@@ -231,19 +237,22 @@ function spin(){
       if(b.type==="HIGH"&&result>=19) win=true;
 
       if(win){
-  let w = b.amt*2;
+  let w = b.amt * 2;
 
-  w = addWinAmount(w);   // ⭐ daily limit apply
+  // (optional) agar function hai tabhi use kar
+  if(typeof addWinAmount === "function"){
+    w = addWinAmount(w);
+  }
 
   state.wallet += w;
   syncWallet();
 
   b.res = "WIN ₹"+w;
   popupMsg(`🎉 ${result} → WIN ₹${w}`,"win");
-      }
-      }else{
-        b.res="LOSS";
-        popupMsg(`❌ ${result} → LOSS`,"lose");
+
+}else{
+  b.res="LOSS";
+  popupMsg(`❌ ${result} → LOSS`,"lose");
       }
     });
     save();render();
