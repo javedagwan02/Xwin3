@@ -146,7 +146,7 @@ button{
   <div class="popup-box" id="popupText"></div>
 </div>
 
-<script type="module">
+  <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getFirestore, getDocs, collection, query, where, doc, updateDoc, getDoc }
 from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
@@ -180,22 +180,16 @@ async function saveWallet(){
   await updateDoc(doc(db,"users",uid), { balance: wallet });
 }
 
-/* 🔥 HOUSE EDGE */
+/* 🔥 GET HOUSE EDGE */
 async function getChance(){
   try{
     const ref = doc(db,"settings","houseEdge");
     const snap = await getDoc(ref);
-
     if(snap.exists()){
-      let val = Number(snap.data().spin ?? 50);
-      console.log("SPIN CHANCE:", val);
-      return val;
+      return Number(snap.data().spin ?? 50);
     }
-    return 50;
-  }catch(e){
-    console.log(e);
-    return 50;
-  }
+  }catch(e){}
+  return 50;
 }
 
 /* UI */
@@ -210,11 +204,13 @@ function renderWallet(){
   document.getElementById("wallet").innerText = wallet;
 }
 
-/* SPIN ENGINE */
+/* GAME STATE */
 let angle = 0;
 let spinInt = null;
 let spinning = false;
+let isStopping = false;
 
+/* SPIN */
 spinBtn.onclick = async ()=>{
   const bet = Number(document.getElementById("bet").value);
   if(bet<=0 || bet>wallet) return alert("Low balance");
@@ -225,7 +221,10 @@ spinBtn.onclick = async ()=>{
 
   spinBtn.disabled = true;
   stopBtn.disabled = false;
+
   spinning = true;
+  isStopping = false;
+  angle = 0;
 
   spinner.style.transition = "none";
 
@@ -235,11 +234,15 @@ spinBtn.onclick = async ()=>{
   },50);
 };
 
+/* STOP */
 stopBtn.onclick = async ()=>{
-  if(!spinning) return;
+  if(!spinning || isStopping) return;
+
+  isStopping = true;
 
   clearInterval(spinInt);
   spinning = false;
+
   spinBtn.disabled = false;
   stopBtn.disabled = true;
 
@@ -248,40 +251,35 @@ stopBtn.onclick = async ()=>{
   let chance = await getChance();
   let win;
 
-  // 🎯 RESULT LOGIC
+  // 🎯 FINAL LOGIC (NO BUG)
   if(chance >= 100){
     win = true;
-  }
-  else if(chance <= 0){
+  }else if(chance <= 0){
     win = false;
-  }
-  else{
-    let rand = Math.random()*100;
-    win = rand < chance;
+  }else{
+    win = Math.random()*100 < chance;
   }
 
-  // 🔥 SPINNER FIX
+  // 🎡 FIXED SPINNER RESULT
   let finalAngle;
 
   if(win){
-    // GREEN
-    finalAngle = Math.random() < 0.5 
-      ? Math.random()*90 
+    finalAngle = (Math.random() < 0.5)
+      ? Math.random()*90
       : 180 + Math.random()*90;
   }else{
-    // RED
-    finalAngle = Math.random() < 0.5 
-      ? 90 + Math.random()*90 
+    finalAngle = (Math.random() < 0.5)
+      ? 90 + Math.random()*90
       : 270 + Math.random()*90;
   }
 
   spinner.style.transition = "transform 1s ease-out";
   spinner.style.transform = `rotate(${angle + finalAngle}deg)`;
 
-  let resultText="";
+  let resultText;
 
   if(win){
-    const winAmt = bet * 2;
+    let winAmt = bet * 2;
     wallet += winAmt;
     await saveWallet();
 
@@ -315,7 +313,7 @@ function addHistory(type,amt){
 }
 
 loadWallet();
-                   </script>
-
+  </script>
+  
 </body>
 </html>
