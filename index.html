@@ -79,6 +79,21 @@ flex-shrink:0;
   top:0;
   left:0;
 }
+
+  .aviator-card{
+  background: linear-gradient(135deg,#ff9800,#ff5722);
+  position: relative;
+  overflow: hidden;
+}
+
+.aviator-card img{
+  position:absolute;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  top:0;
+  left:0;
+}
   
   background-color: #21cbf3;
   position: relative;
@@ -288,7 +303,9 @@ font-size:16px;
   </div>
 </div>
   
-<div class="game-card aviator" onclick="openGame('aviator.html')"><div class="icon">✈️</div><h3>AVIATOR</h3><p>Crash Multiplier</p></div>
+<div class="game-card aviator-card" onclick="openGame('aviator.html')">
+  <img src="images/27707-removebg-preview.png">
+</div>
 
 <div class="game-card goddevil" onclick="openGame('dragon-tiger.html')"><div class="icon">🐉</div><h3>DRAGON • TIGER</h3><p>High Card Battle</p></div>
 
