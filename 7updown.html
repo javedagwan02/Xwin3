@@ -23,7 +23,31 @@ body{
   letter-spacing:2px;
   text-shadow:0 0 10px #ffd700;
 }
+.top-bar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:0 15px;
+  margin-top:5px;
+}
 
+/* TIMER */
+.timer{
+  font-size:20px;
+  font-weight:bold;
+  color:#ffd700;
+  text-shadow:0 0 10px #ffd700;
+}
+
+/* WALLET */
+.wallet{
+  font-size:18px;
+  font-weight:bold;
+  background:rgba(0,0,0,0.4);
+  padding:6px 12px;
+  border-radius:10px;
+  border:1px solid rgba(255,255,255,0.2);
+}
 /* 🔥 HISTORY STRIP */
 .history{
   display:flex;
@@ -167,7 +191,12 @@ body{
 <body>
 
 <div class="title">7 UP-DOWN</div>
-
+  <div id="history" class="history"></div>
+<div class="top-bar">
+  <div class="timer" id="timer">20</div>
+  <div class="wallet">₹ <span id="wallet">10000</span></div>
+</div>
+  
 <!-- 🔥 HISTORY -->
 <div class="history" id="history"></div>
 
@@ -208,59 +237,119 @@ body{
 
 let chip=0;
 let bets={LOW:0,HIGH:0,MID:0};
+let wallet=10000;
+let time=20;
+let bettingOpen=true;
 
-// CHIP
+// TIMER LOOP
+setInterval(()=>{
+
+  document.getElementById("timer").innerText=time;
+
+  // 🔒 LAST 5 SEC LOCK
+  if(time<=5){
+    bettingOpen=false;
+  }else{
+    bettingOpen=true;
+  }
+
+  time--;
+
+  if(time<0){
+    result();
+    time=20;
+    bettingOpen=true;
+    reset();
+  }
+
+},1000);
+
+
+// CHIP SELECT
 function setChip(v,e){
   chip=v;
   document.querySelectorAll(".chip").forEach(c=>c.classList.remove("active"));
   e.classList.add("active");
 }
 
-// BET
+
+// PLACE BET
 function bet(type,el){
-  if(!chip) return;
+
+  if(!chip || !bettingOpen) return;
+
+  if(wallet < chip){
+    alert("Low Balance");
+    return;
+  }
+
+  wallet -= chip;
+  document.getElementById("wallet").innerText=wallet;
 
   bets[type]+=chip;
+
   document.getElementById(type.toLowerCase()+"Amt").innerText=bets[type];
+
   el.classList.add("active");
 }
 
-// GAME LOOP
-setInterval(()=>{
-  result();
-  reset();
-},5000);
 
 // RESULT
 function result(){
 
-  let total=Math.floor(Math.random()*11)+2;
+  let d1=Math.floor(Math.random()*6)+1;
+  let d2=Math.floor(Math.random()*6)+1;
+
+  let total=d1+d2;
 
   let winType;
-  let letter;
+  if(total<7) winType="LOW";
+  else if(total>7) winType="HIGH";
+  else winType="MID";
 
-  if(total<7){ winType="LOW"; letter="B"; }
-  else if(total>7){ winType="HIGH"; letter="A"; }
-  else{ winType="MID"; letter="E"; }
-
-  // 🔥 HISTORY ADD
-  const h=document.createElement("div");
-  h.innerText=letter;
-  h.classList.add(letter);
-  document.getElementById("history").appendChild(h);
-
-  // AUTO SCROLL
-  const hist=document.getElementById("history");
-  hist.scrollLeft=hist.scrollWidth;
+  let winAmount=0;
 
   if(bets[winType]>0){
-    let winAmt = winType=="MID"?bets[winType]*5:bets[winType]*2;
-    showPopup("WIN ₹"+winAmt,true);
+
+    winAmount = winType=="MID" ? bets[winType]*5 : bets[winType]*2;
+
+    wallet += winAmount;
+    document.getElementById("wallet").innerText=wallet;
+
+    showPopup("WIN ₹"+winAmount,true);
+
   }else{
     showPopup("LOSS",false);
   }
-}
 
+  updateHistory(winType);
+}
+  function updateHistory(type){
+
+  let h=document.getElementById("history");
+
+  let div=document.createElement("div");
+
+  if(type=="LOW"){
+    div.className="B";
+    div.innerText="B";
+  }
+  else if(type=="HIGH"){
+    div.className="A";
+    div.innerText="A";
+  }
+  else{
+    div.className="E";
+    div.innerText="E";
+  }
+
+  h.prepend(div);
+
+  if(h.children.length>10){
+    h.removeChild(h.lastChild);
+  }
+}
+  
 // RESET
 function reset(){
   bets={LOW:0,HIGH:0,MID:0};
