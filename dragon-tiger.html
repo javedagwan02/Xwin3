@@ -384,7 +384,7 @@ let userDocId = "";
 let houseEdge = 50;
 
 async function loadEdge(){
-  const snap = await getDoc(doc(db,"settings","house"));
+  const snap = await getDoc(doc(db,"settings","houseEdge"));
   if(snap.exists()){
     houseEdge = snap.data().dragonTiger || 50;
   }
