@@ -1,56 +1,67 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>7 Up Down</title>
 
 <style>
 body{
   margin:0;
-  font-family:Arial;
-  background:linear-gradient(180deg,#2b0f3a,#14081d);
   height:100vh;
+  font-family:Arial;
+  background:linear-gradient(180deg,#3b0d4f,#1a0826);
   color:#fff;
 }
 
-/* APP */
-.app{
-  height:100vh;
-  display:flex;
-  flex-direction:column;
-}
-
-/* TOP */
-.top{
-  text-align:center;
-  padding:10px;
-}
-
+/* TIMER */
 .timer{
+  text-align:center;
   font-size:22px;
   color:#ffd700;
+  margin-top:10px;
 }
 
-/* TABLE */
-.table-wrapper{
-  flex:1;
+/* TABLE WRAP */
+.table-wrap{
+  height:70vh;
   display:flex;
   justify-content:center;
   align-items:center;
 }
 
+/* 🎰 CASINO TABLE */
 .table{
   width:90%;
-  height:60vh;
-  background:linear-gradient(180deg,#14532d,#0f3a23);
-  border-radius:30px;
-  border:3px solid #caa85c;
+  height:85%;
   position:relative;
-  box-shadow:0 0 30px rgba(0,0,0,0.6);
+
+  /* 🎯 SHAPE */
+  border-radius:40px 40px 80px 80px;
+
+  /* 🎯 GREEN */
+  background:radial-gradient(circle at center,#166534,#0f3a23);
+
+  /* 🎯 GOLD BORDER */
+  border:4px solid #d4af37;
+
+  box-shadow:
+    inset 0 0 30px rgba(0,0,0,0.6),
+    0 0 20px rgba(0,0,0,0.8);
 }
 
-/* BOXES */
+/* 🎯 INNER LINE (table design) */
+.table::before{
+  content:"";
+  position:absolute;
+  top:5%;
+  left:5%;
+  width:90%;
+  height:90%;
+  border-radius:30px 30px 70px 70px;
+  border:2px solid rgba(255,255,255,0.2);
+}
+
+/* BOX COMMON */
 .box{
   position:absolute;
   border-radius:20px;
@@ -64,39 +75,39 @@ body{
 
 /* BELOW */
 .low{
-  left:5%;
+  left:8%;
   top:15%;
-  width:30%;
+  width:28%;
   height:60%;
 }
 
 /* ABOVE */
 .high{
-  right:5%;
+  right:8%;
   top:15%;
-  width:30%;
+  width:28%;
   height:60%;
 }
 
 /* EXACT */
 .mid{
-  left:35%;
-  bottom:10%;
-  width:30%;
+  left:36%;
+  bottom:8%;
+  width:28%;
   height:30%;
 }
 
-/* ACTIVE */
+/* ACTIVE EFFECT */
 .active{
-  box-shadow:0 0 20px #ffd700 inset;
   border:2px solid #ffd700;
+  box-shadow:0 0 20px #ffd700 inset;
 }
 
 /* DICE */
 .dice{
   text-align:center;
-  font-size:22px;
-  margin:5px;
+  font-size:26px;
+  margin-top:10px;
 }
 
 /* CHIPS */
@@ -131,13 +142,9 @@ body{
 
 <body>
 
-<div class="app">
+<div class="timer">Time: <span id="time">15</span></div>
 
-<div class="top">
-  <div class="timer">Time: <span id="time">15</span></div>
-</div>
-
-<div class="table-wrapper">
+<div class="table-wrap">
 
   <div class="table">
 
@@ -161,29 +168,24 @@ body{
 
 <div class="btn" onclick="startGame()">REBET</div>
 
-</div>
-
 <script>
 
 let chip=0;
 let betType="";
 let interval;
 
-// CHIP
 function setChip(v,e){
   chip=v;
   document.querySelectorAll(".chips div").forEach(el=>el.classList.remove("active-chip"));
   e.classList.add("active-chip");
 }
 
-// BET
 function selectBet(type,el){
   betType=type;
   document.querySelectorAll(".box").forEach(b=>b.classList.remove("active"));
   el.classList.add("active");
 }
 
-// GAME
 function startGame(){
 
   if(!chip) return alert("Select chip");
@@ -203,7 +205,6 @@ function startGame(){
   },1000);
 }
 
-// RESULT
 function result(){
 
   let d1=Math.floor(Math.random()*6)+1;
