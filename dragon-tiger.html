@@ -14,10 +14,11 @@ display:flex;
 flex-direction:column;
 }
 .table-bg{
-flex:1;   /* 🔥 YE MAIN FIX HAI /
-background:url("images/27879-removebg-preview.png") no-repeat center;
-background-size:cover;
+  flex:1;   /* 🔥 YE MAIN FIX HAI */
+  background:url("images/27879-removebg-preview.png") no-repeat center;
+  background-size:cover;
 }
+  
 / HEADER */
 .header{
 text-align:center;
@@ -384,7 +385,7 @@ margin:5px;
 <div onclick="openHistory()" class="history-btn">📜 History</div>    
 </div> 
 </div> 
-  <script>
+<script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getFirestore, getDocs, collection, query, where, doc, updateDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
