@@ -106,7 +106,8 @@ body{margin:0;font-family:Arial;background:#081c2f;color:#fff}
 </div>
 
 <!-- FIREBASE WALLET CONNECT (ADDITION ONLY) -->
-<script type="module">
+  <script type="module">
+
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getFirestore, collection, query, where, getDocs, doc, updateDoc, getDoc }
 from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
@@ -119,53 +120,64 @@ const app = initializeApp({
 });
 const db = getFirestore(app);
 
-/* 🔥 GAME STATE */
+/* 🔥 STATE */
 let wallet = +localStorage.getItem("coin_wallet") || 1000;
 let coinHistory = JSON.parse(localStorage.getItem("coin_history")||"[]");
 let bets = JSON.parse(localStorage.getItem("coin_bets")||"[]");
-let COIN_EDGE = 0.5;
 
-/* 🔥 ELEMENTS */
+let COIN_EDGE = 50; // 🔥 % me
+
 const walletEl = document.getElementById("wallet");
 const coin = document.getElementById("coin");
 const histEl = document.getElementById("history");
 const betsEl = document.getElementById("mybets");
 const popupBg = document.getElementById("popupBg");
 const popup = document.getElementById("popup");
+
 const email = localStorage.getItem("userEmail");
 let uid = "";
 let lastWallet = wallet;
-  async function loadWallet(){
+
+/* 🔥 LOAD WALLET */
+async function loadWallet(){
   if(!email) return;
 
-  const q = query(
-    collection(db,"users"),
-    where("email","==",email)
-  );
-
+  const q = query(collection(db,"users"), where("email","==",email));
   const snap = await getDocs(q);
+
   snap.forEach(d=>{
     uid = d.id;
     wallet = d.data().balance ?? wallet;
     walletEl.innerText = wallet;
     localStorage.setItem("coin_wallet", wallet);
   });
-  }
-/* 🔥 LOAD HOUSE EDGE */
+}
+
+/* 🔥 LOAD EDGE */
 async function loadCoinEdge(){
-  const ref = doc(db,"settings","houseEdge");
-  const snap = await getDoc(ref);
+  const snap = await getDoc(doc(db,"settings","houseEdge"));
   if(snap.exists()){
-    COIN_EDGE = Number(snap.data().coinFlip);
+    COIN_EDGE = snap.data().coinFlip ?? 50;
     console.log("COIN EDGE =", COIN_EDGE);
   }
 }
 
-/* 🔥 DECIDE RESULT */
+/* 🔥 RESULT CONTROL */
 function decideCoinResult(choice){
-  if(COIN_EDGE === 0) return choice==="HEAD"?"TAIL":"HEAD";
-  if(COIN_EDGE === 1) return choice;
-  return Math.random() < COIN_EDGE ? choice : (choice==="HEAD"?"TAIL":"HEAD");
+
+  let chance = COIN_EDGE / 100; // % → decimal
+
+  if(chance === 0){
+    return choice==="HEAD"?"TAIL":"HEAD"; // always lose
+  }
+
+  if(chance === 1){
+    return choice; // always win
+  }
+
+  return Math.random() < chance
+    ? choice
+    : (choice==="HEAD"?"TAIL":"HEAD");
 }
 
 /* 🔥 POPUP */
@@ -177,81 +189,101 @@ function showPopup(msg,type){
 }
 
 /* 🔥 PLAY */
-window.play = function(choice){
-  let amt = +document.getElementById("amt").value;
-  if(wallet<amt) return showPopup("Low Balance","loss");
+window.play = async function(choice){
 
-  wallet-=amt;
-  walletEl.innerText=wallet;
+  let amt = +document.getElementById("amt").value;
+
+  if(wallet < amt) return showPopup("Low Balance","loss");
+
+  wallet -= amt;
+  walletEl.innerText = wallet;
 
   coin.classList.add("flip");
-  setTimeout(()=>{
+
+  setTimeout(async ()=>{
+
     coin.classList.remove("flip");
 
+    await loadCoinEdge(); // 🔥 har round fresh value
+
     let result = decideCoinResult(choice);
+
     coin.innerText = result==="HEAD"?"🙂":"🪙";
 
+    // 🔥 HISTORY
     coinHistory.unshift(result);
     coinHistory = coinHistory.slice(0,10);
     renderHistory();
-saveHistory();   // 🔥 YE MISSING THA
-    if(result===choice){
-      wallet+=amt*2;
+    localStorage.setItem("coin_history", JSON.stringify(coinHistory));
+
+    // 🔥 WIN/LOSS
+    if(result === choice){
+      wallet += amt * 2;
       showPopup("You Win ₹"+amt*2,"win");
     }else{
       showPopup("You Lose","loss");
     }
-bets.unshift({
-  time: new Date().toLocaleTimeString(),
-  choice: choice,
-  result: result,
-  amt: amt,
-  status: result === choice ? "WIN" : "LOSS"
-});
 
-bets = bets.slice(0, 20);
-localStorage.setItem("coin_bets", JSON.stringify(bets));
-renderBets();
-    walletEl.innerText=wallet;
-    localStorage.setItem("coin_wallet",wallet);
+    // 🔥 BET HISTORY
+    bets.unshift({
+      time: new Date().toLocaleTimeString(),
+      choice,
+      result,
+      amt,
+      status: result===choice?"WIN":"LOSS"
+    });
+
+    bets = bets.slice(0,20);
+    localStorage.setItem("coin_bets", JSON.stringify(bets));
+    renderBets();
+
+    walletEl.innerText = wallet;
+    localStorage.setItem("coin_wallet", wallet);
+
   },1000);
 };
-  function renderHistory(){
-  histEl.innerHTML = "";
+
+/* 🔥 RENDER */
+function renderHistory(){
+  histEl.innerHTML="";
   coinHistory.forEach(h=>{
-    let s = document.createElement("span");
-    s.innerText = h === "HEAD" ? "🙂 HEAD" : "🪙 TAIL";
+    let s=document.createElement("span");
+    s.innerText = h==="HEAD"?"🙂 HEAD":"🪙 TAIL";
     histEl.appendChild(s);
   });
-  }
-function saveHistory(){
-  localStorage.setItem("coin_history", JSON.stringify(coinHistory));
-      }
-  function renderBets(){
-  betsEl.innerHTML = "";
+}
+
+function renderBets(){
+  betsEl.innerHTML="";
   bets.forEach(b=>{
-    let d = document.createElement("div");
-    d.innerText = `${b.time} | ${b.choice} | ₹${b.amt} | ${b.status}`;
+    let d=document.createElement("div");
+    d.innerText=`${b.time} | ${b.choice} | ₹${b.amt} | ${b.status}`;
     betsEl.appendChild(d);
   });
-  }
+}
+
 /* 🔥 INIT */
 walletEl.innerText = wallet;
 renderHistory();
 renderBets();
+
+await loadWallet();
 await loadCoinEdge();
-await loadWallet();   // 🔥 IMPORTANT
-  setInterval(async ()=>{
+
+/* 🔥 AUTO FIREBASE SYNC */
+setInterval(async ()=>{
   if(!uid) return;
+
   if(wallet !== lastWallet){
     lastWallet = wallet;
-    await updateDoc(
-      doc(db,"users",uid),
-      { balance: wallet }
-    );
+
+    await updateDoc(doc(db,"users",uid),{
+      balance: wallet
+    });
   }
-}, 800);
-</script>
+},800);
+
+  </script>
   
 </body>
 </html>
