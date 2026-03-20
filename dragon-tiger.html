@@ -563,12 +563,12 @@ function result(p,f){
 }  
   
 // 🔥 GAME LOOP  
-    function openHistory(){  
+    window.openHistory = function(){
   document.getElementById("historyPopup").style.display = "flex";  
   renderPopupHistory();  
 }  
   
-function closeHistory(){  
+window.closeHistory = function(){
   document.getElementById("historyPopup").style.display = "none";  
 }  
   
