@@ -25,7 +25,8 @@ body{
   height:65vh;
   display:flex;
   justify-content:center;
-  align-items:center;
+  align-items:flex-end;  /* 🔥 center se bottom */
+  padding-top:40px;      /* 🔥 upar gap */
 }
 
 .table{
@@ -90,12 +91,14 @@ body{
 
 /* 🎯 CHIPS DESIGN */
 .chips{
+  position:fixed;
+  bottom:20px;
+  left:0;
+  width:100%;
   display:flex;
   justify-content:center;
   gap:12px;
-  margin-top:15px;
 }
-
 .chip{
   width:55px;
   height:55px;
@@ -190,7 +193,6 @@ body{
   </div>
 </div>
 
-<div class="dice" id="dice">🎲 🎲</div>
 
 <div class="chips">
   <div class="chip" onclick="setChip(10,this)">10</div>
