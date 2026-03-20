@@ -22,7 +22,9 @@ body{
   flex-direction:column;
 }
 .table-bg{
-  flex:1;   /* 🔥 YE MAIN FIX HAI */
+  flex:1;
+  position:relative;   /* 🔥 ADD KAR */
+  z-index:1;           /* 🔥 ADD KAR */
   background:url("images/27879-removebg-preview.png") no-repeat center;
   background-size:cover;
 }
@@ -251,6 +253,9 @@ background-repeat:no-repeat;
   border-radius:10px;
   font-size:14px;
   box-shadow:0 0 10px #00ffcc;
+
+  position:relative;
+  z-index:9999;  /* 🔥 YE MAIN FIX HAI */
   }
 
 .history-popup{
