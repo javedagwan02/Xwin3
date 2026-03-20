@@ -132,7 +132,10 @@ body{
   border:1px solid #333;
   border-radius:10px;
   background:#0f172a;
-}
+  history{
+  scroll-behavior: auto; /* ❌ smooth hata */
+  }
+
 
 .history::-webkit-scrollbar{
   display:none;
@@ -490,11 +493,9 @@ function startRound(){
       h.classList.add(r[0]); // 🔥 ye add kar
       document.getElementById("history").appendChild(h);
       setTimeout(()=>{
-  h.scrollIntoView({
-    behavior: "smooth",
-    inline: "center"
-  });
-});
+       
+      });
+      
       if(r=="PUBG") wallet += pubg * 2;
       if(r=="FREE") wallet += free * 2;
       if(r=="TIE") wallet += tie * 9;
