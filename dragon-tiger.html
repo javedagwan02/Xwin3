@@ -555,14 +555,14 @@ return "TIE";
 
 // 🔥 GAME LOOP
 window.openHistory = function(){
-document.getElementById("historyPopup").style.display = "flex";
-renderPopupHistory();
+  document.getElementById("historyPopup").style.display = "flex";
+  renderPopupHistory();
 }
 
 window.closeHistory = function(){
-document.getElementById("historyPopup").style.display = "none";
+  document.getElementById("historyPopup").style.display = "none";
 }
-
+  
 function renderPopupHistory(){
 const list = document.getElementById("historyList");
 list.innerHTML = "";
