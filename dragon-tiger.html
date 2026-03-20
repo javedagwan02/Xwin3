@@ -365,7 +365,7 @@ background-repeat:no-repeat;
   <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getFirestore, getDocs, collection, query, where, doc, updateDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getFirestore, getDocs, collection, query, where, doc, updateDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 // 🔥 FIREBASE INIT
 const app = initializeApp({
@@ -380,14 +380,17 @@ const db = getFirestore(app);
 const userEmail = localStorage.getItem("userEmail");
 let userDocId = "";
 
-// 🔥 HOUSE EDGE (Dragon Tiger slider)
+// 🔥 LIVE HOUSE EDGE
 let houseEdge = 50;
 
-async function loadEdge(){
-  const snap = await getDoc(doc(db,"settings","houseEdge"));
-  if(snap.exists()){
-    houseEdge = snap.data().dragonTiger || 50;
-  }
+// 🔥 REAL-TIME CONTROL 🔥
+function liveEdge(){
+  onSnapshot(doc(db,"settings","houseEdge"), (snap)=>{
+    if(snap.exists()){
+      houseEdge = snap.data().dragonTiger ?? 50;
+      console.log("🔥 LIVE EDGE:", houseEdge);
+    }
+  });
 }
 
 // 🔥 GAME VARS
@@ -415,7 +418,7 @@ async function loadWallet(){
 }
 
 await loadWallet();
-await loadEdge();
+liveEdge(); // 🔥 REAL-TIME START
 
 // 🔥 MUSIC
 document.addEventListener("click", ()=>{
@@ -489,27 +492,42 @@ window.betPlace = async (type) => {
   }
 };
 
-// 🔥 CONTROLLED RESULT (HOUSE EDGE)
+// 🔥 CONTROLLED RESULT (LIVE EDGE)
 function controlledResult(){
 
   let winSide;
 
-  if(Math.random()*100 < houseEdge){
-    // 🟢 USER WIN
+  let chance = houseEdge / 100;
+
+  if(chance === 1){
+    // 🟢 ALWAYS WIN
     if(pubg > free) winSide = "PUBG";
     else if(free > pubg) winSide = "FREE";
     else winSide = Math.random()<0.5?"PUBG":"FREE";
-  }else{
-    // 🔴 USER LOSS
+  }
+  else if(chance === 0){
+    // 🔴 ALWAYS LOSS
     if(pubg > free) winSide = "FREE";
     else if(free > pubg) winSide = "PUBG";
     else winSide = Math.random()<0.5?"PUBG":"FREE";
+  }
+  else{
+    // ⚖️ MIX
+    if(Math.random() < chance){
+      if(pubg > free) winSide = "PUBG";
+      else if(free > pubg) winSide = "FREE";
+      else winSide = Math.random()<0.5?"PUBG":"FREE";
+    }else{
+      if(pubg > free) winSide = "FREE";
+      else if(free > pubg) winSide = "PUBG";
+      else winSide = Math.random()<0.5?"PUBG":"FREE";
+    }
   }
 
   return winSide;
 }
 
-// 🔥 RESULT LOGIC SAME
+// 🔥 RESULT
 function result(p,f){
   const order=["A","K","Q","J","10","9"];
   if(order.indexOf(p) < order.indexOf(f)) return "PUBG";
@@ -544,9 +562,6 @@ function startRound(){
     if(time < 0){
 
       clearInterval(gameInterval);
-
-      // 🔥 LOAD EDGE EVERY ROUND
-      await loadEdge();
 
       const win = controlledResult();
 
@@ -603,7 +618,7 @@ function startRound(){
 
 startRound();
 
-  </script>      
+  </script>
   
   <audio id="bgMusic" loop>
   <source src="audio/pubg-theme.mp3" type="audio/mp3">
