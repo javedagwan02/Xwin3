@@ -452,7 +452,7 @@ let userDocId = "";
 
 // 🔥 LIVE HOUSE EDGE
 let houseEdge = 50;
-
+let myBets = JSON.parse(localStorage.getItem("pf_bets")) || [];
 // 🔥 REAL-TIME CONTROL 🔥
 function liveEdge(){
   onSnapshot(doc(db,"settings","houseEdge"), (snap)=>{
@@ -462,6 +462,7 @@ function liveEdge(){
     }
   });
 }
+    
 
 // 🔥 GAME VARS
 let wallet = 0;
@@ -628,7 +629,7 @@ function renderPopupHistory(){
     div.innerHTML = `
       <span>${b.type}</span>
       <span>₹${b.amount}</span>
-      <span>${b.time}</span>
+      <span style="font-size:11px;opacity:.7">${b.time}</span>
     `;
 
     list.appendChild(div);
@@ -691,6 +692,37 @@ function startRound(){
       if(r=="FREE") wallet += free * 2;
       if(r=="TIE") wallet += tie * 9;
 
+      // 🔥 SAVE BET HISTORY
+if(pubg > 0){
+  myBets.unshift({
+    type:"PUBG",
+    amount: pubg,
+    time: new Date().toLocaleTimeString(),
+    status: r=="PUBG" ? "WIN" : "LOSS"
+  });
+}
+
+if(free > 0){
+  myBets.unshift({
+    type:"FREE",
+    amount: free,
+    time: new Date().toLocaleTimeString(),
+    status: r=="FREE" ? "WIN" : "LOSS"
+  });
+}
+
+if(tie > 0){
+  myBets.unshift({
+    type:"TIE",
+    amount: tie,
+    time: new Date().toLocaleTimeString(),
+    status: r=="TIE" ? "WIN" : "LOSS"
+  });
+}
+
+myBets = myBets.slice(0,20);
+localStorage.setItem("pf_bets", JSON.stringify(myBets));
+      
       document.getElementById("wallet").innerText = wallet;
 
       await updateDoc(doc(db,"users",userDocId),{
