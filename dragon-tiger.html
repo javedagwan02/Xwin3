@@ -371,7 +371,13 @@ let free = 0;
 let tie = 0;
 let time = 20;
   let gameInterval;
-  
+  document.addEventListener("click", ()=>{
+  const music = document.getElementById("bgMusic");
+  if(music.paused){
+    music.play();
+    music.volume = 0.3; // 🔥 volume control
+  }
+});
   // 🔥 LOAD SAVED DATA
 if(localStorage.getItem("wallet")){
   wallet = parseInt(localStorage.getItem("wallet"));
@@ -521,6 +527,10 @@ function startRound(){
 startRound();
 
 </script>
+  
+  <audio id="bgMusic" loop>
+  <source src="audio/pubg-theme.mp3" type="audio/mp3">
+  </audio>
   
 <div id="popup" class="popup">
   <div class="popup-box">
