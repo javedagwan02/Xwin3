@@ -411,13 +411,15 @@ let userDocId = "";
 // 🔥 VARS
 let wallet = 0;
 let chip = 0;
-
 let pubg = 0;
 let free = 0;
 let tie = 0;
 let time = 20;
 
 let myBets = JSON.parse(localStorage.getItem("pf_bets")) || [];
+
+// 🔥 ADMIN CONTROL (👇 sirf ek phone me true karna)
+let isAdmin = false;
 
 // 🔥 LOAD WALLET
 async function loadWallet(){
@@ -481,7 +483,7 @@ window.betPlace = async (type) => {
   }
 };
 
-// 🔥 HISTORY POPUP
+// 🔥 HISTORY
 window.openHistory = function(){
   document.getElementById("historyPopup").style.display = "flex";
   renderPopupHistory();
@@ -510,9 +512,48 @@ function renderPopupHistory(){
   });
 }
 
-// 🔥 FIREBASE GAME SYNC
-const gameRef = doc(db, "dragonTiger", "dragonTiger");
+// 🔥 FIREBASE REF
+const gameRef = doc(db, "game", "dragonTiger");
 
+// 🔥 ADMIN TIMER (ONLY 1 USER)
+if(isAdmin){
+
+  let roundId = 1;
+
+  setInterval(()=>{
+
+    let t = 20;
+
+    const timer = setInterval(async ()=>{
+
+      await updateDoc(gameRef,{
+        time: t,
+        roundId: roundId
+      });
+
+      t--;
+
+      if(t < 0){
+
+        clearInterval(timer);
+
+        let result = Math.random() < 0.5 ? "PUBG" : "FREE";
+
+        await updateDoc(gameRef,{
+          result: result
+        });
+
+        roundId++;
+
+      }
+
+    },1000);
+
+  },22000);
+
+}
+
+// 🔥 LIVE SYNC (ALL USERS)
 let lastRound = null;
 
 onSnapshot(gameRef, async (snap)=>{
@@ -520,13 +561,13 @@ onSnapshot(gameRef, async (snap)=>{
 
   const data = snap.data();
 
-  // 🔥 TIMER SYNC
+  // TIMER
   if(typeof data.time === "number"){
     time = data.time;
     document.getElementById("time").innerText = time;
   }
 
-  // 🔥 NEW ROUND RESULT
+  // RESULT
   if(data.roundId !== lastRound){
 
     lastRound = data.roundId;
@@ -549,7 +590,6 @@ onSnapshot(gameRef, async (snap)=>{
 
     const r = data.result;
 
-    // 🔥 HISTORY UI
     const h = document.createElement("div");
     h.innerText = r[0];
     h.classList.add(r[0]);
@@ -558,7 +598,6 @@ onSnapshot(gameRef, async (snap)=>{
     const hist = document.getElementById("history");
     hist.scrollLeft = hist.scrollWidth;
 
-    // 🔥 WALLET CALC
     if(r=="PUBG") wallet += pubg * 2;
     if(r=="FREE") wallet += free * 2;
     if(r=="TIE") wallet += tie * 9;
@@ -569,7 +608,7 @@ onSnapshot(gameRef, async (snap)=>{
       balance: wallet
     });
 
-    // 🔥 SAVE BET HISTORY
+    // SAVE HISTORY
     if(pubg > 0){
       myBets.unshift({
         type:"PUBG",
@@ -600,7 +639,7 @@ onSnapshot(gameRef, async (snap)=>{
     myBets = myBets.slice(0,20);
     localStorage.setItem("pf_bets", JSON.stringify(myBets));
 
-    // 🔥 RESET
+    // RESET
     pubg = 0;
     free = 0;
     tie = 0;
@@ -612,7 +651,7 @@ onSnapshot(gameRef, async (snap)=>{
 
 });
 
-  </script>
+</script>
         
   <audio id="bgMusic" loop>  
   <source src="audio/pubg-theme.mp3" type="audio/mp3">  
