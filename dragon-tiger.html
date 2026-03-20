@@ -393,7 +393,8 @@ background-repeat:no-repeat;
     <div onclick="setAmt(1000,this)">1000</div>  
   </div>  
 <div onclick="openHistory()" class="history-btn">📜 History</div>  
-</div>  </div>    <script type="module">  
+</div>  </div>  
+  <script 
   
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";  
 import { getFirestore, getDocs, collection, query, where, doc, updateDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";  
@@ -568,14 +569,14 @@ function result(p,f){
 }  
   
 // 🔥 GAME LOOP  
-    function openHistory(){  
-  document.getElementById("historyPopup").style.display = "flex";  
-  renderPopupHistory();  
-}  
+    window.openHistory = function(){
+  document.getElementById("historyPopup").style.display = "flex";
+  renderPopupHistory();
+    }
   
-function closeHistory(){  
-  document.getElementById("historyPopup").style.display = "none";  
-}  
+window.closeHistory = function(){
+  document.getElementById("historyPopup").style.display = "none";
+}
   
 function renderPopupHistory(){  
   const list = document.getElementById("historyList");  
