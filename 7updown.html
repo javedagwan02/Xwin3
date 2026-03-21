@@ -276,6 +276,83 @@ body{
 .win{ background:#065f46;color:#00ff99; }
 .loss{ background:#7f1d1d;color:#ff4d4d; }
 .lock{ background:#111;color:#ffd700; }
+  
+  /* 📜 HISTORY BUTTON */
+#historyBtn{
+  position:absolute;
+  bottom:10px;
+  left:50%;
+  transform:translateX(-50%);
+  background:#0f172a;
+  color:#fff;
+  padding:10px 25px;
+  border-radius:12px;
+  box-shadow:0 0 15px #00ffcc;
+  cursor:pointer;
+}
+
+/* POPUP */
+.history-popup{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,0.7);
+  display:flex;
+  justify-content:center;
+  align-items:flex-end;
+
+  visibility:hidden;
+  opacity:0;
+  transition:0.3s;
+}
+
+.history-popup.show{
+  visibility:visible;
+  opacity:1;
+}
+
+.history-box{
+  width:100%;
+  max-height:70%;
+  background:#0b1220;
+  border-radius:20px 20px 0 0;
+  padding:15px;
+  overflow:hidden;
+}
+
+/* HEADER */
+.history-header{
+  display:flex;
+  justify-content:space-between;
+  font-weight:bold;
+  margin-bottom:10px;
+}
+
+/* LIST */
+.history-list{
+  max-height:300px;
+  overflow-y:auto;   /* 🔥 SCROLL ENABLE */
+}
+
+/* ITEM */
+.history-item{
+  background:#111;
+  margin-bottom:8px;
+  padding:12px;
+  border-radius:10px;
+  display:flex;
+  justify-content:space-between;
+}
+
+.win-item{
+  border:1px solid #00ff99;
+}
+
+.loss-item{
+  border:1px solid #ff4d4d;
+}
 
   /* ❓ HELP BUTTON */
 #helpBtn{
@@ -371,7 +448,7 @@ body{
     <div class="card-amt" id="highAmt">0</div>
   </div>
 </div>
-
+<div id="historyBtn">📜 History</div>
   </div>
 </div>
 
@@ -686,6 +763,18 @@ helpPopup.onclick = ()=>{
     <img src="images/Picsart_26-03-21_20-58-33-008.png">
   </div>
     </div>
+  <div id="historyPopup" class="history-popup">
+  <div class="history-box">
+
+    <div class="history-header">
+      <span>My Betting History</span>
+      <span id="closeHistory">✖</span>
+    </div>
+
+    <div id="historyList" class="history-list"></div>
+
+  </div>
+  </div>
   
 </body>
 </html>
