@@ -381,6 +381,16 @@ async function loadHouseEdge(){
   }
 }
 await loadHouseEdge();
+    let savedStart = localStorage.getItem("roundStart");
+
+if(savedStart){
+  let diff = Math.floor((Date.now() - savedStart) / 1000);
+  time = 20 - diff;
+
+  if(time < 0) time = 0;
+}else{
+  localStorage.setItem("roundStart", Date.now());
+}
 
 // 🎁 INIT
 document.getElementById("cover").style.display="block";
@@ -534,6 +544,7 @@ async function result(){
     bettingOpen=true;
 
     time=20; // ✅ reset properly
+    localStorage.setItem("roundStart", Date.now());
     reset();
 
   },2000);
