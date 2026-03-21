@@ -333,7 +333,7 @@ body{
 
   <script type="module">
     
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getFirestore, doc, getDoc, getDocs, collection, query, where, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 // 🔥 FIREBASE INIT
@@ -382,7 +382,7 @@ async function loadHouseEdge(){
 }
 await loadHouseEdge();
 
-// 🎁 INIT VIEW
+// 🎁 INIT
 document.getElementById("cover").style.display="block";
 document.getElementById("diceArea").style.display="none";
 
@@ -425,17 +425,17 @@ window.bet = async (type,el)=>{
 // 🔥 RESULT LOGIC
 function controlledResult(){
 
-  let userBet = null;
+  let userBet=null;
 
-  if(bets.LOW > 0) userBet="LOW";
-  else if(bets.HIGH > 0) userBet="HIGH";
-  else if(bets.MID > 0) userBet="MID";
+  if(bets.LOW>0) userBet="LOW";
+  else if(bets.HIGH>0) userBet="HIGH";
+  else if(bets.MID>0) userBet="MID";
 
   if(!userBet){
     return ["LOW","HIGH","MID"][Math.floor(Math.random()*3)];
   }
 
-  let rand = Math.random()*100;
+  let rand=Math.random()*100;
 
   if(rand < houseEdge){
     return userBet;
@@ -446,21 +446,30 @@ function controlledResult(){
   }
 }
 
-// 🔥 TIMER
+// 🔥 TIMER (FIXED)
 setInterval(()=>{
 
-  document.getElementById("timer").innerText=time;
+  // ❌ stop negative
+  if(time < 0) time = 0;
 
-  if(time===5){
+  document.getElementById("timer").innerText = time;
+
+  if(time === 5){
     bettingOpen=false;
     showPopup("BET LOCK",null,true);
   }
 
-  if(time===0 && !resultRunning){
-    result();
-  }else{
-    time--;
+  // ✅ only once trigger
+  if(time === 0){
+
+    if(!resultRunning){
+      result();
+    }
+
+    return; // ❗ stop further decrease
   }
+
+  time--;
 
 },1000);
 
@@ -469,8 +478,8 @@ async function result(){
 
   if(resultRunning) return;
 
-  resultRunning=true;
-  bettingOpen=false;
+  resultRunning = true;
+  bettingOpen = false;
 
   let cover=document.getElementById("cover");
   let dice=document.getElementById("diceArea");
@@ -481,7 +490,6 @@ async function result(){
   cover.style.display="none";
   dice.style.display="flex";
 
-  // 🎯 RESULT CALC
   let winType = controlledResult();
 
   let d1,d2;
@@ -490,7 +498,6 @@ async function result(){
   else if(winType=="HIGH"){ d1=6; d2=5; }
   else{ d1=3; d2=4; }
 
-  // 🎲 SHOW RESULT (ONLY ONCE)
   setTimeout(async ()=>{
 
     d1El.innerText="🎲 "+d1;
@@ -516,9 +523,8 @@ async function result(){
 
     updateHistory(winType);
 
-  },800);
+  },700);
 
-  // 🔄 RESET
   setTimeout(()=>{
 
     cover.style.display="block";
@@ -527,10 +533,10 @@ async function result(){
     resultRunning=false;
     bettingOpen=true;
 
-    time=20;
+    time=20; // ✅ reset properly
     reset();
 
-  },2200);
+  },2000);
 }
 
 // 📜 HISTORY
@@ -583,7 +589,8 @@ function showPopup(msg,win,lock=false){
   setTimeout(()=>{
     p.classList.remove("show");
   },2000);
-}
+    }
+    
 </script>
     
 </body>
