@@ -467,10 +467,11 @@ function controlledResult(){
 
 // 🔥 TIMER LOOP
 setInterval(()=>{
-if(resultRunning) return;
-document.getElementById("timer").innerText=time;
 
-// save
+if(resultRunning) return;
+
+document.getElementById("timer").innerText = time;
+
 localStorage.setItem("time", time);
 
 if(time === 5){
@@ -478,17 +479,9 @@ if(time === 5){
   showPopup("BET LOCK",null,true);
 }
 
-// ✅ FIXED LOGIC
 if(time === 0){
 
-  result();
-
-  time = 20;
-  bettingOpen = true;
-
-  localStorage.removeItem("time");
-
-  reset();
+  result(); // ✅ sirf call
 
 }else{
   time--;
@@ -552,8 +545,6 @@ showPopup("WIN ₹"+winAmount,true);
 showPopup("LOSS",false);
 }
 
-// ❌ OLD RESULT REMOVE (important)
-document.getElementById("history").innerHTML = "";
 
 updateHistory(winType);
 
@@ -563,11 +554,16 @@ updateHistory(winType);
 setTimeout(()=>{
 cover.style.display="block";
 dice.style.display="none";
-resultRunning = false;
-bettingOpen = true; // ✅ reopen betting
-},2500); // ⬅ thoda delay badha diya
 
-}
+resultRunning = false;
+bettingOpen = true;
+
+// ✅ NEXT ROUND YAHAN START
+time = 20;
+localStorage.removeItem("time");
+reset();
+
+},2500);
 
 // 📜 HISTORY
 function updateHistory(type){
