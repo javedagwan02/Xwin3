@@ -277,6 +277,51 @@ body{
 .loss{ background:#7f1d1d;color:#ff4d4d; }
 .lock{ background:#111;color:#ffd700; }
 
+  /* ❓ HELP BUTTON */
+#helpBtn{
+  width:45px;
+  height:45px;
+  border-radius:50%;
+  background:radial-gradient(circle,#ffd700,#b8860b);
+  color:#000;
+  font-size:22px;
+  font-weight:bold;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  margin:10px auto;
+  cursor:pointer;
+  box-shadow:0 0 15px gold;
+}
+
+/* POPUP */
+.help-popup{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,0.7);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+
+  visibility:hidden;
+  opacity:0;
+  transition:0.3s;
+}
+
+.help-popup.show{
+  visibility:visible;
+  opacity:1;
+}
+
+.help-box img{
+  width:90%;
+  max-width:350px;
+  border-radius:15px;
+}
+
 </style>
 </head>
 
@@ -291,7 +336,7 @@ body{
 
 <!-- ✅ ONLY ONE HISTORY -->
 <div id="history" class="history"></div>
-
+<div id="helpBtn">?</div>
 <div class="table-wrap">
   <div class="table">
     
@@ -604,7 +649,7 @@ function reset(){
 
 // 💬 POPUP
 function showPopup(msg,win,lock=false){
-
+  
   const p=document.getElementById("popup");
   const box=document.getElementById("popupText");
 
@@ -622,8 +667,25 @@ function showPopup(msg,win,lock=false){
     p.classList.remove("show");
   },2000);
     }
+    // ❓ HELP POPUP (FINAL)
+const helpBtn = document.getElementById("helpBtn");
+const helpPopup = document.getElementById("helpPopup");
+
+helpBtn.onclick = ()=>{
+  helpPopup.classList.add("show");
+};
+
+helpPopup.onclick = ()=>{
+  helpPopup.classList.remove("show");
+};
     
 </script>
-    
+  
+    <div id="helpPopup" class="help-popup">
+  <div class="help-box">
+    <img src="images/Picsart_26-03-21_20-58-33-008.png">
+  </div>
+    </div>
+  
 </body>
 </html>
