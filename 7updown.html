@@ -377,6 +377,9 @@ document.getElementById("wallet").innerText = wallet;
 }
 
 await loadWallet();
+  // 🎁 INITIAL VIEW FIX
+document.getElementById("cover").style.display="block";
+document.getElementById("diceArea").style.display="none";
   // ⏱ LOAD TIMER
 if(localStorage.getItem("time")){
   time = parseInt(localStorage.getItem("time"));
