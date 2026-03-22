@@ -489,7 +489,7 @@ let bettingOpen=true;
 let resultDone=false;
 
 // 🔥 HISTORY DUPLICATE FIX
-let lastHistoryResult=null;
+let lastRoundIdHistory = null;
 
 // UI
 const cover=document.getElementById("cover");
@@ -548,6 +548,11 @@ onSnapshot(doc(db,"history","global"), snap=>{
   if(!snap.exists()) return;
 
   let data = snap.data();
+
+  if(lastRoundIdHistory === data.time) return;
+
+  lastRoundIdHistory = data.time;
+
   updateHistory(data.lastResult);
 });
 
