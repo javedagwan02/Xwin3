@@ -7,11 +7,13 @@
 
 <h2>Auto Round Running...</h2>
 
-<script type="module">
+
+  <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getFirestore, doc, setDoc, getDocs, collection } 
-from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { 
+  getFirestore, doc, setDoc, getDoc 
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 const app = initializeApp({
   apiKey:"AIzaSyBx3J9aGn_98rTPgurMMKw_GR3puIMj4Ms",
@@ -21,40 +23,30 @@ const app = initializeApp({
 
 const db = getFirestore(app);
 
-let running = false; // 🔥 duplicate loop rokne ke liye
+let running = false;
 
-// 🎲 SMART RESULT (HOUSE EDGE)
+// 🎯 FINAL RESULT LOGIC (STRICT)
 async function getResult(){
 
-  let low=0, high=0, mid=0;
+  const snap = await getDoc(doc(db,"bets","global"));
 
-  try{
-    const snap = await getDocs(collection(db,"bets"));
-
-    snap.forEach(d=>{
-      const b = d.data();
-      low += b.LOW || 0;
-      high += b.HIGH || 0;
-      mid += b.MID || 0;
-    });
-
-  }catch(e){
-    console.log("⚠ bets fetch error",e);
+  if(!snap.exists()){
+    return "MID"; // safety
   }
 
-  console.log("💰 BETS:",low,high,mid);
+  const data = snap.data();
 
-  // ✅ Equal bet → MID (SAFE, no loss)
+  let low = Number(data.LOW) || 0;
+  let high = Number(data.HIGH) || 0;
+
+  console.log("LOW:",low,"HIGH:",high);
+
+  // ✅ SAME → MID
   if(low === high){
     return "MID";
   }
 
-  // ✅ MID heavy → avoid MID (loss control)
-  if(mid > low && mid > high){
-    return low > high ? "HIGH" : "LOW";
-  }
-
-  // ✅ Jispe jyada bet → usko harana
+  // ✅ JISPE JYADA → WO HAREGA
   if(low > high){
     return "HIGH";
   }else{
@@ -69,10 +61,10 @@ function getDice(r){
   return {d1:3,d2:4};
 }
 
-// 🔥 MAIN GAME LOOP
+// 🔥 MAIN LOOP
 async function startGame(){
 
-  if(running) return; // 🔥 double start fix
+  if(running) return;
   running = true;
 
   while(true){
@@ -80,6 +72,7 @@ async function startGame(){
     const r = await getResult();
     const d = getDice(r);
 
+    // 🔥 ROUND CREATE
     await setDoc(doc(db,"gameRounds","current"),{
       roundId: Date.now(),
       startTime: Date.now(),
@@ -88,17 +81,24 @@ async function startGame(){
       d2: d.d2
     });
 
-    console.log("✅ NEW ROUND:", r);
+    console.log("✅ RESULT:", r);
 
-    // ⏱ 20 sec wait
+    // 🔥 RESET BETS (VERY IMPORTANT)
+    await setDoc(doc(db,"bets","global"),{
+      LOW:0,
+      HIGH:0,
+      MID:0
+    });
+
+    // ⏱ wait 20 sec
     await new Promise(res => setTimeout(res, 20000));
   }
 }
 
-// 🔥 START
+// 🚀 START
 startGame();
 
-</script>
+  </script>
 
 </body>
 </html>
