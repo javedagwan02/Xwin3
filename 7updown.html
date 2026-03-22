@@ -464,8 +464,7 @@ body{
   <div class="popup-box" id="popupText"></div>
 </div>
 
-
-  <script type="module">
+<script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { 
@@ -480,20 +479,22 @@ const app = initializeApp({
 const db = getFirestore(app);
 
 const userEmail = localStorage.getItem("userEmail");
-let userDocId = "";
 
+let userDocId="";
 let wallet=0, chip=0;
 let bets={LOW:0,HIGH:0,MID:0};
 
 let currentRound=null;
-let lastRoundId=null;
-
 let bettingOpen=true;
 let resultDone=false;
+
+// 🔥 HISTORY DUPLICATE FIX
+let lastHistoryResult=null;
 
 // UI
 const cover=document.getElementById("cover");
 const dice=document.getElementById("diceArea");
+
 
 // 🔥 WALLET LOAD
 async function loadWallet(){
@@ -507,7 +508,7 @@ async function loadWallet(){
 await loadWallet();
 
 
-// 🔥 REALTIME ROUND
+// 🔥 ROUND SYNC
 onSnapshot(doc(db,"gameRounds","current"), snap=>{
   if(!snap.exists()) return;
 
@@ -517,7 +518,6 @@ onSnapshot(doc(db,"gameRounds","current"), snap=>{
   if(!currentRound || data.roundId !== currentRound.roundId){
 
     currentRound = data;
-    lastRoundId = data.roundId;
 
     bettingOpen = true;
     resultDone = false;
@@ -543,7 +543,7 @@ onSnapshot(doc(db,"gameRounds","current"), snap=>{
 });
 
 
-// 🔥 GLOBAL HISTORY SYNC (ONLY SOURCE)
+// 🔥 GLOBAL HISTORY SYNC
 onSnapshot(doc(db,"history","global"), snap=>{
   if(!snap.exists()) return;
 
@@ -576,7 +576,7 @@ setInterval(()=>{
 },1000);
 
 
-// 🎯 CHIP SELECT
+// 🎯 CHIP
 window.setChip=(v,e)=>{
   chip=v;
   document.querySelectorAll(".chip").forEach(c=>c.classList.remove("active"));
@@ -584,11 +584,11 @@ window.setChip=(v,e)=>{
 };
 
 
-// 🎯 BET FUNCTION
+// 🎯 BET
 window.bet=async(type,el)=>{
   if(!chip || !bettingOpen) return;
 
-  if(wallet<chip) return alert("Low Balance");
+  if(wallet < chip) return alert("Low Balance");
 
   wallet -= chip;
 
@@ -646,8 +646,12 @@ async function showResult(){
 }
 
 
-// 📜 HISTORY UI
+// 📜 HISTORY FUNCTION (NO DUPLICATE)
 function updateHistory(type){
+
+  if(lastHistoryResult === type) return;
+
+  lastHistoryResult = type;
 
   let h=document.getElementById("history");
 
@@ -698,7 +702,7 @@ function showPopup(msg,win){
 }
 
   </script>
-      
+    
     <div id="helpPopup" class="help-popup">
   <div class="help-box">
     <img src="images/Picsart_26-03-21_20-58-33-008.png">
