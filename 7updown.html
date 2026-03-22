@@ -513,12 +513,21 @@ onSnapshot(doc(db,"gameRounds","current"), snap=>{
 
   const data = snap.data();
 
-  if(!currentRound || currentRound.roundId !== data.roundId){
+ if(!currentRound || currentRound.roundId !== data.roundId){
 
-    currentRound = data;
-    resultDone=false;
-    bettingOpen=true;
+  currentRound = data;
 
+  // 🔥 yaha fix
+  let diff = Date.now() - data.startTime;
+  let remaining = Math.floor((20000 - diff)/1000);
+
+  if(remaining <= 0){
+    resultDone = true;
+    showResult(); // 🔥 direct result dikha
+  }else{
+    resultDone = false;
+  }
+}
     bets={LOW:0,HIGH:0,MID:0};
 
     document.getElementById("lowAmt").innerText=0;
@@ -573,7 +582,9 @@ setInterval(()=>{
   document.getElementById("timer").innerText=t;
 
   if(t<=5) bettingOpen=false;
-
+if(currentRound && Date.now() > currentRound.startTime + 20000){
+  showResult();
+}
   if(t===0 && !resultDone){
     showResult();
   }
