@@ -106,7 +106,11 @@ async function startGame(){
       d1: d.d1,
       d2: d.d2
     });
-
+    
+await setDoc(doc(db,"history","global"),{
+  lastResult: r,
+  time: Date.now()
+});
     console.log("🎯 FINAL RESULT:", r);
 
     // 🔥 RESET BETS
