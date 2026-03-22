@@ -393,8 +393,10 @@ margin:5px;
 <div onclick="openHistory()" class="history-btn">📜 History</div>    
 </div> 
 </div> 
-<script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+
+  <script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getFirestore, getDocs, collection, query, where, doc, updateDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 // 🔥 FIREBASE INIT
@@ -410,38 +412,28 @@ const db = getFirestore(app);
 const userEmail = localStorage.getItem("userEmail");
 let userDocId = "";
 
-// 🔥 LIVE HOUSE EDGE
-let houseEdge = 50;
-let myBets = JSON.parse(localStorage.getItem("pf_bets")) || [];
-// 🔥 REAL-TIME CONTROL 🔥
-function liveEdge(){
-onSnapshot(doc(db,"settings","houseEdge"), (snap)=>{
-if(snap.exists()){
-houseEdge = snap.data().dragonTiger ?? 50;
-console.log("🔥 LIVE EDGE:", houseEdge);
-}
-});
-}
-
 // 🔥 GAME VARS
 let wallet = 0;
 let chip = 0;
-
 let pubg = 0;
 let free = 0;
 let tie = 0;
 let time = 20;
 let gameInterval;
-const cards = ["A","K","Q","J","10","9","8","7","6","5","4","3","2"];
 
-  function getRandomCard(){
-  return cards[Math.floor(Math.random() * cards.length)];
+let myBets = JSON.parse(localStorage.getItem("pf_bets")) || [];
+
+// 🔥 LIVE EDGE
+let houseEdge = 50;
+onSnapshot(doc(db,"settings","houseEdge"), (snap)=>{
+if(snap.exists()){
+houseEdge = snap.data().dragonTiger ?? 50;
 }
+});
+
 // 🔥 LOAD WALLET
 async function loadWallet(){
-const snap = await getDocs(
-query(collection(db,"users"), where("email","==",userEmail))
-);
+const snap = await getDocs(query(collection(db,"users"), where("email","==",userEmail)));
 
 snap.forEach(d=>{
 userDocId = d.id;
@@ -450,53 +442,20 @@ wallet = d.data().balance || 0;
 
 document.getElementById("wallet").innerText = wallet;
 }
-
 await loadWallet();
-liveEdge(); // 🔥 REAL-TIME START
-
-// 🔥 MUSIC
-document.addEventListener("click", ()=>{
-const music = document.getElementById("bgMusic");
-if(music.paused){
-music.play();
-music.volume = 0.3;
-}
-});
-
-// 🔥 LOAD HISTORY
-if(localStorage.getItem("history")){
-document.getElementById("history").innerHTML = localStorage.getItem("history");
-}
-
-if(localStorage.getItem("time")){
-time = parseInt(localStorage.getItem("time"));
-}
-
-// 🔥 SCROLL FIX
-setTimeout(()=>{
-const hist = document.getElementById("history");
-hist.scrollLeft = hist.scrollWidth;
-},100);
 
 // 🔥 POPUP
 function showPopup(msg, win){
-
 const p = document.getElementById("popup");
 const box = document.getElementById("popupText");
 
 box.innerText = msg;
 
-if(win){
-  box.className = "popup-box win-popup";
-}else{
-  box.className = "popup-box loss-popup";
-}
+box.className = "popup-box " + (win ? "win-popup" : "loss-popup");
 
 p.classList.add("show");
 
-setTimeout(()=>{
-  p.classList.remove("show");
-},1500);
+setTimeout(()=> p.classList.remove("show"),1500);
 }
 
 // 🔥 CHIP
@@ -509,8 +468,8 @@ el.classList.add("active");
 // 🔥 BET
 window.betPlace = async (type) => {
 
-if(time <= 3) return showPopup("Bet Closed");
-if(wallet < chip) return showPopup("Low Balance");
+if(time <= 3) return showPopup("Bet Closed ❌");
+if(wallet < chip) return showPopup("Low Balance ❌");
 
 wallet -= chip;
 
@@ -536,27 +495,27 @@ document.getElementById("tieAmt").innerText = tie;
 }
 };
 
-// 🔥 CONTROLLED RESULT (LIVE EDGE)
+// 🔥 CARDS
+const cards = ["A","K","Q","J","10","9","8","7","6","5","4","3","2"];
+
+function getRandomCard(){
+return cards[Math.floor(Math.random() * cards.length)];
+}
+
+// 🔥 RESULT LOGIC
+function result(p,f){
+const order=["A","K","Q","J","10","9"];
+if(order.indexOf(p) < order.indexOf(f)) return "PUBG";
+if(order.indexOf(p) > order.indexOf(f)) return "FREE";
+return "TIE";
+}
+
+// 🔥 CONTROLLED RESULT
 function controlledResult(){
 
+let chance = houseEdge / 100;
 let winSide;
 
-let chance = houseEdge / 100;
-
-if(chance === 1){
-// 🟢 ALWAYS WIN
-if(pubg > free) winSide = "PUBG";
-else if(free > pubg) winSide = "FREE";
-else winSide = Math.random()<0.5?"PUBG":"FREE";
-}
-else if(chance === 0){
-// 🔴 ALWAYS LOSS
-if(pubg > free) winSide = "FREE";
-else if(free > pubg) winSide = "PUBG";
-else winSide = Math.random()<0.5?"PUBG":"FREE";
-}
-else{
-// ⚖️ MIX
 if(Math.random() < chance){
 if(pubg > free) winSide = "PUBG";
 else if(free > pubg) winSide = "FREE";
@@ -566,43 +525,39 @@ if(pubg > free) winSide = "FREE";
 else if(free > pubg) winSide = "PUBG";
 else winSide = Math.random()<0.5?"PUBG":"FREE";
 }
-}
 
 return winSide;
 }
 
-// 🔥 RESULT
-function result(p,f){
-const order=["A","K","Q","J","10","9"];
-if(order.indexOf(p) < order.indexOf(f)) return "PUBG";
-if(order.indexOf(p) > order.indexOf(f)) return "FREE";
-return "TIE";
-}
-
-// 🔥 GAME LOOP
+// 📜 HISTORY POPUP
 window.openHistory = function(){
-  document.getElementById("historyPopup").style.display = "flex";
-  renderPopupHistory();
+document.getElementById("historyPopup").style.display = "flex";
+renderPopupHistory();
 };
 
 window.closeHistory = function(){
-  document.getElementById("historyPopup").style.display = "none";
+document.getElementById("historyPopup").style.display = "none";
 };
-  
+
+// 🔥 RENDER HISTORY (FINAL FIX)
 function renderPopupHistory(){
 const list = document.getElementById("historyList");
 list.innerHTML = "";
 
 myBets.forEach(b=>{
 
-let div = document.createElement("div");    
+let isWin = b.status === "WIN";
 
-div.className = "history-item " + (b.status === "WIN" ? "win" : "loss");    
+let div = document.createElement("div");    
+div.className = "history-item " + (isWin ? "win" : "loss");    
 
 div.innerHTML = `
-
 <span>${b.type === "FREE" ? "FREE FIRE" : b.type}</span>
-<span>₹${b.amount}</span>
+
+<span>
+${isWin ? "+₹" + b.amount + " 🎉" : "-₹" + b.amount + " ❌"}
+</span>
+
 <span style="font-size:11px;opacity:.7">${b.time}</span>
 `;
 
@@ -610,13 +565,12 @@ list.appendChild(div);
 
 });
 }
+
+// 🔥 GAME LOOP
 function startRound(){
 
 clearInterval(gameInterval);
-
-if(!localStorage.getItem("time")){
 time = 20;
-}
 
 document.getElementById("pFlip").classList.remove("active");
 document.getElementById("fFlip").classList.remove("active");
@@ -626,73 +580,64 @@ document.getElementById("fCard").innerText = "";
 
 gameInterval = setInterval(async ()=>{
 
-document.getElementById("time").innerText = time;    
+document.getElementById("time").innerText = time;
+time--;
 
-time--;    
+if(time < 0){
 
-localStorage.setItem("time", time);    
-localStorage.setItem("history", document.getElementById("history").innerHTML);    
+clearInterval(gameInterval);
 
-if(time < 0){    
+const win = controlledResult();
 
-  clearInterval(gameInterval);    
+let p,f;
 
-  const win = controlledResult();    
+do{
+p = getRandomCard();
+f = getRandomCard();
+}while(result(p,f) !== win);
 
-  let p = getRandomCard();
-let f = getRandomCard();
+document.getElementById("pCard").innerText = p;
+document.getElementById("fCard").innerText = f;
 
-// 🔥 ensure win logic follow ho
-while(result(p,f) !== win){
-  p = getRandomCard();
-  f = getRandomCard();
-}
+document.getElementById("pFlip").classList.add("active");
+document.getElementById("fFlip").classList.add("active");
 
-  document.getElementById("pCard").innerText = p;    
-  document.getElementById("fCard").innerText = f;    
+const r = result(p,f);
 
-  document.getElementById("pFlip").classList.add("active");    
-  document.getElementById("fFlip").classList.add("active");    
+// 🔥 HISTORY DOTS
+const h = document.createElement("div");
+h.innerText = r[0];
+h.classList.add(r[0]);
+document.getElementById("history").appendChild(h);
 
-  const r = result(p,f);    
-
-  const h = document.createElement("div");    
-  h.innerText = r[0];    
-  h.classList.add(r[0]);    
-  document.getElementById("history").appendChild(h);    
-
-  const hist = document.getElementById("history");    
-  hist.scrollLeft = hist.scrollWidth;    
-
-  let winAmount = 0;
+// 🔥 WIN LOSS
+let winAmount = 0;
 let lossAmount = 0;
 
-// WIN / LOSS CALCULATION
 if(r=="PUBG"){
-  winAmount = pubg * 2;
-  wallet += winAmount;
-  lossAmount = free + tie;
+winAmount = pubg * 2;
+wallet += winAmount;
+lossAmount = free + tie;
 }
 else if(r=="FREE"){
-  winAmount = free * 2;
-  wallet += winAmount;
-  lossAmount = pubg + tie;
+winAmount = free * 2;
+wallet += winAmount;
+lossAmount = pubg + tie;
 }
 else{
-  winAmount = tie * 9;
-  wallet += winAmount;
-  lossAmount = pubg + free;
+winAmount = tie * 9;
+wallet += winAmount;
+lossAmount = pubg + free;
 }
 
-// 🔥 POPUP SHOW
+// 🔥 POPUP
 if(winAmount > 0){
-  showPopup("WIN +₹" + winAmount, true);
+showPopup("🎉 CONGRATS +₹" + winAmount, true);
 }else{
-  showPopup("LOSS -₹" + lossAmount, false);
+showPopup("❌ LOSS -₹" + lossAmount, false);
 }
 
-  // 🔥 SAVE BET HISTORY
-
+// 🔥 SAVE HISTORY (FIXED)
 if(pubg > 0){
 myBets.unshift({
 type:"PUBG",
@@ -707,7 +652,7 @@ myBets.unshift({
 type:"FREE",
 amount: free,
 time: new Date().toLocaleTimeString(),
-status: r=="FREE FIRE" ? "WIN" : "LOSS"
+status: r=="FREE" ? "WIN" : "LOSS"
 });
 }
 
@@ -723,24 +668,20 @@ status: r=="TIE" ? "WIN" : "LOSS"
 myBets = myBets.slice(0,20);
 localStorage.setItem("pf_bets", JSON.stringify(myBets));
 
-document.getElementById("wallet").innerText = wallet;    
+document.getElementById("wallet").innerText = wallet;
 
-  await updateDoc(doc(db,"users",userDocId),{    
-    balance: wallet    
-  });    
+await updateDoc(doc(db,"users",userDocId),{
+balance: wallet
+});
 
-  pubg = 0;    
-  free = 0;    
-  tie = 0;    
+// 🔄 RESET
+pubg=0; free=0; tie=0;
 
-  document.getElementById("pubgAmt").innerText = 0;    
-  document.getElementById("freeAmt").innerText = 0;    
-  document.getElementById("tieAmt").innerText = 0;    
+document.getElementById("pubgAmt").innerText=0;
+document.getElementById("freeAmt").innerText=0;
+document.getElementById("tieAmt").innerText=0;
 
-  setTimeout(()=>{    
-    localStorage.removeItem("time");    
-    startRound();    
-  },2000);    
+setTimeout(startRound,2000);
 }
 
 },1000);
@@ -748,7 +689,9 @@ document.getElementById("wallet").innerText = wallet;
 
 startRound();
 
-</script>    <audio id="bgMusic" loop>
+  </script>
+
+  <audio id="bgMusic" loop>
 <source src="audio/pubg-theme.mp3" type="audio/mp3">
 </audio>    <div class="history-popup" id="historyPopup">
 
