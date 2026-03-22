@@ -464,10 +464,12 @@ body{
   <div class="popup-box" id="popupText"></div>
 </div>
 
-<script type="module">
+  
+  <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getFirestore, doc, getDoc, getDocs, collection, query, where, updateDoc, addDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getFirestore, doc, getDocs, collection, query, where, updateDoc, onSnapshot }
+from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 // 🔥 FIREBASE
 const app = initializeApp({
@@ -475,35 +477,25 @@ const app = initializeApp({
   authDomain:"colourcash-ea60e.firebaseapp.com",
   projectId:"colourcash-ea60e"
 });
-
 const db = getFirestore(app);
 
 // 🔥 USER
 const userEmail = localStorage.getItem("userEmail");
 let userDocId = "";
 
-// 🔥 GAME VARS
-let chip=0;
-let bets={LOW:0,HIGH:0,MID:0};
-let wallet=0;
-let bettingOpen=true;
-let resultRunning=false;
-let houseEdge=50;
-let time=20;
+// 🔥 VARS
+let wallet = 0;
+let chip = 0;
+let bets = {LOW:0,HIGH:0,MID:0};
+let bettingOpen = true;
+let resultRunning = false;
 
-// 🔥 ROUND SYNC (NO REFRESH RESET)
-let roundStart = localStorage.getItem("roundStart");
+let currentRound = null;
+let lastRoundId = null;
 
-if(!roundStart){
-  roundStart = Date.now();
-  localStorage.setItem("roundStart", roundStart);
-}
-
-function getTime(){
-  let elapsed = Date.now() - roundStart;
-  let t = Math.floor((20000 - elapsed) / 1000);
-  return t < 0 ? 0 : t;
-}
+// 🎁 UI
+const cover = document.getElementById("cover");
+const dice = document.getElementById("diceArea");
 
 // 🔥 LOAD WALLET
 async function loadWallet(){
@@ -516,32 +508,33 @@ async function loadWallet(){
 }
 await loadWallet();
 
-// 🔥 LOAD EDGE
-async function loadHouseEdge(){
-  const snap = await getDoc(doc(db,"settings","houseEdge"));
-  if(snap.exists()){
-    houseEdge = snap.data().sevenUpDown ?? 50;
-  }
+// 🔥 REALTIME ROUND LISTENER
+onSnapshot(doc(db,"gameRounds","current"), (snap)=>{
+  if(!snap.exists()) return;
+
+  currentRound = snap.data();
+});
+
+// 🔥 TIMER
+function getTime(){
+  if(!currentRound) return 20;
+
+  let diff = Date.now() - currentRound.startTime;
+  let t = Math.floor((20000 - diff)/1000);
+
+  return t < 0 ? 0 : t;
 }
-await loadHouseEdge();
-
-// 🎁 INIT VIEW
-const cover=document.getElementById("cover");
-const dice=document.getElementById("diceArea");
-
-cover.style.display="block";
-dice.style.display="none";
-dice.style.opacity="0";
 
 // 🔥 CHIP
 window.setChip = (v,e)=>{
-  chip=v;
+  chip = v;
   document.querySelectorAll(".chip").forEach(c=>c.classList.remove("active"));
   e.classList.add("active");
 };
 
 // 🔥 BET
 window.bet = async (type,el)=>{
+
   if(!chip || !bettingOpen) return;
 
   if(wallet < chip){
@@ -551,86 +544,37 @@ window.bet = async (type,el)=>{
 
   wallet -= chip;
 
-  await updateDoc(doc(db,"users",userDocId),{ balance: wallet });
+  await updateDoc(doc(db,"users",userDocId),{
+    balance: wallet
+  });
 
-  document.getElementById("wallet").innerText=wallet;
+  document.getElementById("wallet").innerText = wallet;
 
-  bets[type]+=chip;
-  document.getElementById(type.toLowerCase()+"Amt").innerText=bets[type];
+  bets[type] += chip;
+  document.getElementById(type.toLowerCase()+"Amt").innerText = bets[type];
 
   el.querySelector(".card-inner").classList.add("active");
 };
 
-// 🎲 RESULT LOGIC
-function controlledResult(){
+// 🔥 RESULT SHOW
+async function showResult(){
 
-  let userBet=null;
-
-  if(bets.LOW>0) userBet="LOW";
-  else if(bets.HIGH>0) userBet="HIGH";
-  else if(bets.MID>0) userBet="MID";
-
-  if(!userBet){
-    return ["LOW","HIGH","MID"][Math.floor(Math.random()*3)];
-  }
-
-  let rand=Math.random()*100;
-
-  if(rand < houseEdge){
-    return userBet;
-  }else{
-    if(userBet=="LOW") return "HIGH";
-    if(userBet=="HIGH") return "LOW";
-    return "LOW";
-  }
-}
-
-// 🔥 TIMER LOOP (SYNCED)
-setInterval(()=>{
-
-  time = getTime();
-
-  document.getElementById("timer").innerText = time;
-
-  if(time === 5){
-    bettingOpen=false;
-    showPopup("BET LOCK",null,true);
-  }
-
-  if(time === 0){
-    if(!resultRunning){
-      result();
-    }
-  }
-
-},1000);
-
-// 🎲 RESULT
-async function result(){
-
-  if(resultRunning) return;
+  if(resultRunning || !currentRound) return;
 
   resultRunning = true;
-  bettingOpen = false;
 
-  let d1El=document.getElementById("d1");
-  let d2El=document.getElementById("d2");
+  let winType = currentRound.result;
+  let d1 = currentRound.d1;
+  let d2 = currentRound.d2;
 
-  let winType = controlledResult();
+  let d1El = document.getElementById("d1");
+  let d2El = document.getElementById("d2");
 
-  let d1,d2;
-
-  if(winType=="LOW"){ d1=1; d2=2; }
-  else if(winType=="HIGH"){ d1=6; d2=5; }
-  else{ d1=3; d2=4; }
-
-  // 🎁 hide gift → show dice smooth
+  // 🎁 hide gift
   cover.style.display="none";
   dice.style.display="flex";
 
-  setTimeout(()=>{
-    dice.style.opacity="1";
-  },100);
+  setTimeout(()=> dice.style.opacity="1",100);
 
   setTimeout(async ()=>{
 
@@ -647,9 +591,9 @@ async function result(){
 
       wallet += winAmount;
 
-      await updateDoc(doc(db,"users",userDocId),{ balance: wallet });
-
-      document.getElementById("wallet").innerText=wallet;
+      await updateDoc(doc(db,"users",userDocId),{
+        balance: wallet
+      });
 
       showPopup("WIN ₹"+winAmount,true);
 
@@ -657,27 +601,37 @@ async function result(){
       showPopup("LOSS",false);
     }
 
-    // 🔥 SAVE HISTORY
-    await addDoc(collection(db,"users",userDocId,"bets"),{
-      type: winType,
-      amount: bets[winType] || 0,
-      win: win,
-      time: new Date().toLocaleTimeString()
-    });
-
     updateHistory(winType);
 
   },500);
+}
 
-  // 🔄 RESET
-  setTimeout(()=>{
+// 🔥 TIMER LOOP
+setInterval(()=>{
 
-    dice.style.opacity="0";
+  let time = getTime();
 
-    setTimeout(()=>{
-      dice.style.display="none";
-      cover.style.display="block";
-    },200);
+  document.getElementById("timer").innerText = time;
+
+  if(time === 5){
+    bettingOpen=false;
+    showPopup("BET LOCK",null,true);
+  }
+
+  if(time === 0){
+    showResult();
+  }
+
+},1000);
+
+// 🔄 ROUND RESET
+setInterval(()=>{
+
+  if(!currentRound) return;
+
+  if(currentRound.roundId !== lastRoundId){
+
+    lastRoundId = currentRound.roundId;
 
     resultRunning=false;
     bettingOpen=true;
@@ -690,14 +644,19 @@ async function result(){
 
     document.querySelectorAll(".card-inner").forEach(b=>b.classList.remove("active"));
 
-    // 🔥 NEW ROUND SYNC
-    roundStart = Date.now();
-    localStorage.setItem("roundStart", roundStart);
+    // 🎁 reset view
+    dice.style.opacity="0";
 
-  },2000);
-}
+    setTimeout(()=>{
+      dice.style.display="none";
+      cover.style.display="block";
+    },200);
 
-// 📜 TOP HISTORY DOTS
+  }
+
+},500);
+
+// 📜 HISTORY DOT
 function updateHistory(type){
 
   let h=document.getElementById("history");
@@ -712,13 +671,11 @@ function updateHistory(type){
   if(h.children.length>10){
     h.removeChild(h.lastChild);
   }
-
-  localStorage.setItem("history", h.innerHTML);
 }
 
 // 💬 POPUP
 function showPopup(msg,win,lock=false){
-  
+
   const p=document.getElementById("popup");
   const box=document.getElementById("popupText");
 
@@ -735,68 +692,7 @@ function showPopup(msg,win,lock=false){
   setTimeout(()=> p.classList.remove("show"),2000);
 }
 
-// ❓ HELP
-const helpBtn = document.getElementById("helpBtn");
-const helpPopup = document.getElementById("helpPopup");
-
-helpBtn.onclick = ()=> helpPopup.classList.add("show");
-helpPopup.onclick = ()=> helpPopup.classList.remove("show");
-
-// 📜 HISTORY POPUP
-const historyBtn = document.getElementById("historyBtn");
-const historyPopup = document.getElementById("historyPopup");
-const closeHistory = document.getElementById("closeHistory");
-const historyList = document.getElementById("historyList");
-
-historyBtn.onclick = ()=>{
-  historyPopup.classList.add("show");
-  loadBetHistory();
-};
-
-closeHistory.onclick = ()=>{
-  historyPopup.classList.remove("show");
-};
-
-historyPopup.onclick = (e)=>{
-  if(e.target === historyPopup){
-    historyPopup.classList.remove("show");
-  }
-};
-
-// 🔥 LOAD HISTORY
-async function loadBetHistory(){
-
-  historyList.innerHTML="Loading...";
-
-  const snap = await getDocs(collection(db,"users",userDocId,"bets"));
-
-  let data=[];
-  snap.forEach(d=> data.push(d.data()));
-
-  data.reverse();
-
-  historyList.innerHTML="";
-
-  if(data.length===0){
-    historyList.innerHTML="No bets yet";
-    return;
-  }
-
-  data.forEach(item=>{
-    let div=document.createElement("div");
-    div.className="history-item "+(item.win?"win-item":"loss-item");
-
-    div.innerHTML=`
-      <span>${item.type}</span>
-      <span>₹${item.amount}</span>
-      <span>${item.time}</span>
-    `;
-
-    historyList.appendChild(div);
-  });
-}
-
-</script>
+             </script>
   
     <div id="helpPopup" class="help-popup">
   <div class="help-box">
