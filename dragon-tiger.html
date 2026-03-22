@@ -504,9 +504,16 @@ return cards[Math.floor(Math.random() * cards.length)];
 
 // 🔥 RESULT LOGIC
 function result(p,f){
-const order=["A","K","Q","J","10","9"];
-if(order.indexOf(p) < order.indexOf(f)) return "PUBG";
-if(order.indexOf(p) > order.indexOf(f)) return "FREE";
+
+const order = ["A","K","Q","J","10","9","8","7","6","5","4","3","2"];
+
+let pIndex = order.indexOf(p);
+let fIndex = order.indexOf(f);
+
+// 🔥 LOWER INDEX = STRONGER CARD
+if(pIndex < fIndex) return "PUBG";
+if(pIndex > fIndex) return "FREE";
+
 return "TIE";
 }
 
