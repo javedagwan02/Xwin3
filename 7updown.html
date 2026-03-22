@@ -468,8 +468,9 @@ body{
   <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getFirestore, doc, getDocs, collection, query, where, updateDoc, onSnapshot }
-from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { 
+  getFirestore, doc, getDocs, collection, query, where, updateDoc, onSnapshot, increment
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 const app = initializeApp({
   apiKey:"AIzaSyBx3J9aGn_98rTPgurMMKw_GR3puIMj4Ms",
@@ -494,7 +495,7 @@ let resultDone=false;
 const cover=document.getElementById("cover");
 const dice=document.getElementById("diceArea");
 
-// 🔥 WALLET
+// 🔥 WALLET LOAD
 async function loadWallet(){
   const snap = await getDocs(query(collection(db,"users"), where("email","==",userEmail)));
   snap.forEach(d=>{
@@ -506,34 +507,13 @@ async function loadWallet(){
 await loadWallet();
 
 
-// 🔥 LOAD HISTORY FROM STORAGE
-function loadHistory(){
-  let saved = JSON.parse(localStorage.getItem("history") || "[]");
-
-  let h = document.getElementById("history");
-  h.innerHTML = "";
-
-  saved.forEach(type=>{
-    let d=document.createElement("div");
-
-    if(type=="LOW"){d.className="B";d.innerText="B";}
-    else if(type=="HIGH"){d.className="A";d.innerText="A";}
-    else{d.className="E";d.innerText="E";}
-
-    h.appendChild(d);
-  });
-}
-loadHistory();
-
-
-// 🔥 REALTIME GAME
+// 🔥 REALTIME ROUND
 onSnapshot(doc(db,"gameRounds","current"), snap=>{
   if(!snap.exists()) return;
 
   const data = snap.data();
   data.startTime = Number(data.startTime);
 
-  // 🔄 NEW ROUND RESET
   if(!currentRound || data.roundId !== currentRound.roundId){
 
     currentRound = data;
@@ -561,12 +541,16 @@ onSnapshot(doc(db,"gameRounds","current"), snap=>{
 
   currentRound = data;
 });
+
+
+// 🔥 GLOBAL HISTORY SYNC (ONLY SOURCE)
 onSnapshot(doc(db,"history","global"), snap=>{
   if(!snap.exists()) return;
 
   let data = snap.data();
   updateHistory(data.lastResult);
 });
+
 
 // 🔥 TIMER
 function getTime(){
@@ -592,30 +576,31 @@ setInterval(()=>{
 },1000);
 
 
-// CHIP
+// 🎯 CHIP SELECT
 window.setChip=(v,e)=>{
   chip=v;
   document.querySelectorAll(".chip").forEach(c=>c.classList.remove("active"));
   e.classList.add("active");
 };
 
-// BET
+
+// 🎯 BET FUNCTION
 window.bet=async(type,el)=>{
   if(!chip || !bettingOpen) return;
 
   if(wallet<chip) return alert("Low Balance");
 
-  wallet-=chip;
+  wallet -= chip;
 
   await updateDoc(doc(db,"users",userDocId),{balance:wallet});
-  document.getElementById("wallet").innerText=wallet;
 
+  // 🔥 GLOBAL BET UPDATE
   await updateDoc(doc(db,"bets","global"),{
-  [type]: increment(chip)
-});
+    [type]: increment(chip)
+  });
+
   document.getElementById("wallet").innerText=wallet;
 
-  
   bets[type]+=chip;
   document.getElementById(type.toLowerCase()+"Amt").innerText=bets[type];
 
@@ -623,7 +608,7 @@ window.bet=async(type,el)=>{
 };
 
 
-// 🔥 RESULT
+// 🎲 RESULT
 async function showResult(){
 
   if(resultDone || !currentRound || !currentRound.result) return;
@@ -641,28 +626,27 @@ async function showResult(){
   let r=currentRound.result;
   let winAmt=0;
 
-if(bets[r]>0){
+  if(bets[r]>0){
 
-  if(r=="MID"){
-    winAmt = bets[r]*5;
+    if(r=="MID"){
+      winAmt = bets[r]*5;
+    }else{
+      winAmt = bets[r]*2;
+    }
+
+    wallet += winAmt;
+
+    await updateDoc(doc(db,"users",userDocId),{balance:wallet});
+
+    showPopup("WIN ₹"+winAmt,true);
+
   }else{
-    winAmt = bets[r]*2;
+    showPopup("LOSS",false);
   }
-
-  wallet += winAmt;
-
-  await updateDoc(doc(db,"users",userDocId),{balance:wallet});
-
-  showPopup("WIN ₹"+winAmt,true);
-
-}else{
-  showPopup("LOSS",false);
 }
 
 
-
-
-// 📜 HISTORY SAVE + SHOW
+// 📜 HISTORY UI
 function updateHistory(type){
 
   let h=document.getElementById("history");
@@ -680,7 +664,8 @@ function updateHistory(type){
   }
 }
 
-// 📜 HISTORY BUTTON
+
+// 📜 HISTORY POPUP
 document.getElementById("historyBtn").onclick=()=>{
   document.getElementById("historyPopup").classList.add("show");
 };
@@ -700,7 +685,7 @@ document.getElementById("helpPopup").onclick=()=>{
 };
 
 
-// POPUP
+// 🔥 POPUP
 function showPopup(msg,win){
   const p=document.getElementById("popup");
   const box=document.getElementById("popupText");
