@@ -646,6 +646,7 @@ async function showResult(){
     amount: bets.LOW + bets.HIGH + bets.MID,
     win: win,
     time: new Date().toLocaleTimeString()
+    timeStamp: Date.now() // 🔥 sorting ke liye
   });
 }
 
@@ -697,8 +698,13 @@ closeHistory.onclick = ()=>{
 
   historyList.innerHTML = "Loading...";
 
-  const snap = await getDocs(collection(db,"users",userDocId,"bets"));
-
+  const snap = await getDocs(
+  query(
+    collection(db,"users",userDocId,"bets"),
+    orderBy("timeStamp","desc")
+  )
+);
+  
   let data = [];
   snap.forEach(d => data.push(d.data()));
 
