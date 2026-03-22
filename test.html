@@ -2,10 +2,6 @@
 <html>
 <head>
 <title>Admin Auto Round</title>
-
-<!-- 🔥 AUTO RELOAD (IMPORTANT) -->
-<meta http-equiv="refresh" content="20">
-
 </head>
 <body>
 
@@ -25,38 +21,52 @@ const app = initializeApp({
 
 const db = getFirestore(app);
 
-// 🎲 RANDOM RESULT
+// 🎲 RESULT
 function getResult(){
   const arr=["LOW","HIGH","MID"];
   return arr[Math.floor(Math.random()*3)];
 }
 
-// 🎲 DICE LOGIC
+// 🎲 DICE
 function getDice(r){
   if(r==="LOW") return {d1:1,d2:2};
   if(r==="HIGH") return {d1:6,d2:5};
   return {d1:3,d2:4};
 }
 
-// 🔥 CREATE ROUND
-async function createRound(){
+// 🔥 MAIN LOOP (IMPORTANT)
+async function startGame(){
 
-  const r = getResult();
-  const d = getDice(r);
+  while(true){
 
-  await setDoc(doc(db,"gameRounds","current"),{
-    roundId: Date.now(),
-    startTime: Date.now(),
-    result: r,
-    d1: d.d1,
-    d2: d.d2
-  });
+    const r = getResult();
+    const d = getDice(r);
 
-  console.log("✅ NEW ROUND CREATED");
+    await setDoc(doc(db,"gameRounds","current"),{
+      roundId: Date.now(),
+      startTime: Date.now(),
+      result: r,
+      d1: d.d1,
+      d2: d.d2
+    });
+
+    console.log("✅ NEW ROUND");
+
+    // ⏱ wait 20 sec
+    await new Promise(res => setTimeout(res, 20000));
+  }
 }
 
-// 🔥 RUN ON LOAD
-createRound();
+// 🔥 RUN
+startGame();
+
+// 🔥 VISIBILITY FIX (VERY IMPORTANT)
+document.addEventListener("visibilitychange", ()=>{
+  if(document.visibilityState === "visible"){
+    console.log("🔁 Restarting loop");
+    startGame();
+  }
+});
 
 </script>
 
