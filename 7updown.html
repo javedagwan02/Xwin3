@@ -505,14 +505,14 @@ async function loadWallet(){
 await loadWallet();
 
 
-// 🔥 REALTIME GAME (MAIN FIX)
+// 🔥 REALTIME GAME
 onSnapshot(doc(db,"gameRounds","current"), snap=>{
   if(!snap.exists()) return;
 
   const data = snap.data();
   data.startTime = Number(data.startTime);
 
-  // 🔄 NEW ROUND
+  // 🔄 NEW ROUND RESET
   if(!currentRound || data.roundId !== currentRound.roundId){
 
     currentRound = data;
@@ -539,15 +539,10 @@ onSnapshot(doc(db,"gameRounds","current"), snap=>{
   }
 
   currentRound = data;
-
-  // 🔥 RESULT ONLY FROM FIREBASE
-  if(currentRound.result && !resultDone){
-    showResult();
-  }
 });
 
 
-// 🔥 TIMER
+// 🔥 TIMER LOOP (ONLY RESULT TRIGGER HERE)
 function getTime(){
   if(!currentRound) return 20;
 
@@ -557,7 +552,6 @@ function getTime(){
   return t < 0 ? 0 : t;
 }
 
-// LOOP
 setInterval(()=>{
 
   let t = getTime();
@@ -565,7 +559,7 @@ setInterval(()=>{
 
   if(t <= 5) bettingOpen = false;
 
-  // 🔥 FINAL FIX
+  // ✅ ONLY HERE RESULT CALL
   if(t === 0 && currentRound && currentRound.result && !resultDone){
     showResult();
   }
@@ -598,10 +592,10 @@ window.bet=async(type,el)=>{
 };
 
 
-// 🔥 RESULT (SYNC FIXED)
+// 🔥 RESULT (FINAL SAFE)
 async function showResult(){
 
-  if(resultDone || !currentRound) return;
+  if(resultDone || !currentRound || !currentRound.result) return;
 
   resultDone=true;
 
@@ -652,9 +646,16 @@ document.getElementById("helpPopup").onclick=()=>{
 };
 
 
-// HISTORY TOP
+// HISTORY TOP (NO DUPLICATE)
 function updateHistory(type){
+
   let h=document.getElementById("history");
+
+  // 🔥 prevent double insert
+  if(h.firstChild && h.firstChild.innerText === (type=="LOW"?"B":type=="HIGH"?"A":"E")){
+    return;
+  }
+
   let d=document.createElement("div");
 
   if(type=="LOW"){d.className="B";d.innerText="B";}
@@ -682,7 +683,6 @@ function showPopup(msg,win){
 }
 
 </script>
-  
       
     <div id="helpPopup" class="help-popup">
   <div class="help-box">
