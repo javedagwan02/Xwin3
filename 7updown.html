@@ -464,7 +464,6 @@ body{
   <div class="popup-box" id="popupText"></div>
 </div>
 
-  
   <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
@@ -483,10 +482,11 @@ const db = getFirestore(app);
 const userEmail = localStorage.getItem("userEmail");
 let userDocId = "";
 
-// 🔥 VARS
+// 🔥 GAME VARS
 let wallet = 0;
 let chip = 0;
 let bets = {LOW:0,HIGH:0,MID:0};
+
 let bettingOpen = true;
 let resultRunning = false;
 
@@ -508,11 +508,21 @@ async function loadWallet(){
 }
 await loadWallet();
 
+// 🔥 LOAD HISTORY (IMPORTANT)
+if(localStorage.getItem("history")){
+  document.getElementById("history").innerHTML = localStorage.getItem("history");
+}
+
 // 🔥 REALTIME ROUND LISTENER
 onSnapshot(doc(db,"gameRounds","current"), (snap)=>{
   if(!snap.exists()) return;
 
   currentRound = snap.data();
+
+  // 🔥 FIRST LOAD FIX
+  if(!lastRoundId){
+    lastRoundId = currentRound.roundId;
+  }
 });
 
 // 🔥 TIMER
@@ -570,7 +580,7 @@ async function showResult(){
   let d1El = document.getElementById("d1");
   let d2El = document.getElementById("d2");
 
-  // 🎁 hide gift
+  // 🎁 SHOW DICE
   cover.style.display="none";
   dice.style.display="flex";
 
@@ -581,12 +591,10 @@ async function showResult(){
     d1El.innerText="🎲 "+d1;
     d2El.innerText="🎲 "+d2;
 
-    let win=false;
     let winAmount=0;
 
     if(bets[winType] > 0){
 
-      win=true;
       winAmount = winType=="MID" ? bets[winType]*11 : bets[winType]*2;
 
       wallet += winAmount;
@@ -610,7 +618,6 @@ async function showResult(){
 setInterval(()=>{
 
   let time = getTime();
-
   document.getElementById("timer").innerText = time;
 
   if(time === 5){
@@ -644,7 +651,7 @@ setInterval(()=>{
 
     document.querySelectorAll(".card-inner").forEach(b=>b.classList.remove("active"));
 
-    // 🎁 reset view
+    // 🎁 RESET VIEW
     dice.style.opacity="0";
 
     setTimeout(()=>{
@@ -656,7 +663,7 @@ setInterval(()=>{
 
 },500);
 
-// 📜 HISTORY DOT
+// 📜 HISTORY
 function updateHistory(type){
 
   let h=document.getElementById("history");
@@ -671,6 +678,8 @@ function updateHistory(type){
   if(h.children.length>10){
     h.removeChild(h.lastChild);
   }
+
+  localStorage.setItem("history", h.innerHTML);
 }
 
 // 💬 POPUP
@@ -692,7 +701,7 @@ function showPopup(msg,win,lock=false){
   setTimeout(()=> p.classList.remove("show"),2000);
 }
 
-             </script>
+  </script>
   
     <div id="helpPopup" class="help-popup">
   <div class="help-box">
