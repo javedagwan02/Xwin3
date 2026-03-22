@@ -464,6 +464,7 @@ body{
   <div class="popup-box" id="popupText"></div>
 </div>
 
+  
   <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
@@ -503,7 +504,7 @@ async function loadWallet(){
 }
 await loadWallet();
 
-// 🔥 ROUND LISTENER
+// 🔥 REALTIME ROUND
 onSnapshot(doc(db,"gameRounds","current"), snap=>{
   if(!snap.exists()) return;
 
@@ -514,11 +515,13 @@ onSnapshot(doc(db,"gameRounds","current"), snap=>{
   }
 });
 
-// 🔥 TIMER
+// 🔥 TIMER FIX (MAIN FIX)
 function getTime(){
-  if(!currentRound) return 20;
+  if(!currentRound || !currentRound.startTime) return 20;
 
-  let t=Math.floor((20000-(Date.now()-currentRound.startTime))/1000);
+  let start=currentRound.startTime.toMillis(); // 🔥 FIX
+  let t=Math.floor((20000-(Date.now()-start))/1000);
+
   return t<0?0:t;
 }
 
@@ -660,6 +663,8 @@ function showPopup(msg,win,lock=false){
 }
 
   </script>
+  
+    
   
     <div id="helpPopup" class="help-popup">
   <div class="help-box">
