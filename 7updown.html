@@ -533,11 +533,18 @@ onSnapshot(doc(db,"gameRounds","current"), snap=>{
 });
 
 
-// 🔥 HISTORY SYNC
+// 🔥 HISTORY CONTROL
+let lastHistoryTime = null;
+
 onSnapshot(doc(db,"history","global"), snap=>{
   if(!snap.exists()) return;
 
-  let data=snap.data();
+  let data = snap.data();
+
+  // 🔥 duplicate block (MAIN FIX)
+  if(lastHistoryTime === data.time) return;
+
+  lastHistoryTime = data.time;
 
   updateHistory(data.lastResult);
 });
