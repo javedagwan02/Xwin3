@@ -75,36 +75,43 @@ async function start(){
 
   while(true){
 
-    let startTime = getNextTime();
+  let startTime = getNextTime();
 
-    let wait = startTime - Date.now();
-    if(wait>0){
-      await new Promise(r=>setTimeout(r,wait));
-    }
+  if(lastRoundId === startTime){
+    await new Promise(r=>setTimeout(r,100));
+    continue;
+  }
 
-    const r = await getResult();
-    const d = getDice(r);
+  lastRoundId = startTime;
 
-    await setDoc(doc(db,"gameRounds","current"),{
-      roundId:startTime,
-      startTime:startTime,
-      result:r,
-      d1:d.d1,
-      d2:d.d2
-    });
+  let wait = startTime - Date.now();
+  if(wait>0){
+    await new Promise(r=>setTimeout(r,wait));
+  }
 
-    setTimeout(async ()=>{
-  await setDoc(doc(db,"history","global"),{
-    lastResult: r,
-    time: Date.now()
+  const result = await getResult();
+  const dice = getDice(result);
+
+  await setDoc(doc(db,"gameRounds","current"),{
+    roundId:startTime,
+    startTime:startTime,
+    result:result,
+    d1:dice.d1,
+    d2:dice.d2
   });
-}, 500); // small delay = FIX
 
-    await setDoc(doc(db,"bets","global"),{
-      LOW:0,HIGH:0,MID:0
-    });
+  await new Promise(r=>setTimeout(r,300));
 
-    console.log("RESULT:",r);
+  await setDoc(doc(db,"history","global"),{
+    lastResult:result,
+    time:Date.now()
+  });
+
+  await setDoc(doc(db,"bets","global"),{
+    LOW:0,HIGH:0,MID:0
+  });
+
+  console.log("FINAL:",result);
   }
 }
 
