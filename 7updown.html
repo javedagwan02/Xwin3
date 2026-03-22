@@ -559,10 +559,16 @@ function getTime(){
 
 // LOOP
 setInterval(()=>{
-  let t=getTime();
-  document.getElementById("timer").innerText=t;
 
-  if(t<=5) bettingOpen=false;
+  let t = getTime();
+  document.getElementById("timer").innerText = t;
+
+  if(t <= 5) bettingOpen = false;
+
+  // 🔥 FINAL FIX
+  if(t === 0 && currentRound && currentRound.result && !resultDone){
+    showResult();
+  }
 
 },1000);
 
