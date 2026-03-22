@@ -465,6 +465,7 @@ body{
 </div>
 
   
+  
   <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
@@ -481,7 +482,6 @@ const db = getFirestore(app);
 const userEmail = localStorage.getItem("userEmail");
 let userDocId = "";
 
-// 🔥 GAME STATE
 let wallet=0, chip=0;
 let bets={LOW:0,HIGH:0,MID:0};
 
@@ -491,11 +491,11 @@ let lastRoundId=null;
 let bettingOpen=true;
 let resultDone=false;
 
-// 🎁 UI
+// UI
 const cover=document.getElementById("cover");
 const dice=document.getElementById("diceArea");
 
-// 🔥 WALLET LOAD
+// 🔥 WALLET
 async function loadWallet(){
   const snap = await getDocs(query(collection(db,"users"), where("email","==",userEmail)));
   snap.forEach(d=>{
@@ -506,13 +506,11 @@ async function loadWallet(){
 }
 await loadWallet();
 
-// 🔥 REALTIME ROUND (FIXED)
+// 🔥 REALTIME
 onSnapshot(doc(db,"gameRounds","current"), snap=>{
   if(!snap.exists()) return;
 
   currentRound = snap.data();
-
-  // 🔥 FORCE NUMBER (IMPORTANT)
   currentRound.startTime = Number(currentRound.startTime);
 
   if(!lastRoundId){
@@ -520,54 +518,46 @@ onSnapshot(doc(db,"gameRounds","current"), snap=>{
   }
 });
 
-// 🔥 TIMER (FINAL FIX)
+// 🔥 TIMER
 function getTime(){
-  if(!currentRound || !currentRound.startTime) return 20;
+  if(!currentRound) return 20;
 
-  let start = Number(currentRound.startTime);
-
-  let diff = Date.now() - start;
-
-  let t = Math.floor((20000 - diff) / 1000);
+  let diff = Date.now() - Number(currentRound.startTime);
+  let t = Math.floor((20000 - diff)/1000);
 
   return t < 0 ? 0 : t;
 }
 
-// 🔥 CHIP SELECT
+// CHIP
 window.setChip=(v,e)=>{
   chip=v;
   document.querySelectorAll(".chip").forEach(c=>c.classList.remove("active"));
   e.classList.add("active");
 };
 
-// 🔥 BET
+// BET
 window.bet=async(type,el)=>{
   if(!chip || !bettingOpen) return;
 
-  if(wallet < chip){
-    alert("Low Balance");
-    return;
-  }
+  if(wallet<chip) return alert("Low Balance");
 
-  wallet -= chip;
+  wallet-=chip;
 
-  await updateDoc(doc(db,"users",userDocId),{
-    balance: wallet
-  });
+  await updateDoc(doc(db,"users",userDocId),{balance:wallet});
+  document.getElementById("wallet").innerText=wallet;
 
-  document.getElementById("wallet").innerText = wallet;
-
-  bets[type] += chip;
-  document.getElementById(type.toLowerCase()+"Amt").innerText = bets[type];
+  bets[type]+=chip;
+  document.getElementById(type.toLowerCase()+"Amt").innerText=bets[type];
 
   el.querySelector(".card-inner").classList.add("active");
 };
 
-// 🔥 RESULT SHOW
+// 🔥 RESULT (FIXED DOUBLE BUG)
 async function showResult(){
 
   if(resultDone || !currentRound) return;
-  resultDone = true;
+
+  resultDone=true;
 
   cover.style.display="none";
   dice.style.display="flex";
@@ -576,22 +566,18 @@ async function showResult(){
 
   setTimeout(async ()=>{
 
-    let r = currentRound.result;
+    let r=currentRound.result;
 
     document.getElementById("d1").innerText="🎲 "+currentRound.d1;
     document.getElementById("d2").innerText="🎲 "+currentRound.d2;
 
     let winAmt=0;
 
-    if(bets[r] > 0){
-      winAmt = r=="MID" ? bets[r]*11 : bets[r]*2;
+    if(bets[r]>0){
+      winAmt=r=="MID"?bets[r]*11:bets[r]*2;
+      wallet+=winAmt;
 
-      wallet += winAmt;
-
-      await updateDoc(doc(db,"users",userDocId),{
-        balance: wallet
-      });
-
+      await updateDoc(doc(db,"users",userDocId),{balance:wallet});
       showPopup("WIN ₹"+winAmt,true);
     }else{
       showPopup("LOSS",false);
@@ -602,43 +588,37 @@ async function showResult(){
   },500);
 }
 
-// 🔥 MAIN LOOP
+// LOOP
 setInterval(()=>{
 
-  let t = getTime();
-  document.getElementById("timer").innerText = t;
+  let t=getTime();
+  document.getElementById("timer").innerText=t;
 
-  if(t === 5){
-    bettingOpen = false;
-    showPopup("BET LOCK",null,true);
-  }
+  if(t<=5) bettingOpen=false;
 
-  if(t === 0){
-    showResult();
-  }
+  if(t===0) showResult();
 
 },1000);
 
-// 🔄 ROUND RESET
+// RESET
 setInterval(()=>{
 
   if(!currentRound) return;
 
-  if(currentRound.roundId !== lastRoundId){
+  if(currentRound.roundId!==lastRoundId){
 
-    lastRoundId = currentRound.roundId;
+    lastRoundId=currentRound.roundId;
 
-    bettingOpen = true;
-    resultDone = false;
+    bettingOpen=true;
+    resultDone=false;
 
-    bets = {LOW:0,HIGH:0,MID:0};
+    bets={LOW:0,HIGH:0,MID:0};
 
     document.getElementById("lowAmt").innerText=0;
     document.getElementById("midAmt").innerText=0;
     document.getElementById("highAmt").innerText=0;
 
-    document.querySelectorAll(".card-inner")
-      .forEach(e=>e.classList.remove("active"));
+    document.querySelectorAll(".card-inner").forEach(e=>e.classList.remove("active"));
 
     dice.style.opacity="0";
 
@@ -651,7 +631,25 @@ setInterval(()=>{
 
 },500);
 
-// 📜 HISTORY
+// 📜 HISTORY UI
+document.getElementById("historyBtn").onclick=()=>{
+  document.getElementById("historyPopup").classList.add("show");
+};
+
+document.getElementById("closeHistory").onclick=()=>{
+  document.getElementById("historyPopup").classList.remove("show");
+};
+
+// ❓ HELP UI
+document.getElementById("helpBtn").onclick=()=>{
+  document.getElementById("helpPopup").classList.add("show");
+};
+
+document.getElementById("helpPopup").onclick=()=>{
+  document.getElementById("helpPopup").classList.remove("show");
+};
+
+// HISTORY DATA
 function updateHistory(type){
   let h=document.getElementById("history");
   let d=document.createElement("div");
@@ -662,32 +660,25 @@ function updateHistory(type){
 
   h.prepend(d);
 
-  if(h.children.length > 10){
+  if(h.children.length>10){
     h.removeChild(h.lastChild);
   }
 }
 
-// 💬 POPUP
-function showPopup(msg,win,lock=false){
+// POPUP
+function showPopup(msg,win){
 
   const p=document.getElementById("popup");
   const box=document.getElementById("popupText");
 
-  box.innerText = msg;
-
-  if(lock){
-    box.className="popup-box lock";
-  }else{
-    box.className="popup-box "+(win?"win":"loss");
-  }
+  box.innerText=msg;
+  box.className="popup-box "+(win?"win":"loss");
 
   p.classList.add("show");
-
   setTimeout(()=>p.classList.remove("show"),2000);
 }
 
   </script>
-    
   
     <div id="helpPopup" class="help-popup">
   <div class="help-box">
