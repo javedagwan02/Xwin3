@@ -106,7 +106,10 @@ async function start(){
     lastResult:result,
     time:Date.now()
   });
-
+await addDoc(collection(db,"history","all"),{
+  result: result,
+  time: Date.now()
+});
   await setDoc(doc(db,"bets","global"),{
     LOW:0,HIGH:0,MID:0
   });
