@@ -455,6 +455,10 @@ await loadWallet();
 if(localStorage.getItem("history")){
 document.getElementById("history").innerHTML = localStorage.getItem("history");
 }
+  setTimeout(()=>{
+  const hist = document.getElementById("history");
+  hist.scrollLeft = hist.scrollWidth;
+},100);
 
 // 🔥 POPUP
 function showPopup(msg, win){
@@ -610,6 +614,8 @@ let h=document.createElement("div");
 h.innerText=r[0];
 h.classList.add(r[0]);
 document.getElementById("history").appendChild(h);
+  const hist = document.getElementById("history");
+hist.scrollLeft = hist.scrollWidth;
 
 localStorage.setItem("history",document.getElementById("history").innerHTML);
 
