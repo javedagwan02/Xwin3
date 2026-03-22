@@ -509,6 +509,10 @@ async function loadWallet(){
 await loadWallet();
 
 
+// 🔥 LOAD HISTORY (LOCAL)
+renderHistory(JSON.parse(localStorage.getItem("history") || "[]"));
+
+
 // 🔥 ROUND SYNC
 onSnapshot(doc(db,"gameRounds","current"), snap=>{
   if(!snap.exists()) return;
@@ -544,20 +548,18 @@ onSnapshot(doc(db,"gameRounds","current"), snap=>{
 });
 
 
-// 🔥 HISTORY SYNC (FINAL FIX)
+// 🔥 HISTORY SYNC (FIREBASE)
 onSnapshot(doc(db,"history","global"), snap=>{
   if(!snap.exists()) return;
 
   let data = snap.data();
 
-  // 🔥 first load ignore duplicate
   if(!historyLoaded){
     historyLoaded = true;
     lastRoundIdHistory = data.time;
     return;
   }
 
-  // 🔥 duplicate block
   if(lastRoundIdHistory === data.time) return;
 
   lastRoundIdHistory = data.time;
@@ -577,7 +579,6 @@ function getTime(){
 }
 
 setInterval(()=>{
-
   let t = getTime();
   document.getElementById("timer").innerText = t;
 
@@ -586,7 +587,6 @@ setInterval(()=>{
   if(t === 0 && currentRound && currentRound.result && !resultDone){
     showResult();
   }
-
 },1000);
 
 
@@ -637,6 +637,14 @@ async function showResult(){
   document.getElementById("d2").innerText="🎲 "+currentRound.d2;
 
   let r=currentRound.result;
+
+  // 🔥 RESULT FIX
+  if(typeof r === "number"){
+    if(r < 7) r = "LOW";
+    else if(r > 7) r = "HIGH";
+    else r = "MID";
+  }
+
   let winAmt=0;
 
   if(bets[r]>0){
@@ -659,26 +667,40 @@ async function showResult(){
 }
 
 
-// 📜 HISTORY
+// 📜 UPDATE HISTORY (LOCAL + UI)
 function updateHistory(type){
 
-  let h=document.getElementById("history");
+  let saved = JSON.parse(localStorage.getItem("history") || "[]");
 
-  let d=document.createElement("div");
+  saved.unshift(type);
 
-  if(type=="LOW"){d.className="B";d.innerText="B";}
-  else if(type=="HIGH"){d.className="A";d.innerText="A";}
-  else{d.className="E";d.innerText="E";}
+  if(saved.length > 10) saved.pop();
 
-  h.prepend(d);
+  localStorage.setItem("history", JSON.stringify(saved));
 
-  if(h.children.length>10){
-    h.removeChild(h.lastChild);
-  }
+  renderHistory(saved);
 }
 
 
-// 📜 HISTORY POPUP
+// 📜 RENDER HISTORY
+function renderHistory(saved){
+
+  let h=document.getElementById("history");
+  h.innerHTML = "";
+
+  saved.forEach(type=>{
+    let d=document.createElement("div");
+
+    if(type=="LOW"){d.className="B";d.innerText="B";}
+    else if(type=="HIGH"){d.className="A";d.innerText="A";}
+    else{d.className="E";d.innerText="E";}
+
+    h.appendChild(d);
+  });
+}
+
+
+// 📜 POPUP
 document.getElementById("historyBtn").onclick=()=>{
   document.getElementById("historyPopup").classList.add("show");
 };
@@ -711,6 +733,7 @@ function showPopup(msg,win){
 }
 
   </script>
+    
 
     <div id="helpPopup" class="help-popup">
   <div class="help-box">
