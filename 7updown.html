@@ -503,7 +503,7 @@ async function loadWallet(){
   document.getElementById("wallet").innerText=wallet;
 }
 await loadWallet();
-
+await loadFullHistory();
 
 // 🔥 ROUND SYNC (MAIN)
 onSnapshot(doc(db,"gameRounds","current"), snap=>{
@@ -536,20 +536,6 @@ onSnapshot(doc(db,"gameRounds","current"), snap=>{
 
 // 🔥 HISTORY CONTROL
 let lastHistoryTime = null;
-
-onSnapshot(doc(db,"history","global"), snap=>{
-  if(!snap.exists()) return;
-
-  let data = snap.data();
-
-  // 🔥 duplicate block (MAIN FIX)
-  if(lastHistoryTime === data.time) return;
-
-  lastHistoryTime = data.time;
-
-  updateHistory(data.lastResult);
-});
-
 
 // 🔥 TIMER
 function getTime(){
@@ -668,7 +654,32 @@ function updateHistory(type){
   }
 }
 
+async function loadFullHistory(){
 
+  const snap = await getDocs(
+    query(
+      collection(db,"history","all"),
+      orderBy("time","desc")
+    )
+  );
+
+  const h = document.getElementById("history");
+  h.innerHTML = "";
+
+  snap.forEach(d=>{
+    let type = d.data().result;
+
+    let div = document.createElement("div");
+
+    if(type=="LOW"){div.className="B";div.innerText="B";}
+    else if(type=="HIGH"){div.className="A";div.innerText="A";}
+    else{div.className="E";div.innerText="E";}
+
+    h.appendChild(div);
+  });
+
+}
+      
 // 💬 POPUP
 function showPopup(msg,win){
   const p=document.getElementById("popup");
