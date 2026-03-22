@@ -684,6 +684,19 @@ function showPopup(msg,win){
   setTimeout(()=>p.classList.remove("show"),2000);
 }
 
+      const historyBtn = document.getElementById("historyBtn");
+const historyPopup = document.getElementById("historyPopup");
+const closeHistory = document.getElementById("closeHistory");
+
+historyBtn.onclick = ()=>{
+  historyPopup.classList.add("show");
+  loadBetHistory(); // 🔥 ye important hai
+};
+
+closeHistory.onclick = ()=>{
+  historyPopup.classList.remove("show");
+};
+      
       async function loadBetHistory(){
 
   historyList.innerHTML = "Loading...";
