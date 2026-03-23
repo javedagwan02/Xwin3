@@ -508,14 +508,13 @@ await loadWallet();
 });
 
 // 🔥 ROUND SYNC (MAIN)
+
 onSnapshot(doc(db,"gameRounds","current"), snap=>{
   if(!snap.exists()) return;
 
   const data = snap.data();
 
- if(!currentRound || currentRound.roundId !== data.roundId){
-
-  currentRound = data;
+  currentRound = data; // 🔥 always update
 
   let diff = Date.now() - data.startTime;
   let remaining = Math.floor((20000 - diff)/1000);
@@ -527,7 +526,7 @@ onSnapshot(doc(db,"gameRounds","current"), snap=>{
     resultDone = false;
   }
 
-  // 🔥 YE ANDAR HI RAHEGA
+  // RESET UI (sirf new round pe)
   bets={LOW:0,HIGH:0,MID:0};
 
   document.getElementById("lowAmt").innerText=0;
@@ -539,10 +538,7 @@ onSnapshot(doc(db,"gameRounds","current"), snap=>{
 
   dice.style.display="none";
   cover.style.display="block";
- }
-  currentRound = data;
 });
-
 
 // 🔥 HISTORY CONTROL
 let lastHistoryTime = null;
@@ -567,12 +563,16 @@ let lastHistoryTime = null;
 
 // 🔥 TIMER
 function getTime(){
-  if(!currentRound) return 20;
+
+  // 🔥 fallback (Firebase na aaye to bhi chale)
+  if(!currentRound){
+    return Math.floor((20000 - (Date.now() % 20000))/1000);
+  }
 
   let diff = Date.now() - currentRound.startTime;
-  let t = Math.floor((20000-diff)/1000);
+  let t = Math.floor((20000 - diff)/1000);
 
-  return t<0?0:t;
+  return t < 0 ? 0 : t;
 }
 
 setInterval(()=>{
