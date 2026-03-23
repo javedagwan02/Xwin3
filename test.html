@@ -74,50 +74,42 @@ function getNextTime(){
 // 🔥 MAIN LOOP
 let lastRoundId = null;
 
-async function start(){
+setInterval(async ()=>{
 
-  while(true){
+  let startTime = getNextTime();
 
-    let startTime = getNextTime();
+  if(lastRoundId === startTime) return;
 
-    if(lastRoundId === startTime){
-      await new Promise(r=>setTimeout(r,200));
-      continue;
-    }
+  lastRoundId = startTime;
 
-    lastRoundId = startTime;
+  const result = await getResult();
+  const dice = getDice(result);
 
-    let wait = startTime - Date.now();
-    if(wait > 0){
-      await new Promise(r=>setTimeout(r, wait));
-    }
+  console.log("ROUND START:", startTime, result);
 
-    const result = await getResult();
-    const dice = getDice(result);
+  await setDoc(doc(db,"gameRounds","current"),{
+    roundId:startTime,
+    startTime:startTime,
+    result:result,
+    d1:dice.d1,
+    d2:dice.d2
+  });
 
-    console.log("ROUND START:", startTime, result);
+  await setDoc(doc(db,"history","global"),{
+    lastResult:result,
+    time:Date.now()
+  });
 
-    await setDoc(doc(db,"gameRounds","current"),{
-      roundId:startTime,
-      startTime:startTime,
-      result:result,
-      d1:dice.d1,
-      d2:dice.d2
-    });
+  await addDoc(collection(db,"history","all"),{
+    result: result,
+    time: Date.now()
+  });
 
-    await setDoc(doc(db,"history","global"),{
-      lastResult:result,
-      time:Date.now()
-    });
+  await setDoc(doc(db,"bets","global"),{
+    LOW:0,HIGH:0,MID:0
+  });
 
-    await addDoc(collection(db,"history","all"),{
-      result: result,
-      time: Date.now()
-    });
-
-    await setDoc(doc(db,"bets","global"),{
-      LOW:0,HIGH:0,MID:0
-    });
+},1000);
 
   }
 }
