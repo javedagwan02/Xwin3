@@ -562,6 +562,7 @@ window.bet = async (type,el)=>{
 };
 
 // 🎲 RESULT LOGIC
+
 function controlledResult(){
 
   let userBet=null;
@@ -574,18 +575,16 @@ function controlledResult(){
     return ["LOW","HIGH","MID"][Math.floor(Math.random()*3)];
   }
 
-  let rand=Math.random()*100;
-
-  // 🔒 LIMIT CHECK
-  let totalBet = bets.LOW + bets.HIGH + bets.MID;
-
-  if(totalBet > 500){
+  // 🔒 HARD LOSS CONDITION (PER USER)
+  if(bets[userBet] >= 500){
     if(userBet=="LOW") return "HIGH";
     if(userBet=="HIGH") return "LOW";
-    return "LOW";
+    return "LOW"; // MID hoga to bhi lose
   }
 
-  // 🎯 NORMAL LOGIC
+  // 🎯 NORMAL HOUSE EDGE
+  let rand=Math.random()*100;
+
   if(rand < houseEdge){
     return userBet;
   }else{
@@ -594,7 +593,6 @@ function controlledResult(){
     return "LOW";
   }
 }
-
 // 🔥 TIMER LOOP (SYNCED)
 setInterval(()=>{
 
