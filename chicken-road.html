@@ -7,53 +7,85 @@
 <style>
 body{
   margin:0;
+  font-family:Arial;
   background:#0b0f1a;
   color:#fff;
-  font-family:Arial;
-  text-align:center;
 }
 
 .container{
-  max-width:400px;
+  max-width:420px;
   margin:auto;
   padding:10px;
 }
 
-h2{
-  margin:10px 0;
+.header{
+  text-align:center;
+  font-size:22px;
+  font-weight:bold;
 }
 
 /* ROAD */
-.road{
-  display:flex;
-  justify-content:space-between;
-  margin:20px 0;
+.road-container{
+  overflow:hidden;
+  width:100%;
+  height:200px;
+  position:relative;
 }
 
+.road{
+  display:flex;
+  gap:12px;
+  padding-left:20px;
+  transition:0.4s;
+}
+
+/* STEP */
 .step{
-  width:22%;
-  height:80px;
-  border:2px dashed #555;
-  border-radius:10px;
+  min-width:80px;
+  height:110px;
+  border-radius:12px;
+  background:#1e293b;
   display:flex;
   align-items:center;
   justify-content:center;
+  font-weight:bold;
 }
 
 .active{
-  border-color:#00ffcc;
+  background:#00ffcc;
+  color:#000;
 }
 
-/* CHICKEN */
-#chicken{
-  font-size:40px;
+/* 🐔 CHICKEN IMAGE */
+.chicken{
+  position:absolute;
+  bottom:10px;
+  left:20px;
+  width:70px;
   transition:0.3s;
 }
 
-/* BUTTONS */
+/* 🔥 JUMP ANIMATION */
+@keyframes jump{
+  0%{transform:translateY(0);}
+  50%{transform:translateY(-60px);}
+  100%{transform:translateY(0);}
+}
+
+.jump{
+  animation:jump 0.4s;
+}
+
+/* UI */
+#multi{
+  text-align:center;
+  margin:10px;
+  font-size:20px;
+}
+
 button{
   width:100%;
-  padding:15px;
+  padding:14px;
   margin-top:10px;
   border:none;
   border-radius:10px;
@@ -70,13 +102,16 @@ button{
 
 <div class="container">
 
-<h2>🐔 Chicken Road</h2>
+<div class="header">🐔 Chicken Road</div>
 
-<div id="chicken">🐔</div>
+<div class="road-container">
+  <div class="road" id="road"></div>
 
-<div class="road" id="road"></div>
+  <!-- 🐔 IMAGE -->
+  <img src="images/28859-removebg-preview.png" id="chicken" class="chicken">
+</div>
 
-<h3 id="multi">1.00x</h3>
+<div id="multi">1.00x</div>
 
 <select id="level">
 <option value="easy">Easy</option>
@@ -92,12 +127,11 @@ button{
 
 <script>
 
-// 🔥 MULTIPLIERS
 const levels = {
-  easy:[1.02,1.08,1.14,1.21,1.29,1.37,1.46,1.56,1.67,1.80,1.94],
-  medium:[1.08,1.22,1.38,1.57,1.79,2.06,2.38],
-  hard:[1.19,1.47,1.84,2.32,2.97,3.84],
-  hardcore:[1.45,2.22,3.47,5.56,9.13]
+easy:[1.02,1.08,1.14,1.21,1.29,1.37,1.46,1.56,1.67,1.80],
+medium:[1.08,1.22,1.38,1.57,1.79,2.06,2.38],
+hard:[1.19,1.47,1.84,2.32,2.97,3.84],
+hardcore:[1.45,2.22,3.47,5.56,9.13]
 };
 
 let playing=false;
@@ -105,27 +139,24 @@ let step=0;
 let currentLevel="easy";
 let bet=100;
 
-// 🧱 CREATE ROAD
+// CREATE ROAD
 function createRoad(){
   let road=document.getElementById("road");
   road.innerHTML="";
 
-  let arr=levels[currentLevel];
-
-  arr.forEach((m,i)=>{
+  levels[currentLevel].forEach((m,i)=>{
     let d=document.createElement("div");
     d.className="step";
     d.innerText=m+"x";
-    d.id="step"+i;
+    d.id="s"+i;
     road.appendChild(d);
   });
 }
 
-// ▶️ PLAY / JUMP
+// PLAY / JUMP
 function play(){
 
   if(!playing){
-    // START
     playing=true;
     step=0;
     currentLevel=document.getElementById("level").value;
@@ -136,67 +167,80 @@ function play(){
     document.getElementById("multi").innerText="1.00x";
 
   }else{
-    // JUMP
+
     step++;
 
     let arr=levels[currentLevel];
 
-    if(step >= arr.length){
+    if(step>=arr.length){
       gameOver();
       return;
     }
 
-    moveChicken(step);
+    move(step);
 
-    // 🔥 LOSE CHANCE
-    let loseChance = {
+    let loseChance={
       easy:0.1,
       medium:0.2,
       hard:0.3,
       hardcore:0.5
     };
 
-    if(Math.random() < loseChance[currentLevel]){
+    if(Math.random()<loseChance[currentLevel]){
       gameOver();
       return;
     }
 
-    document.getElementById("multi").innerText = arr[step]+"x";
+    document.getElementById("multi").innerText=arr[step]+"x";
   }
 }
 
-// 🐔 MOVE
-function moveChicken(s){
+// 🐔 MOVE + JUMP
+function move(s){
+
+  let chicken=document.getElementById("chicken");
+
+  // 🔥 JUMP EFFECT
+  chicken.classList.add("jump");
+  setTimeout(()=>chicken.classList.remove("jump"),400);
+
+  // 🔥 MOVE RIGHT
+  chicken.style.left = (20 + s*90)+"px";
+
+  // 🔥 ROAD SLIDE
+  let road=document.getElementById("road");
+  road.style.transform = `translateX(-${s*60}px)`;
+
   document.querySelectorAll(".step").forEach(e=>e.classList.remove("active"));
-  document.getElementById("step"+s).classList.add("active");
+  document.getElementById("s"+s).classList.add("active");
 }
 
-// 💰 CASHOUT
+// CASHOUT
 function cashout(){
-
   if(!playing) return;
 
   let arr=levels[currentLevel];
-  let win = bet * arr[step];
+  let win=bet*arr[step];
 
   alert("WIN ₹"+Math.floor(win));
-
-  resetGame();
+  reset();
 }
 
-// ❌ LOSE
+// LOSE
 function gameOver(){
   alert("❌ LOSE");
-  resetGame();
+  reset();
 }
 
-// 🔄 RESET
-function resetGame(){
+// RESET
+function reset(){
   playing=false;
   step=0;
   document.getElementById("playBtn").innerText="PLAY";
   document.getElementById("multi").innerText="1.00x";
   document.getElementById("road").innerHTML="";
+  document.getElementById("road").style.transform="translateX(0)";
+  document.getElementById("chicken").style.left="20px";
 }
 
 </script>
