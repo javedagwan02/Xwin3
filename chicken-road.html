@@ -25,16 +25,23 @@ body{
 .header{
   font-size:22px;
   font-weight:bold;
-  margin-bottom:20px;
 }
 
-/* MULTI BOX CONTAINER */
+/* WALLET */
+.wallet{
+  margin:10px 0;
+  background:#111;
+  padding:8px;
+  border-radius:10px;
+}
+
+/* MULTI BOX */
 .multi-box{
   border:2px solid rgba(0,255,200,0.3);
   border-radius:20px;
   padding:15px;
   overflow:hidden;
-  margin-bottom:20px;
+  margin:15px 0;
 }
 
 .road{
@@ -52,22 +59,20 @@ body{
   display:flex;
   align-items:center;
   justify-content:center;
-  font-weight:bold;
   color:#00ffcc;
-  box-shadow:0 0 15px rgba(0,255,200,0.2);
+  font-weight:bold;
 }
 
 .active{
-  background:linear-gradient(145deg,#00ffcc,#00cc99);
+  background:#00ffcc;
   color:#000;
   transform:scale(1.1);
 }
 
-/* 🐔 CHICKEN */
+/* 🐔 */
 .chicken{
   width:70px;
-  margin:10px auto;
-  transition:0.3s;
+  margin-top:-10px;
 }
 
 /* JUMP */
@@ -76,19 +81,17 @@ body{
   50%{transform:translateY(-60px);}
   100%{transform:translateY(0);}
 }
-
 .jump{
   animation:jump 0.4s;
 }
 
-/* MULTI TEXT */
+/* MULTI */
 #multi{
   font-size:24px;
   color:#ffd700;
-  margin:10px 0;
 }
 
-/* BUTTONS */
+/* BUTTON */
 button{
   width:100%;
   padding:14px;
@@ -97,7 +100,6 @@ button{
   border-radius:10px;
   font-size:16px;
 }
-
 .play{ background:#22c55e; }
 .cash{ background:#f59e0b; }
 
@@ -111,35 +113,30 @@ button{
   display:flex;
   justify-content:center;
   align-items:center;
-  background:rgba(0,0,0,0.6);
+  background:rgba(0,0,0,0.7);
   opacity:0;
   pointer-events:none;
   transition:0.3s;
 }
-
 .popup.show{
   opacity:1;
   pointer-events:auto;
 }
-
 .popup-box{
-  padding:20px 30px;
+  padding:25px;
   border-radius:15px;
   font-size:18px;
   font-weight:bold;
   animation:pop 0.3s;
 }
-
 .win{
   background:#065f46;
   color:#00ff99;
 }
-
 .loss{
   background:#7f1d1d;
   color:#ff4d4d;
 }
-
 @keyframes pop{
   from{transform:scale(0.7);}
   to{transform:scale(1);}
@@ -154,12 +151,12 @@ button{
 
 <div class="header">🐔 Chicken Road</div>
 
-<!-- MULTIPLIER BOX -->
+<div class="wallet">💰 Wallet: ₹ <span id="wallet">1000</span></div>
+
 <div class="multi-box">
   <div class="road" id="road"></div>
 </div>
 
-<!-- 🐔 -->
 <img src="images/28859-removebg-preview.png" id="chicken" class="chicken">
 
 <div id="multi">1.00x</div>
@@ -176,7 +173,6 @@ button{
 
 </div>
 
-<!-- POPUP -->
 <div id="popup" class="popup">
   <div id="popupText" class="popup-box"></div>
 </div>
@@ -184,16 +180,18 @@ button{
 <script>
 
 const levels={
-easy:[1.02,1.08,1.14,1.21,1.29,1.37],
-medium:[1.08,1.22,1.38,1.57,1.79],
-hard:[1.19,1.47,1.84,2.32],
-hardcore:[1.45,2.22,3.47,5.56]
+easy:[1.02,1.08,1.14,1.21],
+medium:[1.08,1.22,1.38],
+hard:[1.19,1.47,1.84],
+hardcore:[1.45,2.22,3.47]
 };
+
+let wallet=1000;
+let bet=100;
 
 let playing=false;
 let step=0;
 let currentLevel="easy";
-let bet=100;
 
 // INIT
 function initGame(){
@@ -202,7 +200,7 @@ function initGame(){
 }
 initGame();
 
-// CREATE ROAD
+// CREATE
 function createRoad(){
   let road=document.getElementById("road");
   road.innerHTML="";
@@ -214,9 +212,12 @@ function createRoad(){
     d.id="s"+i;
     road.appendChild(d);
   });
+
+  // first active
+  document.getElementById("s0").classList.add("active");
 }
 
-// PLAY / JUMP
+// PLAY
 function play(){
 
   if(!playing){
@@ -225,8 +226,9 @@ function play(){
 
     document.getElementById("playBtn").innerText="JUMP";
 
-    // 🔥 FIRST JUMP
-    move(0);
+    // 👉 first multiplier direct
+    let first=levels[currentLevel][0];
+    document.getElementById("multi").innerText=first+"x";
 
   }else{
 
@@ -268,22 +270,19 @@ function move(s){
   document.querySelectorAll(".step").forEach(e=>e.classList.remove("active"));
   document.getElementById("s"+s).classList.add("active");
 
-  // slide
   document.getElementById("road").style.transform = `translateX(-${s*90}px)`;
 }
 
 // POPUP
 function showPopup(msg,win){
-
   let p=document.getElementById("popup");
   let box=document.getElementById("popupText");
 
-  box.innerText=msg;
+  box.innerHTML=msg;
   box.className="popup-box "+(win?"win":"loss");
 
   p.classList.add("show");
-
-  setTimeout(()=>p.classList.remove("show"),2000);
+  setTimeout(()=>p.classList.remove("show"),2500);
 }
 
 // CASHOUT
@@ -291,15 +290,24 @@ function cashout(){
   if(!playing) return;
 
   let arr=levels[currentLevel];
-  let win=bet*arr[step];
+  let winAmount = Math.floor(bet * arr[step]);
 
-  showPopup("WIN ₹"+Math.floor(win),true);
+  wallet += winAmount;
+  document.getElementById("wallet").innerText=wallet;
+
+  showPopup(`🎉 Congratulations! <br> You Win ₹${winAmount}`,true);
+
   reset();
 }
 
 // LOSE
 function gameOver(){
-  showPopup("❌ LOSS",false);
+
+  wallet -= bet;
+  document.getElementById("wallet").innerText=wallet;
+
+  showPopup(`😢 Bad Luck! <br> You Loss ₹${bet}`,false);
+
   reset();
 }
 
@@ -307,10 +315,14 @@ function gameOver(){
 function reset(){
   playing=false;
   step=0;
+
   document.getElementById("playBtn").innerText="PLAY";
   document.getElementById("multi").innerText="1.00x";
+
   document.getElementById("road").style.transform="translateX(0)";
   document.querySelectorAll(".step").forEach(e=>e.classList.remove("active"));
+
+  document.getElementById("s0").classList.add("active");
 }
 
 </script>
