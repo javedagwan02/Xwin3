@@ -460,8 +460,10 @@ document.getElementById("wallet").innerText=wallet;
 await loadWallet();
 
 // 🔥 LOAD HISTORY UI
-if(localStorage.getItem("history")){
-document.getElementById("history").innerHTML = localStorage.getItem("history");
+const savedHistory = localStorage.getItem("history_"+userEmail);
+
+if(savedHistory){
+  document.getElementById("history").innerHTML = savedHistory;
 }
   setTimeout(()=>{
   const hist = document.getElementById("history");
@@ -604,7 +606,8 @@ let time=getTime();
 document.getElementById("time").innerText=time;
 
 // 🔥 SAVE UI
-localStorage.setItem("history",document.getElementById("history").innerHTML);
+
+localStorage.setItem("history", document.getElementById("history").innerHTML);
 
 if(time===0){
 
@@ -637,7 +640,8 @@ document.getElementById("history").appendChild(h);
   const hist = document.getElementById("history");
 hist.scrollLeft = hist.scrollWidth;
 
-localStorage.setItem("history",document.getElementById("history").innerHTML);
+
+localStorage.setItem("history", document.getElementById("history").innerHTML);
 
 // 💰 CALC
 let winAmount=0, lossAmount=0;
