@@ -488,6 +488,7 @@ let bets={LOW:0,HIGH:0,MID:0};
 let wallet=0;
 let bettingOpen=true;
 let resultRunning=false;
+let resultShown = false;
 let houseEdge=50;
 let time=20;
 
@@ -607,11 +608,12 @@ setInterval(()=>{
   }
 
   if(time === 0){
-    if(!resultRunning){
-      result();
-    }
+  if(!resultShown){
+    resultShown = true;
+    result();
   }
-
+  }
+  
 },1000);
 
 // 🎲 RESULT
@@ -691,7 +693,7 @@ async function result(){
 
     resultRunning=false;
     bettingOpen=true;
-
+    resultShown = false;
     bets={LOW:0,HIGH:0,MID:0};
 
     document.getElementById("lowAmt").innerText=0;
