@@ -314,8 +314,7 @@ let wallet=1000;
 function getBet(){
   return parseInt(document.getElementById("betAmount").value) || 0;
 }
-  let userDocId = "";
-const userEmail = localStorage.getItem("userEmail");
+  
 
 async function loadWallet(){
   const snap = await getDocs(query(collection(db,"users"), where("email","==",userEmail)));
@@ -373,7 +372,7 @@ function createRoad(){
 }
 
 // PLAY / JUMP
-function play(){
+async function play(){
 
   if(!playing){
     let bet = parseInt(document.getElementById("betAmount").value) || 0;
@@ -510,7 +509,7 @@ function changeBet(val){
 }
 
 // CASHOUT
-function cashout(){
+async function cashout(){
   if(!playing) return;
 
   let bet = parseInt(document.getElementById("betAmount").value) || 0;  // 🔥 YAHAN ADD
@@ -532,11 +531,11 @@ await updateDoc(doc(db,"users",userDocId),{
 }
 
 // LOSE
-function gameOver(){
+async function gameOver(){
 
   let bet = parseInt(document.getElementById("betAmount").value) || 0;  // 🔥 YAHAN ADD
 
-  wallet -= bet;
+  
   await updateDoc(doc(db,"users",userDocId),{
   balance: wallet
 });
@@ -559,7 +558,7 @@ function reset(){
   document.getElementById("s0").classList.add("active");
 
   moveChicken(0);
-  autoFire();
+  
 }
 
         </script>
