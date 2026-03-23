@@ -517,13 +517,12 @@ async function loadWallet(){
 await loadWallet();
 
 // 🔥 LOAD EDGE
-async function loadHouseEdge(){
-  const snap = await getDoc(doc(db,"settings","houseEdge"));
+onSnapshot(doc(db,"settings","houseEdge"), snap=>{
   if(snap.exists()){
     houseEdge = snap.data().sevenUpDown ?? 50;
+    console.log("🔥 House Edge Updated:", houseEdge);
   }
-}
-await loadHouseEdge();
+});
 
 // 🎁 INIT VIEW
 const cover=document.getElementById("cover");
