@@ -21,13 +21,11 @@ body{
   text-align:center;
 }
 
-/* HEADER */
 .header{
   font-size:22px;
   font-weight:bold;
 }
 
-/* WALLET */
 .wallet{
   margin:10px 0;
   background:#111;
@@ -35,17 +33,19 @@ body{
   border-radius:10px;
 }
 
-/* 🔥 MULTI BOX */
+/* MULTI BOX */
 .multi-box{
   border:2px solid rgba(0,255,200,0.3);
   border-radius:20px;
   padding:15px;
-  overflow-x:auto;   /* 🔥 SCROLL ENABLE */
+  overflow-x:auto;
 }
 
+/* ROAD */
 .road{
   display:flex;
   gap:12px;
+  position:relative;
 }
 
 /* STEP */
@@ -67,18 +67,11 @@ body{
   transform:scale(1.1);
 }
 
-/* 🐔 LANE (NEW) */
-.chicken-lane{
-  margin-top:10px;
-  height:80px;
-  position:relative;
-  overflow:hidden;
-}
-
+/* 🐔 CHICKEN INSIDE ROAD */
 #chicken{
   position:absolute;
+  bottom:-70px;
   width:60px;
-  left:0;
   transition:0.3s;
 }
 
@@ -93,7 +86,7 @@ body{
   animation:jump 0.4s;
 }
 
-/* MULTI */
+/* MULTI TEXT */
 #multi{
   font-size:24px;
   color:#ffd700;
@@ -157,14 +150,10 @@ button{
 
 <div class="wallet">💰 Wallet: ₹ <span id="wallet">1000</span></div>
 
-<!-- MULTIPLIERS -->
 <div class="multi-box">
-  <div class="road" id="road"></div>
-</div>
-
-<!-- 🐔 LANE -->
-<div class="chicken-lane">
-  <img src="images/28859-removebg-preview.png" id="chicken">
+  <div class="road" id="road">
+    <img src="images/28859-removebg-preview.png" id="chicken">
+  </div>
 </div>
 
 <div id="multi">1.00x</div>
@@ -211,7 +200,7 @@ initGame();
 // CREATE ROAD
 function createRoad(){
   let road=document.getElementById("road");
-  road.innerHTML="";
+  road.innerHTML = `<img src="images/28859-removebg-preview.png" id="chicken">`;
 
   levels[currentLevel].forEach((m,i)=>{
     let d=document.createElement("div");
@@ -222,8 +211,6 @@ function createRoad(){
   });
 
   document.getElementById("s0").classList.add("active");
-
-  // chicken first position
   moveChicken(0);
 }
 
@@ -268,12 +255,12 @@ function play(){
   }
 }
 
-// 🐔 MOVE IN LANE
+// 🐔 MOVE (NOW PERFECT)
 function moveChicken(s){
 
   let chicken=document.getElementById("chicken");
 
-  let boxWidth=97; // adjust
+  let boxWidth=97;
   chicken.style.left = (s * boxWidth)+"px";
 
   chicken.classList.add("jump");
