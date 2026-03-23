@@ -348,19 +348,27 @@ function moveChicken(s){
   
 function autoFire(){
 
-  let pipes = document.querySelectorAll(".pipe");
-
   setInterval(()=>{
 
-    let index = Math.floor(Math.random() * pipes.length);
+    let pipes = document.querySelectorAll(".pipe"); // 🔥 har baar fresh lo
 
-    pipes[index].classList.add("active");
+    if(pipes.length === 0) return;
 
-    setTimeout(()=>{
-      pipes[index].classList.remove("active");
-    },500);
+    // 🔥 1–3 random pipes ek sath
+    let count = Math.floor(Math.random()*3)+1;
 
-  }, Math.random()*2000 + 1000); // 1–3 sec random
+    for(let i=0;i<count;i++){
+
+      let index = Math.floor(Math.random() * pipes.length);
+
+      pipes[index].classList.add("active");
+
+      setTimeout(()=>{
+        pipes[index].classList.remove("active");
+      },600);
+    }
+
+  }, 1000 + Math.random()*2000); // 1–3 sec
 
 }
   
