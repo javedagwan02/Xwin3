@@ -34,10 +34,9 @@ body{
   max-width:300px;
   margin:20px auto;
   overflow:hidden;
-  z-index:1;
-  pointer-events:none; /* 🔥 MAIN FIX */
 }
 
+/* BLOCK */
 .block{
   position:absolute;
   height:30px;
@@ -45,6 +44,7 @@ body{
   pointer-events:none;
 }
 
+/* BASE */
 .base{
   width:200px;
   height:30px;
@@ -76,10 +76,6 @@ button{
   font-weight:bold;
   font-size:16px;
 }
-  button, input{
-  position:relative;
-  z-index:5;
-  }
 
 /* POPUP */
 .popup{
@@ -116,9 +112,9 @@ button{
 
 <div class="mult" id="mult">x1.00</div>
 
-<input id="bet" type="number" value="100">
-<button id="mainBtn" onclick="mainAction()">START</button>
-<button onclick="drop()">DROP</button>
+<input id="betInput" type="number" value="100">
+<button id="mainBtn">START</button>
+<button id="dropBtn">DROP</button>
 
 <div class="popup" id="popup"><div id="popupText"></div></div>
 
@@ -140,6 +136,12 @@ let lastWidth=200;
 let block=null;
 let pos=0,dir=1,move;
 
+/* ELEMENTS */
+const game=document.getElementById("game");
+const betInput=document.getElementById("betInput");
+const mainBtn=document.getElementById("mainBtn");
+const dropBtn=document.getElementById("dropBtn");
+
 /* UI */
 function updateWallet(){
  document.getElementById("wallet").innerText=wallet;
@@ -152,14 +154,17 @@ function popup(msg,type){
  setTimeout(()=>popup.style.display="none",1500);
 }
 
-/* START / CASHOUT BUTTON */
-function mainAction(){
+/* START / CASHOUT */
+mainBtn.onclick=()=>{
  if(!running){
    startGame();
  }else{
    cashout();
  }
-}
+};
+
+/* DROP BUTTON */
+dropBtn.onclick=()=>drop();
 
 /* START */
 function startGame(){
@@ -176,12 +181,11 @@ function startGame(){
  running=true;
  step=0;
 
- document.getElementById("mainBtn").innerText="CASHOUT";
+ mainBtn.innerText="CASHOUT";
 
- document.getElementById("game").innerHTML='<div class="base"></div>';
+ game.innerHTML='<div class="base"></div>';
 
- const gameRect = document.getElementById("game").getBoundingClientRect();
-lastLeft = (gameRect.width / 2) - 100;
+ lastLeft=(game.clientWidth/2)-100;
  lastWidth=200;
 
  createBlock();
@@ -189,12 +193,10 @@ lastLeft = (gameRect.width / 2) - 100;
 
 /* CREATE BLOCK */
 function createBlock(){
- const game=document.getElementById("game");
-
  block=document.createElement("div");
  block.className="block";
+
  block.style.width=lastWidth+"px";
- block.style.height="30px";
  block.style.bottom=(30*(step+1))+"px";
  block.style.left="0px";
  block.style.background="#fff";
@@ -206,9 +208,7 @@ function createBlock(){
  move=setInterval(()=>{
    pos+=dir*4;
 
-   const gameWidth = document.getElementById("game").clientWidth;
-
-if(pos > gameWidth - lastWidth) dir = -1;
+   if(pos>game.clientWidth-lastWidth) dir=-1;
    if(pos<0) dir=1;
 
    block.style.left=pos+"px";
@@ -221,7 +221,6 @@ function drop(){
 
  clearInterval(move);
 
- /* RANDOM CRASH */
  const crash=Math.random()<0.3;
 
  if(crash){
@@ -231,7 +230,6 @@ function drop(){
    return;
  }
 
- /* STACK */
  let overlap=Math.min(pos+lastWidth,lastLeft+lastWidth)-Math.max(pos,lastLeft);
 
  if(overlap<=0){
@@ -247,7 +245,6 @@ function drop(){
  lastLeft=parseFloat(block.style.left);
  lastWidth=overlap;
 
- /* MULTIPLIER */
  document.getElementById("mult").innerText="x"+multipliers[step];
 
  step++;
@@ -274,7 +271,7 @@ function cashout(){
 /* RESET */
 function reset(){
  running=false;
- document.getElementById("mainBtn").innerText="START";
+ mainBtn.innerText="START";
 }
 
 /* INIT */
