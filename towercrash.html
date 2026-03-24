@@ -30,9 +30,12 @@ body{
 /* GAME */
 .game{
   position:relative;
-  height:350px;
+  height:300px;
+  max-width:300px;
+  margin:20px auto;
   overflow:hidden;
   z-index:1;
+  pointer-events:none; /* 🔥 MAIN FIX */
 }
 
 .block{
