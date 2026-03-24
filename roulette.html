@@ -286,14 +286,18 @@ setTimeout(()=>{
     if(b.type==="BLACK"&&black.includes(result)) win=true;
 
     if(win){
-      let w=b.amt*2;
-      state.wallet+=w;
-      syncWallet();
-      b.res="WIN ₹"+w;
-      popupMsg(`🎉 ${result} → WIN ₹${w}`,"win");
-    }else{
-      b.res="LOSS";
-      popupMsg(`❌ ${result} → LOSS`,"lose");
+  let w;
+
+  if(b.type==="NUMBER"){
+    w = b.amt * 10;
+  }else{
+    w = b.amt * 2;
+  }
+
+  state.wallet+=w;
+  syncWallet();
+  b.res="WIN ₹"+w;
+  popupMsg(`🎉 ${result} → WIN ₹${w}`,"win");
     }
   });
 
