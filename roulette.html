@@ -37,14 +37,17 @@ body{margin:0;font-family:Arial;background:#0e3b2f;color:#fff}
   background:#fff;
   border-radius:50%;
   position:absolute;
-  top:8px;
+
+  top:50%;
   left:50%;
-  transform:translateX(-50%);
+
+  transform: rotate(0deg) translateY(-140px);  /* 🔥 OUTER RING */
+  transform-origin:center;
+
   box-shadow:0 0 10px #fff;
   z-index:10;
   transition:transform 4.5s cubic-bezier(.22,.61,.36,1);
 }
-  
 .wheel span{
   position:absolute;
   top:50%;left:50%;
@@ -260,13 +263,13 @@ void ball.offsetWidth;
 
 // ANIMATION
 ball.style.transition="transform 4.5s cubic-bezier(.22,.61,.36,1)";
-ball.style.transform=`rotate(${360*8+angle}deg)`;
+ball.style.transform=`rotate(${360*8+angle}deg) translateY(-140px)`;
 
 // FINAL STOP + RESULT LOGIC
 setTimeout(()=>{
 
   ball.style.transition="none";
-  ball.style.transform=`rotate(${angle}deg)`; // ✔️ ONLY THIS
+  ball.style.transform=`rotate(${angle}deg) translateY(-140px)`;  // ✔️ correct
 
   state.last.unshift(result);
   state.last=state.last.slice(0,10);
