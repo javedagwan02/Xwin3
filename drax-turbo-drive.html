@@ -85,6 +85,13 @@ input{
   border:none;border-radius:30px;
   margin-top:10px
 }
+  input[type="range"]{
+  width:90%;
+  margin:10px auto;
+  display:block;
+  z-index:1;
+  position:relative;
+}
 
 /* BUTTON */
 button{
@@ -94,7 +101,11 @@ button{
   font-size:18px;font-weight:bold;
   margin-top:10px
 }
-
+button, .sel{
+  position:relative;
+  z-index:2;
+}
+  
 /* HISTORY */
 .history{
   background:#14001f;margin:14px;padding:12px;
@@ -158,6 +169,10 @@ button{
 </div>
 
 <input id="betInput" type="number" value="100">
+  <div style="margin:10px 20px; position:relative; z-index:1;">
+  <input type="range" id="edgeSlider" min="0" max="100" value="25">
+  <div id="edgeLabel">House Edge: 25%</div>
+</div>
 <button onclick="startRace()">START RACE</button>
 
 <div class="history">
