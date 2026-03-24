@@ -179,7 +179,8 @@ button, .sel{
 
 <div class="popup" id="popup"><div id="popupText"></div></div>
 
-<script type="module">
+
+  <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import {
   getFirestore,collection,query,where,
@@ -206,7 +207,7 @@ const userEmail = localStorage.getItem("userEmail");
 /* ===== STATE ===== */
 let uid = "";
 let wallet = 0;
-let HOUSE_EDGE = 0.25;
+let HOUSE_EDGE = 0.5; // default 50%
 
 /* ===== LOAD WALLET ===== */
 async function loadWallet(){
@@ -223,19 +224,17 @@ async function loadWallet(){
   updateWallet();
 }
 
-/* ===== LOAD HOUSE EDGE (FIREBASE CONTROL) ===== */
-async function loadEdge(){
-  try{
-    const ref = doc(db,"settings","houseEdge");
-    const snap = await getDoc(ref);
+/* ===== LIVE HOUSE EDGE (FIXED) ===== */
+onSnapshot(doc(db,"settings","houseEdge"), (snap)=>{
+  if(snap.exists()){
+    let val = snap.data().draxTurbo ?? 50;
 
-    if(snap.exists()){
-      HOUSE_EDGE = (snap.data().draxTurbo ?? 50) / 100;
-    }
-  }catch(e){
-    console.log("Edge load error", e);
+    // 🔥 FIX: 0-100 → 0-1
+    HOUSE_EDGE = val / 100;
+
+    console.log("🔥 LIVE WIN %:", val + "%");
   }
-}
+});
 
 /* ===== SAVE WALLET ===== */
 async function saveWallet(){
@@ -246,13 +245,6 @@ async function saveWallet(){
 
 /* ===== INIT ===== */
 await loadWallet();
-onSnapshot(doc(db,"settings","houseEdge"), (snap)=>{
-  if(snap.exists()){
-    HOUSE_EDGE = snap.data().draxTurbo ?? 0.25;
-
-    console.log("🔥 LIVE EDGE:", HOUSE_EDGE);
-  }
-});
 
 /* ===== GAME ===== */
 let selected = "";
@@ -302,8 +294,15 @@ window.startRace = async ()=>{
   await saveWallet();
   updateWallet();
 
-  /* 🎯 RESULT */
-  const winner = Math.random() < HOUSE_EDGE ? selected : getOther();
+  /* 🎯 FINAL CORRECT LOGIC */
+  const random = Math.random();
+  let winner;
+
+  if(random < HOUSE_EDGE){
+    winner = selected;     // WIN %
+  }else{
+    winner = getOther();   // LOSS
+  }
 
   setTimeout(()=>{
     document.getElementById(cars[winner].el)
@@ -352,8 +351,7 @@ function showPopup(t){
   popup.style.display = "flex";
   setTimeout(()=>popup.style.display="none",1500);
 }
-                                       </script>
- 
+  </script>
   
 </body>
 </html>
