@@ -1,294 +1,166 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>💥 Stack Crash Pro</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-
-<style>
-body{
-  margin:0;
-  font-family:Arial;
-  background:#050518;
-  color:#fff;
-  text-align:center;
-}
-
-.header{
-  padding:15px;
-  font-size:22px;
-  font-weight:bold;
-}
-
-.wallet{
-  background:#111;
-  padding:6px 16px;
-  border-radius:20px;
-  display:inline-block;
-}
-
-/* GAME */
-.game{
-  position:relative;
-  height:350px;
-  max-width:300px;
-  margin:20px auto;
-  overflow:hidden;
-}
-
-/* BLOCK */
-.block{
-  position:absolute;
-  height:30px;
-  border-radius:6px;
-  pointer-events:none;
-  transition:all .2s linear;
-}
-
-/* BASE */
-.base{
-  width:200px;
-  height:30px;
-  background:#fff;
-  position:absolute;
-  bottom:0;
-  left:50%;
-  transform:translateX(-50%);
-}
-
-/* MULT */
-.mult{
-  font-size:26px;
-  color:#00ffc3;
-  margin:10px;
-}
-
-/* INPUT + BTN */
-input,button{
-  width:85%;
-  padding:14px;
-  border:none;
-  border-radius:30px;
-  margin-top:10px;
-}
-
-button{
-  background:#ff4fd8;
-  font-weight:bold;
-}
-
-/* POPUP */
-.popup{
-  position:fixed;
-  inset:0;
-  display:none;
-  align-items:center;
-  justify-content:center;
-  background:rgba(0,0,0,.7);
-}
-
-.popup div{
-  background:#111;
-  padding:25px;
-  border-radius:20px;
-  font-size:20px;
-}
-
-.win{color:#00ff88;}
-.loss{color:#ff3b3b;}
-</style>
+  <meta charset="UTF-8">
+  <title>towerX</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: skyblue;
+      overflow: hidden;
+    }
+    #gameArea {
+      position: relative;
+      width: 100%;
+      height: 500px;
+      background: linear-gradient(skyblue, white);
+      border-bottom: 3px solid #333;
+    }
+    .segment {
+      position: absolute;
+      width: 120px;
+      height: 40px;
+      background: #ffcc00;
+      text-align: center;
+      line-height: 40px;
+      font-weight: bold;
+      border: 2px solid #333;
+    }
+    #controls {
+      margin: 20px;
+      text-align: center;
+    }
+    button {
+      padding: 10px 20px;
+      margin: 5px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    #multiplier {
+      font-size: 20px;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+    #popup {
+      position: fixed;
+      top: 40%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      padding: 20px;
+      border: 2px solid #333;
+      display: none;
+      font-size: 18px;
+    }
+  </style>
 </head>
-
 <body>
+  <div id="gameArea"></div>
+  <div id="controls">
+    <button id="startBtn">Start</button>
+    <button id="dropBtn">Drop</button>
+    <button id="historyBtn">History</button>
+    <div id="multiplier">Multiplier: 1.00x</div>
+  </div>
+  <div id="popup"></div>
 
-<div class="header">
-💥 STACK CRASH  
-<div class="wallet">₹ <span id="wallet">1000</span></div>
-</div>
+  <script>
+    const gameArea = document.getElementById("gameArea");
+    const startBtn = document.getElementById("startBtn");
+    const dropBtn = document.getElementById("dropBtn");
+    const multiplierDisplay = document.getElementById("multiplier");
+    const popup = document.getElementById("popup");
 
-<div id="game" class="game">
-  <div class="base"></div>
-</div>
+    let fallingSegment = null;
+    let towerHeight = 0;
+    let multiplierIndex = 0;
+    let gameActive = false;
 
-<div class="mult" id="mult">x1.00</div>
+    const multipliers = [
+      1.02,1.08,1.14,1.21,1.29,1.37,1.46,1.56,1.67,1.80,1.94,2.09,2.27,2.47,
+      2.69,2.95,3.24,3.58,3.98,4.45,5.01,5.68,6.49,7.49,8.74,10.33,12.39,15.15,
+      18.94,24.35
+    ];
 
-<input id="betInput" type="number" value="100">
-<button id="mainBtn">START</button>
-<button id="dropBtn">DROP</button>
+    function createSegment(y=0) {
+      const seg = document.createElement("div");
+      seg.className = "segment";
+      seg.textContent = "HALL";
+      seg.style.top = y + "px";
+      seg.style.left = "0px";
+      gameArea.appendChild(seg);
+      return seg;
+    }
 
-<div class="popup" id="popup"><div id="popupText"></div></div>
+    function moveSegment() {
+      if (!fallingSegment) return;
+      let pos = 0;
+      let direction = 1;
+      const interval = setInterval(() => {
+        if (!fallingSegment) { clearInterval(interval); return; }
+        pos += direction * 5;
+        if (pos > gameArea.offsetWidth - 120 || pos < 0) direction *= -1;
+        fallingSegment.style.left = pos + "px";
+      }, 50);
+    }
 
-<script>
-let wallet=1000;
-let running=false;
-let bet=0;
-let step=0;
+    dropBtn.onclick = () => {
+      if (!gameActive) return;
+      if (fallingSegment) {
+        // Drop current segment
+        fallingSegment.style.top = (gameArea.offsetHeight - 40 - towerHeight) + "px";
+        towerHeight += 40;
+        multiplierIndex++;
+        if (multiplierIndex < multipliers.length) {
+          multiplierDisplay.textContent = "Multiplier: " + multipliers[multiplierIndex].toFixed(2) + "x";
+        } else {
+          multiplierDisplay.textContent = "Multiplier: MAX";
+        }
+        fallingSegment = null;
+        fallingSegment = createSegment();
+        moveSegment();
+      }
+    };
 
-const multipliers=[
-1.02,1.08,1.14,1.21,1.29,1.37,1.46,1.56,1.67,1.80,
-1.94,2.09,2.27,2.47,2.69,2.95,3.24,3.58,3.98,4.45,
-5.01,5.68,6.49,7.49,8.74,10.33,12.39,15.15,18.94,24.35
-];
+    startBtn.onclick = () => {
+      if (!gameActive) {
+        gameActive = true;
+        startBtn.textContent = "Cash Out";
+        towerHeight = 0;
+        multiplierIndex = 0;
+        multiplierDisplay.textContent = "Multiplier: 1.00x";
+        gameArea.innerHTML = "";
+        fallingSegment = createSegment();
+        moveSegment();
+      } else {
+        // Cash out
+        showPopup("🎉 You cashed out with " + multipliers[multiplierIndex].toFixed(2) + "x");
+        resetGame();
+      }
+    };
 
-let lastLeft=0;
-let lastWidth=200;
-let pos=0,dir=1,move;
+    function showPopup(msg) {
+      popup.textContent = msg;
+      popup.style.display = "block";
+      setTimeout(() => popup.style.display = "none", 3000);
+    }
 
-/* ELEMENTS */
-const game=document.getElementById("game");
-const mainBtn=document.getElementById("mainBtn");
-const dropBtn=document.getElementById("dropBtn");
-const betInput=document.getElementById("betInput");
-const walletEl=document.getElementById("wallet");
+    function resetGame() {
+      gameActive = false;
+      startBtn.textContent = "Start";
+      fallingSegment = null;
+      towerHeight = 0;
+      multiplierIndex = 0;
+    }
 
-/* UI */
-function updateWallet(){
- walletEl.innerText=wallet;
-}
-
-function popup(msg,type){
- popupText.className=type;
- popupText.innerText=msg;
- popup.style.display="flex";
- setTimeout(()=>popup.style.display="none",1800);
-}
-
-/* BUTTON EVENTS */
-mainBtn.onclick=()=>{
- if(!running){
-   startGame();
- }else{
-   cashout();
- }
-};
-
-dropBtn.onclick=()=>drop();
-
-/* START */
-function startGame(){
- bet=+betInput.value;
-
- if(bet<=0 || bet>wallet){
-   popup("Low Balance","loss");
-   return;
- }
-
- wallet-=bet;
- updateWallet();
-
- running=true;
- step=0;
-
- mainBtn.innerText="CASHOUT";
-
- game.innerHTML='<div class="base"></div>';
-
- lastLeft=(game.clientWidth/2)-100;
- lastWidth=200;
-
- createBlock();
-}
-
-/* CREATE BLOCK */
-function createBlock(){
- const block=document.createElement("div");
-
- block.className="block";
- block.style.width=lastWidth+"px";
- block.style.left="0px";
- block.style.top="-40px";
- block.style.background="#fff";
-
- game.appendChild(block);
-
- /* FALL */
- setTimeout(()=>{
-   block.style.top=(320-(step*30))+"px";
- },50);
-
- pos=0; dir=1;
-
- move=setInterval(()=>{
-   pos+=dir*4;
-
-   if(pos>game.clientWidth-lastWidth) dir=-1;
-   if(pos<0) dir=1;
-
-   block.style.left=pos+"px";
- },20);
-}
-
-/* DROP */
-function drop(){
- if(!running) return;
-
- clearInterval(move);
-
- let blocks=document.querySelectorAll(".block");
- let current=blocks[blocks.length-1];
-
- /* CRASH */
- if(Math.random()<0.25){
-   current.style.background="red";
-   popup("💥 FUT GYA","loss");
-   reset();
-   return;
- }
-
- /* STACK */
- let overlap=Math.min(pos+lastWidth,lastLeft+lastWidth)-Math.max(pos,lastLeft);
-
- if(overlap<=0){
-   current.style.background="red";
-   popup("💥 MISS","loss");
-   reset();
-   return;
- }
-
- current.style.left=Math.max(pos,lastLeft)+"px";
- current.style.width=overlap+"px";
-
- lastLeft=parseFloat(current.style.left);
- lastWidth=overlap;
-
- document.getElementById("mult").innerText="x"+multipliers[step];
-
- step++;
-
- popup("✅ SAFE","win");
-
- /* AUTO CASHOUT */
- if(step>=multipliers.length){
-   cashout();
-   return;
- }
-
- setTimeout(createBlock,200);
-}
-
-/* CASHOUT */
-function cashout(){
- if(!running) return;
-
- let win=bet*multipliers[Math.max(step-1,0)];
-
- wallet+=win;
- updateWallet();
-
- popup("💰 ₹"+Math.floor(win),"win");
-
- reset();
-}
-
-/* RESET */
-function reset(){
- running=false;
- mainBtn.innerText="START";
-}
-
-/* INIT */
-updateWallet();
-</script>
-
+    // Simulate loss if tower too high
+    setInterval(() => {
+      if (towerHeight > 400 && gameActive) {
+        showPopup("🔥 Bad news, you lost");
+        resetGame();
+      }
+    }, 1000);
+  </script>
 </body>
 </html>
