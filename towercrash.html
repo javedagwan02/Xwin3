@@ -33,25 +33,26 @@ body{
 
 /* HOLE */
 .hole{
-  width:80px;
-  height:40px;
+  width:145px;   /* 🔥 thoda chhota */
+  height:85px;
   position:absolute;
   top:10px;
+  background-size:contain;
+  background-repeat:no-repeat;
 }
 
 /* IMAGE BLOCK */
 .block{
-  width:80px;
-  height:40px;
+  width:160px;   /* 🔥 BIG SIZE */
+  height:90px;
   position:absolute;
-  background-size:cover;
+  background-size:contain;
   background-repeat:no-repeat;
 }
-
 /* BASE IMAGE */
 .base{
-  width:100px;
-  height:40px;
+  width:170px;
+  height:90px;
   position:absolute;
   bottom:0;
   left:50%;
@@ -136,7 +137,7 @@ const multipliers=[
 
 let holeX=0,dir=1,moveHole;
 let lastLeft=110;
-let lastWidth=100;
+let lastWidth=170;
 
 /* ELEMENTS */
 const game=document.getElementById("game");
@@ -229,8 +230,7 @@ function drop(){
        return;
      }
 
-     let overlap=Math.min(holeX+80,lastLeft+lastWidth)-Math.max(holeX,lastLeft);
-
+     let overlap=Math.min(holeX+160,lastLeft+lastWidth)-Math.max(holeX,lastLeft);
      if(overlap<=0){
        block.style.filter="brightness(0)";
        showPopup("🔥 Miss! You Loss","loss");
