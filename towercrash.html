@@ -180,7 +180,8 @@ function startGame(){
 
  document.getElementById("game").innerHTML='<div class="base"></div>';
 
- lastLeft=window.innerWidth/2-100;
+ const gameRect = document.getElementById("game").getBoundingClientRect();
+lastLeft = (gameRect.width / 2) - 100;
  lastWidth=200;
 
  createBlock();
@@ -205,7 +206,9 @@ function createBlock(){
  move=setInterval(()=>{
    pos+=dir*4;
 
-   if(pos>window.innerWidth-lastWidth) dir=-1;
+   const gameWidth = document.getElementById("game").clientWidth;
+
+if(pos > gameWidth - lastWidth) dir = -1;
    if(pos<0) dir=1;
 
    block.style.left=pos+"px";
