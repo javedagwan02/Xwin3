@@ -255,20 +255,20 @@ async function spin(){
   let angle=(360/37)*result;
 
   // RESET
-  wheel.style.transition="none";
+ball.style.transition="none";
+ball.style.transform="rotate(0deg)";
+void ball.offsetWidth;
+
+// ANIMATION
+ball.style.transition="transform 4.5s cubic-bezier(.22,.61,.36,1)";
+ball.style.transform=`rotate(${360*8+angle}deg)`;
+
+// FINAL STOP
+setTimeout(()=>{
   ball.style.transition="none";
-  wheel.style.transform="rotate(0deg)";
-  ball.style.transform="rotate(0deg)";
-  void wheel.offsetWidth;
-
-  // 🔥 ANIMATION
-  wheel.style.transition="transform 4.5s cubic-bezier(.22,.61,.36,1)";
-  ball.style.transition="transform 4.5s cubic-bezier(.22,.61,.36,1)";
-
-  wheel.style.transform=`rotate(${360*6+angle}deg)`;
-  ball.style.transform=`rotate(-${360*8+angle}deg)`; // 🔥 opposite
-
-  setTimeout(()=>{
+  ball.style.transform=`rotate(${angle}deg)`;
+},4600);
+  
 
     // 🔥 FINAL STOP EXACT NUMBER
     ball.style.transition="none";
