@@ -505,8 +505,20 @@ document.getElementById("multi").innerText=first+"x";
 
 // MOVE
 function moveChicken(s){
+
   let chicken=document.getElementById("chicken");
-  chicken.style.left=(s*97)+"px";
+  let road=document.getElementById("road");
+
+  let boxWidth=97;
+
+  let newLeft = (s * boxWidth);
+  chicken.style.left = newLeft + "px";
+
+  // 🔥 AUTO SCROLL
+  road.parentElement.scrollTo({
+    left: newLeft - 100, // thoda center me rakhega
+    behavior: "smooth"
+  });
 
   chicken.classList.add("jump");
   setTimeout(()=>chicken.classList.remove("jump"),400);
