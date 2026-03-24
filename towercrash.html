@@ -1,166 +1,288 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>towerX</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: skyblue;
-      overflow: hidden;
-    }
-    #gameArea {
-      position: relative;
-      width: 100%;
-      height: 500px;
-      background: linear-gradient(skyblue, white);
-      border-bottom: 3px solid #333;
-    }
-    .segment {
-      position: absolute;
-      width: 120px;
-      height: 40px;
-      background: #ffcc00;
-      text-align: center;
-      line-height: 40px;
-      font-weight: bold;
-      border: 2px solid #333;
-    }
-    #controls {
-      margin: 20px;
-      text-align: center;
-    }
-    button {
-      padding: 10px 20px;
-      margin: 5px;
-      font-size: 16px;
-      cursor: pointer;
-    }
-    #multiplier {
-      font-size: 20px;
-      font-weight: bold;
-      margin-top: 10px;
-    }
-    #popup {
-      position: fixed;
-      top: 40%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background: white;
-      padding: 20px;
-      border: 2px solid #333;
-      display: none;
-      font-size: 18px;
-    }
-  </style>
+<meta charset="UTF-8">
+<title>🏢 Tower X</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+body{
+  margin:0;
+  font-family:Arial;
+  background:#0b0f2a;
+  color:#fff;
+  text-align:center;
+}
+
+/* HEADER */
+.header{
+  padding:12px;
+  font-size:22px;
+  font-weight:bold;
+}
+
+/* GAME AREA */
+.game{
+  position:relative;
+  height:400px;
+  max-width:300px;
+  margin:10px auto;
+  background:linear-gradient(#87ceeb,#4fa3d1);
+  overflow:hidden;
+  border-radius:20px;
+}
+
+/* HOLE */
+.hole{
+  width:80px;
+  height:40px;
+  background:#fff;
+  position:absolute;
+  top:10px;
+  border-radius:10px;
+}
+
+/* BLOCK */
+.block{
+  width:80px;
+  height:30px;
+  background:#fff;
+  position:absolute;
+  border-radius:6px;
+}
+
+/* BASE */
+.base{
+  width:100px;
+  height:30px;
+  background:#fff;
+  position:absolute;
+  bottom:0;
+  left:50%;
+  transform:translateX(-50%);
+}
+
+/* MULT */
+.mult{
+  font-size:24px;
+  color:#00ffcc;
+  margin:10px;
+}
+
+/* BTN */
+button,input{
+  width:85%;
+  padding:14px;
+  border:none;
+  border-radius:30px;
+  margin-top:10px;
+}
+
+button{
+  background:#ff4fd8;
+  font-weight:bold;
+}
+
+/* POPUP */
+.popup{
+  position:fixed;
+  inset:0;
+  display:none;
+  justify-content:center;
+  align-items:center;
+  background:rgba(0,0,0,.7);
+}
+
+.popup div{
+  background:#111;
+  padding:25px;
+  border-radius:20px;
+  font-size:20px;
+}
+
+.win{color:#00ff88;}
+.loss{color:#ff3b3b;}
+</style>
 </head>
+
 <body>
-  <div id="gameArea"></div>
-  <div id="controls">
-    <button id="startBtn">Start</button>
-    <button id="dropBtn">Drop</button>
-    <button id="historyBtn">History</button>
-    <div id="multiplier">Multiplier: 1.00x</div>
-  </div>
-  <div id="popup"></div>
 
-  <script>
-    const gameArea = document.getElementById("gameArea");
-    const startBtn = document.getElementById("startBtn");
-    const dropBtn = document.getElementById("dropBtn");
-    const multiplierDisplay = document.getElementById("multiplier");
-    const popup = document.getElementById("popup");
+<div class="header">🏢 Tower X</div>
 
-    let fallingSegment = null;
-    let towerHeight = 0;
-    let multiplierIndex = 0;
-    let gameActive = false;
+<div id="game" class="game">
+  <div id="hole" class="hole"></div>
+  <div class="base"></div>
+</div>
 
-    const multipliers = [
-      1.02,1.08,1.14,1.21,1.29,1.37,1.46,1.56,1.67,1.80,1.94,2.09,2.27,2.47,
-      2.69,2.95,3.24,3.58,3.98,4.45,5.01,5.68,6.49,7.49,8.74,10.33,12.39,15.15,
-      18.94,24.35
-    ];
+<div class="mult" id="mult">x1.00</div>
 
-    function createSegment(y=0) {
-      const seg = document.createElement("div");
-      seg.className = "segment";
-      seg.textContent = "HALL";
-      seg.style.top = y + "px";
-      seg.style.left = "0px";
-      gameArea.appendChild(seg);
-      return seg;
-    }
+<input id="bet" type="number" value="100">
 
-    function moveSegment() {
-      if (!fallingSegment) return;
-      let pos = 0;
-      let direction = 1;
-      const interval = setInterval(() => {
-        if (!fallingSegment) { clearInterval(interval); return; }
-        pos += direction * 5;
-        if (pos > gameArea.offsetWidth - 120 || pos < 0) direction *= -1;
-        fallingSegment.style.left = pos + "px";
-      }, 50);
-    }
+<button id="mainBtn">START</button>
+<button id="dropBtn">DROP</button>
 
-    dropBtn.onclick = () => {
-      if (!gameActive) return;
-      if (fallingSegment) {
-        // Drop current segment
-        fallingSegment.style.top = (gameArea.offsetHeight - 40 - towerHeight) + "px";
-        towerHeight += 40;
-        multiplierIndex++;
-        if (multiplierIndex < multipliers.length) {
-          multiplierDisplay.textContent = "Multiplier: " + multipliers[multiplierIndex].toFixed(2) + "x";
-        } else {
-          multiplierDisplay.textContent = "Multiplier: MAX";
-        }
-        fallingSegment = null;
-        fallingSegment = createSegment();
-        moveSegment();
-      }
-    };
+<div class="popup" id="popup">
+  <div id="popupText"></div>
+</div>
 
-    startBtn.onclick = () => {
-      if (!gameActive) {
-        gameActive = true;
-        startBtn.textContent = "Cash Out";
-        towerHeight = 0;
-        multiplierIndex = 0;
-        multiplierDisplay.textContent = "Multiplier: 1.00x";
-        gameArea.innerHTML = "";
-        fallingSegment = createSegment();
-        moveSegment();
-      } else {
-        // Cash out
-        showPopup("🎉 You cashed out with " + multipliers[multiplierIndex].toFixed(2) + "x");
-        resetGame();
-      }
-    };
+<script>
+let wallet=1000;
+let running=false;
+let bet=0;
+let step=0;
 
-    function showPopup(msg) {
-      popup.textContent = msg;
-      popup.style.display = "block";
-      setTimeout(() => popup.style.display = "none", 3000);
-    }
+const multipliers=[
+1.02,1.08,1.14,1.21,1.29,1.37,1.46,1.56,1.67,1.80,
+1.94,2.09,2.27,2.47,2.69,2.95,3.24,3.58,3.98,4.45,
+5.01,5.68,6.49,7.49,8.74,10.33,12.39,15.15,18.94,24.35
+];
 
-    function resetGame() {
-      gameActive = false;
-      startBtn.textContent = "Start";
-      fallingSegment = null;
-      towerHeight = 0;
-      multiplierIndex = 0;
-    }
+let holeX=0,dir=1,moveHole;
+let lastLeft=110;
+let lastWidth=100;
 
-    // Simulate loss if tower too high
-    setInterval(() => {
-      if (towerHeight > 400 && gameActive) {
-        showPopup("🔥 Bad news, you lost");
-        resetGame();
-      }
-    }, 1000);
-  </script>
+/* ELEMENTS */
+const hole=document.getElementById("hole");
+const game=document.getElementById("game");
+const mainBtn=document.getElementById("mainBtn");
+const dropBtn=document.getElementById("dropBtn");
+
+/* POPUP */
+function showPopup(text,type){
+ popupText.className=type;
+ popupText.innerText=text;
+ popup.style.display="flex";
+ setTimeout(()=>popup.style.display="none",2000);
+}
+
+/* START / CASHOUT */
+mainBtn.onclick=()=>{
+ if(!running){
+   startGame();
+ }else{
+   cashout();
+ }
+};
+
+dropBtn.onclick=()=>drop();
+
+/* START */
+function startGame(){
+ bet=+document.getElementById("bet").value;
+
+ if(bet<=0 || bet>wallet){
+   showPopup("❌ Low Balance","loss");
+   return;
+ }
+
+ wallet-=bet;
+ running=true;
+ step=0;
+
+ mainBtn.innerText="CASHOUT";
+
+ game.innerHTML='<div id="hole" class="hole"></div><div class="base"></div>';
+ 
+ startHole();
+}
+
+/* MOVE HOLE */
+function startHole(){
+ const hole=document.getElementById("hole");
+
+ moveHole=setInterval(()=>{
+   holeX+=dir*4;
+
+   if(holeX>220) dir=-1;
+   if(holeX<0) dir=1;
+
+   hole.style.left=holeX+"px";
+ },20);
+}
+
+/* DROP */
+function drop(){
+ if(!running) return;
+
+ clearInterval(moveHole);
+
+ const hole=document.getElementById("hole");
+
+ let block=document.createElement("div");
+ block.className="block";
+ block.style.left=holeX+"px";
+ block.style.top="0px";
+
+ game.appendChild(block);
+
+ /* FALL */
+ let fall=setInterval(()=>{
+   let top=parseInt(block.style.top);
+   top+=5;
+   block.style.top=top+"px";
+
+   if(top>=350-(step*30)){
+     clearInterval(fall);
+
+     /* LOSS (random black) */
+     if(Math.random()<0.25){
+       block.style.background="red";
+       showPopup("🔥 Bad Luck! You Loss","loss");
+       reset();
+       return;
+     }
+
+     /* STACK */
+     let overlap=Math.min(holeX+80,lastLeft+lastWidth)-Math.max(holeX,lastLeft);
+
+     if(overlap<=0){
+       block.style.background="red";
+       showPopup("🔥 Miss! You Loss","loss");
+       reset();
+       return;
+     }
+
+     block.style.left=Math.max(holeX,lastLeft)+"px";
+     block.style.width=overlap+"px";
+
+     lastLeft=parseFloat(block.style.left);
+     lastWidth=overlap;
+
+     /* MULTIPLIER */
+     document.getElementById("mult").innerText="x"+multipliers[step];
+
+     step++;
+
+     if(step>=multipliers.length){
+       cashout();
+       return;
+     }
+
+     startHole();
+   }
+
+ },20);
+}
+
+/* CASHOUT */
+function cashout(){
+ if(!running) return;
+
+ let win=bet*multipliers[Math.max(step-1,0)];
+
+ wallet+=win;
+
+ showPopup("💰 You Cashout ₹"+Math.floor(win),"win");
+
+ reset();
+}
+
+/* RESET */
+function reset(){
+ running=false;
+ mainBtn.innerText="START";
+}
+</script>
+
 </body>
 </html>
