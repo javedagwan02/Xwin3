@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>💥 Stack Tower Pro</title>
+<title>💥 Stack Crash Pro</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <style>
@@ -30,7 +30,7 @@ body{
 /* GAME */
 .game{
   position:relative;
-  height:320px;
+  height:350px;
   max-width:300px;
   margin:20px auto;
   overflow:hidden;
@@ -42,7 +42,7 @@ body{
   height:30px;
   border-radius:6px;
   pointer-events:none;
-  transition:top 0.3s ease;
+  transition:all .2s linear;
 }
 
 /* BASE */
@@ -63,7 +63,7 @@ body{
   margin:10px;
 }
 
-/* BTN */
+/* INPUT + BTN */
 input,button{
   width:85%;
   padding:14px;
@@ -102,8 +102,8 @@ button{
 <body>
 
 <div class="header">
-💥 STACK TOWER  
-<div class="wallet">₹ <span id="wallet">0</span></div>
+💥 STACK CRASH  
+<div class="wallet">₹ <span id="wallet">1000</span></div>
 </div>
 
 <div id="game" class="game">
@@ -122,8 +122,6 @@ button{
 let wallet=1000;
 let running=false;
 let bet=0;
-let startTime=0;
-
 let step=0;
 
 const multipliers=[
@@ -134,18 +132,14 @@ const multipliers=[
 
 let lastLeft=0;
 let lastWidth=200;
-let block=null;
 let pos=0,dir=1,move;
 
-/* ELEMENTS */
 const game=document.getElementById("game");
-const betInput=document.getElementById("betInput");
 const mainBtn=document.getElementById("mainBtn");
-const dropBtn=document.getElementById("dropBtn");
 
 /* UI */
 function updateWallet(){
- wallet.innerText=wallet;
+ walletEl.innerText=wallet;
 }
 
 function popup(msg,type){
@@ -155,7 +149,7 @@ function popup(msg,type){
  setTimeout(()=>popup.style.display="none",1800);
 }
 
-/* BUTTON */
+/* START / CASHOUT */
 mainBtn.onclick=()=>{
  if(!running){
    startGame();
@@ -180,7 +174,6 @@ function startGame(){
 
  running=true;
  step=0;
- startTime=Date.now();
 
  mainBtn.innerText="CASHOUT";
 
@@ -192,24 +185,24 @@ function startGame(){
  createBlock();
 }
 
-/* CREATE BLOCK (UPPER DROP EFFECT) */
+/* CREATE BLOCK */
 function createBlock(){
- block=document.createElement("div");
- block.className="block";
+ const block=document.createElement("div");
 
+ block.className="block";
  block.style.width=lastWidth+"px";
- block.style.top="-40px"; /* 🔥 upar se aayega */
  block.style.left="0px";
+ block.style.top="-40px";
  block.style.background="#fff";
 
  game.appendChild(block);
 
- /* fall animation */
+ /* FALL */
  setTimeout(()=>{
-   block.style.top=(280 - (step*30))+"px";
+   block.style.top=(320-(step*30))+"px";
  },50);
 
- pos=0;dir=1;
+ pos=0; dir=1;
 
  move=setInterval(()=>{
    pos+=dir*4;
@@ -219,6 +212,8 @@ function createBlock(){
 
    block.style.left=pos+"px";
  },20);
+
+ block.dataset.id=Date.now();
 }
 
 /* DROP */
@@ -227,12 +222,13 @@ function drop(){
 
  clearInterval(move);
 
- /* RANDOM CRASH */
- const crash=Math.random()<0.3;
+ let blocks=document.querySelectorAll(".block");
+ let current=blocks[blocks.length-1];
 
- if(crash){
-   block.style.background="red";
-   popup("💥 CRASH","loss");
+ /* CRASH */
+ if(Math.random()<0.25){
+   current.style.background="red";
+   popup("💥 FUT GYA","loss");
    reset();
    return;
  }
@@ -241,38 +237,44 @@ function drop(){
  let overlap=Math.min(pos+lastWidth,lastLeft+lastWidth)-Math.max(pos,lastLeft);
 
  if(overlap<=0){
-   block.style.background="red";
+   current.style.background="red";
    popup("💥 MISS","loss");
    reset();
    return;
  }
 
- block.style.left=Math.max(pos,lastLeft)+"px";
- block.style.width=overlap+"px";
+ current.style.left=Math.max(pos,lastLeft)+"px";
+ current.style.width=overlap+"px";
 
- lastLeft=parseFloat(block.style.left);
+ lastLeft=parseFloat(current.style.left);
  lastWidth=overlap;
 
+ /* MULTIPLIER */
  document.getElementById("mult").innerText="x"+multipliers[step];
 
  step++;
 
  popup("✅ SAFE","win");
 
- setTimeout(createBlock,300);
+ /* AUTO CASHOUT */
+ if(step>=multipliers.length){
+   cashout();
+   return;
+ }
+
+ setTimeout(createBlock,200);
 }
 
 /* CASHOUT */
 function cashout(){
  if(!running) return;
 
- let time = ((Date.now()-startTime)/1000).toFixed(1);
  let win=bet*multipliers[Math.max(step-1,0)];
 
  wallet+=win;
  updateWallet();
 
- popup(`💰 ₹${Math.floor(win)}\n⏱ ${time}s`,"win");
+ popup("💰 ₹"+Math.floor(win),"win");
 
  reset();
 }
