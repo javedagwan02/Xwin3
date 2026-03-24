@@ -230,7 +230,7 @@ async function loadEdge(){
     const snap = await getDoc(ref);
 
     if(snap.exists()){
-      HOUSE_EDGE = snap.data().draxTurbo ?? 0.25;
+      HOUSE_EDGE = (snap.data().draxTurbo ?? 25) / 100;
     }
   }catch(e){
     console.log("Edge load error", e);
