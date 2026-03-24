@@ -334,10 +334,13 @@ button{
   <div id="popupText" class="popup-box"></div>
 </div>
 
-    
-<script type="module">
+    <script type="module">
+
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getFirestore, getDocs, collection, query, where, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { 
+  getFirestore, getDocs, collection, query, where, 
+  doc, updateDoc, onSnapshot 
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 const app = initializeApp({
   apiKey:"AIzaSyBx3J9aGn_98rTPgurMMKw_GR3puIMj4Ms",
@@ -350,23 +353,36 @@ const db = getFirestore(app);
 const userEmail = localStorage.getItem("userEmail");
 let userDocId = "";
 
-// 🔥 HISTORY DATA
+// 🔥 HISTORY
 let historyData = [];
 
-// 🔥 LEVELS (same as tera)
-const levels = { ...JSON.parse(`{
-"easy":[1.02,1.08,1.14,1.21,1.29,1.37,1.46,1.56,1.67,1.80,1.94,2.09,2.27,2.47,2.69,2.95,3.24,3.58,3.98,4.45,5.01,5.68,6.49,7.49,8.74,10.33,12.39,15.15,18.94,24.35],
-"medium":[1.08,1.22,1.38,1.57,1.79,2.06,2.38,2.78,3.27,3.89,4.67,5.67,6.98,8.73,11.11,14.44,19.25,26.48,37.83,56.74,90.79,158.88,317.77,794.43,3177.72],
-"hard":[1.19,1.47,1.84,2.32,2.97,3.84,5.05,6.73,9.13,12.65,17.92,26.07,39.11,60.84,98.87,169.49,310.74,621.49,1398.35,3728.95,13051.35,78308.1],
-"hardcore":[1.45,2.22,3.47,5.56,9.13,15.46,27.06,49.21,93.5,187.01,397.39,908.33,2270.83,6358.35,20664.63,82658.55,456622.02,4546220.25]
-}`) };
+// 🔥 HOUSE EDGE (LIVE)
+let houseEdge = 50;
+
+onSnapshot(doc(db,"settings","houseEdge"), (snap)=>{
+  if(!snap.exists()) return;
+
+  let data = snap.data();
+  if(data.chickenRoad !== undefined){
+    houseEdge = Number(data.chickenRoad);
+    console.log("HOUSE EDGE:", houseEdge);
+  }
+});
+
+// 🔥 LEVELS
+const levels = {
+easy:[1.02,1.08,1.14,1.21,1.29,1.37,1.46,1.56,1.67,1.80,1.94,2.09,2.27,2.47,2.69,2.95,3.24,3.58,3.98,4.45,5.01,5.68,6.49,7.49,8.74,10.33,12.39,15.15,18.94,24.35],
+medium:[1.08,1.22,1.38,1.57,1.79,2.06,2.38,2.78,3.27,3.89,4.67,5.67,6.98,8.73,11.11,14.44,19.25,26.48,37.83,56.74,90.79,158.88,317.77,794.43,3177.72],
+hard:[1.19,1.47,1.84,2.32,2.97,3.84,5.05,6.73,9.13,12.65,17.92,26.07,39.11,60.84,98.87,169.49,310.74,621.49,1398.35,3728.95,13051.35,78308.1],
+hardcore:[1.45,2.22,3.47,5.56,9.13,15.46,27.06,49.21,93.5,187.01,397.39,908.33,2270.83,6358.35,20664.63,82658.55,456622.02,4546220.25]
+};
 
 let wallet=1000;
 let playing=false;
 let step=0;
 let currentLevel="easy";
 
-// 🔥 WALLET LOAD
+// 🔥 LOAD WALLET
 async function loadWallet(){
   const snap = await getDocs(query(collection(db,"users"), where("email","==",userEmail)));
   snap.forEach(d=>{
@@ -416,6 +432,7 @@ function createRoad(){
 async function play(){
 
   if(!playing){
+
     let bet = parseInt(document.getElementById("betAmount").value) || 0;
 
     if(wallet < bet){
@@ -435,8 +452,8 @@ async function play(){
 
     document.getElementById("playBtn").innerText="JUMP";
 
-    let first=levels[currentLevel][0];
-    document.getElementById("multi").innerText=first+"x";
+    document.getElementById("multi").innerText=
+      levels[currentLevel][0]+"x";
 
   }else{
 
@@ -450,14 +467,21 @@ async function play(){
 
     moveChicken(step);
 
-    let loseChance={
-      easy:0.1,
-      medium:0.2,
-      hard:0.3,
-      hardcore:0.5
-    };
+    // 🔥 HOUSE EDGE LOGIC
+    let lose=false;
 
-    if(Math.random()<loseChance[currentLevel]){
+    if(houseEdge===0){
+      lose=true;
+    }
+    else if(houseEdge===100){
+      lose=false;
+    }
+    else{
+      let winChance = houseEdge/100;
+      lose = Math.random() > winChance;
+    }
+
+    if(lose){
       triggerFire(step);
       setTimeout(()=>gameOver(),400);
       return;
@@ -470,7 +494,7 @@ async function play(){
 // MOVE
 function moveChicken(s){
   let chicken=document.getElementById("chicken");
-  chicken.style.left = (s * 97)+"px";
+  chicken.style.left=(s*97)+"px";
 
   chicken.classList.add("jump");
   setTimeout(()=>chicken.classList.remove("jump"),400);
@@ -487,8 +511,8 @@ function autoFire(){
 
     let i=Math.floor(Math.random()*pipes.length);
     pipes[i].classList.add("active");
-    setTimeout(()=>pipes[i].classList.remove("active"),600);
 
+    setTimeout(()=>pipes[i].classList.remove("active"),600);
   },1000+Math.random()*2000);
 }
 
@@ -500,7 +524,7 @@ function triggerFire(i){
   }
 }
 
-// 🔥 HISTORY ADD
+// HISTORY
 function addHistory(type, amount){
   let time=new Date().toLocaleTimeString();
   historyData.unshift({type,amount,time});
@@ -570,7 +594,7 @@ async function cashout(){
 
   document.getElementById("wallet").innerText=wallet;
 
-  addHistory("win", winAmount); // 🔥 ADD
+  addHistory("win", winAmount);
 
   showPopup(`🎉 Congratulations!<br>Win ₹${winAmount} 💰`,true);
   reset();
@@ -588,7 +612,7 @@ async function gameOver(){
 
   document.getElementById("wallet").innerText=wallet;
 
-  addHistory("loss", bet); // 🔥 ADD
+  addHistory("loss", bet);
 
   showPopup(`💀 Bad Luck!<br>You Lost ₹${bet} 🔥`,false);
   reset();
@@ -608,7 +632,7 @@ function reset(){
   moveChicken(0);
 }
 
-// 🔥 GLOBAL (IMPORTANT)
+// GLOBAL
 window.play = play;
 window.cashout = cashout;
 window.changeBet = changeBet;
@@ -617,7 +641,7 @@ window.initGame = initGame;
 window.openHistory = openHistory;
 window.closeHistory = closeHistory;
 
-    </script>
+                       </script>
   
   <div id="historyPopup" class="history-popup">
   <div class="history-box">
