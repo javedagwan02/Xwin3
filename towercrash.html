@@ -124,7 +124,7 @@ button{
 </div>
 
 
-   <script>
+  <script>
 let wallet=1000;
 let running=false;
 let bet=0;
@@ -217,7 +217,7 @@ function drop(){
 
  block.className="block";
  block.style.left=blockLeft+"px";
- block.style.top="-120px"; // 🔥 upar se start
+ block.style.top="-120px";
  block.style.background="url(images/29199-removebg-preview.png) center/contain no-repeat";
 
  game.appendChild(block);
@@ -227,28 +227,28 @@ function drop(){
 
  let targetY = game.clientHeight - baseOffset - (step * blockHeight);
 
- /* 🔥 REAL PHYSICS DROP */
- let velocity = 0;
- let gravity = 0.6;
+ /* 🔥 REAL FALL */
+ let velocity=0;
+ let gravity=0.6;
 
- let fall = setInterval(()=>{
-   let top = parseFloat(block.style.top);
+ let fall=setInterval(()=>{
+   let top=parseFloat(block.style.top);
 
-   velocity += gravity;
-   top += velocity;
+   velocity+=gravity;
+   top+=velocity;
 
-   block.style.top = top + "px";
+   block.style.top=top+"px";
 
-   if(top >= targetY){
+   if(top>=targetY){
      clearInterval(fall);
 
-     /* 🔥 BOUNCE EFFECT */
-     block.style.top = (targetY - 10) + "px";
+     /* 🔥 BOUNCE */
+     block.style.top=(targetY-10)+"px";
 
      setTimeout(()=>{
-       block.style.top = targetY + "px";
+       block.style.top=targetY+"px";
 
-       /* LOSS RANDOM */
+       /* 🔥 LOSS RANDOM */
        if(Math.random()<0.25){
          block.style.filter="brightness(0)";
          showPopup("🔥 Bad Luck! You Loss","loss");
@@ -256,30 +256,20 @@ function drop(){
          return;
        }
 
-       /* STACK */
-       let overlap = Math.min(blockLeft + blockWidth, lastLeft + lastWidth)
-                   - Math.max(blockLeft, lastLeft);
-
-       if(overlap<=0){
-         block.style.filter="brightness(0)";
-         showPopup("🔥 Miss! You Loss","loss");
-         reset();
-         return;
-       }
-
-       let newLeft = Math.max(blockLeft, lastLeft);
+       /* 🔥 PERFECT STACK (MAIN FIX) */
+       let newLeft = lastLeft + (lastWidth/2) - (blockWidth/2);
 
        block.style.left=newLeft+"px";
-       block.style.width=overlap+"px";
+       block.style.width=blockWidth+"px";
 
-       /* 🔥 IMPACT EFFECT */
+       /* IMPACT EFFECT */
        block.style.transform="scaleY(0.95)";
        setTimeout(()=>{
          block.style.transform="scaleY(1)";
        },120);
 
        lastLeft=newLeft;
-       lastWidth=overlap;
+       lastWidth=blockWidth;
 
        document.getElementById("mult").innerText="x"+multipliers[step];
 
@@ -321,7 +311,8 @@ function reset(){
  running=false;
  mainBtn.innerText="START";
 }
-</script>    
+         </script>       
+ 
   
 </body>
 </html>
