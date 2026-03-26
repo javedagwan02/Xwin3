@@ -265,7 +265,16 @@ rollBtn.onclick = async ()=>{
     }
 
     // 👇 RESULT FIX
-dice.innerText = num;
+const diceMap = {
+  1:"⚀",
+  2:"⚁",
+  3:"⚂",
+  4:"⚃",
+  5:"⚄",
+  6:"⚅"
+};
+
+dice.innerText = diceMap[num];
 
 let winAmt=0;
 
