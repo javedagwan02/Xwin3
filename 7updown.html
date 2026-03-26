@@ -622,11 +622,16 @@ async function result(){
 
   cover.style.opacity = "0";
 
+// 🎯 DELAY → FIRST RESULT HIDE
 setTimeout(()=>{
-  cover.style.display = "none";
-  dice.style.display = "flex";
-  dice.style.opacity = "1";
-},200);
+
+  cover.style.display="none";
+  dice.style.display="flex";
+
+  document.getElementById("d1").innerText=d1;
+  document.getElementById("d2").innerText=d2;
+
+},400);  // 🔥 delay important
 
   setTimeout(()=>{
     document.getElementById("d1").innerText=d1;
