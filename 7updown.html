@@ -464,13 +464,12 @@ body{
   <div class="popup-box" id="popupText"></div>
 </div>
 
-
 <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getFirestore, doc, getDocs, collection, query, where, updateDoc, addDoc, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-/* 🔥 FIREBASE */
+/* FIREBASE */
 const app = initializeApp({
   apiKey:"AIzaSyBx3J9aGn_98rTPgurMMKw_GR3puIMj4Ms",
   authDomain:"colourcash-ea60e.firebaseapp.com",
@@ -489,6 +488,7 @@ let wallet=0;
 let bettingOpen=true;
 let resultRunning=false;
 let houseEdge=50;
+let lastResultTime = 0;
 
 /* ROUND SYNC */
 let roundStart = localStorage.getItem("roundStart");
@@ -524,8 +524,10 @@ onSnapshot(doc(db,"settings","houseEdge"), snap=>{
 /* UI */
 const cover=document.getElementById("cover");
 const dice=document.getElementById("diceArea");
+
 cover.style.display="block";
 dice.style.display="none";
+dice.style.opacity="1"; // 🔥 FIX
 
 /* CHIP */
 window.setChip=(v,e)=>{
@@ -569,7 +571,7 @@ function controlledResult(){
     userBet=="LOW"?"HIGH":userBet=="HIGH"?"LOW":"LOW";
 }
 
-/* TIMER (FINAL FIX) */
+/* TIMER FIX (NO DOUBLE RESULT) */
 setInterval(()=>{
   let time = getTime();
   document.getElementById("timer").innerText = time;
@@ -579,11 +581,12 @@ setInterval(()=>{
     showPopup("BET LOCK",null,true);
   }
 
-  if(time <= 0 && !resultRunning){
+  if(time === 0 && Date.now() - lastResultTime > 3000){
+    lastResultTime = Date.now();
     result();
   }
 
-},500); // 🔥 faster check (bug fix)
+},1000);
 
 /* RESULT */
 async function result(){
@@ -621,10 +624,8 @@ async function result(){
   dice.style.display="flex";
 
   setTimeout(()=>{
-
-    document.getElementById("d1").innerText="🎲 "+d1;
-    document.getElementById("d2").innerText="🎲 "+d2;
-
+    document.getElementById("d1").innerText=d1;
+    document.getElementById("d2").innerText=d2;
   },300);
 
   setTimeout(async ()=>{
@@ -678,10 +679,12 @@ async function result(){
   },2000);
 }
 
-/* POPUP */
+/* POPUP FIX */
 function showPopup(msg,win,lock=false){
   const p=document.getElementById("popup");
   const box=document.getElementById("popupText");
+
+  if(!p || !box) return;
 
   box.innerText=msg;
   box.className="popup-box "+(lock?"lock":win?"win":"loss");
@@ -702,27 +705,23 @@ function updateHistory(type){
   if(h.children.length>10) h.removeChild(h.lastChild);
 }
 
-/* BUTTON FIX */
-window.addEventListener("DOMContentLoaded", ()=>{
+/* 🔥 BUTTON FIX (DIRECT – NO DOMContentLoaded) */
+document.getElementById("helpBtn").onclick = ()=>{
+  document.getElementById("helpPopup").classList.add("show");
+};
 
-  document.getElementById("helpBtn").onclick=()=>{
-    document.getElementById("helpPopup").classList.add("show");
-  };
+document.getElementById("helpPopup").onclick = ()=>{
+  document.getElementById("helpPopup").classList.remove("show");
+};
 
-  document.getElementById("helpPopup").onclick=()=>{
-    document.getElementById("helpPopup").classList.remove("show");
-  };
+document.getElementById("historyBtn").onclick = ()=>{
+  document.getElementById("historyPopup").classList.add("show");
+  loadBetHistory();
+};
 
-  document.getElementById("historyBtn").onclick=()=>{
-    document.getElementById("historyPopup").classList.add("show");
-    loadBetHistory();
-  };
-
-  document.getElementById("closeHistory").onclick=()=>{
-    document.getElementById("historyPopup").classList.remove("show");
-  };
-
-});
+document.getElementById("closeHistory").onclick = ()=>{
+  document.getElementById("historyPopup").classList.remove("show");
+};
 
 /* LOAD HISTORY */
 async function loadBetHistory(){
@@ -736,8 +735,8 @@ async function loadBetHistory(){
 
   snap.forEach(d=>{
     const item=d.data();
-    let div=document.createElement("div");
 
+    let div=document.createElement("div");
     div.className="history-item "+(item.win?"win-item":"loss-item");
 
     div.innerHTML=`
