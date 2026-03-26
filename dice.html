@@ -264,16 +264,19 @@ rollBtn.onclick = async ()=>{
       }
     }
 
-    let winAmt=0;
+    // 👇 RESULT FIX
+dice.innerText = num;
 
-    if(win){
-      winAmt = bet*2;
-      wallet += winAmt;
-      popupText.innerText=`🎉 YOU WIN ₹${winAmt}`;
-      await saveWallet();
-    }else{
-      popupText.innerText="❌ YOU LOST";
-    }
+let winAmt=0;
+
+if(win){
+  winAmt = bet*2;
+  wallet += winAmt;
+  popupText.innerText=`🎉 YOU WIN ₹${winAmt}`;
+  await saveWallet();
+}else{
+  popupText.innerText="❌ YOU LOST";
+}
 
     updateWallet();
     addHistory(num,bet,selectedOE,win,winAmt);
