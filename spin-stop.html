@@ -157,6 +157,7 @@ button{
   <button class="chooseBtn redBtn" onclick="selectColor('red',this)">RED</button>
   <button class="chooseBtn greenBtn" onclick="selectColor('green',this)">GREEN</button>
 </div>
+  <button id="startBtn">START</button>
 <button id="stopBtn" disabled>STOP</button>
 
 <div class="history">
@@ -245,7 +246,9 @@ window.selectColor = (color, el)=>{
 };
 
 /* SPIN */
-spinBtn.onclick = async ()=>{
+/* START */
+startBtn.onclick = async ()=>{
+
   const bet = Number(document.getElementById("bet").value);
 
   if(!selectedColor) return alert("Select RED or GREEN");
@@ -255,7 +258,7 @@ spinBtn.onclick = async ()=>{
   await saveWallet();
   renderWallet();
 
-  spinBtn.disabled = true;
+  startBtn.disabled = true;
   stopBtn.disabled = false;
 
   spinning = true;
@@ -269,7 +272,6 @@ spinBtn.onclick = async ()=>{
     spinner.style.transform = `rotate(${angle}deg)`;
   },50);
 };
-
 /* STOP */
 stopBtn.onclick = async ()=>{
   if(!spinning || isStopping) return;
@@ -279,7 +281,7 @@ stopBtn.onclick = async ()=>{
   clearInterval(spinInt);
   spinning = false;
 
-  spinBtn.disabled = false;
+  startBtn.disabled = false;
   stopBtn.disabled = true;
 
   const bet = Number(document.getElementById("bet").value);
