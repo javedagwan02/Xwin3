@@ -489,6 +489,7 @@ let bettingOpen=true;
 let resultRunning=false;
 let houseEdge=50;
 let lastResultTime = 0;
+let roundPlayed = false;
 
 /* ROUND SYNC */
 let roundStart = localStorage.getItem("roundStart");
@@ -581,8 +582,9 @@ setInterval(()=>{
     showPopup("BET LOCK",null,true);
   }
 
-  if(time === 0 && Date.now() - lastResultTime > 3000){
-    lastResultTime = Date.now();
+  // 🔥 ONLY ONCE PER ROUND
+  if(time === 0 && !roundPlayed){
+    roundPlayed = true;
     result();
   }
 
@@ -680,6 +682,7 @@ setTimeout(()=>{
 
     resultRunning=false;
     bettingOpen=true;
+    roundPlayed = false;
     bets={LOW:0,HIGH:0,MID:0};
 
     document.getElementById("lowAmt").innerText=0;
