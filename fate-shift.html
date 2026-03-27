@@ -113,9 +113,10 @@ input{
  <div id="bets">No bets yet</div>
 </div>
 
-<script type="module">
+
+      <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getFirestore, collection, query, where, getDocs, doc, updateDoc }
+import { getFirestore, collection, query, where, getDocs, doc, updateDoc, onSnapshot }
 from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 /* FIREBASE */
@@ -147,6 +148,18 @@ let balance=0;
 let docId="";
 let autoShift=0;
 
+/* 🔥 HOUSE EDGE */
+let houseEdge = 50;
+
+onSnapshot(doc(db,"settings","houseEdge"), (snap)=>{
+  if(!snap.exists()) return;
+  let data = snap.data();
+  if(data.fateShift !== undefined){
+    houseEdge = Number(data.fateShift);
+    console.log("FATE SHIFT EDGE:", houseEdge);
+  }
+});
+
 /* LOAD HISTORY */
 let history = JSON.parse(localStorage.getItem("FS_HISTORY")||"[]");
 renderHistory();
@@ -162,15 +175,35 @@ snap.forEach(d=>{
 });
 walletEl.innerText = balance.toFixed(2);
 
-/* CRASH POINT (MAX ≈ 2.2x) */
+/* 🔥 NEW CRASH LOGIC */
 function crashPoint(){
-  return 1.45 + Math.random()*0.75;
+
+  // 🔻 FULL LOSS MODE
+  if(houseEdge <= 0){
+    return 1.01 + Math.random()*0.09; // max 1.10
+  }
+
+  // 🔺 FULL WIN MODE
+  if(houseEdge >= 100){
+    return 2 + Math.random()*3; // 2x - 5x+
+  }
+
+  // 🔄 MIX MODE
+  let winChance = houseEdge / 100;
+
+  if(Math.random() < winChance){
+    // WIN SIDE
+    return 1.5 + Math.random()*3; // 1.5x - 4.5x
+  }else{
+    // LOSS SIDE
+    return 1.01 + Math.random()*0.5; // 1.01x - 1.5x
+  }
 }
 
-/* OWNER EDGE */
+/* OWNER EDGE (AUTO SHIFT CONTROL SAME) */
 function shouldAutoWin(){
-  let loseChance = 0.65;              // base loss
-  loseChance += Math.min(bet/1000,1)*0.2; // high bet = more loss
+  let loseChance = 0.65;
+  loseChance += Math.min(bet/1000,1)*0.2;
   return Math.random() > loseChance;
 }
 
@@ -192,7 +225,7 @@ startBtn.onclick = async ()=>{
 
   multiplier = 1;
   bar = 0;
-  crash = crashPoint();
+  crash = crashPoint(); // 🔥 UPDATED
 
   running = true;
   startBtn.disabled = true;
@@ -213,13 +246,13 @@ function loop(){
   multiEl.innerText = multiplier.toFixed(2);
   barEl.style.width = Math.min(bar,100)+"%";
 
-  // RANDOM EARLY CRASH (OWNER SAFE)
+  // RANDOM EARLY CRASH
   if(Math.random() < 0.02){
     end(false);
     return;
   }
 
-  // AUTO SHIFT (NOT GUARANTEED)
+  // AUTO SHIFT
   if(autoShift > 1 && multiplier >= autoShift){
     if(shouldAutoWin()){
       end(true);
@@ -269,13 +302,13 @@ async function end(win){
   renderHistory();
 }
 
-/* RENDER HISTORY */
+/* HISTORY */
 function renderHistory(){
   betsEl.innerHTML = history.length
     ? history.map(h=>`<div class="bet-row ${h.startsWith("WIN")?"win":"lose"}">${h}</div>`).join("")
     : "No bets yet";
 }
-</script>
+      </script>
 
 </body>
 </html>
