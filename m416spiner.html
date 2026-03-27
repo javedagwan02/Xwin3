@@ -316,17 +316,19 @@ window.spin = async function(){
 
   let result = wheelMap[index];
 
-  // 🎯 ANGLE CALC (FINAL FIX)
   let slice = 360 / 8;
-  let target = (index * slice) + (slice / 2);
 
-  let extraSpins = Math.floor(Math.random() * 2) + 5;
+// 🎯 IMPORTANT FIX (reverse mapping)
+let target = 360 - (index * slice) - (slice / 2);
 
-  // 🔥 ACCUMULATE ROTATION (MAIN FIX)
-  currentRotation += (360 * extraSpins) + target;
+// 🔥 spins
+let extraSpins = Math.floor(Math.random() * 2) + 5;
 
-  let finalDeg = currentRotation;
+// 🔥 accumulate rotation
+currentRotation += (360 * extraSpins) + target;
 
+let finalDeg = currentRotation;
+  
   // 🎯 SPIN
   spinner.style.transition = "4s cubic-bezier(0.22, 1, 0.36, 1)";
   spinner.style.transform = `rotate(${finalDeg}deg)`;
