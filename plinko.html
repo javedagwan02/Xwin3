@@ -123,6 +123,24 @@ body{
   font-weight:bold;
   font-size:16px;
 }
+  .hole{
+  width:30px;
+  height:20px;
+  background:#000;
+  position:absolute;
+  top:0;
+  border-radius:0 0 15px 15px;
+  box-shadow:0 0 10px #000 inset;
+}
+
+.left-hole{
+  left:30%;
+}
+
+.right-hole{
+  right:30%;
+}
+  
 </style>
 </head>
 
@@ -136,6 +154,9 @@ body{
 <div class="history" id="history">Encrypted Result:</div>
 <div class="board" id="board"></div>
 
+ <div class="hole left-hole"></div>
+<div class="hole right-hole"></div>
+  
 <div class="rows">
   <div class="row">
     <div class="box red">26.3</div><div class="box red">4</div><div class="box red">1.5</div>
@@ -301,10 +322,22 @@ $("drop").onclick=async ()=>{
 
   /* 🎯 ANIMATION TARGET BASED */
   let row = 0;
-  let col = 4;
+  // 🎯 RANDOM HOLE SELECT
+let startSide = Math.random() < 0.5 ? "left" : "right";
 
-  ball.style.top = "20px";
-  ball.style.left = (col * sx + 20) + "px";
+let startX;
+
+if(startSide === "left"){
+  startX = 100;  // adjust as per design
+}else{
+  startX = 200;
+}
+
+ball.style.top = "0px";
+ball.style.left = startX + "px";
+
+// starting column set
+col = startSide === "left" ? 2 : 6;
 
   function stepFall(){
     if(row >= rows){
