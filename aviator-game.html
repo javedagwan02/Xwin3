@@ -15,9 +15,20 @@ body{
 
 /* HEADER */
 .header{
-  padding:10px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:15px;
   font-size:20px;
   font-weight:bold;
+}
+
+.wallet{
+  background:#111;
+  padding:6px 12px;
+  border-radius:20px;
+  font-size:14px;
+  box-shadow:0 0 10px #00ffcc;
 }
 
 /* SPINNER */
@@ -136,7 +147,10 @@ button{
 
 <body>
 
-<div class="header">🎯 Spinner Game</div>
+<div class="header">
+  🎯 Spinner Game
+  <div class="wallet">₹ <span id="wallet">0</span></div>
+</div>
 
 <div class="spinner-box">
   <div class="arrow">⬇️</div>
