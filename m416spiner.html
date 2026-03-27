@@ -301,7 +301,7 @@ window.spin = async function(){
 
   let spinner = document.getElementById("spinner");
 
-  // 🎯 HOUSE EDGE RESULT
+  // 🎯 STEP 1: RESULT PEHLE DECIDE
   let winChance = Math.random();
   let index;
 
@@ -316,20 +316,17 @@ window.spin = async function(){
 
   let result = wheelMap[index];
 
+  // 🎯 STEP 2: EXACT ANGLE CALC
   let slice = 360 / 8;
 
-// 🎯 IMPORTANT FIX (reverse mapping)
-let target = 360 - (index * slice) - (slice / 2);
+  // 🔥 reverse angle (IMPORTANT)
+  let target = 360 - (index * slice) - (slice / 2);
 
-// 🔥 spins
-let extraSpins = Math.floor(Math.random() * 2) + 5;
+  let extraSpins = Math.floor(Math.random() * 2) + 5;
 
-// 🔥 accumulate rotation
-currentRotation += (360 * extraSpins) + target;
+  let finalDeg = (360 * extraSpins) + target;
 
-let finalDeg = currentRotation;
-  
-  // 🎯 SPIN
+  // 🎯 SPIN START
   spinner.style.transition = "4s cubic-bezier(0.22, 1, 0.36, 1)";
   spinner.style.transform = `rotate(${finalDeg}deg)`;
 
