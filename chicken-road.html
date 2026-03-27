@@ -334,7 +334,7 @@ button{
   <div id="popupText" class="popup-box"></div>
 </div>
 
-    <script type="module">
+<script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { 
@@ -353,28 +353,26 @@ const db = getFirestore(app);
 const userEmail = localStorage.getItem("userEmail");
 let userDocId = "";
 
-// 🔥 HISTORY
+/* 🔥 HISTORY */
 let historyData = [];
 
-// 🔥 HOUSE EDGE (LIVE)
+/* 🔥 HOUSE EDGE */
 let houseEdge = 50;
 
 onSnapshot(doc(db,"settings","houseEdge"), (snap)=>{
   if(!snap.exists()) return;
-
   let data = snap.data();
   if(data.chickenRoad !== undefined){
     houseEdge = Number(data.chickenRoad);
-    console.log("HOUSE EDGE:", houseEdge);
   }
 });
 
-// 🔥 LEVELS
+/* 🔥 LEVELS (START ADDED) */
 const levels = {
-easy:[1.02,1.08,1.14,1.21,1.29,1.37,1.46,1.56,1.67,1.80,1.94,2.09,2.27,2.47,2.69,2.95,3.24,3.58,3.98,4.45,5.01,5.68,6.49,7.49,8.74,10.33,12.39,15.15,18.94,24.35],
-medium:[1.08,1.22,1.38,1.57,1.79,2.06,2.38,2.78,3.27,3.89,4.67,5.67,6.98,8.73,11.11,14.44,19.25,26.48,37.83,56.74,90.79,158.88,317.77,794.43,3177.72],
-hard:[1.19,1.47,1.84,2.32,2.97,3.84,5.05,6.73,9.13,12.65,17.92,26.07,39.11,60.84,98.87,169.49,310.74,621.49,1398.35,3728.95,13051.35,78308.1],
-hardcore:[1.45,2.22,3.47,5.56,9.13,15.46,27.06,49.21,93.5,187.01,397.39,908.33,2270.83,6358.35,20664.63,82658.55,456622.02,4546220.25]
+easy:[1.00,1.02,1.08,1.14,1.21,1.29,1.37,1.46,1.56,1.67,1.80,1.94,2.09,2.27,2.47,2.69,2.95,3.24,3.58,3.98,4.45,5.01,5.68,6.49,7.49,8.74,10.33,12.39,15.15,18.94,24.35],
+medium:[1.00,1.08,1.22,1.38,1.57,1.79,2.06,2.38,2.78,3.27,3.89,4.67,5.67,6.98,8.73,11.11,14.44,19.25,26.48,37.83,56.74,90.79,158.88,317.77,794.43,3177.72],
+hard:[1.00,1.19,1.47,1.84,2.32,2.97,3.84,5.05,6.73,9.13,12.65,17.92,26.07,39.11,60.84,98.87,169.49,310.74,621.49,1398.35,3728.95,13051.35,78308.1],
+hardcore:[1.00,1.45,2.22,3.47,5.56,9.13,15.46,27.06,49.21,93.5,187.01,397.39,908.33,2270.83,6358.35,20664.63,82658.55,456622.02,4546220.25]
 };
 
 let wallet=1000;
@@ -382,7 +380,7 @@ let playing=false;
 let step=0;
 let currentLevel="easy";
 
-// 🔥 LOAD WALLET
+/* LOAD WALLET */
 async function loadWallet(){
   const snap = await getDocs(query(collection(db,"users"), where("email","==",userEmail)));
   snap.forEach(d=>{
@@ -393,7 +391,7 @@ async function loadWallet(){
 }
 loadWallet();
 
-// INIT
+/* INIT */
 function initGame(){
   currentLevel=document.getElementById("level").value;
   createRoad();
@@ -401,7 +399,7 @@ function initGame(){
 initGame();
 autoFire();
 
-// CREATE ROAD
+/* CREATE ROAD */
 function createRoad(){
   let road=document.getElementById("road");
 
@@ -415,7 +413,7 @@ function createRoad(){
   levels[currentLevel].forEach((m,i)=>{
     let d=document.createElement("div");
     d.className="step";
-    d.innerText=m+"x";
+    d.innerText = (i===0) ? "START" : m+"x";
     d.id="s"+i;
     road.appendChild(d);
 
@@ -428,7 +426,7 @@ function createRoad(){
   moveChicken(0);
 }
 
-// PLAY
+/* PLAY */
 async function play(){
 
   if(!playing){
@@ -447,76 +445,60 @@ async function play(){
 
     document.getElementById("wallet").innerText = wallet;
 
-    playing=true;
-step=0;
+    playing = true;
+    step = 0;
 
-document.getElementById("playBtn").innerText="JUMP";
+    document.getElementById("playBtn").innerText = "JUMP";
+    document.getElementById("multi").innerText = "1.00x";
 
-// 🔥 HOUSE EDGE = 0 → INSTANT LOSS
-if(houseEdge === 0){
-  triggerFire(0);
-
-  setTimeout(()=>{
-    gameOver();
-  },300);
-
-  return;
-}
-
-// warna normal start
-let first=levels[currentLevel][0];
-document.getElementById("multi").innerText=first+"x";
-
-  }else{
-
-    step++;
-    let arr=levels[currentLevel];
-
-    if(step>=arr.length){
-      gameOver();
-      return;
-    }
-
-    moveChicken(step);
-
-    // 🔥 HOUSE EDGE LOGIC
-    let lose=false;
-
-    if(houseEdge===0){
-      lose=true;
-    }
-    else if(houseEdge===100){
-      lose=false;
-    }
-    else{
-      let winChance = houseEdge/100;
-      lose = Math.random() > winChance;
-    }
-
-    if(lose){
-      triggerFire(step);
-      setTimeout(()=>gameOver(),400);
-      return;
-    }
-
-    document.getElementById("multi").innerText=arr[step]+"x";
+    return; // 🔥 IMPORTANT (first click only start)
   }
+
+  /* JUMP LOGIC */
+  step++;
+  let arr=levels[currentLevel];
+
+  if(step>=arr.length){
+    gameOver();
+    return;
+  }
+
+  moveChicken(step);
+
+  /* HOUSE EDGE */
+  let lose=false;
+
+  if(houseEdge===0){
+    lose=true;
+  }
+  else if(houseEdge===100){
+    lose=false;
+  }
+  else{
+    let winChance = houseEdge/100;
+    lose = Math.random() > winChance;
+  }
+
+  if(lose){
+    triggerFire(step);
+    setTimeout(()=>gameOver(),400);
+    return;
+  }
+
+  document.getElementById("multi").innerText=arr[step]+"x";
 }
 
-// MOVE
+/* MOVE */
 function moveChicken(s){
-
   let chicken=document.getElementById("chicken");
   let road=document.getElementById("road");
 
   let boxWidth=97;
-
   let newLeft = (s * boxWidth);
   chicken.style.left = newLeft + "px";
 
-  // 🔥 AUTO SCROLL
   road.parentElement.scrollTo({
-    left: newLeft - 100, // thoda center me rakhega
+    left: newLeft - 100,
     behavior: "smooth"
   });
 
@@ -527,7 +509,7 @@ function moveChicken(s){
   document.getElementById("s"+s).classList.add("active");
 }
 
-// FIRE
+/* FIRE */
 function autoFire(){
   setInterval(()=>{
     let pipes=document.querySelectorAll(".pipe");
@@ -548,61 +530,7 @@ function triggerFire(i){
   }
 }
 
-// HISTORY
-function addHistory(type, amount){
-  let time=new Date().toLocaleTimeString();
-  historyData.unshift({type,amount,time});
-  updateHistoryUI();
-}
-
-function updateHistoryUI(){
-  let list=document.getElementById("historyList");
-  list.innerHTML="";
-
-  historyData.forEach(h=>{
-    let div=document.createElement("div");
-    div.className="history-item";
-
-    let emoji = h.type==="win" ? "🎉" : "💀";
-
-    div.innerHTML=`
-      <span>${h.time}</span>
-      <span class="${h.type}">${emoji} ₹${h.amount}</span>
-    `;
-
-    list.appendChild(div);
-  });
-}
-
-function openHistory(){
-  document.getElementById("historyPopup").style.display="flex";
-}
-function closeHistory(){
-  document.getElementById("historyPopup").style.display="none";
-}
-
-// POPUP
-function showPopup(msg,win){
-  let p=document.getElementById("popup");
-  let box=document.getElementById("popupText");
-
-  box.innerHTML=msg;
-  box.className="popup-box "+(win?"win":"loss");
-
-  p.classList.add("show");
-  setTimeout(()=>p.classList.remove("show"),2500);
-}
-
-// BET
-function setBet(val){
-  document.getElementById("betAmount").value = val;
-}
-function changeBet(val){
-  let i=document.getElementById("betAmount");
-  i.value=Math.max(10,(parseInt(i.value)||0)+val);
-}
-
-// CASHOUT
+/* CASHOUT */
 async function cashout(){
   if(!playing) return;
 
@@ -618,13 +546,11 @@ async function cashout(){
 
   document.getElementById("wallet").innerText=wallet;
 
-  addHistory("win", winAmount);
-
-  showPopup(`🎉 Congratulations!<br>Win ₹${winAmount} 💰`,true);
+  showPopup(`🎉 Win ₹${winAmount}`,true);
   reset();
 }
 
-// LOSE
+/* LOSE */
 async function gameOver(){
   let bet=parseInt(document.getElementById("betAmount").value)||0;
 
@@ -636,13 +562,11 @@ async function gameOver(){
 
   document.getElementById("wallet").innerText=wallet;
 
-  addHistory("loss", bet);
-
-  showPopup(`💀 Bad Luck!<br>You Lost ₹${bet} 🔥`,false);
+  showPopup(`💀 Lost ₹${bet}`,false);
   reset();
 }
 
-// RESET
+/* RESET */
 function reset(){
   playing=false;
   step=0;
@@ -656,16 +580,35 @@ function reset(){
   moveChicken(0);
 }
 
-// GLOBAL
+/* POPUP */
+function showPopup(msg,win){
+  let p=document.getElementById("popup");
+  let box=document.getElementById("popupText");
+
+  box.innerHTML=msg;
+  box.className="popup-box "+(win?"win":"loss");
+
+  p.classList.add("show");
+  setTimeout(()=>p.classList.remove("show"),2500);
+}
+
+/* BET */
+function setBet(val){
+  document.getElementById("betAmount").value = val;
+}
+function changeBet(val){
+  let i=document.getElementById("betAmount");
+  i.value=Math.max(10,(parseInt(i.value)||0)+val);
+}
+
+/* GLOBAL */
 window.play = play;
 window.cashout = cashout;
 window.changeBet = changeBet;
 window.setBet = setBet;
 window.initGame = initGame;
-window.openHistory = openHistory;
-window.closeHistory = closeHistory;
 
-                       </script>
+</script>
   
   <div id="historyPopup" class="history-popup">
   <div class="history-box">
