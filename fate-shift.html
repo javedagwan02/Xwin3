@@ -254,12 +254,8 @@ function loop(){
 
   // AUTO SHIFT
   if(autoShift > 1 && multiplier >= autoShift){
-    if(shouldAutoWin()){
-      end(true);
-    }else{
-      end(false);
-    }
-    return;
+  end(true); // 🔥 GUARANTEED WIN
+  return;
   }
 
   // HARD CRASH
