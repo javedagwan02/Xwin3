@@ -10,8 +10,6 @@ body{
   font-family:Arial;
   background:#0b0f1a;
   color:#fff;
-  display:flex;
-  justify-content:center;
 }
 
 .container{
@@ -40,6 +38,7 @@ body{
   padding:15px;
   padding-bottom:80px;   /* 🔥 IMPORTANT */
   overflow-x:auto;
+  overflow-y:hidden;   /* 🔥 IMPORTANT */
 }
 
 /* ROAD */
@@ -47,6 +46,7 @@ body{
   display:flex;
   gap:12px;
   position:relative;
+  width:max-content;   /* 🔥 MAIN FIX */
 }
 
 /* STEP */
