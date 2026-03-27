@@ -200,7 +200,20 @@ button{
 let selected = -1;
 let history = [];
 
+// 4 boxes multipliers
 const multipliers = [5,4,2,2];
+
+// 8 slices (wheel mapping)
+const wheelMap = [
+  {type:"win", box:0},   // 5x
+  {type:"lose"},         // better luck
+  {type:"win", box:1},   // 4x
+  {type:"lose"},
+  {type:"win", box:2},   // 2x
+  {type:"lose"},
+  {type:"win", box:3},   // 2x
+  {type:"lose"}
+];
 
 // SELECT BOX
 function selectBox(i){
@@ -219,45 +232,51 @@ function spin(){
 
   let bet = parseInt(document.getElementById("bet").value) || 0;
 
-  // RANDOM INDEX
-  let randomIndex = Math.floor(Math.random() * 4);
+  // RANDOM SLICE (0–7)
+  let randomIndex = Math.floor(Math.random() * 8);
 
-  let anglePerBox = 360 / 4;
-
-  // CENTER ALIGN FIX
-  let deg = 360 + (randomIndex * anglePerBox) + (anglePerBox / 2);
+  let anglePerSlice = 360 / 8;
+  let deg = 360 + (randomIndex * anglePerSlice) + (anglePerSlice / 2);
 
   let spinner = document.getElementById("spinner");
 
-  // RESET FIRST (important)
+  // RESET
   spinner.style.transition = "none";
   spinner.style.transform = "rotate(0deg)";
 
   setTimeout(()=>{
-
     spinner.style.transition = "3s cubic-bezier(.17,.67,.83,.67)";
     spinner.style.transform = `rotate(${deg}deg)`;
-
   },50);
 
-  // RESULT AFTER SPIN
+  // RESULT
   setTimeout(()=>{
 
-    let win = selected === randomIndex;
+    let result = wheelMap[randomIndex];
 
-    if(win){
-      let amount = bet * multipliers[selected];
-      showPopup(`🎉 WIN ₹${amount}`);
-      addHistory("WIN", amount);
-    }else{
-      showPopup(`💀 Better Luck Next Time ₹${bet}`);
+    if(result.type === "lose"){
+      // RED SLICE
+      showPopup(`😅 Better Luck Next Time`);
       addHistory("LOSS", bet);
+
+    } else {
+
+      if(result.box === selected){
+        let amount = bet * multipliers[selected];
+        showPopup(`🎉 WIN ₹${amount}`);
+        addHistory("WIN", amount);
+
+      } else {
+        showPopup(`💀 LOSS ₹${bet}`);
+        addHistory("LOSS", bet);
+      }
+
     }
 
   },3000);
 }
 
-// BET CHANGE
+// BET
 function changeBet(val){
   let i = document.getElementById("bet");
   i.value = Math.max(10,(parseInt(i.value)||0)+val);
@@ -293,11 +312,10 @@ function renderHistory(){
   });
 }
 
-// HISTORY OPEN/CLOSE
+// HISTORY
 function openHistory(){
   document.getElementById("historyBox").style.display="flex";
 }
-
 function closeHistory(){
   document.getElementById("historyBox").style.display="none";
 }
