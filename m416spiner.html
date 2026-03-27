@@ -210,7 +210,7 @@ M416 Spiner 💫
 </div>
 
 
-  <script type="module">
+<script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getFirestore, doc, getDocs, collection, query, where, updateDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
@@ -231,6 +231,9 @@ let wallet = 0;
 /* 🔥 HOUSE EDGE */
 let HOUSE_EDGE = 0.5;
 
+/* 🔥 ROTATION FIX */
+let currentRotation = 0;
+
 /* LOAD WALLET */
 async function loadWallet(){
   const snap = await getDocs(query(collection(db,"users"), where("email","==",userEmail)));
@@ -242,7 +245,7 @@ async function loadWallet(){
 }
 await loadWallet();
 
-/* 🔥 LIVE HOUSE EDGE (m416Spinner) */
+/* 🔥 LIVE HOUSE EDGE */
 onSnapshot(doc(db,"settings","houseEdge"), (snap)=>{
   if(snap.exists()){
     let val = snap.data().m416Spinner ?? 50;
@@ -269,7 +272,7 @@ const wheelMap = [
   {type:"lose"}
 ];
 
-// SELECT BOX
+// SELECT
 window.selectBox = function(i){
   document.querySelectorAll(".box").forEach(b=>b.classList.remove("active"));
   document.querySelectorAll(".box")[i].classList.add("active");
@@ -298,50 +301,35 @@ window.spin = async function(){
 
   let spinner = document.getElementById("spinner");
 
-  // 🎯 HOUSE EDGE RESULT DECIDE
+  // 🎯 HOUSE EDGE RESULT
   let winChance = Math.random();
   let index;
 
   if(winChance < HOUSE_EDGE){
-    // ✅ WIN
-    index = selected * 2;
+    index = selected * 2; // WIN
   }else{
-    // ❌ LOSS
-    let redSlices = [1,3,5,7];
-    let wrongWins = [0,2,4,6].filter(i => i !== selected*2);
-
-    let mix = [...redSlices, ...wrongWins];
+    let red = [1,3,5,7];
+    let wrong = [0,2,4,6].filter(i => i !== selected*2);
+    let mix = [...red, ...wrong];
     index = mix[Math.floor(Math.random() * mix.length)];
   }
 
   let result = wheelMap[index];
 
+  // 🎯 ANGLE CALC (FINAL FIX)
   let slice = 360 / 8;
+  let target = (index * slice) + (slice / 2);
 
-// 🔥 FIXED OFFSET
-let offset = -90;
+  let extraSpins = Math.floor(Math.random() * 2) + 5;
 
-let target = (index * slice) + (slice / 2);
+  // 🔥 ACCUMULATE ROTATION (MAIN FIX)
+  currentRotation += (360 * extraSpins) + target;
 
-let extraSpins = Math.floor(Math.random() * 2) + 5;
+  let finalDeg = currentRotation;
 
-// ✅ FINAL CORRECT ROTATION
-let finalDeg = (360 * extraSpins) + target + offset;
-
-  // 🔥 RESET
-  spinner.style.transition = "none";
-  spinner.style.transform = "rotate(0deg)";
-
-  setTimeout(()=>{
-    spinner.style.transition = "4s cubic-bezier(0.22, 1, 0.36, 1)";
-    spinner.style.transform = `rotate(${finalDeg}deg)`;
-  },50);
-
-  // 🔥 BACK EFFECT
-  setTimeout(()=>{
-    spinner.style.transition = "0.4s ease-out";
-    spinner.style.transform = `rotate(${finalDeg - 10}deg)`;
-  },3800);
+  // 🎯 SPIN
+  spinner.style.transition = "4s cubic-bezier(0.22, 1, 0.36, 1)";
+  spinner.style.transform = `rotate(${finalDeg}deg)`;
 
   // 🎯 RESULT AFTER STOP
   setTimeout(async ()=>{
@@ -370,10 +358,10 @@ let finalDeg = (360 * extraSpins) + target + offset;
 
     }
 
-  },4200);
+  },4000);
 }
 
-// BET CHANGE
+// BET
 window.changeBet = function(val){
   let i = document.getElementById("bet");
   i.value = Math.max(10,(parseInt(i.value)||0)+val);
@@ -417,7 +405,7 @@ window.closeHistory = function(){
   document.getElementById("historyBox").style.display="none";
 }
 
-          </script>
+</script>
 
 </body>
 </html>
