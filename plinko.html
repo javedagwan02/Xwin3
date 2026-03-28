@@ -237,7 +237,7 @@ for(let c=0;c<start+r;c++){
 const p=document.createElement("div");
 p.className="pin";
 p.style.top=50+r*sy+"px";
-p.style.left=160-((start+r-1)sx)/2+csx+"px";
+p.style.left = 160 - ((start + r - 1) * sx) / 2 + c * sx + "px";
 board.appendChild(p);
 }
 }
@@ -294,21 +294,29 @@ setTimeout(()=>ball.remove(),400);
 return;
 }
 
-// 🎲 realistic bounce  
-if (Math.random() < 0.5) col--;  
-else col++;  
+// 🎯 SMART CONTROL + RANDOM
+if(col < selectedIndex){
+  col++;
+}
+else if(col > selectedIndex){
+  col--;
+}
+else{
+  if(Math.random() < 0.3){
+    col += Math.random() < 0.5 ? -1 : 1;
+  }
+}
 
-// limit  
-col = Math.max(0, Math.min(8, col));  
+// limit
+col = Math.max(0, Math.min(8, col));
 
-row++;  
+row++;
 
-ball.style.transition="top 0.25s ease-out, left 0.25s ease-in-out";  
-ball.style.top=(40+row*sy)+"px";  
-ball.style.left=(col*sx+20)+"px";  
+ball.style.transition="top 0.25s ease-out, left 0.25s ease-in-out";
+ball.style.top=(40+row*sy)+"px";
+ball.style.left=(col*sx+20)+"px";
 
 setTimeout(stepFall,260);
-
 }
 
 stepFall();
@@ -323,7 +331,7 @@ wallet += win;
 saveWallet();
 render();
 
-$("history").innerHTML +=  | ${color.toUpperCase()} ${multi}x;
+$("history").innerHTML += ` | ${color.toUpperCase()} ${multi}x`;
 }
 
 /* INIT */
