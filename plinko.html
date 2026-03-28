@@ -255,6 +255,7 @@ $("drop").onclick=async ()=>{
 
   let row = 0;
   let col = Math.round(gapX / sx);
+  col += (Math.random() - 0.5) * 1;
 
   ball.style.top = "10px";
   ball.style.left = gapX + "px";
@@ -267,27 +268,38 @@ $("drop").onclick=async ()=>{
 
   /* 🎯 REAL RANDOM FALL */
   function stepFall(){
-    if(row >= rows){
-      finish(ball);
-      setTimeout(()=>ball.remove(),400);
-      return;
-    }
 
-    // real plinko randomness
-    if(Math.random() < 0.5){
-      col--;
-    }else{
-      col++;
-    }
+  if(row >= rows){
+    finish(ball);
+    setTimeout(()=>ball.remove(),400);
+    return;
+  }
 
-    col = Math.max(0, Math.min(8, col));
-    row++;
+  // 🎯 smooth random drift (main physics)
+  let drift = (Math.random() - 0.5) * 1.8; // strong randomness
 
-    ball.style.transition="top 0.25s ease-out, left 0.25s ease-in-out";
-    ball.style.top=(40+row*sy)+"px";
-    ball.style.left=(col*sx+20)+"px";
+  col += drift;
 
-    setTimeout(stepFall,260);
+  // 🎯 occasional bounce hit (pin effect)
+  if(Math.random() < 0.35){
+    col += (Math.random() < 0.5 ? -1 : 1) * 0.6;
+  }
+
+  // 🎯 slight gravity bias (downward feel)
+  col += (Math.random() - 0.5) * 0.3;
+
+  // 🎯 clamp within board
+  col = Math.max(0, Math.min(8, col));
+
+  row++;
+
+  // 🎯 smooth animation (important)
+  ball.style.transition = "top 0.28s cubic-bezier(.22,1,.36,1), left 0.28s ease";
+
+  ball.style.top = (40 + row * sy) + "px";
+  ball.style.left = (col * sx + 20) + "px";
+
+  setTimeout(stepFall, 280);
   }
 
   stepFall();
