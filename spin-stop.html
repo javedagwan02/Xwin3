@@ -208,8 +208,9 @@ button{
 </div>
 
   <script type="module">
+
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getFirestore, getDocs, collection, query, where, doc, updateDoc, getDoc }
+import { getFirestore, getDocs, collection, query, where, doc, updateDoc, onSnapshot }
 from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 /* FIREBASE */
@@ -220,9 +221,20 @@ const app = initializeApp({
 });
 const db = getFirestore(app);
 
+/* USER */
 const userEmail = localStorage.getItem("userEmail");
 let wallet = 0;
 let uid = "";
+
+/* 🔥 HOUSE EDGE REALTIME */
+let HOUSE_EDGE = 50;
+
+onSnapshot(doc(db,"settings","houseEdge"), (snap)=>{
+  if(snap.exists()){
+    HOUSE_EDGE = Number(snap.data().spinStop ?? 50);
+    console.log("🔥 SpinStop Edge:", HOUSE_EDGE);
+  }
+});
 
 /* LOAD WALLET */
 async function loadWallet(){
@@ -241,21 +253,9 @@ async function saveWallet(){
   await updateDoc(doc(db,"users",uid), { balance: wallet });
 }
 
-/* 🔥 HOUSE EDGE */
-async function getChance(){
-  try{
-    const ref = doc(db,"settings","houseEdge");
-    const snap = await getDoc(ref);
-    if(snap.exists()){
-      return Number(snap.data().spin ?? 50);
-    }
-  }catch(e){}
-  return 50;
-}
-
 /* UI */
 const spinner = document.getElementById("spinner");
-const spinBtn = document.getElementById("spinBtn");
+const startBtn = document.getElementById("startBtn");
 const stopBtn = document.getElementById("stopBtn");
 const popup = document.getElementById("popup");
 const popupText = document.getElementById("popupText");
@@ -283,7 +283,6 @@ window.selectColor = (color, el)=>{
   el.classList.add("active");
 };
 
-/* SPIN */
 /* START */
 startBtn.onclick = async ()=>{
 
@@ -310,7 +309,8 @@ startBtn.onclick = async ()=>{
     spinner.style.transform = `rotate(${angle}deg)`;
   },50);
 };
-  // 🔥 STOP PRESS
+
+/* 🔥 STOP */
 stopBtn.onclick = async ()=>{
   if(!spinning || isStopping) return;
 
@@ -318,18 +318,22 @@ stopBtn.onclick = async ()=>{
 
   const bet = Number(document.getElementById("bet").value);
 
-  let chance = await getChance();
   let win;
 
-  if(chance >= 100){
+  // 🔥 FORCE LOSS SYSTEM
+  if(bet >= 300){
+    win = false;
+  }else if(HOUSE_EDGE >= 100){
     win = true;
-  }else if(chance <= 0){
+  }else if(HOUSE_EDGE <= 0){
     win = false;
   }else{
-    win = Math.random()*100 < chance;
+    win = Math.random()*100 < HOUSE_EDGE;
   }
 
-  let resultColor = win ? selectedColor : (selectedColor === "green" ? "red" : "green");
+  let resultColor = win 
+    ? selectedColor 
+    : (selectedColor === "green" ? "red" : "green");
 
   let finalAngle;
 
@@ -343,7 +347,7 @@ stopBtn.onclick = async ()=>{
       : 315 + Math.random()*40;
   }
 
-  // 🔥 CONTINUE SPIN 6 SEC + SMOOTH STOP
+  /* STOP ANIMATION */
   clearInterval(spinInt);
 
   spinner.style.transition = "transform 6s cubic-bezier(.17,.67,.83,.67)";
@@ -355,7 +359,7 @@ stopBtn.onclick = async ()=>{
   startBtn.disabled = false;
   stopBtn.disabled = true;
 
-  // 🔥 RESULT AFTER SPIN COMPLETE
+  /* RESULT AFTER STOP */
   setTimeout(async ()=>{
 
     let resultText;
@@ -378,7 +382,7 @@ stopBtn.onclick = async ()=>{
     popup.style.display="flex";
     setTimeout(()=>popup.style.display="none",1500);
 
-  },6000); // 🔥 EXACT 6 SEC
+  },6000);
 
 };
 
@@ -396,7 +400,7 @@ function addHistory(type,amt){
 }
 
 loadWallet();
-  
+
   </script>
   
 </body>
