@@ -306,52 +306,48 @@ window.spin = async function(){
   let index;
 
   if(winChance < HOUSE_EDGE){
-  // ✅ WIN → correct slice dhundo
-  let possible = [];
+    let possible = [];
 
-  wheelMap.forEach((item, i)=>{
-    if(item.type === "win" && item.box === selected){
-      possible.push(i);
-    }
-  });
+    wheelMap.forEach((item, i)=>{
+      if(item.type === "win" && item.box === selected){
+        possible.push(i);
+      }
+    });
 
-  index = possible[Math.floor(Math.random() * possible.length)];
+    index = possible[Math.floor(Math.random() * possible.length)];
 
-}else{
-  // ❌ LOSS
-  let possible = [];
+  }else{
+    let possible = [];
 
-  wheelMap.forEach((item, i)=>{
-    if(item.type === "lose" || item.box !== selected){
-      possible.push(i);
-    }
-  });
+    wheelMap.forEach((item, i)=>{
+      if(item.type === "lose" || item.box !== selected){
+        possible.push(i);
+      }
+    });
 
-  index = possible[Math.floor(Math.random() * possible.length)];
-}
-    
+    index = possible[Math.floor(Math.random() * possible.length)];
+  }
 
   let result = wheelMap[index];
 
-  // 🎯 STEP 2: EXACT ANGLE CALC
+  // 🎯 STEP 2: EXACT ANGLE (NO GUESS)
   let slice = 360 / 8;
 
-// 🔥 reverse angle
-let target = 360 - (index * slice) - (slice / 2) + 22;
+  // 🔥 PERFECT ALIGNMENT (IMPORTANT)
+  let target = (index * slice) + (slice / 2);
 
-// spins
-let extraSpins = Math.floor(Math.random() * 2) + 5;
+  // 🔥 reverse for arrow
+  target = 360 - target;
 
-// ✅ MAIN FIX (accumulate)
-currentRotation += (360 * extraSpins) + target;
+  let spins = 5 + Math.floor(Math.random() * 2);
 
-let finalDeg = currentRotation;
+  let finalDeg = (360 * spins) + target;
 
-  // 🎯 SPIN START
+  // 🎯 SPIN
   spinner.style.transition = "4s cubic-bezier(0.22, 1, 0.36, 1)";
   spinner.style.transform = `rotate(${finalDeg}deg)`;
 
-  // 🎯 RESULT AFTER STOP
+  // 🎯 AFTER STOP → POPUP
   setTimeout(async ()=>{
 
     if(result.type === "lose"){
@@ -380,7 +376,6 @@ let finalDeg = currentRotation;
 
   },4000);
 }
-
 // BET
 window.changeBet = function(val){
   let i = document.getElementById("bet");
