@@ -50,9 +50,10 @@ body{
 
 .arrow{
   position:absolute;
-  top:-20px;
+  top:50%;
   left:50%;
-  transform:translateX(-50%);
+  transform:translate(-50%,-50%) rotate(0deg);
+  transform-origin:center -120px; /* 🔥 radius adjust */
 }
 
 .arrow img{
@@ -324,26 +325,19 @@ window.spin = async function(){
 
   let result = wheelMap[index];
 
-  // 🎯 EXACT ANGLE (PERFECT)
   let slice = 360 / 8;
 
-  let target = (index * slice) + (slice / 2);
+// 🎯 arrow rotation
+let arrowAngle = index * slice;
 
-  // 🔥 arrow top fix
-let finalAngle = 360 - target - 22;
+let arrow = document.querySelector(".arrow");
 
-  // 🔥 smooth spin same feel
-  let spins = 5;
+arrow.style.transition = "4s cubic-bezier(0.22, 1, 0.36, 1)";
+arrow.style.transform = `translate(-50%,-50%) rotate(${arrowAngle + (360*5)}deg)`;
 
- let finalDeg = (360 * spins) + finalAngle;
-
-spinner.style.transition = "none";
-spinner.style.transform = "rotate(0deg)";
-
-setTimeout(()=>{
-  spinner.style.transition = "4s cubic-bezier(0.22, 1, 0.36, 1)";
-  spinner.style.transform = `rotate(${finalDeg}deg)`;
-},50);
+// 🎡 spinner simple spin (sirf animation)
+spinner.style.transition = "4s cubic-bezier(0.22, 1, 0.36, 1)";
+spinner.style.transform = `rotate(${360 * 5}deg)`;
   // 🎯 AFTER STOP
   setTimeout(async ()=>{
 
