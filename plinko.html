@@ -298,30 +298,47 @@ $("drop").onclick=async ()=>{
   }
 
   function stepFall(){
-    if(row >= rows){
-      finish(selectedIndex, ball);
-      setTimeout(()=>ball.remove(),400);
-      return;
-    }
+  if(row >= rows){
+    finish(selectedIndex, ball);
+    setTimeout(()=>ball.remove(),400);
+    return;
+  }
 
-    if (Math.random() < 0.5) col--;
-    else col++;
+  // 🎯 TARGET BASED MOVE
+  let targetCol = selectedIndex;
 
-    col = Math.max(0, Math.min(8, col));
-    row++;
+  // धीरे-धीरे target की तरफ जाए
+  if(col < targetCol){
+    col++;
+  }else if(col > targetCol){
+    col--;
+  }else{
+    // थोड़ा randomness ताकि real लगे
+    col += Math.random() < 0.5 ? -1 : 1;
+  }
 
-    ball.style.transition="top 0.25s ease-out, left 0.25s ease-in-out";
-    ball.style.top=(40+row*sy)+"px";
-    ball.style.left=(col*sx+20)+"px";
+  col = Math.max(0, Math.min(8, col));
+  row++;
 
-    setTimeout(stepFall,260);
+  ball.style.transition="top 0.25s ease-out, left 0.25s ease-in-out";
+  ball.style.top=(40+row*sy)+"px";
+  ball.style.left=(col*sx+20)+"px";
+
+  setTimeout(stepFall,260);
   }
 
   stepFall();
 };
 /* RESULT */
 function finish(index, ball){
-  let multi = M[color][index];
+
+  // 🎯 जो column पे ball है वही result
+  let finalCol = Math.round((parseInt(ball.style.left)-20)/sx);
+
+  finalCol = Math.max(0, Math.min(8, finalCol));
+
+  let multi = M[color][finalCol];
+
   let win = Math.floor(bet * multi);
 
   wallet += win;
