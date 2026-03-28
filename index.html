@@ -574,12 +574,12 @@ font-size:16px;
 </div>
 
 <script>
-let db, getDoc, doc;
+
 function openSupportMail(){
 window.location.href="mailto:supirtx4@gmail.com?subject=DraxBet Support";
 }
 
-async function openGame(url){
+
 
 const gameName = url.replace(".html","");
 
@@ -622,10 +622,9 @@ document.getElementById("giftPopup").style.display="flex";
 <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-
 import { getFirestore, collection, getDocs, query, where, updateDoc, doc, getDoc }
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-  
+
 const firebaseConfig = {
 apiKey: "AIzaSyBx3J9aGn_98rTPgurMMKw_GR3puIMj4Ms",
 authDomain: "colourcash-ea60e.firebaseapp.com",
@@ -638,58 +637,41 @@ appId: "1:403688058646:web:f1753360471528f275ea37"
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-  window.db = db;
-window.getDoc = getDoc;
-window.doc = doc;
+// 🔥 YAHI SABSE IMPORTANT
+window.openGame = async function(url){
 
-window.redeemCode = async function(){
+const gameName = url.replace(".html","");
 
-const code = document.getElementById("giftCodeInput").value.trim();
+const ref = doc(db,"gameStatus",gameName);
+const snap = await getDoc(ref);
 
-const q = query(collection(db,"giftcodes"), where("code","==",code));
-const snap = await getDocs(q);
-
-if(snap.empty){
-alert("Invalid Code");
-return;
+// agar doc nahi hai → direct open
+if(!snap.exists()){
+  location.href = url;
+  return;
 }
 
-snap.forEach(async (d)=>{
-
-const data = d.data();
-
-if(data.used){
-alert("Code Already Used");
-return;
+// game OFF
+if(snap.data().active === false){
+  location.href = "coming-soon.html";
+  return;
 }
 
-let wallet = +localStorage.getItem("wallet") || 0;
-wallet += Number(data.amount);
+// game ON → original logic
+let walletAmt =
++localStorage.getItem("wallet") ||
++localStorage.getItem("coin_wallet") ||
+0;
 
-localStorage.setItem("wallet",wallet);
-localStorage.setItem("coin_wallet",wallet);
-localStorage.setItem("balance",wallet);
-  
-  const userEmail = localStorage.getItem("userEmail");
-
-const q2 = query(collection(db,"users"), where("email","==",userEmail));
-const snap2 = await getDocs(q2);
-
-snap2.forEach(async (u)=>{
-await updateDoc(doc(db,"users",u.id),{
-balance: wallet
-});
-});
-  
-await updateDoc(doc(db,"giftcodes",d.id),{used:true});
-
-alert("₹"+data.amount+" Added to Wallet");
-
-});
+if(walletAmt < 100){
+document.getElementById("depositPopup").style.display="flex";
+}else{
+location.href = url;
+}
 
 }
-  </script> 
-  
+
+</script>
 <script>
 
 /* SAVE START BALANCE ON LOGIN DAY */
