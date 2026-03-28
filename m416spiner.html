@@ -342,20 +342,21 @@ if(winChance < HOUSE_EDGE){
 let slice = 360 / 8;
 
 // 🎯 target (center of slice)
-let target = index * slice + (slice / 2);
+let target = slotAngles[index];
 
-// 🔥 arrow top fix
+// 🔥 top arrow adjust
 let finalAngle = target - 90;
 
-// 🎯 smooth spins
+// spins
 let spins = 5;
+
 let finalDeg = (360 * spins) + finalAngle;
 
-// 🔥 RESET FIRST (IMPORTANT)
+// reset
 ball.style.transition = "none";
 ball.style.transform = `rotate(0deg) translate(110px) rotate(0deg)`;
 
-// 🔥 START ANIMATION
+// animate
 setTimeout(()=>{
   ball.style.transition = "4s cubic-bezier(0.22, 1, 0.36, 1)";
   ball.style.transform = `rotate(${finalDeg}deg) translate(110px) rotate(-${finalDeg}deg)`;
