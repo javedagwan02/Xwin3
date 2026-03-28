@@ -339,21 +339,27 @@ if(winChance < HOUSE_EDGE){
 
   let result = wheelMap[index];
 
-  let slice = 360 / 8;
+let slice = 360 / 8;
 
 // 🎯 target (center of slice)
 let target = index * slice + (slice / 2);
 
-// 🔥 arrow top (IMPORTANT FIX)
+// 🔥 arrow top fix
 let finalAngle = target - 90;
 
-// 🔥 smooth spin
+// 🎯 smooth spins
 let spins = 5;
+let finalDeg = (360 * spins) + finalAngle;
 
-ballDeg = (360 * spins) + finalAngle;
+// 🔥 RESET FIRST (IMPORTANT)
+ball.style.transition = "none";
+ball.style.transform = `rotate(0deg) translate(110px) rotate(0deg)`;
 
-ball.style.transition = "4s cubic-bezier(0.22, 1, 0.36, 1)";
-ball.style.transform = `rotate(${ballDeg}deg) translate(110px) rotate(-${ballDeg}deg)`;
+// 🔥 START ANIMATION
+setTimeout(()=>{
+  ball.style.transition = "4s cubic-bezier(0.22, 1, 0.36, 1)";
+  ball.style.transform = `rotate(${finalDeg}deg) translate(110px) rotate(-${finalDeg}deg)`;
+},50);
   // 🎯 RESULT AFTER STOP
   setTimeout(async ()=>{
 
