@@ -335,11 +335,15 @@ let finalAngle = 360 - target - 22;
   // 🔥 smooth spin same feel
   let spins = 5;
 
-  currentDeg += (360 * spins) + finalAngle;
+ let finalDeg = (360 * spins) + finalAngle;
 
+spinner.style.transition = "none";
+spinner.style.transform = "rotate(0deg)";
+
+setTimeout(()=>{
   spinner.style.transition = "4s cubic-bezier(0.22, 1, 0.36, 1)";
-  spinner.style.transform = `rotate(${currentDeg}deg)`;
-
+  spinner.style.transform = `rotate(${finalDeg}deg)`;
+},50);
   // 🎯 AFTER STOP
   setTimeout(async ()=>{
 
