@@ -174,7 +174,7 @@ body{
 <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getFirestore, getDocs, collection, query, where, doc, updateDoc, getDoc } 
+import { getFirestore, getDocs, collection, query, where, doc, updateDoc } 
 from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 /* FIREBASE */
@@ -263,17 +263,18 @@ $("drop").onclick=async ()=>{
   ball.className="ball";
   ball.style.opacity="0";
 
-  /* 🎯 RANDOM START (LEFT / RIGHT GAP) */
-  let topPins = 3;
-  let totalWidth = (topPins - 1) * sx;
-  let startX = (board.offsetWidth / 2) - (totalWidth / 2);
+  /* 🔥 HOLE BASED START */
+  let hole = Math.random() < 0.5 
+    ? document.getElementById("holeL") 
+    : document.getElementById("holeR");
 
-  let gapIndex = Math.random() < 0.5 ? 0 : 1;
-  let gapX = startX + (gapIndex + 0.5) * sx;
+  let rect = hole.getBoundingClientRect();
+  let boardRect = board.getBoundingClientRect();
+
+  let gapX = rect.left - boardRect.left + rect.width/2 - 7;
 
   let row = 0;
-  let col = Math.round(gapX / sx);
-  col += (Math.random() - 0.5) * 1;
+  let col = (gapX - 20) / sx;
 
   ball.style.top = "10px";
   ball.style.left = gapX + "px";
@@ -284,46 +285,39 @@ $("drop").onclick=async ()=>{
     ball.style.opacity="1";
   });
 
-  /* 🎯 REAL RANDOM FALL */
+  /* 🔥 REAL PLINKO FLOW */
   function stepFall(){
 
-  if(row >= rows){
-    finish(ball);
-    setTimeout(()=>ball.remove(),400);
-    return;
-  }
+    if(row >= rows){
+      finish(ball);
+      setTimeout(()=>ball.remove(),400);
+      return;
+    }
 
-  // 🎯 smooth random drift (main physics)
-  let drift = (Math.random() - 0.5) * 1.8; // strong randomness
+    // real bounce (left/right)
+    if(Math.random() < 0.5){
+      col -= 1;
+    }else{
+      col += 1;
+    }
 
-  col += drift;
+    // small randomness
+    col += (Math.random() - 0.5) * 0.4;
 
-  // 🎯 occasional bounce hit (pin effect)
-  if(Math.random() < 0.35){
-    col += (Math.random() < 0.5 ? -1 : 1) * 0.6;
-  }
+    col = Math.max(0, Math.min(8, col));
+    row++;
 
-  // 🎯 slight gravity bias (downward feel)
-  col += (Math.random() - 0.5) * 0.3;
+    ball.style.transition = "top 0.22s ease, left 0.22s ease";
+    ball.style.top = (40 + row * sy) + "px";
+    ball.style.left = (col * sx + 20) + "px";
 
-  // 🎯 clamp within board
-  col = Math.max(0, Math.min(8, col));
-
-  row++;
-
-  // 🎯 smooth animation (important)
-  ball.style.transition = "top 0.28s cubic-bezier(.22,1,.36,1), left 0.28s ease";
-
-  ball.style.top = (40 + row * sy) + "px";
-  ball.style.left = (col * sx + 20) + "px";
-
-  setTimeout(stepFall, 280);
+    setTimeout(stepFall,220);
   }
 
   stepFall();
 };
 
-/* RESULT (REAL LANDING BASED) */
+/* RESULT */
 function finish(ball){
 
   let finalCol = Math.round((parseInt(ball.style.left)-20)/sx);
