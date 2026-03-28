@@ -287,14 +287,14 @@ const wheelMap = [
   {type:"win", box:2}      // 2x (left bottom)
 ];
 const slotAngles = [
-  0,
-  45,
-  90,
-  135,
-  180,
-  225,
-  270,
-  315
+  22.5,   // 0
+  67.5,   // 1
+  112.5,  // 2
+  157.5,  // 3
+  202.5,  // 4
+  247.5,  // 5
+  292.5,  // 6
+  337.5   // 7
 ];
 /* SELECT */
 window.selectBox = function(i){
@@ -354,7 +354,7 @@ let slice = 360 / 8;
 let target = slotAngles[index];
 
 // 🔥 top arrow adjust
-let finalAngle = target - 135;
+let finalAngle = target - 90;
 
 // spins
 let spins = 5;
