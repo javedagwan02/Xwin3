@@ -294,29 +294,35 @@ setTimeout(()=>ball.remove(),400);
 return;
 }
 
-// 🎯 SMART CONTROL + RANDOM
-if(col < selectedIndex){
-  col++;
+// 🎲 RANDOM MOVE (REAL FEEL)
+let move;
+
+// 70% random zig-zag
+if(Math.random() < 0.7){
+  move = Math.random() < 0.5 ? -1 : 1;
 }
-else if(col > selectedIndex){
-  col--;
-}
+// 30% control towards target (house edge)
 else{
-  if(Math.random() < 0.3){
-    col += Math.random() < 0.5 ? -1 : 1;
-  }
+  if(col < selectedIndex) move = 1;
+  else if(col > selectedIndex) move = -1;
+  else move = 0;
 }
 
-// limit
-col = Math.max(0, Math.min(8, col));
+col += move;
+
+// 🎯 EDGE BOUNCE (natural feel)
+if(col <= 0) col = 1;
+if(col >= 8) col = 7;
 
 row++;
 
-ball.style.transition="top 0.25s ease-out, left 0.25s ease-in-out";
-ball.style.top=(40+row*sy)+"px";
-ball.style.left=(col*sx+20)+"px";
+// 🎯 SMOOTH + LITTLE BOUNCE FEEL
+ball.style.transition = "top 0.28s cubic-bezier(.25,1.2,.5,1), left 0.22s ease";
 
-setTimeout(stepFall,260);
+ball.style.top = (40 + row * sy) + "px";
+ball.style.left = (col * sx + 20) + "px";
+
+setTimeout(stepFall,240);
 }
 
 stepFall();
