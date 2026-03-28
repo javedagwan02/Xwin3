@@ -1,213 +1,165 @@
-<!DOCTYPE html>  <html lang="en">  
-<head>  
-<meta charset="UTF-8">  
-<title>PLINKO</title>  
-<meta name="viewport" content="width=device-width, initial-scale=1">  
-<script src="game-control.js"></script>  <style>  
-body{  
-  margin:0;  
-  font-family:Arial, sans-serif;  
-  background:linear-gradient(135deg,#1aa7a1,#0b6f7a);  
-  color:#fff;  
-  text-align:center;  
-}  
-.header{  
-  display:flex;  
-  justify-content:space-between;  
-  align-items:center;  
-  padding:12px 14px;  
-  font-size:20px;  
-  font-weight:bold;  
-}  
-.wallet{  
-  background:rgba(0,0,0,.35);  
-  padding:6px 14px;  
-  border-radius:20px;  
-  font-size:14px;  
-}  
-.history{  
-  margin:6px 10px;  
-  background:rgba(0,0,0,.25);  
-  padding:8px;  
-  border-radius:10px;  
-  font-size:12px;  
-  overflow-x:auto;  
-  white-space:nowrap;  
-}  
-.board{  
-  position:relative;  
-  width:320px;  
-  height:320px;  
-  margin:6px auto 0;  
-}  
-.pin{  
-  width:10px;  
-  height:10px;  
-  background:#fff;  
-  border-radius:50%;  
-  position:absolute;  
-}  
-.ball{  
-  width:14px;  
-  height:14px;  
-  background:#fff;  
-  border-radius:50%;  
-  position:absolute;  
-}  
-  .hole{
-  position:absolute;
-  width:22px;
-  height:12px;
-  background:#000;
-  border-radius:50%;
-  top:20px;
-}
-
-#holeL{ left:120px; }
-#holeR{ right:120px; }
-  
-.rows{margin:0 10px;}  
-.row{  
-  display:grid;  
-  grid-template-columns:repeat(9,1fr);  
-  gap:4px;  
-  margin-bottom:6px;  
-}  
-.box{  
-  padding:6px 0;  
-  font-size:12px;  
-  border-radius:6px;  
-  opacity:.35;  
-}  
-.box.active{  
-  opacity:1;  
-  box-shadow:0 0 10px #fff;  
-  border:2px solid #fff;  
-  transform:scale(1.05);  
-}  
-.red{background:#f44336}  
-.yellow{background:#ff9800}  
-.green{background:#4caf50}  
-.select{  
-  display:flex;  
-  justify-content:center;  
-  gap:10px;  
-  margin-top:6px;  
-}  
-.select button{  
-  flex:1;  
-  max-width:110px;  
-  padding:8px 0;  
-  border:none;  
-  border-radius:20px;  
-  font-weight:bold;  
-  color:#000;  
-}  
-.controls{margin:10px;}  
-.bet-row{  
-  display:flex;  
-  justify-content:center;  
-  align-items:center;  
-  gap:10px;  
-}  
-.bet{  
-  background:#000;  
-  padding:6px 18px;  
-  border-radius:20px;  
-}  
-.ctrl-btn{  
-  width:36px;  
-  height:36px;  
-  border-radius:50%;  
-  border:none;  
-  font-size:18px;  
-}  
-.drop{  
-  width:92%;  
-  padding:14px;  
-  margin-top:10px;  
-  border-radius:30px;  
-  background:#00c853;  
-  color:#000;  
-  font-weight:bold;  
-  font-size:16px;  
-}  
-</style>  </head>  <body>  <div class="header">  
-  <div>PLINKO</div>  
-  <div class="wallet">₹ <span id="wallet">0</span></div>  
-</div>  <div class="history" id="history">Encrypted Result:</div>  
-<div class="board" id="board">
-
-  <!-- 🔥 HOLES YAHAN SAHI HAI -->
-  <div class="hole" id="holeL"></div>
-  <div class="hole" id="holeR"></div>
-
-</div>
-
-<!-- ✅ YE WAPAS ADD KAR -->
-<div class="rows">
-
-  <div class="row">
-    <div class="box red">26.3</div>
-    <div class="box red">4</div>
-    <div class="box red">1.5</div>
-    <div class="box red">0.3</div>
-    <div class="box red">0.2</div>
-    <div class="box red">0.3</div>
-    <div class="box red">1.5</div>
-    <div class="box red">4</div>
-    <div class="box red">26.3</div>
-  </div>
-
-  <div class="row">
-    <div class="box yellow">10.5</div>
-    <div class="box yellow">3</div>
-    <div class="box yellow">1.3</div>
-    <div class="box yellow">0.7</div>
-    <div class="box yellow">0.4</div>
-    <div class="box yellow">0.7</div>
-    <div class="box yellow">1.3</div>
-    <div class="box yellow">3</div>
-    <div class="box yellow">10.5</div>
-  </div>
-
-  <div class="row">
-    <div class="box green">5.4</div>
-    <div class="box green">1.8</div>
-    <div class="box green">1.1</div>
-    <div class="box green">1</div>
-    <div class="box green">0.5</div>
-    <div class="box green">1</div>
-    <div class="box green">1.1</div>
-    <div class="box green">1.8</div>
-    <div class="box green">5.4</div>
-  </div>
-
-</div>
-</div>  <div class="select">  
-  <button class="red" id="r">RED</button>  
-  <button class="yellow" id="y">YELLOW</button>  
-  <button class="green" id="g">GREEN</button>  
-</div>  <div class="controls">  
-  <div class="bet-row">  
-    <button class="ctrl-btn" id="minus">−</button>  
-    <div class="bet">Bet ₹ <span id="bet">100</span></div>  
-    <button class="ctrl-btn" id="plus">+</button>  
-  </div>  
-  <button class="drop" id="drop">DROP BALL</button>  
-</div> 
-
-<script type="module">
-
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getFirestore, getDocs, collection, query, where, doc, updateDoc } 
+ <!DOCTYPE html>  <html lang="en">    <head>    
+<meta charset="UTF-8">    
+<title>PLINKO</title>    
+<meta name="viewport" content="width=device-width, initial-scale=1">    
+<script src="game-control.js"></script>  <style>    
+body{    
+  margin:0;    
+  font-family:Arial, sans-serif;    
+  background:linear-gradient(135deg,#1aa7a1,#0b6f7a);    
+  color:#fff;    
+  text-align:center;    
+}    
+.header{    
+  display:flex;    
+  justify-content:space-between;    
+  align-items:center;    
+  padding:12px 14px;    
+  font-size:20px;    
+  font-weight:bold;    
+}    
+.wallet{    
+  background:rgba(0,0,0,.35);    
+  padding:6px 14px;    
+  border-radius:20px;    
+  font-size:14px;    
+}    
+.history{    
+  margin:6px 10px;    
+  background:rgba(0,0,0,.25);    
+  padding:8px;    
+  border-radius:10px;    
+  font-size:12px;    
+  overflow-x:auto;    
+  white-space:nowrap;    
+}    
+.board{    
+  position:relative;    
+  width:320px;    
+  height:320px;    
+  margin:6px auto 0;    
+}    
+.pin{    
+  width:10px;    
+  height:10px;    
+  background:#fff;    
+  border-radius:50%;    
+  position:absolute;    
+}    
+.ball{    
+  width:14px;    
+  height:14px;    
+  background:#fff;    
+  border-radius:50%;    
+  position:absolute;    
+}    
+.rows{margin:0 10px;}    
+.row{    
+  display:grid;    
+  grid-template-columns:repeat(9,1fr);    
+  gap:4px;    
+  margin-bottom:6px;    
+}    
+.box{    
+  padding:6px 0;    
+  font-size:12px;    
+  border-radius:6px;    
+  opacity:.35;    
+}    
+.box.active{    
+  opacity:1;    
+  box-shadow:0 0 10px #fff;    
+  border:2px solid #fff;    
+  transform:scale(1.05);    
+}    
+.red{background:#f44336}    
+.yellow{background:#ff9800}    
+.green{background:#4caf50}    
+.select{    
+  display:flex;    
+  justify-content:center;    
+  gap:10px;    
+  margin-top:6px;    
+}    
+.select button{    
+  flex:1;    
+  max-width:110px;    
+  padding:8px 0;    
+  border:none;    
+  border-radius:20px;    
+  font-weight:bold;    
+  color:#000;    
+}    
+.controls{margin:10px;}    
+.bet-row{    
+  display:flex;    
+  justify-content:center;    
+  align-items:center;    
+  gap:10px;    
+}    
+.bet{    
+  background:#000;    
+  padding:6px 18px;    
+  border-radius:20px;    
+}    
+.ctrl-btn{    
+  width:36px;    
+  height:36px;    
+  border-radius:50%;    
+  border:none;    
+  font-size:18px;    
+}    
+.drop{    
+  width:92%;    
+  padding:14px;    
+  margin-top:10px;    
+  border-radius:30px;    
+  background:#00c853;    
+  color:#000;    
+  font-weight:bold;    
+  font-size:16px;    
+}    
+</style>  </head>  <body>  <div class="header">    
+  <div>PLINKO</div>    
+  <div class="wallet">₹ <span id="wallet">0</span></div>    
+</div>  <div class="history" id="history">Encrypted Result:</div>    
+<div class="board" id="board"></div>  <div class="rows">    
+  <div class="row">    
+    <div class="box red">26.3</div><div class="box red">4</div><div class="box red">1.5</div>    
+    <div class="box red">0.3</div><div class="box red">0.2</div>    
+    <div class="box red">0.3</div><div class="box red">1.5</div><div class="box red">4</div><div class="box red">26.3</div>    
+  </div>    
+  <div class="row">    
+    <div class="box yellow">10.5</div><div class="box yellow">3</div><div class="box yellow">1.3</div>    
+    <div class="box yellow">0.7</div><div class="box yellow">0.4</div>    
+    <div class="box yellow">0.7</div><div class="box yellow">1.3</div><div class="box yellow">3</div><div class="box yellow">10.5</div>    
+  </div>    
+  <div class="row">    
+    <div class="box green">5.4</div><div class="box green">1.8</div><div class="box green">1.1</div>    
+    <div class="box green">1</div><div class="box green">0.5</div>    
+    <div class="box green">1</div><div class="box green">1.1</div><div class="box green">1.8</div><div class="box green">5.4</div>    
+  </div>    
+</div>  <div class="select">    
+  <button class="red" id="r">RED</button>    
+  <button class="yellow" id="y">YELLOW</button>    
+  <button class="green" id="g">GREEN</button>    
+</div>  <div class="controls">    
+  <div class="bet-row">    
+    <button class="ctrl-btn" id="minus">−</button>    
+    <div class="bet">Bet ₹ <span id="bet">100</span></div>    
+    <button class="ctrl-btn" id="plus">+</button>    
+  </div>    
+  <button class="drop" id="drop">DROP BALL</button>    
+</div>   
+  <script type="module">    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getFirestore, getDocs, collection, query, where, doc, updateDoc, getDoc }
 from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 /* FIREBASE */
 const app = initializeApp({
-  apiKey:"AIzaSyBx3J9aGn_98rTPgurMMKw_GR3puIMj4Ms",
-  authDomain:"colourcash-ea60e.firebaseapp.com",
-  projectId:"colourcash-ea60e"
+apiKey:"AIzaSyBx3J9aGn_98rTPgurMMKw_GR3puIMj4Ms",
+authDomain:"colourcash-ea60e.firebaseapp.com",
+projectId:"colourcash-ea60e"
 });
 const db = getFirestore(app);
 const userEmail = localStorage.getItem("userEmail");
@@ -220,33 +172,46 @@ let uid = "";
 
 /* MULTIPLIERS */
 const M = {
-  red:[26.3,4,1.5,0.3,0.2,0.3,1.5,4,26.3],
-  yellow:[10.5,3,1.3,0.7,0.4,0.7,1.3,3,10.5],
-  green:[5.4,1.8,1.1,1,0.5,1,1.1,1.8,5.4]
+red:[26.3,4,1.5,0.3,0.2,0.3,1.5,4,26.3],
+yellow:[10.5,3,1.3,0.7,0.4,0.7,1.3,3,10.5],
+green:[5.4,1.8,1.1,1,0.5,1,1.1,1.8,5.4]
 };
 
 /* LOAD WALLET */
 async function loadWallet(){
-  const q = query(collection(db,"users"),where("email","==",userEmail));
-  const snap = await getDocs(q);
-  snap.forEach(d=>{
-    uid=d.id;
-    wallet=d.data().balance||0;
-  });
-  render();
+const q = query(collection(db,"users"),where("email","==",userEmail));
+const snap = await getDocs(q);
+snap.forEach(d=>{
+uid=d.id;
+wallet=d.data().balance||0;
+});
+render();
 }
 
 /* SAVE */
 async function saveWallet(){
-  if(!uid) return;
-  await updateDoc(doc(db,"users",uid),{balance:wallet});
+if(!uid) return;
+await updateDoc(doc(db,"users",uid),{balance:wallet});
+}
+
+/* HOUSE EDGE */
+async function getChance(){
+const ref = doc(db,"settings","houseEdge");
+const snap = await getDoc(ref);
+
+let chance = 50;
+if(snap.exists()){
+chance = Number(snap.data().plinko ?? 50);
+}
+
+return chance;
 }
 
 /* UI */
 const $=id=>document.getElementById(id);
 function render(){
-  $("wallet").innerText=wallet;
-  $("bet").innerText=bet;
+$("wallet").innerText=wallet;
+$("bet").innerText=bet;
 }
 
 /* BET */
@@ -255,9 +220,9 @@ $("minus").onclick=()=>{ if(bet>10) bet-=10; render(); }
 
 /* COLOR */
 function setColor(c){
-  color=c;
-  document.querySelectorAll(".box").forEach(b=>b.classList.remove("active"));
-  document.querySelectorAll("."+c).forEach(b=>b.classList.add("active"));
+color=c;
+document.querySelectorAll(".box").forEach(b=>b.classList.remove("active"));
+document.querySelectorAll("."+c).forEach(b=>b.classList.add("active"));
 }
 $("r").onclick=()=>setColor("red");
 $("y").onclick=()=>setColor("yellow");
@@ -268,113 +233,102 @@ const board=$("board");
 const rows=8,sx=34,sy=32,start=3;
 
 for(let r=0;r<rows;r++){
-  for(let c=0;c<start+r;c++){
-    const p=document.createElement("div");
-    p.className="pin";
-    p.style.top=50+r*sy+"px";
-    p.style.left=160-((start+r-1)*sx)/2+c*sx+"px";
-    board.appendChild(p);
-  }
+for(let c=0;c<start+r;c++){
+const p=document.createElement("div");
+p.className="pin";
+p.style.top=50+r*sy+"px";
+p.style.left=160-((start+r-1)sx)/2+csx+"px";
+board.appendChild(p);
+}
 }
 
 /* DROP */
 $("drop").onclick=async ()=>{
-  if(bet>wallet) return alert("Low balance");
+if(bet>wallet) return alert("Low balance");
 
-  wallet-=bet;
-  await saveWallet();
-  render();
+wallet-=bet;
+await saveWallet();
+render();
 
-  const ball=document.createElement("div");
-  ball.className="ball";
-  ball.style.opacity="0";
+const ball=document.createElement("div");
+ball.className="ball";
+board.appendChild(ball);
 
-  /* 🔥 RANDOM HOLE START (PERFECT CENTER) */
-  let hole = Math.random() < 0.5 
-    ? document.getElementById("holeL") 
-    : document.getElementById("holeR");
+let chance = await getChance();
+let selectedIndex;
 
-  let rect = hole.getBoundingClientRect();
-  let boardRect = board.getBoundingClientRect();
+// 🔴 LOSS MODE
+if(chance <= 0){
+selectedIndex = [3,4,5][Math.floor(Math.random()*3)];
+}
 
-  // 🎯 EXACT CENTER FIX
-  let gapX = rect.left - boardRect.left + rect.width/2 - 7;
+// 🟢 WIN MODE
+else if(chance >= 100){
+selectedIndex = [0,1,2,6,7,8][Math.floor(Math.random()*6)];
+}
 
-  let row = 0;
+// 🎲 MIX MODE
+else{
+let rand = Math.random()*100;
 
-  // 🎯 better col calc
-  let col = Math.round((gapX - 20) / sx);
+if(rand < chance){  
+  selectedIndex = [0,1,2,6,7,8][Math.floor(Math.random()*6)];  
+}else{  
+  selectedIndex = [3,4,5][Math.floor(Math.random()*3)];  
+}
 
-  ball.style.top = "10px";
-  ball.style.left = gapX + "px";
+}
 
-  board.appendChild(ball);
+/* 🎯 START EXACT CENTER */
+let row = 0;
+let col = 4; // center column
 
-  requestAnimationFrame(()=>{
-    ball.style.opacity="1";
-  });
+let centerX = board.offsetWidth / 2 - 7;
+ball.style.top = "20px";
+ball.style.left = centerX + "px";
 
-  /* 🔥 REAL RANDOM PLINKO FLOW */
-  function stepFall(){
+function stepFall(){
+if(row >= rows){
+finish(selectedIndex, ball);
+setTimeout(()=>ball.remove(),400);
+return;
+}
 
-    if(row >= rows){
-      finish(ball);
-      setTimeout(()=>ball.remove(),400);
-      return;
-    }
+// 🎲 realistic bounce  
+if (Math.random() < 0.5) col--;  
+else col++;  
 
-    // 🎯 RANDOM MOVEMENT (REAL FEEL)
-    let rand = Math.random();
+// limit  
+col = Math.max(0, Math.min(8, col));  
 
-    if(rand < 0.33){
-      col -= 1;
-    }
-    else if(rand < 0.66){
-      col += 1;
-    }
-    else{
-      // 🔥 kabhi same column bhi (important realism)
-      col += 0;
-    }
+row++;  
 
-    // 🎯 edge bounce (natural feel)
-    if(col <= 0) col = 1;
-    if(col >= 8) col = 7;
+ball.style.transition="top 0.25s ease-out, left 0.25s ease-in-out";  
+ball.style.top=(40+row*sy)+"px";  
+ball.style.left=(col*sx+20)+"px";  
 
-    row++;
+setTimeout(stepFall,260);
 
-    // 🎯 smooth physics
-    ball.style.transition = "top 0.26s cubic-bezier(.22,1,.36,1), left 0.26s ease";
+}
 
-    ball.style.top = (40 + row * sy) + "px";
-    ball.style.left = (col * sx + 20) + "px";
-
-    setTimeout(stepFall,260);
-  }
-
-  stepFall();
+stepFall();
 };
 
 /* RESULT */
-function finish(ball){
+function finish(index, ball){
+let multi = M[color][index];
+let win = Math.floor(bet * multi);
 
-  let finalCol = Math.round((parseInt(ball.style.left)-20)/sx);
-  finalCol = Math.max(0, Math.min(8, finalCol));
+wallet += win;
+saveWallet();
+render();
 
-  let multi = M[color][finalCol];
-  let win = Math.floor(bet * multi);
-
-  wallet += win;
-  saveWallet();
-  render();
-
-  $("history").innerHTML += ` | ${color.toUpperCase()} ${multi}x`;
+$("history").innerHTML +=  | ${color.toUpperCase()} ${multi}x;
 }
 
 /* INIT */
 loadWallet();
-
 </script>
-  
-</body>  
-</html>
+
+</body>    
+</html> 
