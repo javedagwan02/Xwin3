@@ -153,7 +153,7 @@ body{
   <button class="drop" id="drop">DROP BALL</button>  
 </div> 
 
-  <script type="module">
+<script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getFirestore, getDocs, collection, query, where, doc, updateDoc, getDoc } 
@@ -196,19 +196,6 @@ async function loadWallet(){
 async function saveWallet(){
   if(!uid) return;
   await updateDoc(doc(db,"users",uid),{balance:wallet});
-}
-
-/* HOUSE EDGE */
-async function getChance(){
-  const ref = doc(db,"settings","houseEdge");
-  const snap = await getDoc(ref);
-
-  let chance = 50;
-  if(snap.exists()){
-    chance = Number(snap.data().plinko ?? 50);
-  }
-
-  return chance;
 }
 
 /* UI */
@@ -258,12 +245,12 @@ $("drop").onclick=async ()=>{
   ball.className="ball";
   ball.style.opacity="0";
 
-  /* 🎯 PERFECT START POSITION */
+  /* 🎯 RANDOM START (LEFT / RIGHT GAP) */
   let topPins = 3;
   let totalWidth = (topPins - 1) * sx;
   let startX = (board.offsetWidth / 2) - (totalWidth / 2);
 
-  let gapIndex = 1;
+  let gapIndex = Math.random() < 0.5 ? 0 : 1;
   let gapX = startX + (gapIndex + 0.5) * sx;
 
   let row = 0;
@@ -278,67 +265,41 @@ $("drop").onclick=async ()=>{
     ball.style.opacity="1";
   });
 
-  /* 🎯 RESULT LOGIC */
-  let chance = await getChance();
-  let selectedIndex;
-
-  if(chance <= 0){
-    selectedIndex = [3,4,5][Math.floor(Math.random()*3)];
-  }
-  else if(chance >= 100){
-    selectedIndex = [0,1,2,6,7,8][Math.floor(Math.random()*6)];
-  }
-  else{
-    let rand = Math.random()*100;
-    if(rand < chance){
-      selectedIndex = [0,1,2,6,7,8][Math.floor(Math.random()*6)];
-    }else{
-      selectedIndex = [3,4,5][Math.floor(Math.random()*3)];
-    }
-  }
-
+  /* 🎯 REAL RANDOM FALL */
   function stepFall(){
-  if(row >= rows){
-    finish(selectedIndex, ball);
-    setTimeout(()=>ball.remove(),400);
-    return;
-  }
+    if(row >= rows){
+      finish(ball);
+      setTimeout(()=>ball.remove(),400);
+      return;
+    }
 
-  // 🎯 TARGET BASED MOVE
-  let targetCol = selectedIndex;
+    // real plinko randomness
+    if(Math.random() < 0.5){
+      col--;
+    }else{
+      col++;
+    }
 
-  // धीरे-धीरे target की तरफ जाए
-  if(col < targetCol){
-    col++;
-  }else if(col > targetCol){
-    col--;
-  }else{
-    // थोड़ा randomness ताकि real लगे
-    col += Math.random() < 0.5 ? -1 : 1;
-  }
+    col = Math.max(0, Math.min(8, col));
+    row++;
 
-  col = Math.max(0, Math.min(8, col));
-  row++;
+    ball.style.transition="top 0.25s ease-out, left 0.25s ease-in-out";
+    ball.style.top=(40+row*sy)+"px";
+    ball.style.left=(col*sx+20)+"px";
 
-  ball.style.transition="top 0.25s ease-out, left 0.25s ease-in-out";
-  ball.style.top=(40+row*sy)+"px";
-  ball.style.left=(col*sx+20)+"px";
-
-  setTimeout(stepFall,260);
+    setTimeout(stepFall,260);
   }
 
   stepFall();
 };
-/* RESULT */
-function finish(index, ball){
 
-  // 🎯 जो column पे ball है वही result
+/* RESULT (REAL LANDING BASED) */
+function finish(ball){
+
   let finalCol = Math.round((parseInt(ball.style.left)-20)/sx);
-
   finalCol = Math.max(0, Math.min(8, finalCol));
 
   let multi = M[color][finalCol];
-
   let win = Math.floor(bet * multi);
 
   wallet += win;
@@ -351,7 +312,7 @@ function finish(index, ball){
 /* INIT */
 loadWallet();
 
-  </script>
+</script>
   
 </body>  
 </html>
