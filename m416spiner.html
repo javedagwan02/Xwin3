@@ -306,8 +306,29 @@ window.spin = async function(){
   let index;
 
   if(winChance < HOUSE_EDGE){
-    index = selected * 2; // WIN
-  }else{
+  // ✅ WIN → correct slice dhundo
+  let possible = [];
+
+  wheelMap.forEach((item, i)=>{
+    if(item.type === "win" && item.box === selected){
+      possible.push(i);
+    }
+  });
+
+  index = possible[Math.floor(Math.random() * possible.length)];
+
+}else{
+  // ❌ LOSS
+  let possible = [];
+
+  wheelMap.forEach((item, i)=>{
+    if(item.type === "lose" || item.box !== selected){
+      possible.push(i);
+    }
+  });
+
+  index = possible[Math.floor(Math.random() * possible.length)];
+}
     let red = [1,3,5,7];
     let wrong = [0,2,4,6].filter(i => i !== selected*2);
     let mix = [...red, ...wrong];
