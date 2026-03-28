@@ -54,6 +54,18 @@ body{
   border-radius:50%;  
   position:absolute;  
 }  
+  .hole{
+  position:absolute;
+  width:22px;
+  height:12px;
+  background:#000;
+  border-radius:50%;
+  top:20px;
+}
+
+#holeL{ left:120px; }
+#holeR{ right:120px; }
+  
 .rows{margin:0 10px;}  
 .row{  
   display:grid;  
@@ -124,8 +136,14 @@ body{
   <div>PLINKO</div>  
   <div class="wallet">₹ <span id="wallet">0</span></div>  
 </div>  <div class="history" id="history">Encrypted Result:</div>  
-<div class="board" id="board"></div>  <div class="rows">  
-  <div class="row">  
+<div class="board" id="board">
+
+  <!-- 🔥 HOLES YAHAN DAL -->
+  <div class="hole" id="holeL"></div>
+  <div class="hole" id="holeR"></div>
+
+</div>
+    
     <div class="box red">26.3</div><div class="box red">4</div><div class="box red">1.5</div>  
     <div class="box red">0.3</div><div class="box red">0.2</div>  
     <div class="box red">0.3</div><div class="box red">1.5</div><div class="box red">4</div><div class="box red">26.3</div>  
