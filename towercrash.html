@@ -1,318 +1,293 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>🏢 Tower X</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-
+<title>Aviator</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<script src="game-control.js"></script>
 <style>
-body{
-  margin:0;
-  font-family:Arial;
-  background:#0b0f2a;
-  color:#fff;
-  text-align:center;
-}
-
-.header{
-  padding:12px;
-  font-size:22px;
-  font-weight:bold;
-}
-
-/* GAME */
-.game{
-  position:relative;
-  height:400px;
-  max-width:300px;
-  margin:10px auto;
-  background:linear-gradient(#87ceeb,#4fa3d1);
-  overflow:hidden;
-  border-radius:20px;
-}
-
-/* HOLE */
-.hole{
-  width:165px;   /* 🔥 thoda chhota */
-  height:90px;
-  position:absolute;
-  top:10px;
-  background-size:contain;
-  background-repeat:no-repeat;
-}
-
-/* IMAGE BLOCK */
-.block{
-  width:180px;   /* 🔥 aur bada */
-  height:100px;
-  position:absolute;
-  background-size:contain;
-  background-repeat:no-repeat;
-}
-/* BASE IMAGE */
-.base{
-  width:190px;
-  height:100px;
-  position:absolute;
-  bottom:0;
-  left:50%;
-  transform:translateX(-50%);
-  background:url("images/29202-removebg-preview.png") no-repeat center/contain;
-}
-
-/* MULT */
-.mult{
-  font-size:24px;
-  color:#00ffcc;
-  margin:10px;
-}
-
-/* BTN */
-button,input{
-  width:85%;
-  padding:14px;
-  border:none;
-  border-radius:30px;
-  margin-top:10px;
-}
-
-button{
-  background:#ff4fd8;
-  font-weight:bold;
-}
-
-/* POPUP */
-.popup{
-  position:fixed;
-  inset:0;
-  display:none;
-  justify-content:center;
-  align-items:center;
-  background:rgba(0,0,0,.7);
-}
-
-.popup div{
-  background:#111;
-  padding:25px;
-  border-radius:20px;
-  font-size:20px;
-}
-
-.win{color:#00ff88;}
-.loss{color:#ff3b3b;}
+body{margin:0;font-family:Arial;background:#0b0b0b;color:#fff}
+.header{display:flex;justify-content:space-between;align-items:center;padding:14px;background:#111}
+.logo{font-size:26px;font-weight:bold;color:#ff1744}
+.balance{font-size:18px;color:#00e676}
+.history{display:flex;gap:10px;padding:10px;overflow-x:auto;background:#0f0f0f}
+.history span{font-size:14px}
+.low{color:#64b5f6}
+.mid{color:#00e676}
+.high{color:#e040fb}
+.game{height:40vh;background:radial-gradient(circle at bottom,#1a1a1a,#000);display:flex;align-items:center;justify-content:center}
+.multiplier{text-align:center;font-size:64px;font-weight:bold}
+.crashed{color:#ff5252}
+.status{text-align:center;padding:8px;color:#aaa;font-size:16px}
+.controls{padding:12px;display:flex;flex-direction:column;gap:12px}
+.betbox{background:#151515;border-radius:14px;padding:12px}
+.row{display:flex;gap:8px;margin-bottom:8px}
+input{flex:1;padding:10px;border:none;border-radius:8px;font-size:16px;text-align:center}
+button{flex:1;padding:10px;border:none;border-radius:8px;font-weight:bold;font-size:16px}
+.gray{background:#333;color:#fff}
+.green{background:#2ecc71;color:#000}
+.locked{opacity:.5;pointer-events:none}
+.popup-bg{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:999}
+.popup{background:#1c1c1c;padding:20px 26px;border-radius:14px;font-size:20px;font-weight:bold}
+.win{color:#2ecc71}
+.loss{color:#ff5252}
+.betp{color:#64b5f6}
 </style>
 </head>
 
 <body>
 
-<div class="header">🏢 Tower X</div>
-
-<div id="game" class="game">
-  <div id="hole" class="hole"></div>
-  <div class="base"></div>
+<div class="header">
+  <div class="logo">Aviator</div>
+  <div class="balance">₹ <span id="wallet">3000</span></div>
 </div>
 
-<div class="mult" id="mult">x1.00</div>
+<div class="history" id="history"></div>
 
-<input id="bet" type="number" value="100">
-
-<button id="mainBtn">START</button>
-<button id="dropBtn">DROP</button>
-
-<div class="popup" id="popup">
-  <div id="popupText"></div>
+<div class="game">
+  <div class="multiplier" id="multi">WAITING</div>
 </div>
 
+<div class="status" id="status"></div>
 
-  <script>
-let wallet=1000;
-let running=false;
-let bet=0;
-let step=0;
+<div class="controls">
 
-const multipliers=[
-1.02,1.08,1.14,1.21,1.29,1.37,1.46,1.56,1.67,1.80,
-1.94,2.09,2.27,2.47,2.69,2.95,3.24,3.58,3.98,4.45,
-5.01,5.68,6.49,7.49,8.74,10.33,12.39,15.15,18.94,24.35
-];
+  <div class="betbox" id="box1">
+    <div class="row">
+      <button class="gray" onclick="chg(1,-1)">-</button>
+      <input id="amt1" value="10">
+      <button class="gray" onclick="chg(1,1)">+</button>
+    </div>
+    <div class="row">
+      <button class="gray" onclick="setAmt(1,1)">1</button>
+      <button class="gray" onclick="setAmt(1,2)">2</button>
+      <button class="gray" onclick="setAmt(1,5)">5</button>
+      <button class="gray" onclick="setAmt(1,10)">10</button>
+    </div>
+    <button class="green" id="btn1" onclick="bet(1)">BET</button>
+  </div>
 
-let holeX=0,dir=1,moveHole;
-let lastLeft=0;
-let lastWidth=180;
+  <div class="betbox" id="box2">
+    <div class="row">
+      <button class="gray" onclick="chg(2,-1)">-</button>
+      <input id="amt2" value="1">
+      <button class="gray" onclick="chg(2,1)">+</button>
+    </div>
+    <div class="row">
+      <button class="gray" onclick="setAmt(2,1)">1</button>
+      <button class="gray" onclick="setAmt(2,2)">2</button>
+      <button class="gray" onclick="setAmt(2,5)">5</button>
+      <button class="gray" onclick="setAmt(2,10)">10</button>
+    </div>
+    <button class="green" id="btn2" onclick="bet(2)">BET</button>
+  </div>
 
-const game=document.getElementById("game");
-const mainBtn=document.getElementById("mainBtn");
-const dropBtn=document.getElementById("dropBtn");
+</div>
 
-/* POPUP */
-function showPopup(text,type){
- popupText.className=type;
- popupText.innerText=text;
- popup.style.display="flex";
- setTimeout(()=>popup.style.display="none",2000);
+<div class="popup-bg" id="popupBg">
+  <div class="popup" id="popup"></div>
+</div>
+
+<!-- ===== TERI ORIGINAL SCRIPT (AS IS) ===== -->
+<script>
+/* ===== ORIGINAL GAME SCRIPT (UNCHANGED) ===== */
+let wallet=3000;
+let state="BET";
+let multi=1;
+let crash=0;
+let active=[false,false];
+let betAmt=[0,0];
+let history=[];
+
+const BET_TIME=25;
+const LOCK_TIME=5;
+
+let roundStart = Date.now();
+
+const wEl=document.getElementById("wallet");
+const mEl=document.getElementById("multi");
+const sEl=document.getElementById("status");
+const hEl=document.getElementById("history");
+const popupBg=document.getElementById("popupBg");
+const popup=document.getElementById("popup");
+
+function showPopup(txt,cls){
+  popup.className="popup "+cls;
+  popup.innerText=txt;
+  popupBg.style.display="flex";
+  setTimeout(()=>popupBg.style.display="none",1500);
 }
 
-/* BUTTON */
-mainBtn.onclick=()=>{
- if(!running){
-   startGame();
- }else{
-   cashout();
- }
-};
-
-dropBtn.onclick=()=>drop();
-
-/* START */
-function startGame(){
- bet=+document.getElementById("bet").value;
-
- if(bet<=0 || bet>wallet){
-   showPopup("❌ Low Balance","loss");
-   return;
- }
-
- wallet-=bet;
- running=true;
- step=0;
-
- mainBtn.innerText="CASHOUT";
-
- game.innerHTML='<div id="hole" class="hole"></div><div class="base"></div>';
-
- lastWidth=180;
- lastLeft=(game.clientWidth/2)-(lastWidth/2);
-
- startHole();
+function randCrash(){
+  let r=Math.random();
+  if(r<0.6) return +(1+Math.random()*1.5).toFixed(2);
+  if(r<0.85) return +(2+Math.random()*3).toFixed(2);
+  return +(5+Math.random()*15).toFixed(2);
 }
 
-/* HOLE MOVE */
-function startHole(){
- const hole=document.getElementById("hole");
-
- hole.style.background="url(images/29199-removebg-preview.png) center/contain no-repeat";
-
- moveHole=setInterval(()=>{
-   holeX+=dir*2;
-
-   if(holeX>220) dir=-1;
-   if(holeX<0) dir=1;
-
-   hole.style.left=holeX+"px";
- },25);
+function renderHistory(){
+  hEl.innerHTML="";
+  history.forEach(x=>{
+    let s=document.createElement("span");
+    s.textContent=x+"x";
+    s.className=x<2?"low":x<10?"mid":"high";
+    hEl.appendChild(s);
+  });
 }
 
-/* DROP */
-function drop(){
- if(!running) return;
+function loop(){
+  let elapsed=Math.floor((Date.now()-roundStart)/1000);
 
- clearInterval(moveHole);
+  if(elapsed < BET_TIME){
+    state="BET";
+    sEl.innerText=`Place your bets (${BET_TIME-elapsed}s)`;
+    mEl.innerText="WAITING";
+  }
+  else if(elapsed < BET_TIME+LOCK_TIME){
+    state="LOCK";
+    sEl.innerText=`Bet locked (${BET_TIME+LOCK_TIME-elapsed}s)`;
+  }
+  else{
+    if(state!=="FLY"){
+      state="FLY";
+      multi=1;
+      crash=randCrash();
+      sEl.innerText="Flying…";
+    }
+    if(active[0]) document.getElementById("btn1").innerText="CASH OUT";
+    if(active[1]) document.getElementById("btn2").innerText="CASH OUT";
+    multi += 0.02 + multi*0.004;
+    multi=+multi.toFixed(2);
+    mEl.innerText=multi+"x";
 
- const block=document.createElement("div");
-
- let blockWidth=180;
- let holeWidth=165;
-
- let blockLeft = holeX + (holeWidth/2) - (blockWidth/2);
-
- block.className="block";
- block.style.left=blockLeft+"px";
- block.style.top="-120px";
- block.style.background="url(images/29199-removebg-preview.png) center/contain no-repeat";
-
- game.appendChild(block);
-
- const blockHeight=100;
- const baseOffset=100;
-
- let targetY = game.clientHeight - baseOffset - (step * blockHeight);
-
- /* 🔥 REAL FALL */
- let velocity=0;
- let gravity=0.6;
-
- let fall=setInterval(()=>{
-   let top=parseFloat(block.style.top);
-
-   velocity+=gravity;
-   top+=velocity;
-
-   block.style.top=top+"px";
-
-   if(top>=targetY){
-     clearInterval(fall);
-
-     /* 🔥 BOUNCE */
-     block.style.top=(targetY-10)+"px";
-
-     setTimeout(()=>{
-       block.style.top=targetY+"px";
-
-       /* 🔥 LOSS RANDOM */
-       if(Math.random()<0.25){
-         block.style.filter="brightness(0)";
-         showPopup("🔥 Bad Luck! You Loss","loss");
-         reset();
-         return;
-       }
-
-       /* 🔥 PERFECT STACK (MAIN FIX) */
-       let newLeft = lastLeft + (lastWidth/2) - (blockWidth/2);
-
-       block.style.left=newLeft+"px";
-       block.style.width=blockWidth+"px";
-
-       /* IMPACT EFFECT */
-       block.style.transform="scaleY(0.95)";
-       setTimeout(()=>{
-         block.style.transform="scaleY(1)";
-       },120);
-
-       lastLeft=newLeft;
-       lastWidth=blockWidth;
-
-       document.getElementById("mult").innerText="x"+multipliers[step];
-
-       step++;
-
-       /* AUTO SCROLL */
-       if(step>3){
-         game.scrollTop += blockHeight;
-       }
-
-       if(step>=multipliers.length){
-         cashout();
-         return;
-       }
-
-       startHole();
-
-     },120);
-   }
-
- },16);
+    if(multi>=crash){
+      state="CRASH";
+      mEl.innerText="CRASHED @ "+crash+"x";
+      history.unshift(crash);
+      history=history.slice(0,10);
+      renderHistory();
+      active=[false,false];
+      document.getElementById("btn1").innerText="BET";
+      document.getElementById("btn2").innerText="BET";
+      roundStart=Date.now()+2000;
+    }
+  }
 }
 
-/* CASHOUT */
-function cashout(){
- if(!running) return;
+setInterval(loop,100);
 
- let win=bet*multipliers[Math.max(step-1,0)];
+function bet(n){
+  let i=n-1;
+  let amt=+document.getElementById("amt"+n).value;
+  if(state==="BET"){
+    if(wallet<amt) return showPopup("Low Balance","loss");
+    wallet-=amt;
+    wEl.innerText=wallet;
+    active[i]=true;
+    betAmt[i]=amt;
+    document.getElementById("btn"+n).innerText="CASH OUT";
+    showPopup("Bet Placed ₹"+amt,"betp");
+  }
+ else if(state==="FLY" && active[i]){
+  active[i]=false;
 
- wallet+=win;
+  let win = Math.floor(amt*multi);
 
- showPopup("💰 You Cashout ₹"+Math.floor(win),"win");
+  win = addWinAmount(win);   // ⭐ daily limit apply
 
- reset();
+  wallet += win;
+  wEl.innerText = wallet;
+
+  document.getElementById("btn"+n).innerText="BET";
+  showPopup("Cashed Out @ "+multi+"x","win");
+ } 
+
+function chg(n,v){
+  let i=document.getElementById("amt"+n);
+  i.value=Math.max(1,+i.value+v);
+}
+function setAmt(n,v){
+  document.getElementById("amt"+n).value=v;
 }
 
-/* RESET */
-function reset(){
- running=false;
- mainBtn.innerText="START";
+renderHistory();
+</script>
+<!-- ================= HARD REFRESH ROUND FIX (FINAL) ================= -->
+<script>
+(function(){
+  const KEY = "AVIATOR_PERSIST_STATE";
+
+  // LOAD
+  const saved = localStorage.getItem(KEY);
+  if(saved){
+    try{
+      const d = JSON.parse(saved);
+      if(d.roundStart) roundStart = d.roundStart;
+      if(d.state) state = d.state;
+      if(d.multi) multi = d.multi;
+      if(d.crash) crash = d.crash;
+      if(d.active) active = d.active;
+      if(d.betAmt) betAmt = d.betAmt;
+      if(d.history){
+        history = d.history;
+        renderHistory();
+      }
+    }catch(e){}
+  }
+
+  // SAVE CONTINUOUSLY
+  setInterval(()=>{
+    localStorage.setItem(KEY, JSON.stringify({
+      roundStart,
+      state,
+      multi,
+      crash,
+      active,
+      betAmt,
+      history
+    }));
+  }, 500);
+})();
+</script>
+<!-- ================= FIREBASE WALLET SYNC (ONLY ADDITION) ================= -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getFirestore, collection, query, where, getDocs, doc, updateDoc } 
+from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+const app = initializeApp({
+  apiKey:"AIzaSyBx3J9aGn_98rTPgurMMKw_GR3puIMj4Ms",
+  authDomain:"colourcash-ea60e.firebaseapp.com",
+  projectId:"colourcash-ea60e"
+});
+const db = getFirestore(app);
+
+const email = localStorage.getItem("userEmail");
+let uid="";
+let lastWallet = wallet;
+
+/* LOAD WALLET FROM FIREBASE */
+async function loadWallet(){
+  if(!email) return;
+  const q=query(collection(db,"users"),where("email","==",email));
+  const snap=await getDocs(q);
+  snap.forEach(d=>{
+    uid=d.id;
+    wallet = d.data().balance || wallet;
+    document.getElementById("wallet").innerText = wallet;
+  });
 }
-         </script>       
- 
-  
+loadWallet();
+
+/* AUTO SYNC WALLET (NO GAME TOUCH) */
+setInterval(async ()=>{
+  if(!uid) return;
+  if(wallet !== lastWallet){
+    lastWallet = wallet;
+    await updateDoc(doc(db,"users",uid),{ balance: wallet });
+  }
+},600);
+</script>
+
 </body>
 </html>
