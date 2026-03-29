@@ -105,9 +105,7 @@ async function loadDeposits(){
       <div class="row">⏰ Time: ${new Date(data.time).toLocaleString()}</div>
       <div class="row">📌 Status: ${data.status}</div>
 
-      <div class="row">
-  <button onclick="viewImage('${data.screenshot}')">📸 View Screenshot</button>
-</div>
+    
 
       <div class="btns">
         <button class="approve" onclick="approve('${d.id}','${data.email}',${data.amount})">Approve</button>
@@ -167,14 +165,7 @@ window.reject = async function(id){
 
   loadDeposits();
 }
-  window.viewImage = function(url){
-  document.getElementById("popupImg").src = url;
-  document.getElementById("imgPopup").style.display = "flex";
-}
-
-window.closeImg = function(){
-  document.getElementById("imgPopup").style.display = "none";
-}
+  
 
 /* INIT */
 loadDeposits();
