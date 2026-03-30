@@ -239,7 +239,7 @@ async function getChance(){
    const ref = doc(db,"settings","houseEdge");
    const snap = await getDoc(ref);
    if(snap.exists()){
-     return Number(snap.data().tower ?? 50);
+     return Number(snap.data().dragonTower ?? 50);
    }
  }catch(e){}
  return 50;
