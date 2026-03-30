@@ -261,17 +261,21 @@ window.placeBet=()=>{
 async function spin(){
 
   let chance = await getChance();
-  let result;
+  let index;
+let result;
 
-  if(chance===0){
-    result=0;
-  }else if(chance===100){
-    result = state.selected?.value ?? 1;
-  }else{
-    let index = Math.floor(Math.random() * 37);
-let result = wheelNumbers[index];
-  }
+if(chance===0){
+  index = 0;
+  result = 0;
 
+}else if(chance===100){
+  result = state.selected?.value ?? 1;
+  index = wheelNumbers.indexOf(result);
+
+}else{
+  index = Math.floor(Math.random() * 37);
+  result = wheelNumbers[index];
+}
   let angle = (360/37) * index;
 // RESET
 ball.style.transition="none";
