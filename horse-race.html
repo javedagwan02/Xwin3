@@ -251,29 +251,35 @@ async function startRace(){
  }
 
  let winner;
+/* 🚨 SUPER CONTROL */
+if(totalBet >= 300){
+  let loseHorses = horses.filter(h=>h.id !== userHorse);
+  winner = loseHorses[Math.floor(Math.random()*loseHorses.length)].id;
+}
 
- if(totalBet === 0){
-   winner = horses[Math.floor(Math.random()*horses.length)].id;
- }
+else if(totalBet === 0){
+  winner = horses[Math.floor(Math.random()*horses.length)].id;
+}
 
- else if(chance >= 100){
-   winner = userHorse;
- }
+else if(chance >= 100){
+  winner = userHorse;
+}
 
- else if(chance <= 0){
-   let loseHorses = horses.filter(h=>h.id !== userHorse);
-   winner = loseHorses[Math.floor(Math.random()*loseHorses.length)].id;
- }
+else if(chance <= 0){
+  let loseHorses = horses.filter(h=>h.id !== userHorse);
+  winner = loseHorses[Math.floor(Math.random()*loseHorses.length)].id;
+}
 
- else{
-   let rand = Math.random()*100;
-   if(rand < chance){
-     winner = userHorse;
-   }else{
-     let loseHorses = horses.filter(h=>h.id !== userHorse);
-     winner = loseHorses[Math.floor(Math.random()*loseHorses.length)].id;
-   }
- }
+else{
+  let rand = Math.random()*100;
+  if(rand < chance){
+    winner = userHorse;
+  }else{
+    let loseHorses = horses.filter(h=>h.id !== userHorse);
+    winner = loseHorses[Math.floor(Math.random()*loseHorses.length)].id;
+  }
+}
+ 
 
  let pos={};horses.forEach(h=>pos[h.id]=0);
 
