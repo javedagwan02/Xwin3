@@ -259,7 +259,7 @@ let mode="easy", step=0, bet=10, open=true;
 let gameResult=null;
 let lossRow=null;
 let safeCol=null;
-
+let betPlaced = false;
 /* ELEMENTS */
 const minus = document.getElementById("minus");
 const plus = document.getElementById("plus");
@@ -319,9 +319,12 @@ async function openBox(el){
    }
  }
 
- balance-=bet;
- bal.innerText=balance;
- await updateDoc(doc(db,"users",uid),{balance});
+ if(!betPlaced){
+  balance -= bet;
+  bal.innerText = balance;
+  await updateDoc(doc(db,"users",uid),{balance});
+  betPlaced = true;
+ }
 
  let type;
 
@@ -389,6 +392,7 @@ function reset(){
  gameResult=null;
  lossRow=null;
  safeCol=null;
+  betPlaced = false;
  setTimeout(build,400);
 }
 
