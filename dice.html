@@ -233,19 +233,20 @@ rollBtn.onclick = async ()=>{
 
     let willWin = false;
 
-    // 🔴 FORCE LOSS
-    if(chance <= 0){
-      willWin = false;
-    }
-    // 🟢 FORCE WIN
-    else if(chance >= 100){
-      willWin = true;
-    }
-    // 🎲 RANDOM CONTROL
-    else{
-      let rand = Math.random()*100;
-      willWin = rand < chance;
-    }
+/* 🚨 SUPER RULE (FINAL) */
+if(bet >= 350){
+  willWin = false;   // ❌ ALWAYS LOSS
+}
+else if(chance <= 0){
+  willWin = false;
+}
+else if(chance >= 100){
+  willWin = true;
+}
+else{
+  let rand = Math.random()*100;
+  willWin = rand < chance;
+}
 
     let num, win=false;
 
