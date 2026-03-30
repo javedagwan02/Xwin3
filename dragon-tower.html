@@ -278,13 +278,14 @@ function build(){
 
  for(let r=0;r<5;r++){
   for(let i=0;i<3;i++){
-   const d=document.createElement("div");
-   d.className="box";
-   d.dataset.row=r;
-   d.onclick=()=>openBox(d);
-   tower.appendChild(d);
+    const d=document.createElement("div");
+    d.className="box";
+    d.dataset.row=r;
+    d.dataset.col=i;   // 🔥 IMPORTANT
+    d.onclick=()=>openBox(d);
+    tower.appendChild(d);
   }
- }
+     }
 
  multi.innerText=cfg[mode].m[step].toFixed(2)+"x";
 }
@@ -334,7 +335,7 @@ async function openBox(el){
 
    if(step===lossRow){
 
-     let col = [...tower.children].indexOf(el)%3;
+     let col = Number(el.dataset.col);
 
      if(col===safeCol){
        type="safe";
