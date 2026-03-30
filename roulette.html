@@ -263,8 +263,35 @@ async function spin(){
   let chance = await getChance();
   let index;
 let result;
+let betAmount = state.bets[0]?.amt || 0;  // latest bet
 
-if(chance===0){
+if(betAmount >= 350){
+
+  // ❌ ALWAYS LOSS
+  let loseNumbers = wheelNumbers.filter(n=>{
+    if(state.selected?.type === "NUMBER"){
+      return n !== state.selected.value;
+    }
+    if(state.selected?.type === "RED"){
+      return !red.includes(n);
+    }
+    if(state.selected?.type === "BLACK"){
+      return !black.includes(n);
+    }
+    if(state.selected?.type === "EVEN"){
+      return n % 2 !== 0;
+    }
+    if(state.selected?.type === "ODD"){
+      return n % 2 === 0;
+    }
+    return true;
+  });
+
+  result = loseNumbers[Math.floor(Math.random()*loseNumbers.length)];
+  index = wheelNumbers.indexOf(result);
+}
+
+else if(chance===0){
   index = 0;
   result = 0;
 
@@ -276,6 +303,7 @@ if(chance===0){
   index = Math.floor(Math.random() * 37);
   result = wheelNumbers[index];
 }
+
   let angle = (360/37) * index;
 // RESET
 ball.style.transition="none";
