@@ -1,129 +1,266 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Balloon Crash</title>
+<title>Carrom Bet Game</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
 <style>
 body{
   margin:0;
   font-family:Arial;
+  background:#0f5132;
+  color:#fff;
   text-align:center;
-  background:linear-gradient(#4facfe,#00f2fe);
+}
+
+/* HEADER */
+.header{
+  padding:15px;
+  font-size:22px;
+  font-weight:bold;
+}
+
+.timer{
+  font-size:20px;
+  color:#ffd54f;
+}
+
+/* BOARD */
+.board{
+  width:300px;
+  height:300px;
+  margin:20px auto;
+  background:#deb887;
+  border-radius:20px;
+  position:relative;
+}
+
+/* STRIKER */
+.striker{
+  width:20px;
+  height:20px;
+  background:#fff;
+  border-radius:50%;
+  position:absolute;
+  bottom:20px;
+  left:50%;
+  transform:translateX(-50%);
+  transition:1s;
+}
+
+/* SELECT */
+.select{
+  display:flex;
+  justify-content:center;
+  gap:10px;
+  margin-top:10px;
+}
+
+.btn{
+  padding:10px 15px;
+  border-radius:10px;
+  cursor:pointer;
+  font-weight:bold;
+}
+
+.red{background:#e53935}
+.white{background:#eee;color:#000}
+.black{background:#000}
+
+.active{
+  outline:3px solid #00e5ff;
+}
+
+/* INPUT */
+input{
+  width:80%;
+  padding:10px;
+  border:none;
+  border-radius:10px;
+  margin-top:10px;
+}
+
+/* BUTTON */
+.play{
+  width:80%;
+  padding:12px;
+  margin-top:10px;
+  background:#4caf50;
+  border:none;
+  border-radius:10px;
   color:#fff;
 }
 
-/* TOP */
-.top{
-  display:flex;
-  justify-content:space-between;
-  padding:10px;
-  background:#1e3c72;
-}
-
-/* MULTIPLIER */
-#multi{
-  font-size:60px;
-  margin-top:50px;
-}
-
-/* BALLOON */
-.balloon{
-  font-size:80px;
-  margin-top:20px;
-}
-
-/* BUTTONS */
-.controls{
+/* POPUP */
+.popup{
   position:fixed;
-  bottom:20px;
-  width:100%;
+  inset:0;
+  display:none;
+  justify-content:center;
+  align-items:center;
+  background:rgba(0,0,0,0.7);
 }
-
-button{
-  padding:14px 30px;
-  font-size:18px;
-  border:none;
-  border-radius:20px;
-  margin:5px;
+.popup div{
+  background:#111;
+  padding:20px;
+  border-radius:10px;
 }
-
-.bet{background:#2196f3;color:#fff}
-.cash{background:#4caf50;color:#000}
 </style>
-
 </head>
 
 <body>
 
-<div class="top">
-  <div>🎈 Balloon Crash</div>
-  <div>₹ <span id="wallet">1000</span></div>
+<div class="header">🎯 Carrom Bet</div>
+<div>Wallet: ₹<span id="wallet">1000</span></div>
+<div class="timer" id="timer">20</div>
+
+<div class="board">
+  <div class="striker" id="striker"></div>
 </div>
 
-<div id="multi">1.00x</div>
-<div class="balloon">🎈</div>
+<div class="select">
+  <div class="btn red" onclick="select('RED',this)">RED 5x</div>
+  <div class="btn white" onclick="select('WHITE',this)">WHITE 3x</div>
+  <div class="btn black" onclick="select('BLACK',this)">BLACK 2x</div>
+</div>
 
-<div class="controls">
-  <button class="bet" onclick="start()">BET</button>
-  <button class="cash" onclick="cashout()">CASHOUT</button>
+<input id="amount" type="number" placeholder="Enter Amount">
+
+<button class="play" onclick="placeBet()">Place Bet</button>
+
+<div class="popup" id="popup">
+  <div id="popupText"></div>
 </div>
 
 <script>
 
+/* STATE */
 let wallet = 1000;
-let bet = 100;
-let multi = 1;
-let running = false;
-let crashed = false;
+let selected = null;
+let bet = 0;
 
-function start(){
+let phase = "BET";
+let time = 20;
 
-if(running) return;
+/* SELECT */
+function select(color,el){
+  if(phase!=="BET") return;
 
-running = true;
-crashed = false;
-multi = 1;
+  document.querySelectorAll(".btn").forEach(b=>b.classList.remove("active"));
+  el.classList.add("active");
 
-wallet -= bet;
-update();
-
-let crashPoint = (Math.random()*5 + 1).toFixed(2); // 🔥 random crash
-
-let interval = setInterval(()=>{
-
-multi += 0.02;
-document.getElementById("multi").innerText = multi.toFixed(2)+"x";
-
-// 💥 crash
-if(multi >= crashPoint){
-clearInterval(interval);
-running = false;
-crashed = true;
-
-document.getElementById("multi").innerText = "💥 CRASHED at "+multi.toFixed(2)+"x";
+  selected = color;
 }
 
-},50);
+/* BET */
+function placeBet(){
+  let amt = parseInt(document.getElementById("amount").value);
 
+  if(!selected || !amt) return alert("Select & Enter Amount");
+
+  if(amt > wallet) return alert("Low balance");
+
+  bet = amt;
+  wallet -= amt;
+
+  updateUI();
 }
 
-function cashout(){
+/* TIMER */
+setInterval(()=>{
+  time--;
+  document.getElementById("timer").innerText = time;
 
-if(!running || crashed) return;
+  if(phase==="BET" && time===0){
+    phase="LOCK";
+    time=5;
+  }
 
-running = false;
+  else if(phase==="LOCK" && time===0){
+    playGame();
+    phase="RESULT";
+    time=5;
+  }
 
-let win = Math.floor(bet * multi);
-wallet += win;
+  else if(phase==="RESULT" && time===0){
+    phase="BET";
+    time=20;
+    selected=null;
+    bet=0;
+    document.querySelectorAll(".btn").forEach(b=>b.classList.remove("active"));
+  }
 
-document.getElementById("multi").innerText = "✅ CASHOUT "+multi.toFixed(2)+"x";
+},1000);
 
-update();
+/* RESULT LOGIC */
+function getResult(){
+  let r = Math.random();
+
+  if(r < 0.2) return "RED";
+  else if(r < 0.5) return "WHITE";
+  else return "BLACK";
 }
 
-function update(){
-document.getElementById("wallet").innerText = wallet;
+/* GAME */
+function playGame(){
+
+  let result = getResult();
+
+  animate(result);
+
+  setTimeout(()=>{
+
+    if(selected === result){
+
+      let multi = result==="RED"?5:result==="WHITE"?3:2;
+
+      let win = bet * multi;
+      wallet += win;
+
+      showPopup(`🎉 WIN ₹${win}`);
+
+    }else{
+      showPopup(`💀 LOSS ₹${bet}`);
+    }
+
+    updateUI();
+
+  },1200);
+}
+
+/* ANIMATION */
+function animate(result){
+
+  let striker = document.getElementById("striker");
+
+  let move = {
+    RED: "translate(-150px,-150px)",
+    WHITE: "translate(0,-180px)",
+    BLACK: "translate(150px,-150px)"
+  };
+
+  striker.style.transform = move[result];
+
+  setTimeout(()=>{
+    striker.style.transform = "translateX(-50%)";
+  },1000);
+}
+
+/* POPUP */
+function showPopup(msg){
+  let p = document.getElementById("popup");
+  let t = document.getElementById("popupText");
+
+  t.innerText = msg;
+  p.style.display="flex";
+
+  setTimeout(()=>p.style.display="none",1500);
+}
+
+/* UI */
+function updateUI(){
+  document.getElementById("wallet").innerText = wallet;
 }
 
 </script>
