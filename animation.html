@@ -35,17 +35,13 @@ video{
 
 const video = document.getElementById("introVideo");
 
-/* 🔥 VIDEO END PE REDIRECT */
-
-  localStorage.removeItem("newUser");
-  window.location.href = "index.html";
+/* 🔥 VIDEO END + 2 SEC DELAY */
+video.onended = () => {
+  setTimeout(()=>{
+    localStorage.removeItem("newUser");
+    window.location.href = "index.html";
+  },4000); // 🔥 video ke baad 2 sec rukega
 };
-
-/* 🔥 BACKUP (agar video load slow ho) */
-setTimeout(()=>{
-  localStorage.removeItem("newUser");
-  window.location.href = "index.html";
-},6000);
 
 </script>
 
