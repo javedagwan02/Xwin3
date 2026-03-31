@@ -157,6 +157,7 @@ window.login = () => {
     localStorage.setItem("lastLogin", now);
 
     showPopup("Login Successful ✅");
+    localStorage.setItem("newUser","true");
     setTimeout(()=>location.href="index.html",1200);
   })
   .catch(()=>{
