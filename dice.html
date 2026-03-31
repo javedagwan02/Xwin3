@@ -6,10 +6,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <style>
-body{
+
+  body{
   margin:0;
   font-family:Arial, sans-serif;
 
+  /* 🔥 BACKGROUND IMAGE */
   background:url("images/file_0000000023bc71faade15b20862c7b4a.png") no-repeat center;
   background-size:cover;
   background-attachment:fixed;
@@ -19,14 +21,16 @@ body{
   position:relative;
 }
 
-/* 🔥 DARK OVERLAY (PRO LOOK) */
+/* 🔥 DARK OVERLAY */
 body::before{
   content:"";
   position:fixed;
   inset:0;
-  background:rgba(0,0,0,0.6); /* darkness adjust kar sakta h */
+  background:rgba(0,0,0,0.6);
   z-index:-1;
 }
+
+/* HEADER */
 .header{
   display:flex;
   justify-content:space-between;
@@ -34,25 +38,46 @@ body::before{
   padding:14px;
   font-weight:bold;
 }
+
+/* WALLET */
 .wallet{
   background:rgba(0,0,0,.5);
   padding:6px 14px;
   border-radius:20px;
+
+  border:2px solid #00ff66;
+  box-shadow:0 0 10px #00ff66,0 0 20px rgba(0,255,102,0.5);
 }
+
+/* 🎲 DICE */
 .dice{
-  font-size:90px;
-  margin:20px 0;
+  width:120px;
+  height:120px;
+  margin:20px auto;
+
+  border-radius:20px;
+  border:2px solid #00ff66;
+  box-shadow:0 0 12px #00ff66,0 0 25px rgba(0,255,102,0.6);
+
   transition:transform .3s;
 }
-.roll{ transform:rotate(360deg) scale(1.2); }
+.roll{
+  transform:rotate(360deg) scale(1.2);
+}
 
+/* INPUT */
 input{
   width:80%;
   padding:14px;
   border-radius:30px;
-  border:none;
+  border:2px solid #00ff66;
   margin-bottom:14px;
   font-size:16px;
+
+  background:rgba(0,0,0,0.6);
+  color:#fff;
+
+  box-shadow:0 0 10px #00ff66,0 0 20px rgba(0,255,102,0.4);
 }
 
 /* ODD EVEN */
@@ -62,54 +87,80 @@ input{
   gap:14px;
   margin-bottom:14px;
 }
+
 .oe-btn{
   flex:1;
   max-width:140px;
   padding:12px 0;
   border-radius:20px;
-  border:none;
+  border:2px solid #00ff66;
+
   background:#1e2a3a;
   color:#fff;
   font-weight:bold;
-}
-.oe-btn.active{
-  background:#ffb300;
-  color:#000;
-  transform:scale(1.05);
+
+  box-shadow:0 0 10px #00ff66,0 0 20px rgba(0,255,102,0.4);
 }
 
-button{
+/* ACTIVE BUTTON */
+.oe-btn.active{
+  background:#00ff66;
+  color:#000;
+  transform:scale(1.05);
+
+  box-shadow:
+    0 0 12px #00ff66,
+    0 0 25px #00ff66,
+    0 0 40px rgba(0,255,102,0.8);
+}
+
+/* ROLL BUTTON */
+#roll{
   width:80%;
   padding:14px;
   border-radius:30px;
-  border:none;
+  border:2px solid #00ff66;
+
   background:#ffb300;
   font-size:18px;
   font-weight:bold;
+
+  box-shadow:
+    0 0 12px #00ff66,
+    0 0 25px rgba(0,255,102,0.6),
+    0 0 35px rgba(0,255,102,0.4);
 }
 
 /* HISTORY */
 .my-history{
   margin:16px;
-  background:rgba(0,0,0,.35);
+  background:rgba(0,0,0,.5);
   border-radius:12px;
   padding:10px;
   text-align:left;
   font-size:13px;
+
+  border:2px solid #00ff66;
+  box-shadow:0 0 12px #00ff66,0 0 25px rgba(0,255,102,0.5);
 }
+
 .my-history h3{
   margin:0 0 6px;
   text-align:center;
 }
+
+/* HISTORY ROW */
 .bet-row{
   display:flex;
   justify-content:space-between;
   border-bottom:1px solid rgba(255,255,255,.1);
   padding:6px 0;
 }
-.win{ color:#4caf50; }
+
+.win{ color:#00ff66; }
 .lose{ color:#ff5252; }
 
+/* POPUP */
 .popup{
   position:fixed;
   inset:0;
@@ -118,13 +169,21 @@ button{
   align-items:center;
   justify-content:center;
 }
+
+/* POPUP BOX */
 .popup-box{
-  background:#ffb300;
-  color:#000;
+  background:#111;
+  color:#00ff66;
   padding:24px 40px;
   border-radius:20px;
   font-size:22px;
   font-weight:bold;
+
+  border:2px solid #00ff66;
+  box-shadow:
+    0 0 15px #00ff66,
+    0 0 30px rgba(0,255,102,0.6),
+    0 0 45px rgba(0,255,102,0.4);
 }
 </style>
 </head>
