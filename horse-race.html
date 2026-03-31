@@ -135,7 +135,8 @@ body{margin:0;font-family:Arial;background:#1b5e20;color:#fff}
  <div class="popup" id="popup"><h2 id="popupText"></h2></div>
 </div>
 
-  <script type="module">
+
+    <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import {
   getFirestore, getDocs, collection, query, where,
@@ -164,50 +165,40 @@ const track = document.getElementById("track");
 const overlay = document.getElementById("overlay");
 const popup = document.getElementById("popup");
 const popupText = document.getElementById("popupText");
-    function toggleHistory(){
+
+/* 🔥 HISTORY TOGGLE */
+window.toggleHistory = function(){
   const box = document.getElementById("historyBox");
   box.style.display = box.style.display === "none" ? "block" : "none";
-}
-    
-async function loadBetHistory(){
+};
 
+/* 🔥 LOAD BET HISTORY */
+async function loadBetHistory(){
   const snap = await getDoc(userRef());
-  let list = snap.data().betHistory || [];
+  let list = snap.data()?.betHistory || [];
 
   let html = "";
 
   list.forEach(item=>{
-
     if(item.win){
       html += `
-      <div style="
-        background:#1b5e20;
-        padding:8px;
-        border-radius:8px;
-        margin-bottom:6px;
-      ">
+      <div style="background:#1b5e20;padding:8px;border-radius:8px;margin-bottom:6px;">
         🟢 WIN +₹${item.amount.toFixed(2)}<br>
         ⏰ ${item.time}
       </div>`;
     }else{
       html += `
-      <div style="
-        background:#b71c1c;
-        padding:8px;
-        border-radius:8px;
-        margin-bottom:6px;
-      ">
+      <div style="background:#b71c1c;padding:8px;border-radius:8px;margin-bottom:6px;">
         🔴 LOSS -₹${item.loseAmount}<br>
         ⏰ ${item.time}
       </div>`;
     }
-
   });
 
   document.getElementById("historyBox").innerHTML =
     html || "No history yet";
 }
-    
+
 /* GAME DATA */
 const horses=[
  {id:1,odds:8.6},{id:2,odds:6.5},{id:3,odds:4.7},
@@ -216,9 +207,10 @@ const horses=[
 
 let selectedChip=0, betting=true;
 let horseBets={}, timerInt=null;
+let selectedHorses = new Set(); // 🔥 LIMIT SYSTEM
 const ROUND_TIME=15000;
 
-/* 🔥 HOUSE EDGE */
+/* HOUSE EDGE */
 async function getChance(){
   try{
     const ref = doc(db,"settings","houseEdge");
@@ -230,7 +222,7 @@ async function getChance(){
   return 50;
 }
 
-/* LOAD WALLET */
+/* WALLET */
 async function loadWallet(){
  const q=query(collection(db,"users"),where("email","==",userEmail));
  const snap=await getDocs(q);
@@ -242,7 +234,7 @@ async function loadWallet(){
 }
 function userRef(){ return doc(db,"users",uid); }
 
-/* LOAD HISTORY */
+/* HISTORY BALL */
 async function loadHistory(){
  const snap=await getDoc(userRef());
  const h=snap.data()?.horseHistory||[];
@@ -257,11 +249,13 @@ async function syncTimer(){
   start=Date.now();
   await updateDoc(userRef(),{roundStart:start});
  }
+
  clearInterval(timerInt);
  timerInt=setInterval(()=>{
   const left=ROUND_TIME-(Date.now()-start);
   const sec=Math.max(0,Math.ceil(left/1000));
   timeEl.innerText=sec;
+
   if(sec<=3){betting=false;betCloseEl.innerText="Bet Closed";}
   if(sec<=0){clearInterval(timerInt);startRace();}
  },500);
@@ -269,8 +263,13 @@ async function syncTimer(){
 
 /* BUILD UI */
 function buildUI(){
- betPanel.innerHTML="";track.innerHTML="";
- horseBets={};betting=true;betCloseEl.innerText="";
+ betPanel.innerHTML="";
+ track.innerHTML="";
+ horseBets={};
+ betting=true;
+ betCloseEl.innerText="";
+ selectedHorses.clear(); // 🔥 RESET
+
  horses.forEach(h=>{
   horseBets[h.id]=0;
 
@@ -280,13 +279,25 @@ function buildUI(){
   <div><b>Horse ${h.id}</b><div>Odds ${h.odds}</div></div>`;
 
   c.onclick=async()=>{
-   if(!betting||!selectedChip||balance<selectedChip)return;
-   balance-=selectedChip;
-   horseBets[h.id]+=selectedChip;
-   walletEl.innerText=balance;
-   await updateDoc(userRef(),{balance});
-   let b=c.querySelector(".bet-badge")||c.appendChild(document.createElement("div"));
-   b.className="bet-badge";b.innerText="₹"+horseBets[h.id];
+    if(!betting||!selectedChip||balance<selectedChip) return;
+
+    // 🔥 ONLY 2 HORSE LIMIT
+    if(!selectedHorses.has(h.id) && selectedHorses.size >= 2){
+      alert("❌ Only 2 horses allowed");
+      return;
+    }
+
+    selectedHorses.add(h.id);
+
+    balance -= selectedChip;
+    horseBets[h.id]+=selectedChip;
+
+    walletEl.innerText=balance;
+    await updateDoc(userRef(),{balance});
+
+    let b=c.querySelector(".bet-badge")||c.appendChild(document.createElement("div"));
+    b.className="bet-badge";
+    b.innerText="₹"+horseBets[h.id];
   };
 
   betPanel.appendChild(c);
@@ -298,7 +309,7 @@ function buildUI(){
  });
 }
 
-/* 🔥 RACE (FINAL FIXED) */
+/* RACE */
 async function startRace(){
 
  let chance = await getChance();
@@ -314,26 +325,22 @@ async function startRace(){
  }
 
  let winner;
-/* 🚨 SUPER CONTROL */
-if(totalBet >= 300){
+
+ if(totalBet >= 300){
   let loseHorses = horses.filter(h=>h.id !== userHorse);
   winner = loseHorses[Math.floor(Math.random()*loseHorses.length)].id;
-}
-
-else if(totalBet === 0){
+ }
+ else if(totalBet === 0){
   winner = horses[Math.floor(Math.random()*horses.length)].id;
-}
-
-else if(chance >= 100){
+ }
+ else if(chance >= 100){
   winner = userHorse;
-}
-
-else if(chance <= 0){
+ }
+ else if(chance <= 0){
   let loseHorses = horses.filter(h=>h.id !== userHorse);
   winner = loseHorses[Math.floor(Math.random()*loseHorses.length)].id;
-}
-
-else{
+ }
+ else{
   let rand = Math.random()*100;
   if(rand < chance){
     winner = userHorse;
@@ -341,14 +348,12 @@ else{
     let loseHorses = horses.filter(h=>h.id !== userHorse);
     winner = loseHorses[Math.floor(Math.random()*loseHorses.length)].id;
   }
-}
- 
+ }
 
  let pos={};horses.forEach(h=>pos[h.id]=0);
 
  const race=setInterval(()=>{
   horses.forEach(h=>{
-
     if(h.id === winner){
       pos[h.id]+=Math.random()*4 + 1.5;
     }else{
@@ -367,39 +372,43 @@ else{
 
 /* FINISH */
 async function finish(win){
+
  overlay.style.display="flex";
  const bet=horseBets[win]||0;
 
+ let winAmt = bet ? bet*horses.find(h=>h.id===win).odds : 0;
+
  if(bet){
-  const w=bet*horses.find(h=>h.id===win).odds;
-  balance+=w;
+  balance+=winAmt;
   popup.className="popup win";
-  popupText.innerText="🎉 You Win ₹"+w.toFixed(2);
+  popupText.innerText="🎉 You Win ₹"+winAmt.toFixed(2);
  }else{
   popup.className="popup lose";
   popupText.innerText="❌ You Lose";
  }
-  /* 🔥 SAVE BET HISTORY */
-let betResult = {
+
+ /* SAVE HISTORY */
+ let betResult = {
   win: bet > 0,
-  amount: bet ? (bet*horses.find(h=>h.id===win).odds) : 0,
+  amount: winAmt,
   loseAmount: bet || 0,
   time: new Date().toLocaleTimeString()
-};
+ };
 
-const snap2 = await getDoc(userRef());
-let fullHistory = snap2.data().betHistory || [];
+ const snap2 = await getDoc(userRef());
+ let fullHistory = snap2.data()?.betHistory || [];
 
-fullHistory.unshift(betResult);
-fullHistory = fullHistory.slice(0,20);
+ fullHistory.unshift(betResult);
+ fullHistory = fullHistory.slice(0,20);
 
-await updateDoc(userRef(),{
+ await updateDoc(userRef(),{
   betHistory: fullHistory
-});
+ });
 
  const snap=await getDoc(userRef());
- let h=snap.data().horseHistory||[];
- h.unshift(win);h=h.slice(0,10);
+ let h=snap.data()?.horseHistory||[];
+ h.unshift(win);
+ h=h.slice(0,10);
 
  await updateDoc(userRef(),{
   balance,
@@ -414,7 +423,7 @@ await updateDoc(userRef(),{
   overlay.style.display="none";
   buildUI();
   syncTimer();
-   loadBetHistory();
+  loadBetHistory();
  },2000);
 }
 
@@ -432,7 +441,9 @@ await loadWallet();
 await loadHistory();
 buildUI();
 syncTimer();
-  </script>
+loadBetHistory();
+
+    </script>
   
 </body>
 </html>
