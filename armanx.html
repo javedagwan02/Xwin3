@@ -43,7 +43,26 @@ if(localStorage.getItem("adminLogin") !== "true"){
 }
 </script>
 
-<header>🛠️ 2xwin – Owner Panel</header>  <div class="dashboard">  
+<header>🛠️ 2xwin – Owner Panel</header>  
+  
+  <button onclick="logoutAdmin()" style="
+position:fixed;
+top:10px;
+right:10px;
+padding:8px 12px;
+border:none;
+border-radius:8px;
+background:red;
+color:#fff;
+">Logout</button>
+
+<script>
+function logoutAdmin(){
+  localStorage.removeItem("adminLogin");
+  location.href = "admin-login.html";
+}
+</script>
+  <div class="dashboard">  
   <div class="box"><h2 id="totalUsers">0</h2><span>Total Users</span></div>  
   <div class="box"><h2 id="pendingDeposits">0</h2><span>Pending Deposits</span></div>  
   <div class="box"><h2 id="pendingWithdraws">0</h2><span>Pending Withdraws</span></div>  
