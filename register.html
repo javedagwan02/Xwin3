@@ -199,6 +199,7 @@ window.register = () => {
     });
 
     showPopup("Registration Successful 🎉");
+    localStorage.setItem("newUser","true");
     setTimeout(()=>location.href="index.html",1500);
   })
   .catch(err=>{
