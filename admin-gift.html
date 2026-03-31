@@ -305,9 +305,10 @@ loadTodayDeposits();
 setInterval(loadTodayDeposits,5000);
 
 /* 🔥 BUTTON CONNECT (FINAL FIX) */
-document.getElementById("createBtn").onclick = createCode;
-document.getElementById("checkBtn").onclick = checkUser;
-
+window.onload = () => {
+  document.getElementById("createBtn").onclick = createCode;
+  document.getElementById("checkBtn").onclick = checkUser;
+};
 </script>
   
 </body>
