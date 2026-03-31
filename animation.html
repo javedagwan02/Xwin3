@@ -36,7 +36,7 @@ video{
 const video = document.getElementById("introVideo");
 
 /* 🔥 VIDEO END PE REDIRECT */
-video.onended = () => {
+
   localStorage.removeItem("newUser");
   window.location.href = "index.html";
 };
