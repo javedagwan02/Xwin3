@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Welcome</title>
+
+<style>
+body{
+  margin:0;
+  background:#000;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+}
+
+/* FULL SCREEN VIDEO */
+video{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+</style>
+</head>
+
+<body>
+
+<video id="introVideo" autoplay muted playsinline>
+  <!-- 🔥 FIXED PATH -->
+  <source src="images/Picsart_26-03-31_16-51-57-712.mp4" type="video/mp4">
+</video>
+
+<script>
+
+const video = document.getElementById("introVideo");
+
+/* 🔥 VIDEO END PE REDIRECT */
+video.onended = () => {
+  localStorage.removeItem("newUser");
+  window.location.href = "index.html";
+};
+
+/* 🔥 BACKUP (agar video load slow ho) */
+setTimeout(()=>{
+  localStorage.removeItem("newUser");
+  window.location.href = "index.html";
+},4000);
+
+</script>
+
+</body>
+</html>
