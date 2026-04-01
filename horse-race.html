@@ -366,41 +366,41 @@ async function startRace(){
  let chance = await getChance();
 
  let totalBet = 0;
- let userHorse = null;
+let userHorses = [];
 
- for(let id in horseBets){
-   if(horseBets[id] > 0){
-     totalBet += horseBets[id];
-     userHorse = Number(id);
-   }
- }
+for(let id in horseBets){
+  if(horseBets[id] > 0){
+    totalBet += horseBets[id];
+    userHorses.push(Number(id));
+  }
+}
 
  let winner;
 
- if(totalBet >= 300){
-  let loseHorses = horses.filter(h=>h.id !== userHorse);
+if(totalBet >= 300){
+  let loseHorses = horses.filter(h=>!userHorses.includes(h.id));
   winner = loseHorses[Math.floor(Math.random()*loseHorses.length)].id;
- }
- else if(totalBet === 0){
+}
+else if(totalBet === 0){
   winner = horses[Math.floor(Math.random()*horses.length)].id;
- }
- else if(chance >= 100){
-  winner = userHorse;
- }
- else if(chance <= 0){
-  let loseHorses = horses.filter(h=>h.id !== userHorse);
+}
+else if(chance >= 100){
+  winner = userHorses[Math.floor(Math.random()*userHorses.length)];
+}
+else if(chance <= 0){
+  let loseHorses = horses.filter(h=>!userHorses.includes(h.id));
   winner = loseHorses[Math.floor(Math.random()*loseHorses.length)].id;
- }
- else{
+}
+else{
   let rand = Math.random()*100;
+
   if(rand < chance){
-    winner = userHorse;
+    winner = userHorses[Math.floor(Math.random()*userHorses.length)];
   }else{
-    let loseHorses = horses.filter(h=>h.id !== userHorse);
+    let loseHorses = horses.filter(h=>!userHorses.includes(h.id));
     winner = loseHorses[Math.floor(Math.random()*loseHorses.length)].id;
   }
- }
-
+}
  let pos={};horses.forEach(h=>pos[h.id]=0);
 
  const race=setInterval(()=>{
