@@ -425,7 +425,48 @@ background:#ff3b3b;
 color:#fff;
 font-size:16px;
 }
+/* 🔥 CUSTOM POPUP */
+.custom-popup{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.7);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:99999;
+}
 
+.popup-card{
+  width:85%;
+  max-width:320px;
+  background:linear-gradient(135deg,#1e1e1e,#2c2c2c);
+  border-radius:18px;
+  padding:20px;
+  text-align:center;
+  color:#fff;
+  box-shadow:0 0 20px rgba(0,255,100,0.3);
+}
+
+.popup-card h2{
+  margin:0;
+  color:#00e676;
+}
+
+.popup-card p{
+  margin:15px 0;
+  font-size:16px;
+}
+
+.popup-card button{
+  width:100%;
+  padding:12px;
+  border:none;
+  border-radius:10px;
+  background:#00c853;
+  color:#000;
+  font-weight:bold;
+  font-size:16px;
+  }
 </style>
 </head>
 
@@ -564,6 +605,14 @@ font-size:16px;
 </div>
 </div>
 
+  <div id="successPopup" class="custom-popup">
+  <div class="popup-card">
+    <h2>✅ Success</h2>
+    <p id="popupText"></p>
+    <button onclick="closePopup()">OK</button>
+  </div>
+  </div>
+  
 <!-- DEPOSIT POPUP -->
 <div class="deposit-popup" id="depositPopup">
 <div class="deposit-box">
@@ -588,6 +637,14 @@ window.location.href="mailto:supirtx4@gmail.com?subject=DraxBet Support";
 
 window.openGiftBox = function(){
 document.getElementById("giftPopup").style.display="flex";
+}
+  function showPopup(text){
+  document.getElementById("popupText").innerText = text;
+  document.getElementById("successPopup").style.display = "flex";
+}
+
+function closePopup(){
+  document.getElementById("successPopup").style.display = "none";
 }
 
 </script>
