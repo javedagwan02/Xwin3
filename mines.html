@@ -284,29 +284,50 @@ async function clickCell(i,el){
   if(!active || el.classList.contains("open")) return;
 
 // 🔥 STREAK SYSTEM (14–20 MINES ONLY)
+// 🔥 STREAK SYSTEM (SMART RANDOM)
 if(opened === 0 && mines >= 14){
 
-  // 🎯 every 7th game → WIN
   if(streak >= 6){
-    // SAFE CLICK
-    el.classList.add("safe");
-    el.innerText="💎";
-    opened++;
-    streak = 0; // reset
-    localStorage.setItem("mineStreak", streak);
-    calcMultiplier();
-    return;
+
+    let rand = Math.random();
+
+    if(rand < 0.4){
+      // 🟢 WIN (40%)
+      el.classList.add("safe");
+      el.innerText="💎";
+      opened++;
+
+      streak = 0;
+      localStorage.setItem("mineStreak", streak);
+
+      calcMultiplier();
+      return;
+
+    }else{
+      // 🔴 LOSS (60%)
+      el.classList.add("mine");
+      el.innerText="💣";
+
+      streak = 0;
+      localStorage.setItem("mineStreak", streak);
+
+      endGame(false);
+      return;
+    }
+
   }else{
-    // 💣 LOSS
+    // normal loss build
     el.classList.add("mine");
     el.innerText="💣";
+
     streak++;
     localStorage.setItem("mineStreak", streak);
+
     endGame(false);
     return;
   }
 
-  }
+}
   el.classList.add("open");
 
   // 🔥 NEW CONTROL LOGIC
