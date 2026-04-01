@@ -281,7 +281,13 @@ console.log("MINES VALUE:", chance);
 async function clickCell(i,el){
 
   if(!active || el.classList.contains("open")) return;
-
+// 🔥 FORCE LOSS FOR HIGH MINES (15–20)
+if(opened === 0 && mines >= 15){
+  el.classList.add("open","mine");
+  el.innerText="💣";
+  endGame(false);
+  return;
+}
   el.classList.add("open");
 
   // 🔥 NEW CONTROL LOGIC
