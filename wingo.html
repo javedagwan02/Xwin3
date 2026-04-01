@@ -151,6 +151,14 @@ async function bet(type,val){
  if(total>S.wallet) return showPopup("loss","<h2>Low Balance</h2>");
 
  S.wallet-=total;
+  // 🔥 WAGER CUT
+let wager = Number(localStorage.getItem("wager")) || 0;
+
+if(wager > 0){
+  wager -= total;
+  if(wager < 0) wager = 0;
+  localStorage.setItem("wager", wager);
+}
  await updateDoc(doc(db,"users",userDocId),{balance:S.wallet});
  S.bets.push({type,val,amt:total,p:S.period});
  showPopup("bet","<h2>Bet Placed</h2><p>₹"+total+"</p>");
