@@ -316,6 +316,7 @@ const cfg={
 let mode="easy", step=0, bet=10, open=true;
 let gameResult=null;
 let betPlaced=false;
+let maxWinStep = 5; // 🔥 limit control
 
 /* ELEMENTS */
 const minus = document.getElementById("minus");
@@ -356,7 +357,23 @@ async function openBox(el){
  /* 🔥 GLOBAL RESULT (ALL MODES SAME CONTROL) */
  if(step===0){
    let chance = await getChance();
-
+   
+/* 🔥 WIN DEPTH CONTROL */
+if(chance >= 100){
+  maxWinStep = 5; // full win
+}
+else if(chance >= 70){
+  maxWinStep = 4;
+}
+else if(chance >= 40){
+  maxWinStep = 3;
+}
+else if(chance >= 20){
+  maxWinStep = 2;
+}
+else{
+  maxWinStep = 1;
+}
    if(chance<=0) gameResult="loss";
    else if(chance>=100) gameResult="win";
    else gameResult = Math.random()*100 < chance ? "win":"loss";
@@ -401,9 +418,9 @@ async function openBox(el){
  /* 🟢 SAFE */
  step++;
 
- if(step>=5){
-   cashout.click();
-   return;
+ if(step >= maxWinStep){
+  cashout.click();
+  return;
  }
 
  multi.innerText=cfg[mode].m[step].toFixed(2)+"x";
