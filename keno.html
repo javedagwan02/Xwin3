@@ -83,12 +83,31 @@ body{
   width:200px;
   padding:14px;
   border-radius:40px;
-  background:linear-gradient(135deg,#ff9800,#ff5722);
+  background:linear-gradient(135deg,#00c6ff,#0072ff);
   font-size:20px;
   font-weight:bold;
   border:none;
   color:#fff;
   cursor:pointer;
+
+  animation: blueGlow 0.2s infinite;
+}
+  @keyframes blueGlow {
+  0%{
+    box-shadow:
+      0 0 10px #00c6ff,
+      0 0 20px #0072ff;
+  }
+  50%{
+    box-shadow:
+      0 0 20px #00e5ff,
+      0 0 40px #00c6ff;
+  }
+  100%{
+    box-shadow:
+      0 0 10px #00c6ff,
+      0 0 20px #0072ff;
+  }
 }
 .auto{margin-bottom:10px}
 
