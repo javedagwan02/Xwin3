@@ -581,45 +581,11 @@ font-size:16px;
 
 <script>
 
-function openSupportMail(){
+window.openSupportMail = function(){
 window.location.href="mailto:supirtx4@gmail.com?subject=DraxBet Support";
 }
 
-
-
-const gameName = url.replace(".html","");
-
-// 🔥 FIREBASE CHECK
-const ref = doc(db,"gameStatus",gameName);
-const snap = await getDoc(ref);
-
-// ❌ agar doc nahi mila
-if(!snap.exists()){
-  location.href = url;
-  return;
-}
-
-// 🔴 GAME OFF
-if(snap.data().active === false){
-  location.href = "coming-soon.html";
-  return;
-}
-
-// 🟢 GAME ON (tera original system)
-let walletAmt =
-+localStorage.getItem("wallet") ||
-+localStorage.getItem("coin_wallet") ||
-0;
-
-if(walletAmt < 100){
-document.getElementById("depositPopup").style.display="flex";
-}else{
-location.href = url;
-}
-
-}
-
-function openGiftBox(){
+window.openGiftBox = function(){
 document.getElementById("giftPopup").style.display="flex";
 }
 
