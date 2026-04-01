@@ -72,11 +72,17 @@ body{
   gap:12px;
 }
 .bet-box button{
-  width:40px;height:40px;
+  width:40px;
+  height:40px;
   border-radius:50%;
   font-size:20px;
   border:none;
   cursor:pointer;
+
+  background:linear-gradient(135deg,#ffd600,#ff9800);
+  color:#000;
+
+  animation: yellowGlow 0.2s infinite;
 }
 .spin-btn{
   margin:14px auto;
@@ -109,6 +115,40 @@ body{
       0 0 20px #0072ff;
   }
 }
+  @keyframes yellowGlow {
+  0%{
+    box-shadow:
+      0 0 8px #ffd600,
+      0 0 16px #ff9800;
+  }
+  50%{
+    box-shadow:
+      0 0 16px #fff176,
+      0 0 32px #ffd600;
+  }
+  100%{
+    box-shadow:
+      0 0 8px #ffd600,
+      0 0 16px #ff9800;
+  }
+}
+  @keyframes purpleGlow {
+  0%{
+    box-shadow:
+      0 0 10px #9c27b0,
+      0 0 20px #6a1b9a;
+  }
+  50%{
+    box-shadow:
+      0 0 20px #e040fb,
+      0 0 40px #9c27b0;
+  }
+  100%{
+    box-shadow:
+      0 0 10px #9c27b0,
+      0 0 20px #6a1b9a;
+  }
+}
 .auto{margin-bottom:10px}
 
 /* HISTORY */
@@ -119,6 +159,8 @@ body{
   padding:10px;
   font-size:13px;
   text-align:left;
+
+  animation: purpleGlow 0.2s infinite;
 }
 .h-row{
   display:flex;
