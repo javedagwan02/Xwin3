@@ -282,7 +282,7 @@ body{
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getFirestore, getDocs, collection, query, where, doc, updateDoc }
+import { getFirestore, getDocs, collection, query, where, doc, updateDoc, onSnapshot }
 from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 /* FIREBASE */
@@ -293,19 +293,24 @@ const app = initializeApp({
 });
 const db = getFirestore(app);
 
+/* USER */
 const email = localStorage.getItem("userEmail");
 let uid="", balance=0;
-let firstWinDone = localStorage.getItem("kenoFirstWinDone")==="yes";
+
+/* 🔥 HOUSE EDGE */
+let KENO_EDGE = 50;
+
+onSnapshot(doc(db,"settings","houseEdge"), (snap)=>{
+  if(snap.exists()){
+    KENO_EDGE = Number(snap.data().keno ?? 50);
+  }
+});
 
 /* UI */
 const walletEl=document.getElementById("wallet");
 const betEl=document.getElementById("bet");
 const grid=document.getElementById("grid");
 const historyBox=document.getElementById("history");
-
-/* INFO POPUP */
-infoBtn.onclick=()=>infoPopup.style.display="flex";
-closeInfo.onclick=()=>infoPopup.style.display="none";
 
 /* LOAD WALLET */
 async function loadWallet(){
@@ -353,8 +358,53 @@ function payout(matches,picks){
  return 0;
 }
 
+/* 🎯 RESULT CONTROL */
+function decideMatches(picks){
+
+  // 🔴 0 = always loss
+  if(KENO_EDGE <= 0) return 0;
+
+  // 🟢 100 = always win (max match)
+  if(KENO_EDGE >= 100) return picks;
+
+  // 🎲 RANDOM BASED
+  let rand = Math.random()*100;
+
+  if(rand < KENO_EDGE){
+    // WIN SIDE
+    return Math.floor(picks * (0.6 + Math.random()*0.4)); 
+  }else{
+    // LOSS SIDE
+    return Math.floor(Math.random() * (picks * 0.3));
+  }
+}
+
+/* 🎯 DRAW GENERATOR */
+function generateDraw(targetMatches){
+
+  let drawn = [];
+
+  // 🟢 user numbers add
+  let shuffled = [...selected].sort(()=>0.5 - Math.random());
+
+  for(let i=0;i<targetMatches;i++){
+    drawn.push(shuffled[i]);
+  }
+
+  // 🔴 baki fill random
+  while(drawn.length < 10){
+    let r = Math.floor(Math.random()*40)+1;
+    if(!drawn.includes(r)){
+      drawn.push(r);
+    }
+  }
+
+  return drawn;
+}
+
 /* PLAY */
 async function play(){
+
  if(selected.length===0) return alert("Select numbers");
  if(balance<bet) return alert("Low balance");
 
@@ -364,20 +414,14 @@ async function play(){
 
  document.querySelectorAll(".num").forEach(n=>n.classList.remove("hit"));
 
- let drawn=[];
- while(drawn.length<10){
-  let r=Math.floor(Math.random()*40)+1;
-  if(!drawn.includes(r)) drawn.push(r);
- }
+ // 🎯 MATCH CONTROL
+ let targetMatches = decideMatches(selected.length);
 
- let matches=selected.filter(x=>drawn.includes(x)).length;
- let win=bet*payout(matches,selected.length);
+ // 🎯 DRAW BASED ON MATCH
+ let drawn = generateDraw(targetMatches);
 
- if(!firstWinDone && win>0){
-  win=Math.min(win,300);
-  firstWinDone=true;
-  localStorage.setItem("kenoFirstWinDone","yes");
- }
+ let matches = selected.filter(x=>drawn.includes(x)).length;
+ let win = bet * payout(matches, selected.length);
 
  drawn.forEach(n=>document.querySelectorAll(".num")[n-1].classList.add("hit"));
 
@@ -388,6 +432,7 @@ async function play(){
  }else{
   historyBox.innerHTML=`<div class="h-row"><span>Hit ${matches}</span><span class="lose">-₹${bet}</span></div>`+historyBox.innerHTML;
  }
+
  walletEl.innerText=balance;
 }
 
