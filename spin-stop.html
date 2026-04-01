@@ -334,10 +334,6 @@ stopBtn.onclick = async ()=>{
     ? selectedColor 
     : (selectedColor === "green" ? "red" : "green");
 
-  /* 🔥 PERFECT ANGLE FIX */
-  let offset = (Math.random() * 6) - 3; // small randomness
-
-  let baseAngle;
 
   // 🎯 EXACT COLOR ALIGN FIX
 let offset = (Math.random() * 6) - 3;
@@ -354,8 +350,7 @@ if(resultColor === "green"){
 
 let finalAngle = baseAngle + offset;
 
-  let finalAngle = baseAngle + offset;
-
+  
   /* STOP ANIMATION */
   clearInterval(spinInt);
 
