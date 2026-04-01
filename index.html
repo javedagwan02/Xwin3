@@ -594,9 +594,10 @@ document.getElementById("giftPopup").style.display="flex";
 <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getFirestore, collection, getDocs, query, where, updateDoc, doc, getDoc }
-from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
+import {
+  getFirestore, collection, getDocs, query, where,
+  updateDoc, doc, getDoc
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 const firebaseConfig = {
 apiKey: "AIzaSyBx3J9aGn_98rTPgurMMKw_GR3puIMj4Ms",
 authDomain: "colourcash-ea60e.firebaseapp.com",
@@ -608,6 +609,76 @@ appId: "1:403688058646:web:f1753360471528f275ea37"
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+  window.redeemCode = async function(){
+
+  const code = document.getElementById("giftCodeInput").value;
+
+  if(!code){
+    alert("Enter code");
+    return;
+  }
+
+  try{
+
+    // 🔍 FIREBASE SE CODE CHECK
+    const snap = await getDocs(
+      query(collection(db,"giftcodes"), where("code","==",code))
+    );
+
+    if(snap.empty){
+      alert("Invalid Code ❌");
+      return;
+    }
+
+    let docData, docId;
+
+    snap.forEach(d=>{
+      docData = d.data();
+      docId = d.id;
+    });
+
+    // ❌ LIMIT FULL
+    if(docData.usedCount >= docData.maxUse){
+      alert("Code Expired ❌");
+      return;
+    }
+
+    // 💰 USER WALLET UPDATE
+    const userEmail = localStorage.getItem("userEmail");
+
+    const userSnap = await getDocs(
+      query(collection(db,"users"), where("email","==",userEmail))
+    );
+
+    let userId, balance;
+
+    userSnap.forEach(d=>{
+      userId = d.id;
+      balance = Number(d.data().balance || 0);
+    });
+
+    balance += docData.amount;
+
+    await updateDoc(doc(db,"users",userId),{
+      balance
+    });
+
+    // 🔥 UPDATE CODE USE COUNT
+    await updateDoc(doc(db,"giftcodes",docId),{
+      usedCount: docData.usedCount + 1
+    });
+
+    alert("₹"+docData.amount+" Added Successfully ✅");
+
+    // ❌ POPUP CLOSE
+    document.getElementById("giftPopup").style.display="none";
+
+  }catch(e){
+    alert("Error ❌");
+    console.log(e);
+  }
+
+}
 
 // 🔥 YAHI SABSE IMPORTANT
 window.openGame = async function(url){
