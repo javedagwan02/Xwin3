@@ -726,7 +726,9 @@ const db = getFirestore(app);
       usedCount: docData.usedCount + 1
     });
 
-    alert("₹"+docData.amount+" Added Successfully ✅");
+    let time = new Date().toLocaleTimeString();
+
+showPopup(`₹${docData.amount} Added Successfully ✅\n🕒 ${time}`);
 
     // ❌ POPUP CLOSE
     document.getElementById("giftPopup").style.display="none";
