@@ -299,9 +299,72 @@ else if(chance===0){
   result = state.selected?.value ?? 1;
   index = wheelNumbers.indexOf(result);
 
-}else{
-  index = Math.floor(Math.random() * 37);
-  result = wheelNumbers[index];
+else{
+
+  let rand = Math.random() * 100;
+
+  if(rand < chance){
+    // ✅ WIN
+
+    let winNumbers = wheelNumbers.filter(n=>{
+      if(state.selected?.type === "NUMBER"){
+        return n === state.selected.value;
+      }
+      if(state.selected?.type === "RED"){
+        return red.includes(n);
+      }
+      if(state.selected?.type === "BLACK"){
+        return black.includes(n);
+      }
+      if(state.selected?.type === "EVEN"){
+        return n !== 0 && n % 2 === 0;
+      }
+      if(state.selected?.type === "ODD"){
+        return n % 2 !== 0;
+      }
+      if(state.selected?.type === "LOW"){
+        return n >=1 && n <=18;
+      }
+      if(state.selected?.type === "HIGH"){
+        return n >=19 && n <=36;
+      }
+      return false;
+    });
+
+    result = winNumbers[Math.floor(Math.random()*winNumbers.length)];
+    index = wheelNumbers.indexOf(result);
+
+  }else{
+    // ❌ LOSS
+
+    let loseNumbers = wheelNumbers.filter(n=>{
+      if(state.selected?.type === "NUMBER"){
+        return n !== state.selected.value;
+      }
+      if(state.selected?.type === "RED"){
+        return !red.includes(n);
+      }
+      if(state.selected?.type === "BLACK"){
+        return !black.includes(n);
+      }
+      if(state.selected?.type === "EVEN"){
+        return n === 0 || n % 2 !== 0;
+      }
+      if(state.selected?.type === "ODD"){
+        return n % 2 === 0;
+      }
+      if(state.selected?.type === "LOW"){
+        return n <1 || n >18;
+      }
+      if(state.selected?.type === "HIGH"){
+        return n <19 || n >36;
+      }
+      return true;
+    });
+
+    result = loseNumbers[Math.floor(Math.random()*loseNumbers.length)];
+    index = wheelNumbers.indexOf(result);
+  }
 }
 
   let angle = (360/37) * index;
