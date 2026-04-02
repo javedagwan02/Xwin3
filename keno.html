@@ -416,6 +416,14 @@ async function play(){
  if(balance<bet) return alert("Low balance");
 
  balance-=bet;
+  // 🔥 WAGER CUT (ADD HERE)
+let wager = Number(localStorage.getItem("wager")) || 0;
+
+if(wager > 0){
+  wager -= bet;
+  if(wager < 0) wager = 0;
+  localStorage.setItem("wager", wager);
+}
  await updateDoc(userRef(),{balance});
  walletEl.innerText=balance;
 
