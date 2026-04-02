@@ -543,6 +543,14 @@ window.bet=async(type,el)=>{
   if(wallet < chip) return alert("Low Balance");
 
   wallet -= chip;
+  // 🔥 WAGER CUT (YAHI ADD KAR)
+let wager = Number(localStorage.getItem("wager")) || 0;
+
+if(wager > 0){
+  wager -= chip;
+  if(wager < 0) wager = 0;
+  localStorage.setItem("wager", wager);
+}
   await updateDoc(doc(db,"users",userDocId),{ balance: wallet });
 
   document.getElementById("wallet").innerText=wallet;
