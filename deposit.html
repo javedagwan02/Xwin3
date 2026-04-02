@@ -279,13 +279,20 @@ window.submitUTR = async function(){
 
   try{
 
-    await addDoc(collection(db,"deposits"),{
-      email: localStorage.getItem("userEmail") || "test@gmail.com",
-      amount: Number(amt),
-      utr: utr,
-      status: "PENDING",
-      time: Date.now()
-    });
+    const userEmail = localStorage.getItem("userEmail");
+
+if(!userEmail){
+  alert("Login required");
+  return;
+}
+
+await addDoc(collection(db,"deposits"),{
+  email: userEmail,
+  amount: Number(amt),
+  utr: utr,
+  status: "PENDING",
+  time: Date.now()
+});
 
     showPopup("Deposit Submitted ✅");
     // 🔥 WAGER ADD
