@@ -74,8 +74,11 @@ header{background:linear-gradient(135deg,#ff6a6a,#ff8e8e);padding:18px;text-alig
     <div class="edge-item">🐲 DRAGON TOWER <input type="range" value="38"><span>38%</span></div>  
     <div class="edge-item">🎈 BALLOON CRASH <input type="range" value="35"><span>35%</span></div>  
   </div>  
-</div>  <script type="module">  
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";  
+</div>  
+
+  <script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { 
   getFirestore, 
   collection, 
@@ -84,47 +87,52 @@ import {
   doc,
   deleteDoc,
   setDoc,
-  getDoc   // 🔥 ADD THIS
+  getDoc,
+  onSnapshot
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-  
+
 const app = initializeApp({  
   apiKey:"AIzaSyBx3J9aGn_98rTPgurMMKw_GR3puIMj4Ms",  
   authDomain:"colourcash-ea60e.firebaseapp.com",  
   projectId:"colourcash-ea60e"  
 });  
-const db = getFirestore(app);  
-  
+
+const db = getFirestore(app);
+
+/* ---------- TABS ---------- */
 window.openTab=i=>{  
   document.querySelectorAll(".tab").forEach((t,n)=>t.classList.toggle("active",n===i));  
   document.querySelectorAll(".section").forEach((s,n)=>s.classList.toggle("active",n===i));  
-};  
-  
-/* ---------- LOAD DASHBOARD ---------- */  
+};
+
+/* ---------- DASHBOARD ---------- */
 async function loadDashboard(){  
   const users=await getDocs(collection(db,"users"));  
   const dep=await getDocs(collection(db,"deposits"));  
   const wd=await getDocs(collection(db,"withdraws"));  
-  
+
   totalUsers.innerText=users.size;  
   pendingDeposits.innerText=dep.docs.filter(d=>d.data().status==="PENDING").length;  
   pendingWithdraws.innerText=wd.docs.filter(d=>d.data().status==="PENDING").length;  
-  
+
   let dSum=0,wSum=0;  
   dep.docs.forEach(d=>{if(d.data().status==="APPROVED")dSum+=d.data().amount});  
   wd.docs.forEach(d=>{if(d.data().status==="APPROVED")wSum+=d.data().amount});  
-  
+
   totalDeposit.innerText="₹"+dSum;  
   totalWithdraw.innerText="₹"+wSum;  
   netProfit.innerText="₹"+(dSum-wSum);  
-}  
-  
-/* ---------- DEPOSITS ---------- */  
+}
+
+/* ---------- DEPOSITS ---------- */
 async function loadDeposits(){  
   sec0.innerHTML="";  
   const snap=await getDocs(collection(db,"deposits"));  
+
   snap.forEach(d=>{  
     const x=d.data();  
-    if(x.status!=="PENDING")return;  
+    if(x.status!=="PENDING") return;  
+
     sec0.innerHTML+=`  
       <div class="card">  
         <div class="row"><span>${x.email}</span><span>₹${x.amount}</span></div>  
@@ -135,27 +143,36 @@ async function loadDeposits(){
         </div>  
       </div>`;  
   });  
-}  
-  
-window.approveDeposit=async(id,email,amt)=>{  
-  await updateDoc(doc(db,"deposits",id),{status:"APPROVED"});  
-  const users=await getDocs(collection(db,"users"));  
-  users.forEach(u=>{  
-    if(u.data().email===email){  
-      updateDoc(doc(db,"users",u.id),{
-  balance:(u.data().balance||0)+amt,
-  hasDeposited: true   // 🔥 yaha hona chahiye
-});
-  loadDeposits();loadDashboard();  
-};  
-window.rejectDeposit=async id=>{  
-  await updateDoc(doc(db,"deposits",id),{status:"REJECTED"});  
-  loadDeposits();loadDashboard();  
-};  
-  
-/* ---------- WITHDRAWS ---------- */  
-import { onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+}
 
+window.approveDeposit = async (id,email,amt)=>{  
+
+  await updateDoc(doc(db,"deposits",id),{
+    status:"APPROVED"
+  });  
+
+  const users = await getDocs(collection(db,"users"));  
+
+  users.forEach(u=>{  
+    if(u.data().email === email){  
+      updateDoc(doc(db,"users",u.id),{
+        balance:(u.data().balance||0)+amt,
+        hasDeposited: true
+      });
+    }
+  });  
+
+  loadDeposits();
+  loadDashboard();  
+};
+
+window.rejectDeposit = async (id)=>{  
+  await updateDoc(doc(db,"deposits",id),{status:"REJECTED"});  
+  loadDeposits();
+  loadDashboard();  
+};
+
+/* ---------- WITHDRAWS (REALTIME) ---------- */
 onSnapshot(collection(db,"withdraws"), (snap)=>{
   sec1.innerHTML="";
 
@@ -187,12 +204,13 @@ onSnapshot(collection(db,"withdraws"), (snap)=>{
     </div>`;
   });
 });
-  
-window.approveWithdraw=async id=>{  
+
+window.approveWithdraw = async (id)=>{  
   await updateDoc(doc(db,"withdraws",id),{status:"APPROVED"});  
-  loadWithdraws();loadDashboard();  
-};  
-window.rejectWithdraw = async (id) => {
+  loadDashboard();  
+};
+
+window.rejectWithdraw = async (id)=>{
 
   const wRef = doc(db,"withdraws",id);
   const wDoc = await getDoc(wRef);
@@ -201,10 +219,8 @@ window.rejectWithdraw = async (id) => {
   let email = data.email;
   let amount = Number(data.amount || 0);
 
-  // ❌ reject status
   await updateDoc(wRef,{status:"REJECTED"});
 
-  // 💰 refund user
   const users = await getDocs(collection(db,"users"));
   users.forEach(async u=>{
     if(u.data().email === email){
@@ -214,96 +230,51 @@ window.rejectWithdraw = async (id) => {
     }
   });
 
-  
   loadDashboard();
 };
-/* ---------- USERS ---------- */  
+
+/* ---------- USERS ---------- */
 async function loadUsers(){  
   sec2.innerHTML="";  
   const snap=await getDocs(collection(db,"users"));  
+
   snap.forEach(d=>{  
     const u=d.data();
-    const regDate = u.createdAt
-  ? new Date(u.createdAt.seconds * 1000).toLocaleString()
-  : "N/A";
+
     sec2.innerHTML+=`  
     <div class="card">  
       <div class="row"><span>${u.email}</span><span>₹${u.balance||0}</span></div>  
-      <div class="row"><span>Password</span><span>${u.password||"N/A"}</span></div>  
+      
       <div class="row">
-  <span>Registered</span>
-  <span>
-    ${u.createdAt 
-      ? new Date(u.createdAt).toLocaleString() 
-      : "N/A"}
-  </span>
-</div>
+        <input id="amt-${d.id}" type="number" placeholder="Amount" style="width:90px">
+        <button class="btn approve" onclick="addAmount('${d.id}')">ADD</button>
+      </div>
 
-<div class="row">
-  <input id="amt-${d.id}" type="number" placeholder="Amount"
-   style="width:90px;padding:4px;border-radius:6px">
-  <button class="btn approve" onclick="addAmount('${d.id}')">ADD</button>
-</div>
+      <div class="row">
+        <button class="btn reject" onclick="deleteUser('${d.id}')">DELETE</button>
+      </div>
 
-<div class="row">
-  <button class="btn reject" onclick="deleteUser('${d.id}')">
-    DELETE USER
-  </button>
-</div> 
-        <button class="btn approve" onclick="changeBal('${d.id}',100)">+100</button>  
-        <button class="btn reject" onclick="changeBal('${d.id}',-100)">-100</button>  
-      </div>  
+      <button class="btn approve" onclick="changeBal('${d.id}',100)">+100</button>  
+      <button class="btn reject" onclick="changeBal('${d.id}',-100)">-100</button>  
     </div>`;  
   });  
-}  
-  
-window.changeBal=async(id,amt)=>{  
+}
+
+window.changeBal = async(id,amt)=>{  
   const ref=doc(db,"users",id);  
   const snap=await getDocs(collection(db,"users"));  
+
   snap.forEach(d=>{  
     if(d.id===id){  
       updateDoc(ref,{balance:(d.data().balance||0)+amt});  
     }  
   });  
-  loadUsers();loadDashboard();  
-};  
-  
-/* HOUSE EDGE LIVE + SAVE TO FIREBASE */
-document.querySelectorAll(".edge-item input").forEach(r=>{
-  r.oninput = async () => {
-    // UI update
-    r.nextElementSibling.innerText = r.value + "%";
 
-    // 🔥 SAVE DRAX TURBO EDGE
-    await setDoc(
-      doc(db,"settings","houseEdge"),
-      {
-        draxTurbo: Number(r.value) / 100
-      }
-    );
-  };
-}); 
+  loadUsers();
+  loadDashboard();  
+};
 
-document.querySelectorAll(".edge-item input").forEach(r=>{
-  r.oninput = async () => {
-    r.nextElementSibling.innerText = r.value + "%";
-
-    await setDoc(
-      doc(db,"settings","houseEdge"),
-      {
-        draxTurbo: Number(r.value) / 100,
-        coinFlip: Number(r.value) / 100   // ✅ ADD THIS
-      },
-      { merge:true }
-    );
-  };
-});  
-  
-loadDashboard();  
-loadDeposits();  
-loadWithdraws();  
-loadUsers(); 
-  // ADD / MINUS AMOUNT
+/* ---------- EXTRA ---------- */
 window.addAmount = async(id)=>{
   const input = document.getElementById("amt-"+id);
   const amt = Number(input.value);
@@ -324,12 +295,18 @@ window.addAmount = async(id)=>{
   loadDashboard();
 };
 
-// DELETE USER
 window.deleteUser = async(id)=>{
-  if(!confirm("Delete this user?")) return;
+  if(!confirm("Delete user?")) return;
   await deleteDoc(doc(db,"users",id));
   loadUsers();
   loadDashboard();
 };
-</script>  </body>  
+
+/* ---------- INIT ---------- */
+loadDashboard();
+loadDeposits();
+loadUsers();
+
+  </script>
+</body>  
 </html>
