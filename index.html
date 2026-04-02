@@ -797,22 +797,19 @@ if(snap.exists() && snap.data().active === false){
 }
 
 // 🔥 DIRECT USER DOC FETCH (NO QUERY)
+await new Promise(r => setTimeout(r, 300));
+
 const userEmail = localStorage.getItem("userEmail");
 
-// 🔥 users collection me direct match karo
-const userSnap = await getDocs(collection(db,"users"));
+const userSnap = await getDocs(
+  query(collection(db,"users"), where("email","==",userEmail))
+);
 
 let hasDeposited = false;
 
-for(const d of userSnap.docs){
-  if(
-    d.data().email.trim().toLowerCase() === 
-    userEmail.trim().toLowerCase()
-  ){
-    hasDeposited = d.data().hasDeposited === true;
-    break;
-  }
-}
+userSnap.forEach(d=>{
+  hasDeposited = d.data().hasDeposited === true;
+});
 console.log("USER EMAIL:", userEmail);
 console.log("HAS DEPOSIT:", hasDeposited);
 // 🔥 FINAL CHECK
