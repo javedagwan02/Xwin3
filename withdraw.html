@@ -195,20 +195,20 @@ if(wager > 0){
   });
 
   await addDoc(collection(db,"withdraws"),{
-    email: userEmail,
-    amount: amt,
-    method: isUpi ? "UPI" : "BANK",
-    upiId: isUpi ? upiId.value.trim() : "",
-    bankDetails: !isUpi ? {
-      holder: bankHolder.value,
-      bank: bankName.value,
-      account: bankAccount.value,
-      ifsc: bankIfsc.value
-    } : null,
-    status: "PENDING",
-    time: new Date().toLocaleString()
-    timeStamp: Date.now()
-  });
+  email: userEmail,
+  amount: amt,
+  method: isUpi ? "UPI" : "BANK",
+  upiId: isUpi ? upiId.value.trim() : "",
+  bankDetails: !isUpi ? {
+    holder: bankHolder.value,
+    bank: bankName.value,
+    account: bankAccount.value,
+    ifsc: bankIfsc.value
+  } : null,
+  status: "PENDING",
+  time: new Date().toLocaleString(),   // ✅ comma add
+  timeStamp: Date.now()               // ✅ now ok
+});
 
   withdrawCount++;
   localStorage.setItem("withdrawCount",withdrawCount);
