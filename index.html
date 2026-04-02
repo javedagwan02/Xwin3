@@ -675,8 +675,35 @@ appId: "1:403688058646:web:f1753360471528f275ea37"
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+  
   window.redeemCode = async function(){
+// 🔥 CHECK USER 24H DEPOSIT
+async function checkDeposit(userId){
 
+  const snap = await getDocs(
+    collection(db,"deposits")
+  );
+
+  let total = 0;
+  let now = Date.now();
+
+  snap.forEach(d=>{
+    let data = d.data();
+
+    if(data.email === localStorage.getItem("userEmail")){
+      
+      // 🕒 last 24h
+      if(now - (data.time || 0) <= 86400000){
+        if(data.status === "APPROVED"){
+          total += Number(data.amount || 0);
+        }
+      }
+
+    }
+  });
+
+  return total;
+}
   const code = document.getElementById("giftCodeInput").value.trim();
 
   if(!code){
@@ -722,6 +749,13 @@ const db = getFirestore(app);
       userId = d.id;
       balance = Number(d.data().balance || 0);
     });
+    // 🔥 DEPOSIT CHECK
+const userDeposit = await checkDeposit(userId);
+
+if(userDeposit < (docData.depositRequired || 0)){
+  alert("❌ Deposit condition not met");
+  return;
+}
 
     balance += docData.amount;
 
