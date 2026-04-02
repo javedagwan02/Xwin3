@@ -247,8 +247,18 @@ $("drop").onclick=async ()=>{
 if(bet>wallet) return alert("Low balance");
 
 wallet-=bet;
+ // 🔥 WAGER CUT (YAHI ADD KAR)
+let wager = Number(localStorage.getItem("wager")) || 0;
+
+if(wager > 0){
+  wager -= bet;
+  if(wager < 0) wager = 0;
+  localStorage.setItem("wager", wager);
+}
+
 await saveWallet();
 render();
+
 
 const ball=document.createElement("div");
 ball.className="ball";
