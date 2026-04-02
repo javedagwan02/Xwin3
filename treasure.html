@@ -217,7 +217,7 @@ startBtn.onclick=async()=>{
 let wager = Number(localStorage.getItem("wager")) || 0;
 
 if(wager > 0){
-  wager -= bet; ✅
+  wager -= bet;
   if(wager < 0) wager = 0;
   localStorage.setItem("wager", wager);
 }
