@@ -810,7 +810,8 @@ for(const d of userSnap.docs){
     break;
   }
 }
-
+console.log("USER EMAIL:", userEmail);
+console.log("HAS DEPOSIT:", hasDeposited);
 // 🔥 FINAL CHECK
 if(!hasDeposited){
   document.getElementById("depositPopup").style.display="flex";
