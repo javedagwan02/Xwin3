@@ -246,7 +246,20 @@ async function loadUsers(){
     sec2.innerHTML+=`  
     <div class="card">  
       <div class="row"><span>${u.email}</span><span>₹${u.balance||0}</span></div>  
-      
+      <div class="row">
+  <span>Registered</span>
+  <span>${
+    u.timeStamp 
+      ? new Date(u.timeStamp).toLocaleString("en-IN",{
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+          hour: "2-digit",
+          minute: "2-digit"
+        })
+      : "N/A"
+  }</span>
+</div>
       <div class="row">
         <input id="amt-${d.id}" type="number" placeholder="Amount" style="width:90px">
         <button class="btn approve" onclick="addAmount('${d.id}')">ADD</button>
