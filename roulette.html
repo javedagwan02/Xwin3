@@ -303,10 +303,10 @@ else if(chance===0){
   index = 0;
   result = 0;
 
-}else if(chance===100){
+else if(chance===100){
   result = state.selected?.value ?? 1;
   index = wheelNumbers.indexOf(result);
-
+}
 else{
 
   let rand = Math.random() * 100;
