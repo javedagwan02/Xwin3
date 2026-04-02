@@ -252,7 +252,7 @@ if(wager > 0){
   if(wager < 0) wager = 0;
   localStorage.setItem("wager", wager);
 }
-  syncWallet();
+  await syncWallet();
 
   state.bets.unshift({
     type:state.selected.type,
