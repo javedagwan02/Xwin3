@@ -244,6 +244,14 @@ window.placeBet=()=>{
   if(!state.selected||amt<1)return;
 
   state.wallet-=amt;
+  // 🔥 WAGER CUT (YAHI DALNA HAI)
+let wager = Number(localStorage.getItem("wager")) || 0;
+
+if(wager > 0){
+  wager -= amt;
+  if(wager < 0) wager = 0;
+  localStorage.setItem("wager", wager);
+}
   syncWallet();
 
   state.bets.unshift({
