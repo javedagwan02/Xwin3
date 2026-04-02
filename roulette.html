@@ -237,32 +237,39 @@ function popupMsg(msg,cls){
   popup.style.display="flex";
   setTimeout(()=>popup.style.display="none",1800);
 }
+window.placeBet = async ()=>{
+  let amt = +amount.value;
 
-window.placeBet=()=>{
-  let amt=+amount.value;
-  if(amt>state.wallet){popupMsg("INSUFFICIENT BALANCE","warn");return;}
-  if(!state.selected||amt<1)return;
+  if(amt > state.wallet){
+    popupMsg("INSUFFICIENT BALANCE","warn");
+    return;
+  }
 
-  state.wallet-=amt;
-  // 🔥 WAGER CUT (YAHI DALNA HAI)
-let wager = Number(localStorage.getItem("wager")) || 0;
+  if(!state.selected || amt < 1) return;
 
-if(wager > 0){
-  wager -= amt;
-  if(wager < 0) wager = 0;
-  localStorage.setItem("wager", wager);
-}
-  await syncWallet();
+  state.wallet -= amt;
+
+  // 🔥 WAGER CUT
+  let wager = Number(localStorage.getItem("wager")) || 0;
+
+  if(wager > 0){
+    wager -= amt;
+    if(wager < 0) wager = 0;
+    localStorage.setItem("wager", wager);
+  }
+
+  await syncWallet(); // ✅ अब सही चलेगा
 
   state.bets.unshift({
-    type:state.selected.type,
-    value:state.selected.value,
+    type: state.selected.type,
+    value: state.selected.value,
     amt,
-    res:"PENDING"
+    res: "PENDING"
   });
 
   popupMsg("BET PLACED");
-  save();render();
+  save();
+  render();
 }
 
 /* 🎯 SPIN WITH BALL */
