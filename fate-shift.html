@@ -116,7 +116,7 @@ input{
 
       <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getFirestore, collection, query, where, getDocs, doc, updateDoc, onSnapshot }
+import { getFirestore, collection, query, where, getDocs, doc, updateDoc, onSnapshot,increment }
 from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 /* FIREBASE */
@@ -220,13 +220,11 @@ startBtn.onclick = async ()=>{
   }
 
   balance -= bet;
-  // 🔥 WAGER CUT (YAHI ADD KAR)
-let wager = Number(localStorage.getItem("wager")) || 0;
-
-if(wager > 0){
-  wager -= bet;
-  if(wager < 0) wager = 0;
-  localStorage.setItem("wager", wager);
+// 🔥 NEW WAGER SYSTEM
+if(docId){
+  await updateDoc(doc(db,"users",docId),{
+    wagerDone: increment(bet)
+  });
 }
   await updateDoc(doc(db,"users",docId),{balance});
   walletEl.innerText = balance.toFixed(2);
