@@ -258,7 +258,7 @@ async function startGame(){
 
  opened=0;multiplier=1;active=true;
  multi.innerText=multiplier.toFixed(2);
- cashBtn.disabled=false;
+ cashBtn.disabled=true; // 🔥 yahan lagana hai
  minePositions=[];
 
  // 🔥 HOUSE EDGE LOGIC (ONLY ADDITION)
@@ -300,6 +300,7 @@ if(opened === 0 && mines >= 14){
       el.classList.add("safe");
       el.innerText="💎";
       opened++;
+      cashBtn.disabled = false; // 🔥 yahan lagana hai
 
       streak = 0;
       localStorage.setItem("mineStreak", streak);
@@ -379,13 +380,24 @@ function calcMultiplier(){
 }
 /* CASHOUT */
 async function cashOut(){
- if(!active)return;
+
+ if(!active) return;
+
+ // 🔥 NEW FIX
+ if(opened === 0){
+   return showPopup("Open at least 1 box first","#ff5252");
+ }
+
  const win=Math.floor(bet*multiplier);
  wallet+=win;
+
  await updateDoc(doc(db,"users",userDocId),{balance:wallet});
+
  document.getElementById("wallet").innerText=wallet;
+
  addHistory("WIN",win);
  showPopup("💰 +₹"+win,"#4caf50");
+
  endGame(true);
 }
 
