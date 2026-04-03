@@ -121,6 +121,7 @@ let S=JSON.parse(localStorage.getItem("WG"))||{
 };
 
 let multi=1,tab="game",locked=false;
+let selectedBet = null; // 🔥 NEW
 const save=()=>localStorage.setItem("WG",JSON.stringify(S));
 const $=i=>document.getElementById(i);
 
@@ -153,10 +154,17 @@ async function bet(type,val){
  let total = amt * multi;
  if(total > S.wallet) return showPopup("loss","<h2>Low Balance</h2>");
 
- // ✅ CORRECT WALLET CUT
+ // 🔒 SINGLE BET SYSTEM
+ if(selectedBet && (selectedBet.type !== type || selectedBet.val !== val)){
+   return showPopup("loss","<h2>Only 1 Bet Allowed</h2>");
+ }
+
+ selectedBet = {type,val}; // 🔥 SAVE
+
+ // ✅ WALLET CUT
  S.wallet -= total;
 
- // 🔥 NEW WAGER SYSTEM (IMPORTANT)
+ // 🔥 FIREBASE
  await updateDoc(doc(db,"users",userDocId),{
    balance: S.wallet,
    wagerDone: increment(total)
@@ -256,6 +264,7 @@ async function finish(){
  S.period++;
  S.time=30;
  locked=false;
+  selectedBet = null; // 🔥 RESET AFTER ROUND
 
  save();draw();render();
 }
