@@ -122,6 +122,7 @@ let S=JSON.parse(localStorage.getItem("WG"))||{
 
 let multi=1,tab="game",locked=false;
 let selectedBet = null; // 🔥 NEW
+let roundDone = false; // 🔥 NEW 
 const save=()=>localStorage.setItem("WG",JSON.stringify(S));
 const $=i=>document.getElementById(i);
 
@@ -265,6 +266,7 @@ let c = i==0||i==5 ? 'VIOLET' : i%2 ? 'GREEN' : 'RED';
  S.time=30;
  locked=false;
   selectedBet = null; // 🔥 RESET AFTER ROUND
+  roundDone = false; // 🔥 RESET
 
  save();draw();render();
 }
@@ -307,9 +309,10 @@ setInterval(()=>{
 
  if(S.time <= 5) locked = true;
 
- if(S.time === 0){
+if(S.time === 0 && !roundDone){
+   roundDone = true;
    finish();
- }
+}
 
  save();
  render();
