@@ -249,7 +249,7 @@ window.placeBet = async ()=>{
 
   state.wallet -= amt;
 
-  // 🔥 WAGER CUT
+  
   // 🔥 NEW WAGER SYSTEM
 await updateDoc(doc(db,"users",uid),{
   wagerDone: increment(amt)
