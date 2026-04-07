@@ -490,6 +490,7 @@ let resultRunning=false;
 let houseEdge=50;
 let lastResultTime = 0;
 let roundPlayed = false;
+let selectedBet = null; // 🔥 NEW
 
 /* ROUND SYNC */
 let roundStart = localStorage.getItem("roundStart");
@@ -539,15 +540,26 @@ window.setChip=(v,e)=>{
 
 /* BET */
 window.bet=async(type,el)=>{
+
   if(!chip || !bettingOpen) return;
+
+  // 🔒 SINGLE BET SYSTEM
+  if(selectedBet && selectedBet !== type){
+    return alert("Only 1 Bet Allowed");
+  }
+
+  selectedBet = type; // 🔥 SAVE
+
   if(wallet < chip) return alert("Low Balance");
 
   wallet -= chip;
-if(userDocId){
-  await updateDoc(doc(db,"users",userDocId),{
-    wagerDone: increment(chip)
-  });
-}
+
+  if(userDocId){
+    await updateDoc(doc(db,"users",userDocId),{
+      wagerDone: increment(chip)
+    });
+  }
+
   await updateDoc(doc(db,"users",userDocId),{ balance: wallet });
 
   document.getElementById("wallet").innerText=wallet;
@@ -672,6 +684,7 @@ cover.style.display="block";
     bettingOpen=true;
     roundPlayed = false;
     bets={LOW:0,HIGH:0,MID:0};
+    selectedBet = null; // 🔥 RESET AFTER ROUND
 
     document.getElementById("lowAmt").innerText=0;
     document.getElementById("highAmt").innerText=0;
