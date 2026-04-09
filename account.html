@@ -113,6 +113,8 @@ import {
   doc
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
+import { getAuth, updatePassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
 const firebaseConfig = {
   apiKey: "AIzaSyBx3J9aGn_98rTPgurMMKw_GR3puIMj4Ms",
   authDomain: "colourcash-ea60e.firebaseapp.com",
@@ -121,6 +123,7 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+const auth = getAuth(app);
 
 /* USER NAME */
 const name = localStorage.getItem("userName") || "USER";
@@ -138,39 +141,43 @@ document.getElementById("uid").innerText = uid;
 document.getElementById("lastLogin").innerText =
   localStorage.getItem("lastLogin") || "-";
 
-/* LIVE BALANCE */
+/* USER EMAIL */
 const userEmail = localStorage.getItem("userEmail");
 
+/* LOAD BALANCE */
 async function loadBalance(){
   let balance = 0;
+
   const snap = await getDocs(
     query(collection(db,"users"), where("email","==",userEmail))
   );
+
   snap.forEach(d=>{
     balance = d.data().balance || 0;
   });
+
   document.getElementById("accBalance").innerText =
     "₹" + balance.toFixed(2);
 }
 loadBalance();
 
-/* 🔥 LOGOUT */
+/* LOGOUT */
 window.logout = function(){
   localStorage.clear();
   location.href = "login.html";
 };
 
-/* 🔑 OPEN POPUP */
+/* OPEN POPUP */
 window.openChangePass = () => {
   document.getElementById("passPopup").style.display = "flex";
 };
 
-/* ❌ CLOSE POPUP */
+/* CLOSE POPUP */
 window.closePopup = () => {
   document.getElementById("passPopup").style.display = "none";
 };
 
-/* 🔐 CHANGE PASSWORD */
+/* CHANGE PASSWORD */
 window.changePassword = async () => {
 
   const oldPass = document.getElementById("oldPass").value;
@@ -201,12 +208,27 @@ window.changePassword = async () => {
     return alert("Wrong old password");
   }
 
-  await updateDoc(doc(db,"users",docId),{
-    password: newPass
-  });
+  const user = auth.currentUser;
 
-  alert("Password Updated ✅");
-  closePopup();
+  if(!user){
+    return alert("Please login again");
+  }
+
+  try{
+    // 🔥 Firebase Auth password change
+    await updatePassword(user, newPass);
+
+    // 🔥 Firestore update (optional)
+    await updateDoc(doc(db,"users",docId),{
+      password: newPass
+    });
+
+    alert("Password Updated ✅");
+    closePopup();
+
+  }catch(err){
+    alert(err.message);
+  }
 };
 </script>
   <div id="passPopup" style="position:fixed;inset:0;background:rgba(0,0,0,.7);display:none;justify-content:center;align-items:center">
