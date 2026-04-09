@@ -119,31 +119,62 @@ games.forEach(game => {
   div.className = "row";
 
   div.innerHTML = `
-    <div class="label">${game} <span class="value">50%</span></div>
-    <input type="range" min="0" max="100" value="50">
-  `;
+  <div class="label">
+    ${game} 
+    <span class="value">50%</span>
+    <button class="lockBtn">🔓</button>
+  </div>
+  <input type="range" min="0" max="100" value="50">
+`;
 
   let slider = div.querySelector("input");
   let value = div.querySelector(".value");
 
   const key = gameKeys[game];
-
+  
+const lockBtn = div.querySelector(".lockBtn");
+let locked = false;
+  
   // 🔥 SET SAVED VALUE (FIX)
   if(houseData[key] !== undefined){
     slider.value = houseData[key];
     value.innerText = houseData[key] + "%";
   }
+  if(houseData[key + "_lock"] === true){
+  locked = true;
+  slider.disabled = true;
+  lockBtn.innerText = "🔒";
+}
 
+  lockBtn.onclick = async () => {
+
+  locked = !locked;
+
+  if(locked){
+    slider.disabled = true;
+    lockBtn.innerText = "🔒";
+  }else{
+    slider.disabled = false;
+    lockBtn.innerText = "🔓";
+  }
+
+  await setDoc(doc(db,"settings","houseEdge"),{
+    [key + "_lock"]: locked
+  },{ merge:true });
+
+};
   // 🔥 SAVE (no auto overwrite)
   slider.oninput = async () => {
 
-    value.innerText = slider.value + "%";
+  if(locked) return; // 🔥 LOCKED → NO CHANGE
 
-    await setDoc(doc(db,"settings","houseEdge"),{
-      [key]: Number(slider.value)
-    },{ merge:true });
+  value.innerText = slider.value + "%";
 
-  };
+  await setDoc(doc(db,"settings","houseEdge"),{
+    [key]: Number(slider.value)
+  },{ merge:true });
+
+};
 
   container.appendChild(div);
 
