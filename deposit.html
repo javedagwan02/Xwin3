@@ -190,11 +190,12 @@ input{
     <button onclick="closePopup()" style="margin-top:10px;padding:10px;width:100%;background:#4caf50;border:none;border-radius:10px;color:#fff;">OK</button>
   </div>
 </div>
-<script type="module">
+
+  <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getFirestore, collection, addDoc, getDocs, query, where, updateDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-  
+
 /* 🔥 FIREBASE */
 const app = initializeApp({
   apiKey:"AIzaSyBx3J9aGn_98rTPgurMMKw_GR3puIMj4Ms",
@@ -222,7 +223,6 @@ window.selectChannel = function(i){
   document.querySelectorAll(".channel")[i].classList.add("active");
 
   let upi = channels[i].upi;
-
   document.getElementById("upiBox").innerText = upi;
 
   generateQR(upi);
@@ -257,7 +257,6 @@ window.payNow = function(){
   }
 
   let upi = channels[current].upi;
-
   location.href = `upi://pay?pa=${upi}&pn=ColourCash&am=${amt}&cu=INR`;
 }
 
@@ -281,38 +280,49 @@ window.submitUTR = async function(){
 
     const userEmail = localStorage.getItem("userEmail");
 
-if(!userEmail){
-  alert("Login required");
-  return;
-}
+    if(!userEmail){
+      alert("Login required");
+      return;
+    }
 
-await addDoc(collection(db,"deposits"),{
-  email: userEmail,
-  amount: Number(amt),
-  utr: utr,
-  status: "PENDING",
-  time: Date.now()
-});
+    // 🔥 SAVE DEPOSIT
+    await addDoc(collection(db,"deposits"),{
+      email: userEmail,
+      amount: Number(amt),
+      utr: utr,
+      status: "PENDING",
+      time: Date.now()
+    });
+
+    // 🔥 USER FETCH
+    const userSnap = await getDocs(
+      query(collection(db,"users"), where("email","==",userEmail))
+    );
+
+    let userId = "";
+    let currentRequired = 0;
+
+    userSnap.forEach(d=>{
+      userId = d.id;
+      currentRequired = Number(d.data().wagerRequired || 0);
+    });
+
+    // 🔥 UPDATE WAGER
+    await updateDoc(doc(db,"users",userId),{
+      wagerRequired: currentRequired + Number(amt)
+    });
 
     showPopup("Deposit Submitted ✅");
-    
-// 🔥 FIREBASE USER FETCH
-const userSnap = await getDocs(
-  query(collection(db,"users"), where("email","==",userEmail))
-);
 
-let userId = "";
-let currentRequired = 0;
+    document.getElementById("amount").value="";
+    document.getElementById("utr").value="";
 
-userSnap.forEach(d=>{
-  userId = d.id;
-  currentRequired = Number(d.data().wagerRequired || 0);
-});
+  }catch(e){
+    showPopup("Error: "+e.message);
+  }
 
-// 🔥 UPDATE WAGER REQUIRED
-await updateDoc(doc(db,"users",userId),{
-  wagerRequired: currentRequired + Number(amt)
-});
+};
+
 /* 🔥 POPUP */
 window.showPopup = function(msg){
   document.getElementById("popupText").innerText = msg;
@@ -325,7 +335,8 @@ window.closePopup = function(){
 
 /* INIT */
 selectChannel(0);
-// 🔥 ONLY ONCE POPUP (FIRST LOAD)
+
+/* 🔥 ONLY ONCE POPUP */
 window.onload = function(){
 
   let seen = sessionStorage.getItem("depositPopup");
@@ -342,7 +353,8 @@ window.onload = function(){
   }
 
 }
-</script>
+
+  </script>
 
 </body>
 </html>
