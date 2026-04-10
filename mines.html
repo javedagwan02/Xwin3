@@ -152,6 +152,7 @@ const db = getFirestore(app);
 const userEmail = localStorage.getItem("userEmail");
 let userDocId="";
 let wallet=0;
+const cashBtn = document.getElementById("cashBtn");
 
 let bet=0,mines=3,opened=0,multiplier=1,active=false;
 let minePositions=[];
