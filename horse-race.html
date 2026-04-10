@@ -197,13 +197,14 @@ const app = initializeApp({
 });
 const db = getFirestore(app);
 
+
 /* 🔥 LIVE HORSE EDGE (NO REFRESH) */
 let HORSE_EDGE = 50;
 
 function liveHorseEdge(){
   onSnapshot(doc(db,"settings","houseEdge"), (snap)=>{
     if(snap.exists()){
-      HORSE_EDGE = Number(snap.data().horse ?? 50);
+      HORSE_EDGE = Number(snap.data().horseRace ?? 50);
       console.log("🔥 LIVE HORSE EDGE:", HORSE_EDGE);
     }
   });
@@ -472,6 +473,7 @@ async function finish(win){
   buildUI();
   syncTimer();
   loadBetHistory();
+   liveHorseEdge();
  },2000);
 }
 
