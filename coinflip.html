@@ -8,7 +8,13 @@
 <script src="game-control.js"></script>
   
 <style>
-body{margin:0;font-family:Arial;background:#081c2f;color:#fff}
+body{
+  margin:0;
+  font-family:Arial;
+  background:#081c2f;
+  color:#fff;
+  overflow:hidden;   /* 🔥 YAHAN ADD KAR */
+}
 .header{display:flex;justify-content:space-between;align-items:center;padding:14px;background:#041425}
 .balance{font-size:18px;color:#00e676;font-weight:bold}
 .title{font-size:20px}
@@ -54,7 +60,12 @@ body{margin:0;font-family:Arial;background:#081c2f;color:#fff}
 .flip{animation:spin 1s linear}
 @keyframes spin{from{transform:rotateY(0deg)}to{transform:rotateY(720deg)}}
 
-.controls{padding:15px;background:#041425}
+.controls{
+  padding:15px;
+  background:#041425;
+  position:relative;   /* 🔥 ADD */
+  z-index:1;           /* 🔥 ADD */
+}
 .betrow{display:flex;gap:10px;align-items:center;margin-bottom:12px}
 .betrow button{width:40px;height:40px;border:none;border-radius:10px;background:#123a5c;color:#fff;font-size:18px}
 .betrow input{flex:1;padding:10px;border:none;border-radius:10px;font-size:18px;text-align:center}
@@ -110,6 +121,21 @@ body{margin:0;font-family:Arial;background:#081c2f;color:#fff}
 
 .loss-text{
   color:#ff3b3b;
+}
+  /* 🔥 SCROLLABLE BET HISTORY */
+#mybets{
+  max-height:150px;   /* 👈 sirf 2 cards visible */
+  overflow-y:auto;
+  padding-right:4px;
+}
+
+/* smooth scroll */
+#mybets::-webkit-scrollbar{
+  width:4px;
+}
+#mybets::-webkit-scrollbar-thumb{
+  background:#555;
+  border-radius:10px;
 }
 </style>
 </head>
