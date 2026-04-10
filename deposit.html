@@ -294,23 +294,6 @@ window.submitUTR = async function(){
       time: Date.now()
     });
 
-    // 🔥 USER FETCH
-    const userSnap = await getDocs(
-      query(collection(db,"users"), where("email","==",userEmail))
-    );
-
-    let userId = "";
-    let currentRequired = 0;
-
-    userSnap.forEach(d=>{
-      userId = d.id;
-      currentRequired = Number(d.data().wagerRequired || 0);
-    });
-
-    // 🔥 UPDATE WAGER
-    await updateDoc(doc(db,"users",userId),{
-      wagerRequired: currentRequired + Number(amt)
-    });
 
     showPopup("Deposit Submitted ✅");
 
