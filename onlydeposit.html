@@ -139,8 +139,10 @@ window.approve = async function(id,email,amount){
   balance: bal + amount,
   hasDeposited: true,
 
-  // 🔥 ADD THIS
-  wagerRequired: (u.data().wagerRequired || 0) + (amount * 2)
+  wagerRequired: (u.data().wagerRequired || 0) + (amount * 2),
+
+  // 🔥 ADD THIS LINE
+  wagerDone: u.data().wagerDone || 0
 });
 
     });
