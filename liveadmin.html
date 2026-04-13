@@ -36,7 +36,6 @@
 
 <h2 style="text-align:center;">🔥 LIVE BETS</h2>
 
-<!-- 🔥 FILTER BUTTONS -->
 <div style="text-align:center;margin:10px;">
   <button onclick="filterGame('all')" class="btn">ALL</button>
   <button onclick="filterGame('horse')" class="btn">🐎 Horse</button>
@@ -51,7 +50,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getFirestore, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-/* 🔥 FIREBASE CONFIG */
 const firebaseConfig = {
   apiKey:"AIzaSyBx3J9aGn_98rTPgurMMKw_GR3puIMj4Ms",
   authDomain:"colourcash-ea60e.firebaseapp.com",
@@ -61,29 +59,25 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-/* 🔥 STATE */
 let currentGame = "all";
 let allBets = [];
 
-/* 🔥 FILTER */
 window.filterGame = function(game){
   currentGame = game;
-  renderList(); // 🔥 refresh UI
+  renderList();
 }
 
-/* 🔥 RENDER FUNCTION */
 function renderList(){
 
-  document.getElementById("list").innerHTML = "";
+  const list = document.getElementById("list");
+  list.innerHTML = "";
 
   allBets.forEach(d=>{
 
-    // ❌ skip broken data
     if(!d.email || !d.game || !d.amount || !d.selection || !d.time){
       return;
     }
 
-    // 🔥 filter
     if(currentGame !== "all" && d.game !== currentGame){
       return;
     }
@@ -100,18 +94,23 @@ function renderList(){
       📊 Status: ${d.status}
     `;
 
-    document.getElementById("list").appendChild(box);
+    list.appendChild(box);
   });
-
 }
 
-/* 🔥 LIVE DATA */
 onSnapshot(collection(db,"liveBets"), (snap)=>{
 
-  allBets = []; // reset
+  allBets = [];
 
   snap.forEach(doc=>{
     allBets.push(doc.data());
   });
 
-  renderList(); // 🔥
+  renderList();
+
+}); // ✅ IMPORTANT FIX
+
+</script>
+
+</body>
+</html>
