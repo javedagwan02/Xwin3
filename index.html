@@ -801,34 +801,41 @@ showPopup(`₹${docData.amount} Added Successfully ✅\n🕒 ${time}`);
 // 🔥 YAHI SABSE IMPORTANT
 window.openGame = async function(url){
 
-const gameName = url.replace(".html","");
+const userEmail = localStorage.getItem("userEmail");
 
+// 🔥 BLOCK CHECK
+const userSnap = await getDocs(
+  query(collection(db,"users"), where("email","==",userEmail))
+);
+
+let isBlocked = false;
+
+userSnap.forEach(d=>{
+  isBlocked = d.data().blocked || false;
+});
+
+if(isBlocked){
+  alert("❌ Your Account is Blocked\nContact Support");
+  return;
+}
+
+// 🔥 GAME STATUS CHECK
+const gameName = url.replace(".html","");
 const ref = doc(db,"gameStatus",gameName);
 const snap = await getDoc(ref);
 
-// game OFF
 if(snap.exists() && snap.data().active === false){
   location.href = "coming-soon.html";
   return;
 }
 
-// 🔥 DIRECT USER DOC FETCH (NO QUERY)
-await new Promise(r => setTimeout(r, 300));
-
-const userEmail = localStorage.getItem("userEmail");
-
-const userSnap = await getDocs(
-  query(collection(db,"users"), where("email","==",userEmail))
-);
-
+// 🔥 DEPOSIT CHECK
 let hasDeposited = false;
 
 userSnap.forEach(d=>{
   hasDeposited = d.data().hasDeposited === true;
 });
-console.log("USER EMAIL:", userEmail);
-console.log("HAS DEPOSIT:", hasDeposited);
-// 🔥 FINAL CHECK
+
 if(!hasDeposited){
   document.getElementById("depositPopup").style.display="flex";
 }else{
