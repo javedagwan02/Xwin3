@@ -467,6 +467,55 @@ font-size:16px;
   font-weight:bold;
   font-size:16px;
   }
+  .block-popup{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.9);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:99999;
+}
+
+.block-box{
+  width:85%;
+  max-width:320px;
+  background:linear-gradient(145deg,#0a0a0a,#1a0000);
+  border:2px solid #ff0000;
+  border-radius:16px;
+  padding:25px;
+  text-align:center;
+  box-shadow:0 0 25px red, inset 0 0 20px rgba(255,0,0,0.5);
+  animation:pop 0.3s ease;
+}
+
+.block-box h1{
+  color:#ff0000;
+  margin:0;
+  text-shadow:0 0 10px red;
+}
+
+.block-box p{
+  margin:12px 0;
+  color:#fff;
+}
+
+.block-box button{
+  margin-top:10px;
+  width:100%;
+  padding:12px;
+  border:none;
+  border-radius:10px;
+  background:#ff0000;
+  color:#fff;
+  font-weight:bold;
+  box-shadow:0 0 15px red;
+}
+
+@keyframes pop{
+  from{transform:scale(0.6);}
+  to{transform:scale(1);}
+}
 </style>
 </head>
 
@@ -815,7 +864,7 @@ userSnap.forEach(d=>{
 });
 
 if(isBlocked){
-  alert("❌ Your Account is Blocked\nContact Support");
+  document.getElementById("blockPopup").style.display = "flex";
   return;
 }
 
@@ -845,6 +894,13 @@ if(!hasDeposited){
 }
 </script>
 <script>
+  function contactSupport(){
+  window.location.href="tg://resolve?domain=X2xwinxsupportk";
+
+  setTimeout(()=>{
+    window.open("https://t.me/X2xwinxsupportk","_blank");
+  },800);
+}
 
 /* SAVE START BALANCE ON LOGIN DAY */
 if(!localStorage.getItem("startBalance")){
@@ -920,6 +976,12 @@ track.addEventListener("touchend",(e)=>{
 
 
 </script>
-
+<div id="blockPopup" class="block-popup">
+  <div class="block-box">
+    <h1>🚫 ACCESS DENIED</h1>
+    <p>Your Account Has Been Blocked</p>
+    <button onclick="contactSupport()">Contact Support</button>
+  </div>
+</div>
 </body>
 </html>
