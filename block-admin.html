@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>👑 User Control Panel</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <style>
+    body{background:#0f172a;color:white;font-family:sans-serif;}
+    .card{
+      background:#1e293b;
+      margin:10px;
+      padding:12px;
+      border-radius:12px;
+      box-shadow:0 0 10px rgba(0,255,150,0.3);
+    }
+    .btn{
+      margin:4px;
+      padding:6px 10px;
+      border:none;
+      border-radius:8px;
+      cursor:pointer;
+      font-weight:bold;
+    }
+    .block{background:red;color:#fff;}
+    .unblock{background:#00e676;color:#000;}
+    .add{background:#2196f3;color:#fff;}
+    .minus{background:#ff9800;color:#000;}
+    input{padding:6px;width:80px;border-radius:6px;border:none;}
+  </style>
+</head>
+
+<body>
+
+<h2 style="text-align:center;">👑 USER CONTROL PANEL</h2>
+<div id="list"></div>
+
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getFirestore, collection, onSnapshot, doc, updateDoc, increment } 
+from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+const app = initializeApp({
+  apiKey:"AIzaSyBx3J9aGn_98rTPgurMMKw_GR3puIMj4Ms",
+  authDomain:"colourcash-ea60e.firebaseapp.com",
+  projectId:"colourcash-ea60e"
+});
+const db = getFirestore(app);
+
+/* 🔥 LIVE USERS */
+onSnapshot(collection(db,"users"), (snap)=>{
+
+  document.getElementById("list").innerHTML = "";
+
+  snap.forEach(d=>{
+
+    let u = d.data();
+    let id = d.id;
+
+    let box = document.createElement("div");
+    box.className = "card";
+
+    box.innerHTML = `
+      📧 <b>${u.email}</b><br>
+      💰 Wallet: ₹${u.balance || 0}<br>
+      🚫 Status: ${u.blocked ? "BLOCKED" : "ACTIVE"}<br><br>
+
+      <input type="number" id="amt_${id}" placeholder="Amount">
+
+      <button class="btn add" onclick="addMoney('${id}')">+ Add</button>
+      <button class="btn minus" onclick="minusMoney('${id}')">- Minus</button>
+
+      <br><br>
+
+      ${
+        u.blocked
+        ? `<button class="btn unblock" onclick="toggleBlock('${id}', false)">UNBLOCK</button>`
+        : `<button class="btn block" onclick="toggleBlock('${id}', true)">BLOCK</button>`
+      }
+    `;
+
+    list.appendChild(box);
+  });
+
+});
+
+/* 🔥 FUNCTIONS */
+window.addMoney = async(id)=>{
+  let amt = +document.getElementById("amt_"+id).value;
+  if(!amt) return alert("Enter amount");
+
+  await updateDoc(doc(db,"users",id),{
+    balance: increment(amt)
+  });
+};
+
+window.minusMoney = async(id)=>{
+  let amt = +document.getElementById("amt_"+id).value;
+  if(!amt) return alert("Enter amount");
+
+  await updateDoc(doc(db,"users",id),{
+    balance: increment(-amt)
+  });
+};
+
+window.toggleBlock = async(id,status)=>{
+  await updateDoc(doc(db,"users",id),{
+    blocked: status
+  });
+};
+
+</script>
+
+</body>
+</html>
