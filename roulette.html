@@ -302,16 +302,69 @@ if(betAmount >= 350){
   index = wheelNumbers.indexOf(result);
 }
 
-// ✅ FIXED PART START
+// 🔥 LOSS MODE (chance = 0)
 else if(chance === 0){
-  result = 0;
+
+  let loseNumbers = wheelNumbers.filter(n=>{
+    if(state.selected?.type === "NUMBER"){
+      return n !== state.selected.value;
+    }
+    if(state.selected?.type === "RED"){
+      return !red.includes(n);
+    }
+    if(state.selected?.type === "BLACK"){
+      return !black.includes(n);
+    }
+    if(state.selected?.type === "EVEN"){
+      return n === 0 || n % 2 !== 0;
+    }
+    if(state.selected?.type === "ODD"){
+      return n % 2 === 0;
+    }
+    if(state.selected?.type === "LOW"){
+      return n <1 || n >18;
+    }
+    if(state.selected?.type === "HIGH"){
+      return n <19 || n >36;
+    }
+    return true;
+  });
+
+  result = loseNumbers[Math.floor(Math.random()*loseNumbers.length)];
   index = wheelNumbers.indexOf(result);
 }
+
+// 🔥 WIN MODE (chance = 100)
 else if(chance === 100){
-  result = state.selected?.value ?? 1;
+
+  let winNumbers = wheelNumbers.filter(n=>{
+    if(state.selected?.type === "NUMBER"){
+      return n === state.selected.value;
+    }
+    if(state.selected?.type === "RED"){
+      return red.includes(n);
+    }
+    if(state.selected?.type === "BLACK"){
+      return black.includes(n);
+    }
+    if(state.selected?.type === "EVEN"){
+      return n !== 0 && n % 2 === 0;
+    }
+    if(state.selected?.type === "ODD"){
+      return n % 2 !== 0;
+    }
+    if(state.selected?.type === "LOW"){
+      return n >=1 && n <=18;
+    }
+    if(state.selected?.type === "HIGH"){
+      return n >=19 && n <=36;
+    }
+    return false;
+  });
+
+  result = winNumbers[Math.floor(Math.random()*winNumbers.length)];
   index = wheelNumbers.indexOf(result);
 }
-// ✅ FIXED PART END
 
 else{
 
