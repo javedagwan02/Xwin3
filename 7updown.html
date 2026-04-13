@@ -553,6 +553,14 @@ window.bet=async(type,el)=>{
   if(wallet < chip) return alert("Low Balance");
 
   wallet -= chip;
+  await addDoc(collection(db,"liveBets"),{
+  email: userEmail,
+  game: "7up",
+  amount: chip,
+  selection: type, // LOW / HIGH / MID
+  time: Date.now(),
+  status: "PLAYING"
+});
 
   if(userDocId){
     await updateDoc(doc(db,"users",userDocId),{
