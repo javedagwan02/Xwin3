@@ -3,11 +3,46 @@
 <head>
   <title>🔥 Live Admin Panel</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <style>
+    body{
+      background:#0f172a;
+      color:white;
+      font-family:sans-serif;
+    }
+
+    .btn{
+      margin:5px;
+      padding:8px 14px;
+      border:none;
+      border-radius:20px;
+      background:#00e676;
+      color:#000;
+      font-weight:bold;
+      cursor:pointer;
+    }
+
+    .card{
+      background:#1e293b;
+      margin:10px;
+      padding:12px;
+      border-radius:12px;
+      box-shadow:0 0 10px rgba(0,255,150,0.3);
+    }
+  </style>
 </head>
 
-<body style="background:#0f172a;color:white;font-family:sans-serif;">
+<body>
 
 <h2 style="text-align:center;">🔥 LIVE BETS</h2>
+
+<!-- 🔥 FILTER BUTTONS -->
+<div style="text-align:center;margin:10px;">
+  <button onclick="filterGame('all')" class="btn">ALL</button>
+  <button onclick="filterGame('horse')" class="btn">🐎 Horse</button>
+  <button onclick="filterGame('7up')" class="btn">🎲 7UpDown</button>
+  <button onclick="filterGame('pubg')" class="btn">🔫 PUBG</button>
+</div>
 
 <div id="list"></div>
 
@@ -16,7 +51,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getFirestore, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-/* 🔥 TERA SAME FIREBASE CONFIG */
+/* 🔥 FIREBASE CONFIG */
 const firebaseConfig = {
   apiKey:"AIzaSyBx3J9aGn_98rTPgurMMKw_GR3puIMj4Ms",
   authDomain:"colourcash-ea60e.firebaseapp.com",
@@ -25,6 +60,14 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+
+/* 🔥 FILTER STATE */
+let currentGame = "all";
+
+/* 🔥 FILTER FUNCTION */
+window.filterGame = function(game){
+  currentGame = game;
+}
 
 /* 🔥 LIVE DATA */
 onSnapshot(collection(db,"liveBets"), (snap)=>{
@@ -35,13 +78,13 @@ onSnapshot(collection(db,"liveBets"), (snap)=>{
 
     let d = doc.data();
 
-    let box = document.createElement("div");
+    // 🔥 FILTER APPLY
+    if(currentGame !== "all" && d.game !== currentGame){
+      return;
+    }
 
-    box.style.background = "#1e293b";
-    box.style.margin = "10px";
-    box.style.padding = "12px";
-    box.style.borderRadius = "12px";
-    box.style.boxShadow = "0 0 10px rgba(0,255,150,0.3)";
+    let box = document.createElement("div");
+    box.className = "card";
 
     box.innerHTML = `
       📧 <b>${d.email}</b><br><br>
