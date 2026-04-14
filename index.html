@@ -673,7 +673,7 @@ font-size:16px;
 </div>
 
 <!-- BALLOON -->
-<div class="game-card balloon-card" onclick="openGame('balloon-crash.html')">
+<div class="game-card balloon-card" onclick="openJiliGame()">
   <img src="images/27723-removebg-preview.png">
 </div>
 
@@ -803,6 +803,47 @@ appId: "1:403688058646:web:f1753360471528f275ea37"
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+  window.openJiliGame = async function(){
+
+  const userEmail = localStorage.getItem("userEmail");
+
+  // 🔥 USER CHECK
+  const userSnap = await getDocs(
+    query(collection(db,"users"), where("email","==",userEmail))
+  );
+
+  let balance = 0;
+
+  userSnap.forEach(d=>{
+    balance = Number(d.data().balance || 0);
+  });
+
+  // ❌ MIN BALANCE CHECK
+  if(balance < 10){
+    document.getElementById("depositPopup").style.display="flex";
+    return;
+  }
+
+  try{
+
+    // 🔥 BACKEND CALL
+    const res = await fetch("https://jili-backend.onrender.com/start-game?userId=" + userEmail);
+
+    const data = await res.json();
+
+    if(data.payload?.game_launch_url){
+      window.location.href = data.payload.game_launch_url;
+    }else{
+      alert("Game launch failed ❌");
+      console.log(data);
+    }
+
+  }catch(e){
+    alert("Server error ❌");
+    console.log(e);
+  }
+
+};
   
   window.redeemCode = async function(){
 // 🔥 CHECK USER 24H DEPOSIT
