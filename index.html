@@ -824,11 +824,10 @@ const db = getFirestore(app);
     return;
   }
 
-  // 🔥 DIRECT REDIRECT (NO FETCH)
+  // 🔥 DIRECT GAME OPEN
   window.location.href = "https://jili-backend.onrender.com/start-game?userId=" + userEmail;
 
 };
-
   
   window.redeemCode = async function(){
 // 🔥 CHECK USER 24H DEPOSIT
