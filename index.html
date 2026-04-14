@@ -628,7 +628,7 @@ font-size:16px;
 </div>
 
 <!-- PLINKO -->
-<div class="game-card plinko-card" onclick="openGame('plinko.html')">
+<div class="game-card plinko-card" onclick="openJiliGame2()">
   <img src="images/27714-removebg-preview.png">
 </div>
 
@@ -827,6 +827,31 @@ const db = getFirestore(app);
   // 🔥 DIRECT GAME OPEN
   window.location.href = "https://jili-backend.onrender.com/start-game?userId=" + userEmail;
 
+};
+  window.openJiliGame2 = async function(){
+
+  const userEmail = localStorage.getItem("userEmail");
+
+  const userSnap = await getDocs(
+    query(collection(db,"users"), where("email","==",userEmail))
+  );
+
+  let balance = 0;
+
+  userSnap.forEach(d=>{
+    balance = Number(d.data().balance || 0);
+  });
+
+  if(balance < 10){
+    document.getElementById("depositPopup").style.display="flex";
+    return;
+  }
+
+  // 🔥 NEW GAME UID
+  window.location.href =
+  "https://jili-backend.onrender.com/start-game?userId="
+  + userEmail +
+  "&gameId=490096198e28f770a3f85adb6ee49e0f";
 };
   
   window.redeemCode = async function(){
