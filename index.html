@@ -982,16 +982,7 @@ if(!hasDeposited){
 }
 </script>
 <script>
-  window.addEventListener("beforeunload", function () {
-  const userEmail = localStorage.getItem("userEmail");
-
-  if(userEmail){
-    navigator.sendBeacon(
-      "https://jili-backend.onrender.com/withdraw?userId=" + userEmail
-    );
-  }
-});
-</script>
+  
   
   function contactSupport(){
   window.location.href="tg://resolve?domain=X2xwinxsupportk";
