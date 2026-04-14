@@ -516,6 +516,46 @@ font-size:16px;
   from{transform:scale(0.6);}
   to{transform:scale(1);}
 }
+  .security-popup{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.8);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:99999;
+}
+
+.security-box{
+  width:90%;
+  max-width:340px;
+  background:#fff;
+  border-radius:16px;
+  padding:15px;
+  text-align:center;
+  animation:pop 0.3s ease;
+}
+
+.security-box h2{
+  margin:0;
+  background:#ff4d4d;
+  color:#fff;
+  padding:10px;
+  border-radius:10px;
+  font-size:16px;
+}
+
+.security-box button{
+  margin-top:10px;
+  width:100%;
+  padding:12px;
+  border:none;
+  border-radius:10px;
+  background:linear-gradient(90deg,#ff7a7a,#ff4d4d);
+  color:#fff;
+  font-weight:bold;
+  font-size:16px;
+}
 </style>
 </head>
 
@@ -720,6 +760,29 @@ function closePopup(){
   document.getElementById("successPopup").style.display = "none";
 }
 
+  function closeSecurityPopup(){
+  document.getElementById("securityPopup").style.display="none";
+}
+
+// 🔥 AUTO SHOW ON PAGE LOAD
+window.onload = function(){
+
+  // sirf 1 baar show karna ho to uncomment kar
+  // if(localStorage.getItem("seenSecurity")) return;
+
+  setTimeout(()=>{
+    document.getElementById("securityPopup").style.display="flex";
+
+    // auto close after 7 sec
+    setTimeout(()=>{
+      closeSecurityPopup();
+    },7000);
+
+    // localStorage.setItem("seenSecurity","true");
+
+  },1000);
+
+};
 </script>
 
 <script type="module">
@@ -981,6 +1044,19 @@ track.addEventListener("touchend",(e)=>{
     <h1>🚫 ACCESS DENIED</h1>
     <p>Your Account Has Been Blocked</p>
     <button onclick="contactSupport()">Contact Support</button>
+  </div>
+</div>
+  <!-- 🔥 OFFER POPUP -->
+<div id="securityPopup" class="security-popup">
+  <div class="security-box">
+
+    <h2>🔥 New Special Offer 🎁</h2>
+
+    <img src="images/file_000000003fe471fabb7da05d7200668f.png" 
+         style="width:100%;border-radius:10px;margin:10px 0;">
+
+    <button onclick="closeSecurityPopup()">Claim Now</button>
+
   </div>
 </div>
 </body>
