@@ -129,6 +129,9 @@ body{
     <li>✅ bonus system is only for agents</li>
     <li>✅ contact for agent work </li>
      </ul>
+  <button onclick="openReferralDetails()" class="btn">
+View Full Details
+  </button>
   <div id="refList" style="margin-top:20px;"></div>
 </div>
 
@@ -136,7 +139,13 @@ body{
 <div class="popup" id="popup">
   <div id="popupText"></div>
 </div>
-
+<div id="refPopup" class="popup">
+  <div style="width:90%;max-height:80%;overflow:auto;">
+    <h3>My Referral Details</h3>
+    <div id="refDetails"></div>
+    <button class="btn" onclick="closeRefPopup()">Close</button>
+  </div>
+</div>
 <!-- BOTTOM NAV -->
 <div class="bottom-nav">
   <div class="nav-btn" onclick="location.href='index.html'">
@@ -217,7 +226,63 @@ async function loadReferrals(){
 }
 
 loadReferrals();
+  
+window.closeRefPopup = function(){
+  document.getElementById("refPopup").style.display = "none";
+}
 
+window.openReferralDetails = async function(){
+
+  document.getElementById("refPopup").style.display = "flex";
+
+  const myCode = localStorage.getItem("refCode");
+
+  let html = "";
+  let now = Date.now();
+  let threeMonth = 90 * 24 * 60 * 60 * 1000;
+
+  const usersSnap = await getDocs(collection(db,"users"));
+
+  for(const u of usersSnap.docs){
+
+    const user = u.data();
+
+    if(user.referredBy == myCode){
+
+      const depSnap = await getDocs(
+        query(collection(db,"deposits"),
+        where("email","==",user.email))
+      );
+
+      depSnap.forEach(d=>{
+        let data = d.data();
+
+        if(data.status === "APPROVED"){
+
+          // 🔥 3 MONTH FILTER
+          if(now - (data.time || 0) <= threeMonth){
+
+            html += `
+            <div style="background:#fff;padding:10px;margin-top:10px;border-radius:10px;color:#000;">
+              📧 ${user.email}<br>
+              💰 ₹${data.amount}<br>
+              🕒 ${new Date(data.time).toLocaleString()}
+            </div>
+            `;
+          }
+
+        }
+      });
+
+    }
+  }
+
+  if(html === ""){
+    html = "No data in last 3 months";
+  }
+
+  document.getElementById("refDetails").innerHTML = html;
+}
 </script>
 
   <script>
