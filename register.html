@@ -196,7 +196,8 @@ window.register = () => {
     // 🔥 GET REF FROM URL
 const urlParams = new URLSearchParams(window.location.search);
 const ref = urlParams.get("ref");
-
+// 🔥 AUTO USERNAME GENERATE
+const username = user.email.split("@")[0] + Math.floor(1000 + Math.random() * 9000);
 await setDoc(doc(db, "users", user.uid), {
   email: user.email,
   password: pass,
