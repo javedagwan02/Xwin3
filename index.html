@@ -719,12 +719,12 @@ font-size:16px;
 </div>
 
 <!-- NEW GAME 7 -->
-<div class="game-card hilo-card" onclick="onclick="openJiliGame7()">
+<div class="game-card hilo-card" onclick="openJiliGame7()">
   <img src="images/game7.png">
 </div>
 
 <!-- NEW GAME 8 -->
-<div class="game-card dragontower-card" onclick="openGame('game8.html')">
+<div class="game-card dragontower-card" onclick="openJiliGame8()">
   <img src="images/game8.png">
 </div>
 
@@ -1076,6 +1076,31 @@ const db = getFirestore(app);
   "https://jili-backend.onrender.com/start-game?userId="
   + userEmail +
   "&gameId=28bc4a33c985ddce6acd92422626b76f";
+};
+  window.openJiliGame8 = async function(){
+
+  const userEmail = localStorage.getItem("userEmail");
+
+  const userSnap = await getDocs(
+    query(collection(db,"users"), where("email","==",userEmail))
+  );
+
+  let balance = 0;
+
+  userSnap.forEach(d=>{
+    balance = Number(d.data().balance || 0);
+  });
+
+  if(balance < 10){
+    document.getElementById("depositPopup").style.display="flex";
+    return;
+  }
+
+  // 🔥 GAME 8 UID
+  window.location.href =
+  "https://jili-backend.onrender.com/start-game?userId="
+  + userEmail +
+  "&gameId=fabab1a17a237d0fc0e50c20d2c2bf4c";
 };
   window.redeemCode = async function(){
 // 🔥 CHECK USER 24H DEPOSIT
