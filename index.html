@@ -877,8 +877,7 @@ appId: "1:403688058646:web:f1753360471528f275ea37"
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
   
-
-  window.openJiliGame = async function(){
+window.openJiliGame = async function(){
 
   const userEmail = localStorage.getItem("userEmail");
 
@@ -897,10 +896,13 @@ const db = getFirestore(app);
     return;
   }
 
-  // 🔥 DIRECT GAME OPEN
-  window.location.href = "https://jili-backend.onrender.com/start-game?userId=" + userEmail;
-"&gameId=a990de177577a2e6a889aaac5f57b429";
+  // ✅ FIXED
+  window.location.href =
+  "https://jili-backend.onrender.com/start-game?userId="
+  + userEmail +
+  "&gameId=a990de177577a2e6a889aaac5f57b429";
 };
+  
   window.openJiliGame2 = async function(){
 
   const userEmail = localStorage.getItem("userEmail");
