@@ -902,10 +902,16 @@ window.openJiliGame = async function(){
   + userEmail +
   "&gameId=a990de177577a2e6a889aaac5f57b429";
 };
-  
-  window.openJiliGame2 = async function(){
+  window.openJiliGamePlinko = async function(){
+
+  console.log("🔥 PLINKO CLICKED");
 
   const userEmail = localStorage.getItem("userEmail");
+
+  if(!userEmail){
+    alert("User not logged in");
+    return;
+  }
 
   const userSnap = await getDocs(
     query(collection(db,"users"), where("email","==",userEmail))
@@ -922,12 +928,13 @@ window.openJiliGame = async function(){
     return;
   }
 
-  // 🔥 NEW GAME UID
+  // ✅ FINAL UID (Plinko)
   window.location.href =
   "https://jili-backend.onrender.com/start-game?userId="
   + userEmail +
   "&gameId=490096198e28f770a3f85adb6ee49e0f";
 };
+  
   window.openJiliGame3 = async function(){
 
   const userEmail = localStorage.getItem("userEmail");
