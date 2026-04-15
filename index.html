@@ -598,7 +598,7 @@ font-size:16px;
   <img src="images/27708-removebg-preview.png">
 </div>
   
-<div class="game-card roulette-card" onclick="openGame('roulette.html')">
+<div class="game-card roulette-card" onclick="openJiliRoulette()">
   <img src="images/27709-removebg-preview.png">
 </div>
 
@@ -876,7 +876,31 @@ appId: "1:403688058646:web:f1753360471528f275ea37"
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-  
+  window.openJiliRoulette = async function(){
+
+  const userEmail = localStorage.getItem("userEmail");
+
+  const userSnap = await getDocs(
+    query(collection(db,"users"), where("email","==",userEmail))
+  );
+
+  let balance = 0;
+
+  userSnap.forEach(d=>{
+    balance = Number(d.data().balance || 0);
+  });
+
+  if(balance < 10){
+    document.getElementById("depositPopup").style.display="flex";
+    return;
+  }
+
+  // 🔥 NEW GAME UID
+  window.location.href =
+  "https://jili-backend.onrender.com/start-game?userId="
+  + userEmail +
+  "&gameId=d4fc911a31b3a61edd83bdd95e36f3bf";
+};
 window.openJiliGame = async function(){
 
   const userEmail = localStorage.getItem("userEmail");
