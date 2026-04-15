@@ -704,7 +704,7 @@ font-size:16px;
 </div>
 
 <!-- NEW GAME 4 -->
-<div class="game-card ganesh-card" onclick="openGame('game4.html')">
+<div class="game-card ganesh-card"onclick="openJiliGame4()">
   <img src="images/game4.png">
 </div>
 
@@ -976,6 +976,31 @@ const db = getFirestore(app);
   "https://jili-backend.onrender.com/start-game?userId="
   + userEmail +
   "&gameId=eba92b1d3abd5f0d37dfbe112abdf0e2";
+};
+  window.openJiliGame4 = async function(){
+
+  const userEmail = localStorage.getItem("userEmail");
+
+  const userSnap = await getDocs(
+    query(collection(db,"users"), where("email","==",userEmail))
+  );
+
+  let balance = 0;
+
+  userSnap.forEach(d=>{
+    balance = Number(d.data().balance || 0);
+  });
+
+  if(balance < 10){
+    document.getElementById("depositPopup").style.display="flex";
+    return;
+  }
+
+  // 🔥 GAME 4 UID
+  window.location.href =
+  "https://jili-backend.onrender.com/start-game?userId="
+  + userEmail +
+  "&gameId=2c17b7c4e2ce5b8bebf4bd10e3e958d7";
 };
   window.redeemCode = async function(){
 // 🔥 CHECK USER 24H DEPOSIT
