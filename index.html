@@ -761,6 +761,20 @@ font-size:16px;
 <div class="game-card keno-card" onclick="openJiliGame15()">
   <img src="images/38259-removebg-preview.png">
 </div>
+  <!-- GAME 16 -->
+<div class="game-card newgame-card" onclick="openJiliGame16()">
+  <img src="images/game16.png">
+</div>
+
+<!-- GAME 17 -->
+<div class="game-card newgame-card" onclick="openJiliGame17()">
+  <img src="images/game17.png">
+</div>
+
+<!-- GAME 18 -->
+<div class="game-card newgame-card" onclick="openJiliGame18()">
+  <img src="images/game18.png">
+</div>
   
 <div class="spacer"></div>
 
@@ -1331,6 +1345,85 @@ window.openJiliGame15 = async function(){
   "https://jili-backend.onrender.com/start-game?userId="
   + userEmail +
   "&gameId=4db0ec24ff55a685573c888efed47d7f";
+};
+  // 🔥 GAME 16
+window.openJiliGame16 = async function(){
+
+  const userEmail = localStorage.getItem("userEmail");
+
+  const userSnap = await getDocs(
+    query(collection(db,"users"), where("email","==",userEmail))
+  );
+
+  let balance = 0;
+
+  userSnap.forEach(d=>{
+    balance = Number(d.data().balance || 0);
+  });
+
+  if(balance < 10){
+    document.getElementById("depositPopup").style.display="flex";
+    return;
+  }
+
+  window.location.href =
+  "https://jili-backend.onrender.com/start-game?userId="
+  + userEmail +
+  "&gameId=e7ac92d2fdd2aedca92a3521b4416f47";
+};
+
+
+// 🔥 GAME 17
+window.openJiliGame17 = async function(){
+
+  const userEmail = localStorage.getItem("userEmail");
+
+  const userSnap = await getDocs(
+    query(collection(db,"users"), where("email","==",userEmail))
+  );
+
+  let balance = 0;
+
+  userSnap.forEach(d=>{
+    balance = Number(d.data().balance || 0);
+  });
+
+  if(balance < 10){
+    document.getElementById("depositPopup").style.display="flex";
+    return;
+  }
+
+  window.location.href =
+  "https://jili-backend.onrender.com/start-game?userId="
+  + userEmail +
+  "&gameId=dcf220f4e3ecca0278911a55e6f11c77";
+};
+
+
+// 🔥 GAME 18
+window.openJiliGame18 = async function(){
+
+  const userEmail = localStorage.getItem("userEmail");
+
+  const userSnap = await getDocs(
+    query(collection(db,"users"), where("email","==",userEmail))
+  );
+
+  let balance = 0;
+
+  userSnap.forEach(d=>{
+    balance = Number(d.data().balance || 0);
+  });
+
+  if(balance < 10){
+    document.getElementById("depositPopup").style.display="flex";
+    return;
+  }
+
+  window.location.href =
+  "https://jili-backend.onrender.com/start-game?userId="
+  + userEmail +
+  "&gameId=edef29b5eda8e2eaf721d7315491c51d";
 };
   window.redeemCode = async function(){
 // 🔥 CHECK USER 24H DEPOSIT
