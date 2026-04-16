@@ -276,52 +276,47 @@ window.submitUTR = async function(){
     return;
   }
 
-  try{
+  const userEmail = localStorage.getItem("userEmail");
 
-    const userEmail = localStorage.getItem("userEmail");
+  if(!userEmail){
+    showPopup("Login required");
+    return;
+  }
 
-    if(!userEmail){
-      alert("Login required");
-      return;
-    }
+  // 🔥 USER DATA GET
+  const userSnap = await getDocs(
+    query(collection(db,"users"), where("email","==",userEmail))
+  );
 
-// 🔥 USER DATA GET
-const userSnap = await getDocs(
-  query(collection(db,"users"), where("email","==",userEmail))
-);
+  let referredBy = null;
 
-let referredBy = null;
+  userSnap.forEach(d=>{
+    referredBy = d.data().referredBy || null;
+  });
 
-userSnap.forEach(d=>{
-  referredBy = d.data().referredBy || null;
-});
+  // 🔥 TURANT POPUP
+  showPopup("Submitting... ⏳");
 
-// 🔥 TURANT POPUP
-showPopup("Submitting... ⏳");
+  // 🔥 BACKGROUND SAVE
+  addDoc(collection(db,"deposits"),{
+    email: userEmail,
+    amount: Number(amt),
+    utr: utr,
+    status: "PENDING",
+    time: Date.now(),
+    referredBy: referredBy
+  })
+  .then(()=>{
+    showPopup("Deposit Submitted ✅");
 
-// 🔥 BACKGROUND SAVE (NO AWAIT)
-addDoc(collection(db,"deposits"),{
-  email: userEmail,
-  amount: Number(amt),
-  utr: utr,
-  status: "PENDING",
-  time: Date.now(),
-  referredBy: referredBy
-})
-.then(()=>{
-
-  showPopup("Deposit Submitted ✅");
-
-  document.getElementById("amount").value="";
-  document.getElementById("utr").value="";
-
-})
-.catch(e=>{
-  showPopup("Error: " + e.message);
-});
+    document.getElementById("amount").value="";
+    document.getElementById("utr").value="";
+  })
+  .catch(e=>{
+    showPopup("Error: " + e.message);
+  });
 
 };
-
 /* 🔥 POPUP */
 window.showPopup = function(msg){
   document.getElementById("popupText").innerText = msg;
