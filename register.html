@@ -6,96 +6,110 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <style>
-/* 🌤 SKY BLUE BACKGROUND */
 body{
   margin:0;
-  font-family:Arial, sans-serif;
-
+  font-family:Arial;
   background:url("images/file_000000008f787208b840aa1446e72c62.png") no-repeat center;
   background-size:cover;
-  background-attachment:fixed;
-
   color:#fff;
 }
 
-/* ✅ GLASS CONTAINER (BLACK REMOVED) */
+/* 🔥 MAIN CARD */
 .container{
-  max-width:380px;
-  margin:80px auto;
+  max-width:360px;
+  margin:70px auto;
   padding:20px;
+  border-radius:20px;
   text-align:center;
+
+  background: rgba(0,0,0,0.7);
+  backdrop-filter: blur(10px);
+
+  box-shadow:
+    0 0 20px rgba(255,165,0,0.4),
+    inset 0 0 15px rgba(255,140,0,0.4);
+
+  border:2px solid rgba(255,165,0,0.5);
 }
-/* LOGO */
-.logo-wrap{
-  display:flex;
-  justify-content:center;
-  margin-bottom:14px;
-}
+
+/* 🔥 LOGO */
 .logo{
-  width:160px;
-  max-width:80%;
+  width:180px;
+  margin-bottom:10px;
 }
 
-/* TEXT */
-p{
-  opacity:.9;
+/* 🔥 TITLE */
+.title{
+  font-size:22px;
+  font-weight:bold;
+  margin-bottom:5px;
+  color:#ffcc00;
 }
 
-/* INPUTS */
-input{
-  width:100%;
-  padding:14px;
-  margin-top:12px;
+.subtitle{
+  font-size:14px;
+  opacity:0.8;
+  margin-bottom:15px;
+}
+
+/* 🔥 INPUT BOX */
+.input-box{
+  display:flex;
+  align-items:center;
+  background: rgba(0,0,0,0.6);
+  border:1px solid rgba(255,165,0,0.5);
   border-radius:12px;
-  border:2px solid rgba(255,255,255,0.2);
-  font-size:15px;
-  outline:none;
-  background:rgba(0,0,0,0.5);
-  color:#fff;
-
-  box-shadow: 0 0 10px rgba(0,195,255,0.3);
-
-  box-sizing: border-box; /* 🔥 YE ADD KAR */
+  padding:10px;
+  margin-top:12px;
 }
 
-/* REGISTER BUTTON (UNCHANGED) */
+.input-box span{
+  margin-right:8px;
+  font-size:18px;
+}
+
+.input-box input{
+  border:none;
+  outline:none;
+  background:transparent;
+  color:#fff;
+  width:100%;
+  font-size:15px;
+}
+
+/* 🔥 BUTTON */
 button{
   width:100%;
   padding:14px;
-  margin-top:16px;
+  margin-top:18px;
   border:none;
   border-radius:12px;
-  background:#2ecc71;
+
+  background: linear-gradient(90deg,#ff3b00,#ff8c00);
   color:#fff;
   font-size:16px;
   font-weight:bold;
 
-  box-shadow:
-    0 0 10px #2ecc71,
-    0 0 20px rgba(46,204,113,0.5);
+  box-shadow:0 0 15px rgba(255,100,0,0.7);
 }
 
-/* LINKS */
+/* 🔗 LINKS */
 a{
-  color:#2ecc71;
-  text-decoration:none;
+  color:#ffcc00;
   font-weight:bold;
+  text-decoration:none;
 }
 
-/* POPUP */
-.popup{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.6);
-  display:none;
-  align-items:center;
-  justify-content:center;
+.link{
+  margin-top:12px;
+  font-size:14px;
 }
-.popup div{
-  background:#111;
-  padding:25px;
-  border-radius:14px;
-  font-size:18px;
+
+/* 🔒 FOOTER */
+.footer{
+  margin-top:14px;
+  font-size:12px;
+  opacity:0.7;
 }
 </style>
 </head>
@@ -104,31 +118,40 @@ a{
 
 <div class="container">
 
-  <!-- ✅ LOGO -->
-  <div class="logo-wrap">
-    <img src="images/IMG_20260327_085519.png" class="logo" alt="DraxBet Logo">
+  <img src="images/IMG_20260327_085519.png" class="logo">
+
+  <div class="title">REGISTER NOW</div>
+  <div class="subtitle">Join the Ultimate Casino Experience!</div>
+
+  <div class="input-box">
+    <span>📧</span>
+    <input type="email" id="email" placeholder="Enter your Email">
   </div>
 
-  <p>Create your account</p>
+  <div class="input-box">
+    <span>🔒</span>
+    <input type="password" id="password" placeholder="Enter Password">
+  </div>
 
-  <input type="email" id="email" placeholder="Email">
-  <input type="password" id="password" placeholder="Password">
-  <input type="password" id="confirm" placeholder="Confirm Password">
+  <div class="input-box">
+    <span>🔐</span>
+    <input type="password" id="confirm" placeholder="Confirm Password">
+  </div>
 
-  <button onclick="register()">REGISTER</button>
+  <button onclick="register()">SIGN UP</button>
 
-  <p style="margin-top:12px">
-    Already registered? <a href="login.html">Login</a>
-    <p style="margin-top:6px">
-  <span onclick="openSupport()" 
-  style="color:#00ffcc; cursor:pointer; font-size:14px;">
+  <div class="link">
+    Already have an account? <a href="login.html">Login Here</a>
+  </div>
+
+  <div class="link" onclick="openSupport()" style="cursor:pointer;">
     Forgot Password?
-  </span>
-  </p>
-</div>
+  </div>
 
-<div class="popup" id="popup">
-  <div id="popupText"></div>
+  <div class="footer">
+    🔒 100% Secure | SSL Encrypted | 18+
+  </div>
+
 </div>
 
 <script type="module">
