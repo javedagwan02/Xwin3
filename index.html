@@ -775,6 +775,31 @@ font-size:16px;
 <div class="game-card newgame-card" onclick="openJiliGame18()">
   <img src="images/38407-removebg-preview.png">
 </div>
+
+  <!-- GAME 19 -->
+<div class="game-card newgame-card" onclick="openJiliGame19()">
+  <img src="images/38567-removebg-preview.png">
+</div>
+
+<!-- GAME 20 -->
+<div class="game-card newgame-card" onclick="openJiliGame20()">
+  <img src="images/38568-removebg-preview.png">
+</div>
+
+<!-- GAME 21 -->
+<div class="game-card newgame-card" onclick="openJiliGame21()">
+  <img src="images/38573-removebg-preview.png">
+</div>
+
+<!-- GAME 22 -->
+<div class="game-card newgame-card" onclick="openJiliGame22()">
+  <img src="images/38569-removebg-preview.png">
+</div>
+
+<!-- GAME 23 -->
+<div class="game-card newgame-card" onclick="openJiliGame23()">
+  <img src="images/38575-removebg-preview.png">
+</div>
   
 <div class="spacer"></div>
 
@@ -1424,6 +1449,139 @@ window.openJiliGame18 = async function(){
   "https://jili-backend.onrender.com/start-game?userId="
   + userEmail +
   "&gameId=edef29b5eda8e2eaf721d7315491c51d";
+};
+  // 🔥 GAME 19
+window.openJiliGame19 = async function(){
+
+  const userEmail = localStorage.getItem("userEmail");
+
+  const userSnap = await getDocs(
+    query(collection(db,"users"), where("email","==",userEmail))
+  );
+
+  let balance = 0;
+
+  userSnap.forEach(d=>{
+    balance = Number(d.data().balance || 0);
+  });
+
+  if(balance < 10){
+    document.getElementById("depositPopup").style.display="flex";
+    return;
+  }
+
+  window.location.href =
+  "https://jili-backend.onrender.com/start-game?userId="
+  + userEmail +
+  "&gameId=c7a69ab382bd1ff0e6eb65b90a793bdd";
+};
+
+
+// 🔥 GAME 20
+window.openJiliGame20 = async function(){
+
+  const userEmail = localStorage.getItem("userEmail");
+
+  const userSnap = await getDocs(
+    query(collection(db,"users"), where("email","==",userEmail))
+  );
+
+  let balance = 0;
+
+  userSnap.forEach(d=>{
+    balance = Number(d.data().balance || 0);
+  });
+
+  if(balance < 10){
+    document.getElementById("depositPopup").style.display="flex";
+    return;
+  }
+
+  window.location.href =
+  "https://jili-backend.onrender.com/start-game?userId="
+  + userEmail +
+  "&gameId=5c2383ef253f9c36dacec4b463d61622";
+};
+
+
+// 🔥 GAME 21
+window.openJiliGame21 = async function(){
+
+  const userEmail = localStorage.getItem("userEmail");
+
+  const userSnap = await getDocs(
+    query(collection(db,"users"), where("email","==",userEmail))
+  );
+
+  let balance = 0;
+
+  userSnap.forEach(d=>{
+    balance = Number(d.data().balance || 0);
+  });
+
+  if(balance < 10){
+    document.getElementById("depositPopup").style.display="flex";
+    return;
+  }
+
+  window.location.href =
+  "https://jili-backend.onrender.com/start-game?userId="
+  + userEmail +
+  "&gameId=d2b48fe98ac2956eeefd2bc4f7e0335a";
+};
+
+
+// 🔥 GAME 22
+window.openJiliGame22 = async function(){
+
+  const userEmail = localStorage.getItem("userEmail");
+
+  const userSnap = await getDocs(
+    query(collection(db,"users"), where("email","==",userEmail))
+  );
+
+  let balance = 0;
+
+  userSnap.forEach(d=>{
+    balance = Number(d.data().balance || 0);
+  });
+
+  if(balance < 10){
+    document.getElementById("depositPopup").style.display="flex";
+    return;
+  }
+
+  window.location.href =
+  "https://jili-backend.onrender.com/start-game?userId="
+  + userEmail +
+  "&gameId=63927e939636f45e9d6d0b3717b3b1c1";
+};
+
+
+// 🔥 GAME 23
+window.openJiliGame23 = async function(){
+
+  const userEmail = localStorage.getItem("userEmail");
+
+  const userSnap = await getDocs(
+    query(collection(db,"users"), where("email","==",userEmail))
+  );
+
+  let balance = 0;
+
+  userSnap.forEach(d=>{
+    balance = Number(d.data().balance || 0);
+  });
+
+  if(balance < 10){
+    document.getElementById("depositPopup").style.display="flex";
+    return;
+  }
+
+  window.location.href =
+  "https://jili-backend.onrender.com/start-game?userId="
+  + userEmail +
+  "&gameId=4702eb871271aa62ef3f3d78f5d968c1";
 };
   window.redeemCode = async function(){
 // 🔥 CHECK USER 24H DEPOSIT
