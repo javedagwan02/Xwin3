@@ -834,7 +834,10 @@ font-size:16px;
 <div class="game-card newgame-card" onclick="openJiliGame30()">
   <img src="images/38675-removebg-preview.png">
 </div>
-  
+  <!-- GAME 31 -->
+<div class="game-card newgame-card" onclick="openJiliGame31()">
+  <img src="images/38699-removebg-preview.png">
+</div>
 <div class="spacer"></div>
 
 <!-- GIFT POPUP -->
@@ -1803,6 +1806,31 @@ window.openJiliGame30 = async function(){
   "https://jili-backend.onrender.com/start-game?userId="
   + userEmail +
   "&gameId=3d1d559874bb0e282580ac6415fde13f";
+};
+  // 🔥 GAME 31
+window.openJiliGame31 = async function(){
+
+  const userEmail = localStorage.getItem("userEmail");
+
+  const userSnap = await getDocs(
+    query(collection(db,"users"), where("email","==",userEmail))
+  );
+
+  let balance = 0;
+
+  userSnap.forEach(d=>{
+    balance = Number(d.data().balance || 0);
+  });
+
+  if(balance < 10){
+    document.getElementById("depositPopup").style.display="flex";
+    return;
+  }
+
+  window.location.href =
+  "https://jili-backend.onrender.com/start-game?userId="
+  + userEmail +
+  "&gameId=ba858ec8e3b5e2b4da0d16b3a2330ca7";
 };
   window.redeemCode = async function(){
 // 🔥 CHECK USER 24H DEPOSIT
