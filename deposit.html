@@ -296,25 +296,29 @@ userSnap.forEach(d=>{
   referredBy = d.data().referredBy || null;
 });
 
-// 🔥 SAVE DEPOSIT
-await addDoc(collection(db,"deposits"),{
+// 🔥 TURANT POPUP
+showPopup("Submitting... ⏳");
+
+// 🔥 BACKGROUND SAVE (NO AWAIT)
+addDoc(collection(db,"deposits"),{
   email: userEmail,
   amount: Number(amt),
   utr: utr,
   status: "PENDING",
   time: Date.now(),
+  referredBy: referredBy
+})
+.then(()=>{
 
-  referredBy: referredBy   // 🔥 YE SABSE IMPORTANT
+  showPopup("Deposit Submitted ✅");
+
+  document.getElementById("amount").value="";
+  document.getElementById("utr").value="";
+
+})
+.catch(e=>{
+  showPopup("Error: " + e.message);
 });
-
-    showPopup("Deposit Submitted ✅");
-
-    document.getElementById("amount").value="";
-    document.getElementById("utr").value="";
-
-  }catch(e){
-    showPopup("Error: "+e.message);
-  }
 
 };
 
