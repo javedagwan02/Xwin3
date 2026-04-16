@@ -2,86 +2,137 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Login – Colour Cash</title>
+<title>Login – 2xwin</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <style>
-/* 🌤 SKY BLUE BACKGROUND */
 body{
   margin:0;
-  font-family:Arial, sans-serif;
-
+  font-family:Arial;
   background:url("images/file_000000008f787208b840aa1446e72c62.png") no-repeat center;
   background-size:cover;
-  background-attachment:fixed;
-
   color:#fff;
 }
+
+/* 🔥 MAIN CARD */
 .container{
-  max-width:380px;
-  margin:80px auto;
+  max-width:360px;
+  margin:70px auto;
   padding:20px;
+  border-radius:20px;
   text-align:center;
+
+  background: rgba(0,0,0,0.7);
+  backdrop-filter: blur(10px);
+
+  box-shadow:
+    0 0 20px rgba(255,165,0,0.4),
+    inset 0 0 15px rgba(255,140,0,0.4);
+
+  border:2px solid rgba(255,165,0,0.5);
 }
 
-/* LOGO */
-.logo-wrap{
-  display:flex;
-  justify-content:center;
-  margin-bottom:12px;
-}
+/* 🔥 LOGO */
 .logo{
-  width:160px;
-  max-width:80%;
+  width:180px;
+  margin-bottom:10px;
 }
 
-input{
-  width:100%;
-  padding:14px;
-  margin-top:12px;
+/* 🔥 TITLE */
+.title{
+  font-size:22px;
+  font-weight:bold;
+  margin-bottom:5px;
+  color:#ffcc00;
+}
+
+.subtitle{
+  font-size:14px;
+  opacity:0.8;
+  margin-bottom:15px;
+}
+
+/* 🔥 INPUT BOX */
+.input-box{
+  display:flex;
+  align-items:center;
+  background: rgba(0,0,0,0.6);
+  border:1px solid rgba(255,165,0,0.5);
   border-radius:12px;
-  border:2px solid rgba(255,255,255,0.2);
-  font-size:15px;
-  outline:none;
-  background:rgba(0,0,0,0.5);
-  color:#fff;
-
-  box-shadow: 0 0 10px rgba(0,195,255,0.3);
-
-  box-sizing: border-box; /* 🔥 YE ADD KAR */
+  padding:10px;
+  margin-top:12px;
 }
+
+.input-box span{
+  margin-right:8px;
+  font-size:18px;
+}
+
+.input-box input{
+  border:none;
+  outline:none;
+  background:transparent;
+  color:#fff;
+  width:100%;
+  font-size:15px;
+}
+
+/* 🔥 BUTTON */
 button{
   width:100%;
   padding:14px;
-  margin-top:16px;
+  margin-top:18px;
   border:none;
   border-radius:12px;
-  background:#3498db;
+
+  background: linear-gradient(90deg,#ff3b00,#ff8c00);
   color:#fff;
   font-size:16px;
   font-weight:bold;
 
-  box-shadow:
-    0 0 10px #3498db,
-    0 0 20px rgba(52,152,219,0.5);
+  box-shadow:0 0 15px rgba(255,100,0,0.7);
 }
+
+/* 🔗 LINKS */
+a{
+  color:#ffcc00;
+  font-weight:bold;
+  text-decoration:none;
+}
+
+.link{
+  margin-top:12px;
+  font-size:14px;
+}
+
+/* 🔒 FOOTER */
+.footer{
+  margin-top:14px;
+  font-size:12px;
+  opacity:0.7;
+}
+
+/* 🔥 POPUP */
 .popup{
   position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.6);
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,0.7);
   display:none;
   align-items:center;
-  justify-content:center
+  justify-content:center;
+  z-index:9999;
 }
+
 .popup div{
-  background:#1e1e1e;
-  padding:25px;
-  border-radius:14px;
-  font-size:18px
-}
-a{
-  color:#2ecc71;
-  text-decoration:none
+  background:#111;
+  padding:20px 30px;
+  border-radius:12px;
+  font-size:16px;
+  text-align:center;
+  box-shadow:0 0 15px rgba(0,255,100,0.5);
 }
 </style>
 </head>
@@ -90,21 +141,35 @@ a{
 
 <div class="container">
 
-  <!-- ✅ LOGO -->
-  <div class="logo-wrap">
-    <img src="images/IMG_20260327_085519.png" class="logo" alt="DraxBet Logo">
+  <img src="images/IMG_20260327_085519.png" class="logo">
+
+  <div class="title">LOGIN NOW</div>
+  <div class="subtitle">Welcome back! Start winning 💰</div>
+
+  <div class="input-box">
+    <span>📧</span>
+    <input type="email" id="email" placeholder="Enter your Email">
   </div>
 
-  <p>Login to your account</p>
-
-  <input type="email" id="email" placeholder="Email">
-  <input type="password" id="password" placeholder="Password">
+  <div class="input-box">
+    <span>🔒</span>
+    <input type="password" id="password" placeholder="Enter Password">
+  </div>
 
   <button onclick="login()">LOGIN</button>
 
-  <p style="margin-top:12px">
-    New user? <a href="register.html">Register</a>
-  </p>
+  <div class="link">
+    New user? <a href="register.html">Register Here</a>
+  </div>
+
+  <div class="link" onclick="openSupport()" style="cursor:pointer;">
+    Forgot Password?
+  </div>
+
+  <div class="footer">
+    🔒 100% Secure | SSL Encrypted | 18+
+  </div>
+
 </div>
 
 <div class="popup" id="popup">
@@ -125,16 +190,19 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
-const popup = document.getElementById("popup");
-const popupText = document.getElementById("popupText");
-
+/* 🔥 POPUP */
 function showPopup(msg){
-  popupText.innerText = msg;
+  let popup = document.getElementById("popup");
+  let text = document.getElementById("popupText");
+
+  text.innerText = msg;
   popup.style.display = "flex";
-  setTimeout(()=>popup.style.display="none",1200);
+
+  setTimeout(()=> popup.style.display="none",1000);
 }
 
-window.login = () => {
+/* 🔥 LOGIN */
+window.login = async () => {
   const email = document.getElementById("email").value.trim();
   const pass = document.getElementById("password").value;
 
@@ -143,26 +211,28 @@ window.login = () => {
     return;
   }
 
-  signInWithEmailAndPassword(auth, email, pass)
-  .then((result)=>{
+  try{
+    const result = await signInWithEmailAndPassword(auth, email, pass);
     const user = result.user;
 
     localStorage.setItem("userEmail", user.email);
-    localStorage.setItem(
-      "userName",
-      user.displayName || user.email.split("@")[0]
-    );
-
-    const now = new Date().toLocaleString();
-    localStorage.setItem("lastLogin", now);
+    localStorage.setItem("userName", user.email.split("@")[0]);
+    localStorage.setItem("lastLogin", new Date().toLocaleString());
 
     showPopup("Login Successful ✅");
-    localStorage.setItem("newUser","true");
-    setTimeout(()=>location.href="index.html",1200);
-  })
-  .catch(()=>{
+
+    setTimeout(()=>{
+      window.location.href = "index.html";
+    },1000);
+
+  }catch{
     showPopup("Wrong email or password ❌");
-  });
+  }
+};
+
+/* 🔥 SUPPORT */
+window.openSupport = () => {
+  window.open("https://t.me/X2xwinxsupportk", "_blank");
 };
 </script>
 
