@@ -89,6 +89,7 @@ const app = initializeApp({
 
 const db = getFirestore(app);
 let searchTimeout;
+    let lastSearch = "";
     function handleSearch(){
   clearTimeout(searchTimeout);
 
@@ -240,18 +241,21 @@ window.rejectWithdraw = async (id)=>{
 async function loadUsers(){  
 
   const input = document.getElementById("searchUser");
-const search = input ? input.value.toLowerCase() : "";
-  console.log("SEARCH:", search);
+  const search = input ? input.value.toLowerCase() : "";
+
+  lastSearch = search; // 🔥 latest search save
 
   const container = document.getElementById("usersList");
-  container.innerHTML = ""; // ✅ sirf list clear
+  container.innerHTML = "";
 
   const snap = await getDocs(collection(db,"users"));  
+
+  // 🔥 IMPORTANT: agar user ne beech me kuch aur type kar diya
+  if(lastSearch !== search) return;
 
   snap.forEach(d=>{  
     const u = d.data();
 
-    // 🔍 FILTER
     if(search && !u.email.toLowerCase().includes(search)) return;
 
     container.innerHTML += `  
