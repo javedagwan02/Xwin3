@@ -232,7 +232,9 @@ window.rejectWithdraw = async (id)=>{
 /* ---------- USERS ---------- */
 async function loadUsers(){  
 
-  const search = document.getElementById("searchUser").value.toLowerCase();
+  const input = document.getElementById("searchUser");
+const search = input ? input.value.toLowerCase() : "";
+  console.log("SEARCH:", search);
 
   const container = document.getElementById("usersList");
   container.innerHTML = ""; // ✅ sirf list clear
