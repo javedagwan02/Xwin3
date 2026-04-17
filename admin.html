@@ -324,7 +324,33 @@ async function loadUsers(){
     </div>`;
   });
 }   
+async function loadDepositHistory(){
 
+  const container = document.getElementById("sec4");
+  container.innerHTML = "<h3 style='text-align:center'>💰 Deposit History (24 Hours)</h3>";
+
+  const now = Date.now();
+  const last24h = now - (24 * 60 * 60 * 1000);
+
+  const snap = await getDocs(collection(db,"deposits"));
+
+  snap.forEach(d=>{
+    const x = d.data();
+
+    if(x.status !== "APPROVED") return;
+    if(x.time < last24h) return; // 🔥 only 24h
+
+    container.innerHTML += `
+    <div class="card">
+      <div class="row"><span>${x.email}</span><span>₹${x.amount}</span></div>
+      <div class="row"><span>UTR</span><span>${x.utr}</span></div>
+      <div class="row"><span>Time</span><span>${
+        x.time ? new Date(x.time).toLocaleString("en-IN") : "N/A"
+      }</span></div>
+    </div>`;
+  });
+
+}
 window.changeBal = async(id,amt)=>{  
   const ref=doc(db,"users",id);  
   const snap=await getDocs(collection(db,"users"));  
