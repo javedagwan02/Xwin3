@@ -900,6 +900,38 @@ window.openTelegram = function(){
 window.openGiftBox = function(){
 document.getElementById("giftPopup").style.display="flex";
 }
+  function checkDepositAndOpen(callback){
+
+  const email = localStorage.getItem("email");
+
+  if(!email){
+    alert("Login required");
+    return;
+  }
+
+  import("https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js").then(async ({getFirestore, collection, getDocs})=>{
+
+    const db = getFirestore();
+
+    const snap = await getDocs(collection(db,"users"));
+
+    let foundUser = null;
+
+    snap.forEach(d=>{
+      if(d.data().email === email){
+        foundUser = d.data();
+      }
+    });
+
+    if(!foundUser || !foundUser.hasDeposited){
+      document.getElementById("depositPopup").style.display = "flex";
+    }else{
+      callback();
+    }
+
+  });
+
+}
   function showPopup(text){
   document.getElementById("popupText").innerText = text;
   document.getElementById("successPopup").style.display = "flex";
