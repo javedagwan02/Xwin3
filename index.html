@@ -910,7 +910,7 @@ document.getElementById("giftPopup").style.display="flex";
   const email = localStorage.getItem("email");
 
   if(!email){
-    alert("Login required");
+    document.getElementById("customPopup").style.display = "flex";
     return;
   }
 
@@ -928,7 +928,6 @@ document.getElementById("giftPopup").style.display="flex";
     });
 
     if(!foundUser || !foundUser.hasDeposited){
-      // 🔥 YAHI CHANGE KAR
       document.getElementById("customPopup").style.display = "flex";
     }else{
       callback();
@@ -936,7 +935,8 @@ document.getElementById("giftPopup").style.display="flex";
 
   });
 
-  }
+}
+  
   function showPopup(text){
   document.getElementById("popupText").innerText = text;
   document.getElementById("successPopup").style.display = "flex";
