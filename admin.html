@@ -47,33 +47,11 @@ header{background:linear-gradient(135deg,#ff6a6a,#ff8e8e);padding:18px;text-alig
   <div class="tab active" onclick="openTab(0)">Deposits</div>  
   <div class="tab" onclick="openTab(1)">Withdraws</div>  
   <div class="tab" onclick="openTab(2)">Users</div>  
-  <div class="tab" onclick="openTab(3)">House Edge</div>  
+  <div class="tab" onclick="openTab(3)">History</div>  
 </div>  <div class="section active" id="sec0"></div>  
 <div class="section" id="sec1"></div>  
-<div class="section" id="sec2"></div>  <div class="section" id="sec3">  
-  <div class="edge-panel">  
-    <div class="edge-title">🎮 House Edge (SHOW-OFF ONLY)</div>  
-    <div class="edge-item">🎨 WIN GO <input type="range" value="20"><span>20%</span></div>  
-    <div class="edge-item">💣 MINES <input type="range" value="25"><span>25%</span></div>  
-    <div class="edge-item">✈️ AVIATOR <input type="range" value="50"><span>50%</span></div>  
-    <div class="edge-item">🐉 DRAGON TIGER <input type="range" value="22"><span>22%</span></div>  
-    <div class="edge-item">🎰 ROULETTE <input type="range" value="18"><span>18%</span></div>  
-    <div class="edge-item">✈️ AVIATOR REAL <input type="range" value="35"><span>35%</span></div>  
-    <div class="edge-item">🪙 COIN FLIP <input type="range" value="39"><span>39%</span></div>  
-    <div class="edge-item">💎 TREASURE <input type="range" value="40"><span>40%</span></div>  
-    <div class="edge-item">🐔 CHICKEN ROAD <input type="range" value="28"><span>28%</span></div>  
-    <div class="edge-item">🎲 DICE ROLL <input type="range" value="12"><span>12%</span></div>  
-    <div class="edge-item">⚪ PLINKO <input type="range" value="50"><span>50%</span></div>  
-    <div class="edge-item">🚗 DRAX TURBO <input type="range" value="50"><span>50%</span></div>  
-    <div class="edge-item">⏹️ SPIN STOP <input type="range" value="15"><span>15%</span></div>  
-    <div class="edge-item">🐎 HORSE RACE <input type="range" value="33"><span>33%</span></div>  
-    <div class="edge-item">🙏 GANESH SLOTS <input type="range" value="44"><span>44%</span></div>  
-    <div class="edge-item">🔥 KENO <input type="range" value="50"><span>50%</span></div>  
-    <div class="edge-item">⚡ FATE SHIFT <input type="range" value="26"><span>26%</span></div>  
-    <div class="edge-item">⬆️⬇️ HILO <input type="range" value="22"><span>22%</span></div>  
-    <div class="edge-item">🐲 DRAGON TOWER <input type="range" value="38"><span>38%</span></div>  
-    <div class="edge-item">🎈 BALLOON CRASH <input type="range" value="35"><span>35%</span></div>  
-  </div>  
+<div class="section" id="sec2"></div>    
+  <div class="section" id="sec3"></div>
 </div>  
 
   <script type="module">
@@ -100,9 +78,13 @@ const app = initializeApp({
 const db = getFirestore(app);
 
 /* ---------- TABS ---------- */
-window.openTab=i=>{  
-  document.querySelectorAll(".tab").forEach((t,n)=>t.classList.toggle("active",n===i));  
-  document.querySelectorAll(".section").forEach((s,n)=>s.classList.toggle("active",n===i));  
+window.openTab = i => {
+  document.querySelectorAll(".tab").forEach((t,n)=>t.classList.toggle("active",n===i));
+  document.querySelectorAll(".section").forEach((s,n)=>s.classList.toggle("active",n===i));
+
+  if(i === 3){
+    loadHistory(); // 🔥 history load
+  }
 };
 
 /* ---------- DASHBOARD ---------- */
@@ -274,6 +256,40 @@ async function loadUsers(){
     </div>`;  
   });  
 }
+ async function loadHistory(){
+  sec3.innerHTML = "";
+
+  const snap = await getDocs(collection(db,"withdraws"));
+
+  snap.forEach(d=>{
+    const w = d.data();
+
+    if(w.status !== "APPROVED") return; // ✅ sirf approved history
+
+    let details = "";
+
+    if(w.method === "UPI"){
+      details = `<div class="row"><span>UPI</span><span>${w.upiId}</span></div>`;
+    }else{
+      details = `
+      <div class="row"><span>Holder</span><span>${w.bankDetails?.holder}</span></div>
+      <div class="row"><span>Bank</span><span>${w.bankDetails?.bank}</span></div>
+      <div class="row"><span>Account</span><span>${w.bankDetails?.account}</span></div>
+      <div class="row"><span>IFSC</span><span>${w.bankDetails?.ifsc}</span></div>`;
+    }
+
+    sec3.innerHTML += `
+    <div class="card">
+      <div class="row"><span>${w.email}</span><span>₹${w.amount}</span></div>
+      <div class="row"><span>Time</span><span>${
+        w.timeStamp 
+          ? new Date(w.timeStamp).toLocaleString("en-IN") 
+          : "N/A"
+      }</span></div>
+      ${details}
+    </div>`;
+  });
+}   
 
 window.changeBal = async(id,amt)=>{  
   const ref=doc(db,"users",id);  
