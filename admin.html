@@ -54,13 +54,19 @@ header{background:linear-gradient(135deg,#ff6a6a,#ff8e8e);padding:18px;text-alig
 <div class="section" id="sec2">
 
   <!-- 🔍 SEARCH BOX -->
-  <input 
+<input 
   type="text" 
   id="searchUser" 
   placeholder="🔍 Search by Gmail..." 
-  style="width:100%;padding:12px;border:none;border-radius:10px;margin-bottom:10px"
-  oninput="handleSearch()"
+  style="width:70%;padding:12px;border:none;border-radius:10px;margin-bottom:10px"
+/>
+
+<button 
+  onclick="searchUserBtn()" 
+  style="padding:12px;border:none;border-radius:10px;background:#ff8e8e;color:#fff;font-weight:bold"
 >
+Search
+</button>
 <div id="usersList"></div>
 </div>  
   
@@ -293,6 +299,25 @@ async function loadUsers(){
     </div>`;  
   });  
 }
+   function searchUserBtn(){
+  const input = document.getElementById("searchUser").value.toLowerCase();
+
+  const container = document.getElementById("usersList");
+  container.innerHTML = "";
+
+  getDocs(collection(db,"users")).then(snap=>{
+    snap.forEach(d=>{
+      const u = d.data();
+
+      if(!u.email.toLowerCase().includes(input)) return;
+
+      container.innerHTML += `
+      <div class="card">  
+        <div class="row"><span>${u.email}</span><span>₹${u.balance||0}</span></div>  
+      </div>`;
+    });
+  });
+} 
 async function loadDepositHistory(){
 
   const container = document.getElementById("sec4");
