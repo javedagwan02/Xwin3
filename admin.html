@@ -89,6 +89,7 @@ const app = initializeApp({
 });  
 
 const db = getFirestore(app);
+    let allUsers = [];
 let searchTimeout;
     let lastSearch = "";
     function handleSearch(){
@@ -248,18 +249,20 @@ async function loadUsers(){
   const input = document.getElementById("searchUser");
   const search = input ? input.value.toLowerCase() : "";
 
-  lastSearch = search; // 🔥 latest search save
-
   const container = document.getElementById("usersList");
   container.innerHTML = "";
 
-  const snap = await getDocs(collection(db,"users"));  
+  // 🔥 only first time fetch
+  if(allUsers.length === 0){
+    const snap = await getDocs(collection(db,"users"));
+    allUsers = snap.docs.map(d => ({
+      id: d.id,
+      ...d.data()
+    }));
+  }
 
-  // 🔥 IMPORTANT: agar user ne beech me kuch aur type kar diya
-  if(lastSearch !== search) return;
-
-  snap.forEach(d=>{  
-    const u = d.data();
+  // 🔍 FILTER from memory (FAST)
+  allUsers.forEach(u => {
 
     if(search && !u.email.toLowerCase().includes(search)) return;
 
@@ -277,53 +280,19 @@ async function loadUsers(){
       </div>
 
       <div class="row">
-        <input id="amt-${d.id}" type="number" placeholder="Amount" style="width:90px">
-        <button class="btn approve" onclick="addAmount('${d.id}')">ADD</button>
+        <input id="amt-${u.id}" type="number" placeholder="Amount" style="width:90px">
+        <button class="btn approve" onclick="addAmount('${u.id}')">ADD</button>
       </div>
 
       <div class="row">
-        <button class="btn reject" onclick="deleteUser('${d.id}')">DELETE</button>
+        <button class="btn reject" onclick="deleteUser('${u.id}')">DELETE</button>
       </div>
 
-      <button class="btn approve" onclick="changeBal('${d.id}',100)">+100</button>  
-      <button class="btn reject" onclick="changeBal('${d.id}',-100)">-100</button>  
+      <button class="btn approve" onclick="changeBal('${u.id}',100)">+100</button>  
+      <button class="btn reject" onclick="changeBal('${u.id}',-100)">-100</button>  
     </div>`;  
   });  
 }
- async function loadHistory(){
-  sec3.innerHTML = "";
-
-  const snap = await getDocs(collection(db,"withdraws"));
-
-  snap.forEach(d=>{
-    const w = d.data();
-
-    if(w.status !== "APPROVED") return; // ✅ sirf approved history
-
-    let details = "";
-
-    if(w.method === "UPI"){
-      details = `<div class="row"><span>UPI</span><span>${w.upiId}</span></div>`;
-    }else{
-      details = `
-      <div class="row"><span>Holder</span><span>${w.bankDetails?.holder}</span></div>
-      <div class="row"><span>Bank</span><span>${w.bankDetails?.bank}</span></div>
-      <div class="row"><span>Account</span><span>${w.bankDetails?.account}</span></div>
-      <div class="row"><span>IFSC</span><span>${w.bankDetails?.ifsc}</span></div>`;
-    }
-
-    sec3.innerHTML += `
-    <div class="card">
-      <div class="row"><span>${w.email}</span><span>₹${w.amount}</span></div>
-      <div class="row"><span>Time</span><span>${
-        w.timeStamp 
-          ? new Date(w.timeStamp).toLocaleString("en-IN") 
-          : "N/A"
-      }</span></div>
-      ${details}
-    </div>`;
-  });
-}   
 async function loadDepositHistory(){
 
   const container = document.getElementById("sec4");
