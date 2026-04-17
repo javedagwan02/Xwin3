@@ -260,7 +260,7 @@ async function register(){
     await setDoc(doc(db, "users", user.uid), {
       email: user.email,
       username: username,
-      balance: 51,
+      balance: 30,
       signupBonus: true,
       role: "user",
       timeStamp: Date.now(),
