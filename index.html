@@ -909,16 +909,16 @@ document.getElementById("giftPopup").style.display="flex";
 
   const email = localStorage.getItem("email");
 
+  // ❌ login nahi hai → direct deposit popup
   if(!email){
-    document.getElementById("successPopup").style.display = "flex";
-    document.getElementById("popupText").innerText = "Login required";
+    document.getElementById("depositPopup").style.display = "flex";
     return;
   }
 
   import("https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js")
   .then(async ({getFirestore, collection, getDocs})=>{
 
-    const db = getFirestore(window.firebaseApp); // 🔥 FIX
+    const db = getFirestore(window.firebaseApp);
 
     const snap = await getDocs(collection(db,"users"));
 
@@ -930,15 +930,13 @@ document.getElementById("giftPopup").style.display="flex";
       }
     });
 
+    // ❌ deposit nahi kiya → deposit popup
     if(!foundUser || !foundUser.hasDeposited){
-      document.getElementById("successPopup").style.display = "flex";
-      document.getElementById("popupText").innerText = "Minimum ₹100 deposit required";
+      document.getElementById("depositPopup").style.display = "flex";
     }else{
-      callback(); // ✅ GAME OPEN
+      callback(); // ✅ game open
     }
 
-  }).catch(err=>{
-    console.log("Error:", err);
   });
 
   }
