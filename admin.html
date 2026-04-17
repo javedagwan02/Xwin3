@@ -50,7 +50,19 @@ header{background:linear-gradient(135deg,#ff6a6a,#ff8e8e);padding:18px;text-alig
   <div class="tab" onclick="openTab(3)">History</div>  
 </div>  <div class="section active" id="sec0"></div>  
 <div class="section" id="sec1"></div>  
-<div class="section" id="sec2"></div>    
+<div class="section" id="sec2">
+
+  <!-- 🔍 SEARCH BOX -->
+  <input 
+    type="text" 
+    id="searchUser" 
+    placeholder="🔍 Search by Gmail..." 
+    style="width:100%;padding:12px;border:none;border-radius:10px;margin-bottom:10px"
+    oninput="loadUsers()"
+  >
+
+</div>  
+  
   <div class="section" id="sec3"></div>
 </div>  
 
@@ -219,29 +231,38 @@ window.rejectWithdraw = async (id)=>{
 
 /* ---------- USERS ---------- */
 async function loadUsers(){  
-  sec2.innerHTML="";  
-  const snap=await getDocs(collection(db,"users"));  
+  sec2.innerHTML = `
+    <input 
+      type="text" 
+      id="searchUser" 
+      placeholder="🔍 Search by Gmail..." 
+      style="width:100%;padding:12px;border:none;border-radius:10px;margin-bottom:10px"
+      oninput="loadUsers()"
+    />
+  `;
+
+  const snap = await getDocs(collection(db,"users"));  
+  const search = document.getElementById("searchUser").value.toLowerCase();
 
   snap.forEach(d=>{  
-    const u=d.data();
+    const u = d.data();
 
-    sec2.innerHTML+=`  
+    // 🔥 SEARCH FILTER
+    if(search && !u.email.toLowerCase().includes(search)) return;
+
+    sec2.innerHTML += `  
     <div class="card">  
       <div class="row"><span>${u.email}</span><span>₹${u.balance||0}</span></div>  
+
       <div class="row">
-  <span>Registered</span>
-  <span>${
-    u.timeStamp 
-      ? new Date(u.timeStamp).toLocaleString("en-IN",{
-          day: "2-digit",
-          month: "short",
-          year: "numeric",
-          hour: "2-digit",
-          minute: "2-digit"
-        })
-      : "N/A"
-  }</span>
-</div>
+        <span>Registered</span>
+        <span>${
+          u.timeStamp 
+            ? new Date(u.timeStamp).toLocaleString("en-IN")
+            : "N/A"
+        }</span>
+      </div>
+
       <div class="row">
         <input id="amt-${d.id}" type="number" placeholder="Amount" style="width:90px">
         <button class="btn approve" onclick="addAmount('${d.id}')">ADD</button>
