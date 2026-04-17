@@ -231,26 +231,23 @@ window.rejectWithdraw = async (id)=>{
 
 /* ---------- USERS ---------- */
 async function loadUsers(){  
-  sec2.innerHTML = `
-    <input 
-      type="text" 
-      id="searchUser" 
-      placeholder="🔍 Search by Gmail..." 
-      style="width:100%;padding:12px;border:none;border-radius:10px;margin-bottom:10px"
-      oninput="loadUsers()"
-    />
-  `;
+
+  const searchInput = document.getElementById("searchUser");
+  const search = searchInput ? searchInput.value.toLowerCase() : "";
+
+  // ❌ pura sec2 reset mat kar
+  // ✅ sirf cards remove kar
+  document.querySelectorAll("#sec2 .card").forEach(e=>e.remove());
 
   const snap = await getDocs(collection(db,"users"));  
-  const search = document.getElementById("searchUser").value.toLowerCase();
 
   snap.forEach(d=>{  
     const u = d.data();
 
-    // 🔥 SEARCH FILTER
+    // 🔍 FILTER
     if(search && !u.email.toLowerCase().includes(search)) return;
 
-    sec2.innerHTML += `  
+    document.getElementById("sec2").innerHTML += `  
     <div class="card">  
       <div class="row"><span>${u.email}</span><span>₹${u.balance||0}</span></div>  
 
