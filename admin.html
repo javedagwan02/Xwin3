@@ -47,7 +47,8 @@ header{background:linear-gradient(135deg,#ff6a6a,#ff8e8e);padding:18px;text-alig
   <div class="tab active" onclick="openTab(0)">Deposits</div>  
   <div class="tab" onclick="openTab(1)">Withdraws</div>  
   <div class="tab" onclick="openTab(2)">Users</div>  
-  <div class="tab" onclick="openTab(3)">History</div>  
+  <div class="tab" onclick="openTab(3)">History</div> 
+  <div class="tab" onclick="openTab(4)">Deposits History</div>
 </div>  <div class="section active" id="sec0"></div>  
 <div class="section" id="sec1"></div>  
 <div class="section" id="sec2">
@@ -65,7 +66,7 @@ header{background:linear-gradient(135deg,#ff6a6a,#ff8e8e);padding:18px;text-alig
   
   <div class="section" id="sec3"></div>
 </div>  
-
+<div class="section" id="sec4"></div>
   <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
@@ -103,7 +104,11 @@ window.openTab = i => {
   document.querySelectorAll(".section").forEach((s,n)=>s.classList.toggle("active",n===i));
 
   if(i === 3){
-    loadHistory(); // 🔥 history load
+    loadHistory();
+  }
+
+  if(i === 4){
+    loadDepositHistory(); // 🔥 NEW
   }
 };
 
