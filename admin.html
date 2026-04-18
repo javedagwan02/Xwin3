@@ -303,7 +303,7 @@ async function loadUsers(){
 
   const snap = await getDocs(collection(db,"withdraws"));
 
-  let totalWithdraw = 0;
+  let found = false;
 
   snap.forEach(d=>{
     const w = d.data();
@@ -311,18 +311,38 @@ async function loadUsers(){
     if(w.status !== "APPROVED") return;
     if(!w.timeStamp || w.timeStamp < last30Days) return;
 
-    totalWithdraw += Number(w.amount || 0);
+    found = true;
+
+    let extra = "";
+
+    if(w.method === "UPI"){
+      extra = `<div class="row"><span>UPI</span><span>${w.upiId}</span></div>`;
+    } else {
+      extra = `
+      <div class="row"><span>Holder</span><span>${w.bankDetails?.holder || "-"}</span></div>
+      <div class="row"><span>Bank</span><span>${w.bankDetails?.bank || "-"}</span></div>
+      <div class="row"><span>Account</span><span>${w.bankDetails?.account || "-"}</span></div>
+      <div class="row"><span>IFSC</span><span>${w.bankDetails?.ifsc || "-"}</span></div>`;
+    }
+
+    container.innerHTML += `
+    <div class="card">
+      <div class="row"><span>${w.email}</span><span>₹${w.amount}</span></div>
+      
+      <div class="row">
+        <span>Time</span>
+        <span>${w.timeStamp ? new Date(w.timeStamp).toLocaleString("en-IN") : "N/A"}</span>
+      </div>
+
+      ${extra}
+    </div>`;
   });
 
-  container.innerHTML += `
-    <div class="card">
-      <div class="row">
-        <span>Total Withdraw (30 Days)</span>
-        <span>₹${totalWithdraw}</span>
-      </div>
-    </div>
-  `;
-}
+  if(!found){
+    container.innerHTML += "<p style='text-align:center'>❌ No Withdraw Found</p>";
+  }
+    }
+    
 async function loadDepositHistory(){
 
   const container = document.getElementById("sec4");
