@@ -293,6 +293,36 @@ async function loadUsers(){
     </div>`;  
   });  
 }
+    async function loadHistory(){
+
+  const container = document.getElementById("sec3");
+  container.innerHTML = "<h3 style='text-align:center'>📊 Last 30 Days Withdraw</h3>";
+
+  const now = Date.now();
+  const last30Days = now - (30 * 24 * 60 * 60 * 1000);
+
+  const snap = await getDocs(collection(db,"withdraws"));
+
+  let totalWithdraw = 0;
+
+  snap.forEach(d=>{
+    const w = d.data();
+
+    if(w.status !== "APPROVED") return;
+    if(!w.timeStamp || w.timeStamp < last30Days) return;
+
+    totalWithdraw += Number(w.amount || 0);
+  });
+
+  container.innerHTML += `
+    <div class="card">
+      <div class="row">
+        <span>Total Withdraw (30 Days)</span>
+        <span>₹${totalWithdraw}</span>
+      </div>
+    </div>
+  `;
+}
 async function loadDepositHistory(){
 
   const container = document.getElementById("sec4");
