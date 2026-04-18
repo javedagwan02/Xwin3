@@ -249,6 +249,9 @@ window.openReferralDetails = async function(){
 
     if(user.referredBy == myCode){
 
+      let totalDeposit = 0;
+      let lastTime = null;
+
       const depSnap = await getDocs(
         query(collection(db,"deposits"),
         where("email","==",user.email))
@@ -257,22 +260,31 @@ window.openReferralDetails = async function(){
       depSnap.forEach(d=>{
         let data = d.data();
 
-        if(data.status === "APPROVED"){
+        // 🔥 time fix (time ya timeStamp dono check)
+        let t = data.time || data.timeStamp || 0;
 
-          // 🔥 3 MONTH FILTER
-          if(now - (data.time || 0) <= threeMonth){
+        if(data.status === "APPROVED" && (now - t <= threeMonth)){
 
-            html += `
-            <div style="background:#fff;padding:10px;margin-top:10px;border-radius:10px;color:#000;">
-              📧 ${user.email}<br>
-              💰 ₹${data.amount}<br>
-              🕒 ${new Date(data.time).toLocaleString()}
-            </div>
-            `;
+          totalDeposit += Number(data.amount || 0);
+
+          // latest time save
+          if(!lastTime || t > lastTime){
+            lastTime = t;
           }
-
         }
       });
+
+      // 🔥 agar kuch deposit mila
+      if(totalDeposit > 0){
+
+        html += `
+        <div style="background:#fff;padding:10px;margin-top:10px;border-radius:10px;color:#000;">
+          📧 ${user.email}<br>
+          💰 Total Deposit: ₹${totalDeposit}<br>
+          🕒 ${lastTime ? new Date(lastTime).toLocaleString() : "N/A"}
+        </div>
+        `;
+      }
 
     }
   }
