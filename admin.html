@@ -53,25 +53,21 @@ header{background:linear-gradient(135deg,#ff6a6a,#ff8e8e);padding:18px;text-alig
 <div class="section" id="sec1"></div>  
 <div class="section" id="sec2">
 
-  <!-- 🔍 SEARCH -->
+  <!-- 🔍 SEARCH BOX -->
   <input 
-    type="text" 
-    id="searchUser" 
-    placeholder="🔍 Search by Gmail..." 
-    onkeyup="loadUsers()" 
-    style="width:70%;padding:12px;border:none;border-radius:10px;margin-bottom:10px"
-  />
-
-  <!-- 👇 USERS LIST -->
-  <div id="usersList"></div>
-
-</div>
+  type="text" 
+  id="searchUser" 
+  placeholder="🔍 Search by Gmail..." 
+  style="width:100%;padding:12px;border:none;border-radius:10px;margin-bottom:10px"
+  oninput="handleSearch()"
+>
+<div id="usersList"></div>
+</div>  
   
   <div class="section" id="sec3"></div>
 </div>  
 <div class="section" id="sec4"></div>
-  
-<script type="module">
+  <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { 
@@ -81,6 +77,7 @@ import {
   updateDoc, 
   doc,
   deleteDoc,
+  setDoc,
   getDoc,
   onSnapshot
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
@@ -92,17 +89,28 @@ const app = initializeApp({
 });  
 
 const db = getFirestore(app);
+    let allUsers = [];
+let searchTimeout;
+    let lastSearch = "";
+    function handleSearch(){
+  clearTimeout(searchTimeout);
 
-/* ---------- GLOBAL ---------- */
-let allUsers = [];
-
+  searchTimeout = setTimeout(() => {
+    loadUsers();
+  }, 300); // 🔥 300ms delay
+}
 /* ---------- TABS ---------- */
 window.openTab = i => {
   document.querySelectorAll(".tab").forEach((t,n)=>t.classList.toggle("active",n===i));
   document.querySelectorAll(".section").forEach((s,n)=>s.classList.toggle("active",n===i));
 
-  if(i === 3) loadHistory();
-  if(i === 4) loadDepositHistory();
+  if(i === 3){
+    loadHistory();
+  }
+
+  if(i === 4){
+    loadDepositHistory(); // 🔥 NEW
+  }
 };
 
 /* ---------- DASHBOARD ---------- */
@@ -146,9 +154,13 @@ async function loadDeposits(){
 }
 
 window.approveDeposit = async (id,email,amt)=>{  
-  await updateDoc(doc(db,"deposits",id),{status:"APPROVED"});  
+
+  await updateDoc(doc(db,"deposits",id),{
+    status:"APPROVED"
+  });  
 
   const users = await getDocs(collection(db,"users"));  
+
   users.forEach(u=>{  
     if(u.data().email === email){  
       updateDoc(doc(db,"users",u.id),{
@@ -168,18 +180,33 @@ window.rejectDeposit = async (id)=>{
   loadDashboard();  
 };
 
-/* ---------- WITHDRAWS ---------- */
+/* ---------- WITHDRAWS (REALTIME) ---------- */
 onSnapshot(collection(db,"withdraws"), (snap)=>{
   sec1.innerHTML="";
 
   snap.forEach(d=>{
     const w=d.data();
+
     if(w.status !== "PENDING") return;
+
+    let extra="";
+    if(w.method==="UPI"){
+      extra=`<div class="row"><span>UPI</span><span>${w.upiId}</span></div>`;
+    }else{
+      extra=`
+      <div class="row"><span>Holder</span><span>${w.bankDetails?.holder}</span></div>
+      <div class="row"><span>Bank</span><span>${w.bankDetails?.bank}</span></div>
+      <div class="row"><span>Account</span><span>${w.bankDetails?.account}</span></div>
+      <div class="row"><span>IFSC</span><span>${w.bankDetails?.ifsc}</span></div>`;
+    }
 
     sec1.innerHTML+=`
     <div class="card">
       <div class="row"><span>${w.email}</span><span>₹${w.amount}</span></div>
-      <div class="row"><span>Time</span><span>${w.timeStamp ? new Date(w.timeStamp).toLocaleString() : "N/A"}</span></div>
+      <div class="row"><span>Time</span><span>${
+  w.timeStamp ? new Date(w.timeStamp).toLocaleString() : "N/A"
+      }</span></div>
+      ${extra}
       <div class="row">
         <button class="btn approve" onclick="approveWithdraw('${d.id}')">Approve</button>
         <button class="btn reject" onclick="rejectWithdraw('${d.id}')">Reject</button>
@@ -194,16 +221,21 @@ window.approveWithdraw = async (id)=>{
 };
 
 window.rejectWithdraw = async (id)=>{
+
   const wRef = doc(db,"withdraws",id);
-  const data = (await getDoc(wRef)).data();
+  const wDoc = await getDoc(wRef);
+  const data = wDoc.data();
+
+  let email = data.email;
+  let amount = Number(data.amount || 0);
 
   await updateDoc(wRef,{status:"REJECTED"});
 
   const users = await getDocs(collection(db,"users"));
   users.forEach(async u=>{
-    if(u.data().email === data.email){
+    if(u.data().email === email){
       await updateDoc(doc(db,"users",u.id),{
-        balance:(u.data().balance||0) + Number(data.amount||0)
+        balance:(u.data().balance||0) + amount
       });
     }
   });
@@ -211,14 +243,16 @@ window.rejectWithdraw = async (id)=>{
   loadDashboard();
 };
 
-/* ---------- USERS (FIXED) ---------- */
+/* ---------- USERS ---------- */
 async function loadUsers(){  
+
   const input = document.getElementById("searchUser");
-  const search = input ? input.value.toLowerCase().trim() : "";
+  const search = input ? input.value.toLowerCase() : "";
 
   const container = document.getElementById("usersList");
   container.innerHTML = "";
 
+  // 🔥 only first time fetch
   if(allUsers.length === 0){
     const snap = await getDocs(collection(db,"users"));
     allUsers = snap.docs.map(d => ({
@@ -227,34 +261,65 @@ async function loadUsers(){
     }));
   }
 
-  let found = false;
-
+  // 🔍 FILTER from memory (FAST)
   allUsers.forEach(u => {
-    if(search && !u.email.toLowerCase().includes(search)) return;
 
-    found = true;
+    if(search && !u.email.toLowerCase().includes(search)) return;
 
     container.innerHTML += `  
     <div class="card">  
       <div class="row"><span>${u.email}</span><span>₹${u.balance||0}</span></div>  
+
+      <div class="row">
+        <span>Registered</span>
+        <span>${
+          u.timeStamp 
+            ? new Date(u.timeStamp).toLocaleString("en-IN")
+            : "N/A"
+        }</span>
+      </div>
+
+      <div class="row">
+        <input id="amt-${u.id}" type="number" placeholder="Amount" style="width:90px">
+        <button class="btn approve" onclick="addAmount('${u.id}')">ADD</button>
+      </div>
+
+      <div class="row">
+        <button class="btn reject" onclick="deleteUser('${u.id}')">DELETE</button>
+      </div>
+
+      <button class="btn approve" onclick="changeBal('${u.id}',100)">+100</button>  
+      <button class="btn reject" onclick="changeBal('${u.id}',-100)">-100</button>  
+    </div>`;  
+  });  
+}
+async function loadDepositHistory(){
+
+  const container = document.getElementById("sec4");
+  container.innerHTML = "<h3 style='text-align:center'>💰 Deposit History (24 Hours)</h3>";
+
+  const now = Date.now();
+  const last24h = now - (24 * 60 * 60 * 1000);
+
+  const snap = await getDocs(collection(db,"deposits"));
+
+  snap.forEach(d=>{
+    const x = d.data();
+
+    if(x.status !== "APPROVED") return;
+    if(x.time < last24h) return; // 🔥 only 24h
+
+    container.innerHTML += `
+    <div class="card">
+      <div class="row"><span>${x.email}</span><span>₹${x.amount}</span></div>
+      <div class="row"><span>UTR</span><span>${x.utr}</span></div>
+      <div class="row"><span>Time</span><span>${
+        x.time ? new Date(x.time).toLocaleString("en-IN") : "N/A"
+      }</span></div>
     </div>`;
   });
 
-  if(!found){
-    container.innerHTML = "<p style='text-align:center'>❌ No User Found</p>";
-  }
 }
-
-/* ---------- USER ACTIONS ---------- */
-window.deleteUser = async(id)=>{
-  if(!confirm("Delete user?")) return;
-  await deleteDoc(doc(db,"users",id));
-
-  allUsers = [];
-  loadUsers();
-  loadDashboard();
-};
-
 window.changeBal = async(id,amt)=>{  
   const ref=doc(db,"users",id);  
   const snap=await getDocs(collection(db,"users"));  
@@ -265,11 +330,11 @@ window.changeBal = async(id,amt)=>{
     }  
   });  
 
-  allUsers = [];
   loadUsers();
   loadDashboard();  
 };
 
+/* ---------- EXTRA ---------- */
 window.addAmount = async(id)=>{
   const input = document.getElementById("amt-"+id);
   const amt = Number(input.value);
@@ -286,39 +351,21 @@ window.addAmount = async(id)=>{
     }
   });
 
-  allUsers = [];
   loadUsers();
   loadDashboard();
 };
 
-/* ---------- HISTORY ---------- */
-async function loadDepositHistory(){
-  const container = document.getElementById("sec4");
-  container.innerHTML = "<h3 style='text-align:center'>💰 Deposit History (24 Hours)</h3>";
-
-  const now = Date.now();
-  const last24h = now - (24 * 60 * 60 * 1000);
-
-  const snap = await getDocs(collection(db,"deposits"));
-
-  snap.forEach(d=>{
-    const x = d.data();
-    if(x.status !== "APPROVED") return;
-    if(x.time < last24h) return;
-
-    container.innerHTML += `
-    <div class="card">
-      <div class="row"><span>${x.email}</span><span>₹${x.amount}</span></div>
-    </div>`;
-  });
-}
+window.deleteUser = async(id)=>{
+  if(!confirm("Delete user?")) return;
+  await deleteDoc(doc(db,"users",id));
+  loadUsers();
+  loadDashboard();
+};
 
 /* ---------- INIT ---------- */
 loadDashboard();
 loadDeposits();
 loadUsers();
-
-        </script>
 
   </script>
 </body>  
