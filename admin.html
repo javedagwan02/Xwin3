@@ -246,56 +246,7 @@ window.rejectWithdraw = async (id)=>{
   loadDashboard();
 };
 
-/* ---------- USERS ---------- */
-async function loadUsers(){  
 
-  const input = document.getElementById("searchUser");
-  const search = input ? input.value.toLowerCase() : "";
-
-  const container = document.getElementById("usersList");
-  container.innerHTML = "";
-
-  // 🔥 only first time fetch
-  if(allUsers.length === 0){
-    const snap = await getDocs(collection(db,"users"));
-    allUsers = snap.docs.map(d => ({
-      id: d.id,
-      ...d.data()
-    }));
-  }
-
-  // 🔍 FILTER from memory (FAST)
-  allUsers.forEach(u => {
-
-    if(search && !u.email.toLowerCase().includes(search)) return;
-
-    container.innerHTML += `  
-    <div class="card">  
-      <div class="row"><span>${u.email}</span><span>₹${u.balance||0}</span></div>  
-
-      <div class="row">
-        <span>Registered</span>
-        <span>${
-          u.timeStamp 
-            ? new Date(u.timeStamp).toLocaleString("en-IN")
-            : "N/A"
-        }</span>
-      </div>
-
-      <div class="row">
-        <input id="amt-${u.id}" type="number" placeholder="Amount" style="width:90px">
-        <button class="btn approve" onclick="addAmount('${u.id}')">ADD</button>
-      </div>
-
-      <div class="row">
-        <button class="btn reject" onclick="deleteUser('${u.id}')">DELETE</button>
-      </div>
-
-      <button class="btn approve" onclick="changeBal('${u.id}',100)">+100</button>  
-      <button class="btn reject" onclick="changeBal('${u.id}',-100)">-100</button>  
-    </div>`;  
-  });  
-}
    let allUsers = [];
 
 // 🔥 USERS LOAD + SEARCH
