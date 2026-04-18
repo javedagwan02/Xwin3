@@ -169,6 +169,7 @@ input{
 <button class="pay" onclick="payNow()">PAY NOW</button>
 
   <button class="submit" onclick="submitUTR()">Submit UTR</button>
+  <button class="submit" onclick="openVideo()">How To Deposit</button>
   
 </div>
 
@@ -327,6 +328,16 @@ window.closePopup = function(){
   document.getElementById("popup").style.display = "none";
 }
 
+  // 🎥 OPEN VIDEO
+window.openVideo = function(){
+  document.getElementById("videoPopup").style.display = "flex";
+}
+
+// ❌ CLOSE VIDEO
+window.closeVideo = function(){
+  document.getElementById("videoPopup").style.display = "none";
+  document.getElementById("depositVideo").pause();
+}  
 /* INIT */
 selectChannel(0);
 
@@ -349,6 +360,22 @@ window.onload = function(){
 }
 
   </script>
+<!-- 🎥 VIDEO POPUP -->
+<div id="videoPopup" style="position:fixed;inset:0;display:none;justify-content:center;align-items:center;background:rgba(0,0,0,0.9);z-index:9999;">
+  
+  <div style="width:90%;max-width:400px;">
+    
+    <video id="depositVideo" width="100%" controls style="border-radius:12px;">
+      <source src="video/deposit.mp4" type="video/mp4">
+    </video>
 
+    <button onclick="closeVideo()" 
+      style="margin-top:10px;width:100%;padding:10px;background:red;border:none;border-radius:10px;color:#fff;">
+      Close
+    </button>
+
+  </div>
+
+</div>
 </body>
 </html>
