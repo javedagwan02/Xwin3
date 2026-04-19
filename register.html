@@ -258,14 +258,20 @@ async function register(){
 
     /* 🔥 FIRESTORE SAVE */
     await setDoc(doc(db, "users", user.uid), {
-      email: user.email,
-      username: username,
-      balance: 30,
-      signupBonus: true,
-      role: "user",
-      timeStamp: Date.now(),
-      referredBy: ref || null
-    });
+  email: user.email,
+  username: username,
+
+  // 🔥 REAL BALANCE
+  balance: 0,
+
+  // 🎁 BONUS SYSTEM
+  bonusBalance: 30,
+  firstDepositDone: false,
+
+  role: "user",
+  timeStamp: Date.now(),
+  referredBy: ref || null
+});
 
     showPopup("Registration Successful 🎉");
 
