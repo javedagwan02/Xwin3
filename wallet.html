@@ -117,6 +117,11 @@ body{
   <p>Total Balance</p>
   <h1>₹<span id="balance">0.00</span></h1>
 
+  <p>Bonus Balance</p>
+<h2 style="margin-top:5px;color:#ffd700;">
+₹<span id="bonusBalance">0.00</span>
+</h2>
+  
   <div class="stats">
     <div class="stat">
       <h3 id="withdrawTotal">0</h3>
@@ -188,14 +193,18 @@ async function loadWallet(){
   let balance = 0;
   let totalDeposit = 0;
   let totalWithdraw = 0;
+  let bonus = 0;
+let firstDepositDone = false;
 
   /* USER BALANCE */
   const userSnap = await getDocs(
     query(collection(db,"users"), where("email","==",userEmail))
   );
   userSnap.forEach(d=>{
-    balance = d.data().balance || 0;
-  });
+  balance = d.data().balance || 0;
+  bonus = d.data().bonusBalance || 0;
+  firstDepositDone = d.data().firstDepositDone || false;
+});
 // 🔥 SYNC BALANCE TO LOCALSTORAGE (IMPORTANT)
 localStorage.setItem("wallet", balance);
 localStorage.setItem("coin_wallet", balance);
@@ -227,6 +236,7 @@ localStorage.setItem("walletUpdated", "1");
   document.getElementById("balance").innerText = balance.toFixed(2);
   document.getElementById("depositTotal").innerText = totalDeposit;
   document.getElementById("withdrawTotal").innerText = totalWithdraw;
+  document.getElementById("bonusBalance").innerText = bonus.toFixed(2);
 }
 
 loadWallet();
