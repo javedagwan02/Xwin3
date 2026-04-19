@@ -621,7 +621,7 @@ font-size:16px;
 </div>
 
 <!-- CHICKEN -->
-<div class="game-card chicken-card" onclick="openGame('chicken-road.html')">
+<div class="game-card chicken-card" onclick="openJiliChicken()">
   <img src="images/27712-removebg-preview.png">
 </div>
 
@@ -1838,6 +1838,32 @@ window.openJiliGame31 = async function(){
   "https://jili-backend.onrender.com/start-game?userId="
   + userEmail +
   "&gameId=ba858ec8e3b5e2b4da0d16b3a2330ca7";
+};
+  window.openJiliChicken = async function(){
+
+  const userEmail = localStorage.getItem("userEmail");
+
+  const userSnap = await getDocs(
+    query(collection(db,"users"), where("email","==",userEmail))
+  );
+
+  let balance = 0;
+
+  userSnap.forEach(d=>{
+    balance = Number(d.data().balance || 0);
+  });
+
+  // 🔥 deposit check (same system)
+  if(balance < 10){
+    document.getElementById("depositPopup").style.display="flex";
+    return;
+  }
+
+  // ✅ TERA JILI GAME UID
+  window.location.href =
+  "https://jili-backend.onrender.com/start-game?userId="
+  + userEmail +
+  "&gameId=7b373d897e2e7990222ed0a33b47ffba";
 };
   window.redeemCode = async function(){
 // 🔥 CHECK USER 24H DEPOSIT
