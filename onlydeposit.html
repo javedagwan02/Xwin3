@@ -133,16 +133,29 @@ window.approve = async function(id,email,amount){
 
     snap.forEach(async (u)=>{
 
-      let bal = u.data().balance || 0;
+      let userData = u.data();
 
-      await updateDoc(doc(db,"users",u.id),{
-  balance: bal + amount,
+let bal = userData.balance || 0;
+let bonus = userData.bonusBalance || 0;
+let firstDepositDone = userData.firstDepositDone || false;
+
+let newBalance = bal + amount;
+
+// 🔥 FIRST DEPOSIT BONUS UNLOCK
+if(!firstDepositDone && bonus > 0){
+  newBalance += bonus; // bonus add
+  bonus = 0; // bonus reset
+  firstDepositDone = true;
+}
+
+await updateDoc(doc(db,"users",u.id),{
+  balance: newBalance,
+  bonusBalance: bonus,
+  firstDepositDone: firstDepositDone,
   hasDeposited: true,
 
-  wagerRequired: (u.data().wagerRequired || 0) + (amount * 2),
-
-  // 🔥 ADD THIS LINE
-  wagerDone: u.data().wagerDone || 0
+  wagerRequired: (userData.wagerRequired || 0) + (amount * 2),
+  wagerDone: userData.wagerDone || 0
 });
 
     });
