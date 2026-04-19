@@ -261,7 +261,18 @@ window.openReferralDetails = async function(){
         let data = d.data();
 
         // 🔥 time fix (time ya timeStamp dono check)
-        let t = data.time || data.timeStamp || 0;
+        let t = 0;
+
+if(data.time){
+  t = data.time;
+}
+else if(data.timeStamp){
+  if(data.timeStamp.seconds){
+    t = data.timeStamp.seconds * 1000;
+  } else {
+    t = new Date(data.timeStamp).getTime();
+  }
+}
 
         if(data.status === "APPROVED" && (now - t <= threeMonth)){
 
