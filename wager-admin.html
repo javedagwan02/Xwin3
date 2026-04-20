@@ -60,6 +60,14 @@ button{
 <body>
 
 <div class="header">🎯 Wager Control Panel</div>
+  <div style="padding:10px;">
+  <input 
+    type="text" 
+    id="searchInput" 
+    placeholder="Search by email..." 
+    oninput="loadUsers()"
+    style="width:100%;padding:10px;border-radius:10px;border:none;">
+  </div>
 
 <div class="container" id="usersBox"></div>
 
@@ -85,8 +93,15 @@ async function loadUsers(){
 
   const snap = await getDocs(collection(db,"users"));
 
+  const search = document.getElementById("searchInput").value.toLowerCase();
+
   snap.forEach(d=>{
     const u = d.data();
+
+    // 🔥 FILTER
+    if(search && !u.email.toLowerCase().includes(search)){
+      return;
+    }
 
     usersBox.innerHTML += `
     <div class="card">
