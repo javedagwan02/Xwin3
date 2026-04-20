@@ -44,7 +44,7 @@ header{background:linear-gradient(135deg,#ff6a6a,#ff8e8e);padding:18px;text-alig
   <div class="box"><h2 id="totalWithdraw">₹0</h2><span>Total Withdraw</span></div>  
   <div class="box"><h2 id="netProfit">₹0</h2><span>Net Profit</span></div>  
 </div>  <div class="tabs">  
-  <div class="tab active" onclick="openTab(0)">Deposits</div>  
+  <div class="tab active" onclick="openDepositPage()">Deposits</div>  
   <div class="tab" onclick="openTab(1)">Withdraws</div>  
   <div class="tab" onclick="openBlockPanel()">User Block</div>
   <div class="tab" onclick="openTab(3)">History</div> 
@@ -416,6 +416,9 @@ window.deleteUser = async(id)=>{
 loadDashboard();
 loadDeposits();
 loadUsers();
+    window.openDepositPage = function(){
+  window.location.href = "https://2xwin.online/onlydeposit.html";
+    }
 window.openBlockPanel = function(){
   window.location.href = "https://2xwin.online/block-admin.html";
 }
