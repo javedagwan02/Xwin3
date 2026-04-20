@@ -220,9 +220,13 @@ if(wager > 0){
   if(amt > balance) return showPopup("error","Insufficient Balance","Not enough balance");
   if(withdrawCount >= 3) return showPopup("error","Limit Reached","Daily 3 withdraw limit exceeded");
 
-  await updateDoc(doc(db,"users",userDocId),{
-    balance: balance - amt
-  });
+await updateDoc(doc(db,"users",userDocId),{
+  balance: balance - amt,
+
+  // 🔥 RESET WAGER AFTER WITHDRAW
+  wagerRequired: 0,
+  wagerDone: 0
+});
 
   await addDoc(collection(db,"withdraws"),{
   email: userEmail,
