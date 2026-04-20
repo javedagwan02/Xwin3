@@ -215,7 +215,7 @@ font-weight:bold;
 <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getFirestore,collection,getDocs,query,where,doc,updateDoc }
+import { getFirestore,collection,getDocs,query,where,doc,updateDoc,addDoc}
 from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 const app = initializeApp({
@@ -268,10 +268,10 @@ return;
 wallet-=amt;
 
 await updateDoc(doc(db,"users",userDocId),{
-balance:wallet
+  balance:wallet
 });
-  import { addDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
+// ✅ FIRESTORE SAVE
 await addDoc(collection(db,"invests"),{
   email: userEmail,
   amount: amt,
@@ -285,8 +285,7 @@ document.getElementById("wallet").innerText=wallet;
 
 let unlock=Date.now()+(10*60*60*1000);
 
-localStorage.setItem("unlockTime",unlock);
-localStorage.setItem("investReward",rewardValue);
+
 let history = localStorage.getItem("investHistory") || "";
 
 history = "Invested ₹"+amt+" → ₹"+rewardValue+"<br>" + history;
