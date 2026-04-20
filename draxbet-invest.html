@@ -300,15 +300,32 @@ let diff=unlock-Date.now();
 
 if(diff<=0){
 
-let reward=Number(localStorage.getItem("investReward"))||0;
+let reward = Number(localStorage.getItem("investReward")) || 0;
 
-wallet+=reward;
+// 🔥 FIRESTORE SE USER DATA LO
+let userSnap = await getDocs(
+  query(collection(db,"users"), where("email","==",userEmail))
+);
 
-await updateDoc(doc(db,"users",userDocId),{
-balance:wallet
+userSnap.forEach(async d=>{
+
+  let data = d.data();
+
+  let currentBalance = data.balance || 0;
+  let currentWager = data.wagerRequired || 0;
+
+  let newBalance = currentBalance + reward;
+  let newWager = currentWager + reward;
+
+  await updateDoc(doc(db,"users",d.id),{
+    balance: newBalance,        // ✅ wallet me paisa
+    wagerRequired: newWager     // 🔥 wager lock
+  });
+
+  // 🔥 UI update
+  document.getElementById("wallet").innerText = newBalance;
+
 });
-
-document.getElementById("wallet").innerText=wallet;
 
 showPopup("💰 Reward ₹"+reward+" Added");
 
