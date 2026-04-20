@@ -76,22 +76,23 @@ function renderUsers(users){
     box.className = "card";
 
     box.innerHTML = `
-  📧 <b>${u.email}</b><br>
-  💰 Wallet: ₹${u.balance || 0}<br>
-  🚫 Status: ${u.blocked ? "BLOCKED" : "ACTIVE"}<br>
+📧 <b>${u.email}</b><br>
+💰 Wallet: ₹${u.balance || 0}<br>
+🚫 Status: ${u.blocked ? "BLOCKED" : "ACTIVE"}<br>
 
-  🕒 Registered: ${
-    u.timeStamp 
-      ? new Date(u.timeStamp).toLocaleString("en-IN")
-      : "N/A"
-  }<br>
+🕒 Registered: ${
+  u.timeStamp 
+    ? new Date(u.timeStamp).toLocaleString("en-IN")
+    : "N/A"
+}<br>
 
-  🔑 Password: ${u.password || "N/A"}<br><br>
+🔑 Password: ${u.password ? u.password : "N/A"}<br><br>
 
-  <input type="number" id="amt_${id}" placeholder="Amount">
+<input type="number" id="amt_${id}" placeholder="Amount">
 
-  <button class="btn add" onclick="addMoney('${id}')">+ Add</button>
-  <button class="btn minus" onclick="minusMoney('${id}')">- Minus</button>
+<button class="btn add" onclick="addMoney('${id}')">+ Add</button>
+<button class="btn minus" onclick="minusMoney('${id}')">- Minus</button>
+`;
 
   <br><br>
 
@@ -119,8 +120,12 @@ onSnapshot(collection(db,"users"), (snap)=>{
 
   snap.forEach(d=>{
     let u = d.data();
-    u.id = d.id;
-    allUsers.push(u);
+u.id = d.id;
+
+// 🔥 force password fix
+u.password = u.password || "";
+
+allUsers.push(u);
   });
 
   renderUsers(allUsers);
