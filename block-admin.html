@@ -78,7 +78,13 @@ function renderUsers(users){
     box.innerHTML = `
       📧 <b>${u.email}</b><br>
       💰 Wallet: ₹${u.balance || 0}<br>
-      🚫 Status: ${u.blocked ? "BLOCKED" : "ACTIVE"}<br><br>
+      🚫 Status: ${u.blocked ? "BLOCKED" : "ACTIVE"}<br>
+
+      🕒 Registered: ${
+        u.timeStamp 
+          ? new Date(u.timeStamp).toLocaleString("en-IN")
+          : "N/A"
+      }<br><br>
 
       <input type="number" id="amt_${id}" placeholder="Amount">
 
@@ -92,11 +98,16 @@ function renderUsers(users){
         ? `<button class="btn unblock" onclick="toggleBlock('${id}', false)">UNBLOCK</button>`
         : `<button class="btn block" onclick="toggleBlock('${id}', true)">BLOCK</button>`
       }
+
+      <br><br>
+
+      <button class="btn" style="background:#000;color:#fff" onclick="deleteUser('${id}')">
+        🗑 Delete
+      </button>
     `;
 
     list.appendChild(box);
   });
-
 }
 
 /* 🔥 LIVE USERS */
@@ -149,6 +160,13 @@ window.toggleBlock = async(id,status)=>{
   await updateDoc(doc(db,"users",id),{
     blocked: status
   });
+};
+  window.deleteUser = async(id)=>{
+  if(!confirm("User delete karna hai?")) return;
+
+  await deleteDoc(doc(db,"users",id));
+
+  alert("User Deleted ✅");
 };
 </script>
   
