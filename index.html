@@ -891,6 +891,35 @@ window.openSupportMail = function(){
   },800);
 
 }
+  function checkDailyReward(){
+
+  let today = new Date().toDateString(); // 🗓 aaj ki date
+  let lastDay = localStorage.getItem("rewardDay");
+
+  // 👉 agar aaj reward nahi liya
+  if(today !== lastDay){
+
+    // 🎲 Random ₹1–₹5
+    let reward = Math.floor(Math.random() * 5) + 1;
+
+    // 💰 Wallet update
+    let balance = parseInt(localStorage.getItem("wallet") || 0);
+    balance += reward;
+    localStorage.setItem("wallet", balance);
+
+    // 🗓 Save today
+    localStorage.setItem("rewardDay", today);
+
+    // 🎉 Popup show
+    showRewardPopup(reward);
+  }
+  }
+  function showRewardPopup(amount){
+  document.getElementById("popupText").innerText = 
+    "🎉 Daily Reward ₹" + amount + " added!";
+  
+  document.getElementById("successPopup").style.display = "flex";
+}
 window.openTelegram = function(){
 
   // direct open telegram channel
@@ -923,6 +952,7 @@ function closePopup(){
 // 🔥 AUTO SHOW ON PAGE LOAD
 window.onload = function(){
 
+  checkDailyReward(); // 🔥 ye add karna hai
   // sirf 1 baar show karna ho to uncomment kar
   // if(localStorage.getItem("seenSecurity")) return;
 
