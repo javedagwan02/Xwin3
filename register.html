@@ -260,17 +260,17 @@ async function register(){
     await setDoc(doc(db, "users", user.uid), {
   email: user.email,
   username: username,
-
-  // 🔥 REAL BALANCE
-  balance: 0,
-
-  // 🎁 BONUS SYSTEM
-  bonusBalance: 30,
-  firstDepositDone: false,
-password: pass,
+  balance: 30,
+  bonusBalance: 30, // 🔥 add kar
+  signupBonus: true,
   role: "user",
   timeStamp: Date.now(),
-  referredBy: ref || null
+  referredBy: ref || null,
+
+  // 🔥 ADD THIS
+  wagerRequired: 0,
+  wagerDone: 0,
+  firstDepositDone: false
 });
 
     showPopup("Registration Successful 🎉");
