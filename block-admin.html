@@ -92,21 +92,20 @@ function renderUsers(users){
 
 <button class="btn add" onclick="addMoney('${id}')">+ Add</button>
 <button class="btn minus" onclick="minusMoney('${id}')">- Minus</button>
-`;
 
-  <br><br>
+<br><br>
 
-  ${
-    u.blocked
-    ? `<button class="btn unblock" onclick="toggleBlock('${id}', false)">UNBLOCK</button>`
-    : `<button class="btn block" onclick="toggleBlock('${id}', true)">BLOCK</button>`
-  }
+${
+  u.blocked
+  ? `<button class="btn unblock" onclick="toggleBlock('${id}', false)">UNBLOCK</button>`
+  : `<button class="btn block" onclick="toggleBlock('${id}', true)">BLOCK</button>`
+}
 
-  <br><br>
+<br><br>
 
-  <button class="btn" style="background:#000;color:#fff" onclick="deleteUser('${id}')">
-    🗑 Delete
-  </button>
+<button class="btn" style="background:#000;color:#fff" onclick="deleteUser('${id}')">
+🗑 Delete
+</button>
 `;
 
     list.appendChild(box);
