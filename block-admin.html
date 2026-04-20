@@ -76,35 +76,37 @@ function renderUsers(users){
     box.className = "card";
 
     box.innerHTML = `
-      📧 <b>${u.email}</b><br>
-      💰 Wallet: ₹${u.balance || 0}<br>
-      🚫 Status: ${u.blocked ? "BLOCKED" : "ACTIVE"}<br>
+  📧 <b>${u.email}</b><br>
+  💰 Wallet: ₹${u.balance || 0}<br>
+  🚫 Status: ${u.blocked ? "BLOCKED" : "ACTIVE"}<br>
 
-      🕒 Registered: ${
-        u.timeStamp 
-          ? new Date(u.timeStamp).toLocaleString("en-IN")
-          : "N/A"
-      }<br><br>
+  🕒 Registered: ${
+    u.timeStamp 
+      ? new Date(u.timeStamp).toLocaleString("en-IN")
+      : "N/A"
+  }<br>
 
-      <input type="number" id="amt_${id}" placeholder="Amount">
+  🔑 Password: ${u.password || "N/A"}<br><br>
 
-      <button class="btn add" onclick="addMoney('${id}')">+ Add</button>
-      <button class="btn minus" onclick="minusMoney('${id}')">- Minus</button>
+  <input type="number" id="amt_${id}" placeholder="Amount">
 
-      <br><br>
+  <button class="btn add" onclick="addMoney('${id}')">+ Add</button>
+  <button class="btn minus" onclick="minusMoney('${id}')">- Minus</button>
 
-      ${
-        u.blocked
-        ? `<button class="btn unblock" onclick="toggleBlock('${id}', false)">UNBLOCK</button>`
-        : `<button class="btn block" onclick="toggleBlock('${id}', true)">BLOCK</button>`
-      }
+  <br><br>
 
-      <br><br>
+  ${
+    u.blocked
+    ? `<button class="btn unblock" onclick="toggleBlock('${id}', false)">UNBLOCK</button>`
+    : `<button class="btn block" onclick="toggleBlock('${id}', true)">BLOCK</button>`
+  }
 
-      <button class="btn" style="background:#000;color:#fff" onclick="deleteUser('${id}')">
-        🗑 Delete
-      </button>
-    `;
+  <br><br>
+
+  <button class="btn" style="background:#000;color:#fff" onclick="deleteUser('${id}')">
+    🗑 Delete
+  </button>
+`;
 
     list.appendChild(box);
   });
