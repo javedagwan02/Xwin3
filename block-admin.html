@@ -41,8 +41,18 @@
 <div id="list"></div>
 <script type="module">
 
-import { getFirestore, collection, onSnapshot, doc, updateDoc, increment, deleteDoc } 
-from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { initializeApp } 
+from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+
+import { 
+  getFirestore, 
+  collection, 
+  onSnapshot, 
+  doc, 
+  updateDoc, 
+  increment, 
+  deleteDoc 
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 /* 🔥 FIREBASE */
 const app = initializeApp({
   apiKey:"AIzaSyBx3J9aGn_98rTPgurMMKw_GR3puIMj4Ms",
@@ -171,6 +181,9 @@ window.toggleBlock = async(id,status)=>{
   await deleteDoc(doc(db,"users",id));
 
   alert("User Deleted ✅");
+
+  // 🔥 yaha dalna hai
+  location.reload();
 };
 </script>
   
