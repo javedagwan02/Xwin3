@@ -62,16 +62,15 @@ button{
 <div class="header">🎯 Wager Control Panel</div>
   <div style="padding:10px;">
   <input 
-    type="text" 
-    id="searchInput" 
-    placeholder="Search by email..." 
-    oninput="loadUsers()"
-    style="width:100%;padding:10px;border-radius:10px;border:none;">
-  </div>
+  type="text" 
+  id="searchInput" 
+  placeholder="Search by email..." 
+  oninput="renderUsers(allUsers)"
+  style="width:100%;padding:10px;border-radius:10px;border:none;">
 
 <div class="container" id="usersBox"></div>
 
-<script type="module">
+  <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getFirestore, collection, getDocs, updateDoc, doc, getDoc } 
@@ -87,16 +86,36 @@ const db = getFirestore(app);
 
 const usersBox = document.getElementById("usersBox");
 
+/* 🔥 GLOBAL USERS (FOR SEARCH) */
+let allUsers = [];
+
 /* 🔥 LOAD USERS */
 async function loadUsers(){
-  usersBox.innerHTML = "";
+
+  usersBox.innerHTML = "Loading...";
 
   const snap = await getDocs(collection(db,"users"));
 
-  const search = document.getElementById("searchInput").value.toLowerCase();
+  allUsers = []; // reset
 
   snap.forEach(d=>{
-    const u = d.data();
+    allUsers.push({
+      id: d.id,
+      ...d.data()
+    });
+  });
+
+  renderUsers(allUsers); // 🔥 first render
+}
+
+/* 🔥 RENDER USERS + SEARCH */
+window.renderUsers = function(users){
+
+  const search = document.getElementById("searchInput").value.toLowerCase();
+
+  usersBox.innerHTML = "";
+
+  users.forEach(u=>{
 
     // 🔥 FILTER
     if(search && !u.email.toLowerCase().includes(search)){
@@ -117,17 +136,18 @@ async function loadUsers(){
       </div>
 
       <div class="row">
-        <input id="wager-${d.id}" type="number" placeholder="Amount">
-        <button onclick="setWager('${d.id}')">SET</button>
+        <input id="wager-${u.id}" type="number" placeholder="Amount">
+        <button onclick="setWager('${u.id}')">SET</button>
       </div>
 
       <div class="row">
-        <button onclick="addWager('${d.id}')">+ ADD</button>
-        <button onclick="resetWager('${d.id}')">RESET</button>
+        <button onclick="addWager('${u.id}')">+ ADD</button>
+        <button onclick="resetWager('${u.id}')">RESET</button>
       </div>
 
     </div>`;
   });
+
 }
 
 /* 🔥 SET EXACT WAGER */
@@ -175,7 +195,7 @@ window.resetWager = async(id)=>{
 /* INIT */
 loadUsers();
 
-</script>
+  </script>
 
 </body>
 </html>
