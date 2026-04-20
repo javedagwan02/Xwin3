@@ -32,30 +32,45 @@
 <body>
 
 <h2 style="text-align:center;">👑 USER CONTROL PANEL</h2>
+  <input 
+  type="text" 
+  id="searchBox" 
+  placeholder="Search by email..." 
+  style="width:90%;margin:10px auto;display:block;padding:10px;border-radius:10px;border:none;font-size:16px;"
+>
 <div id="list"></div>
-
 <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getFirestore, collection, onSnapshot, doc, updateDoc, increment } 
 from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
+/* 🔥 FIREBASE */
 const app = initializeApp({
   apiKey:"AIzaSyBx3J9aGn_98rTPgurMMKw_GR3puIMj4Ms",
   authDomain:"colourcash-ea60e.firebaseapp.com",
   projectId:"colourcash-ea60e"
 });
+
 const db = getFirestore(app);
+const list = document.getElementById("list");
 
-/* 🔥 LIVE USERS */
-onSnapshot(collection(db,"users"), (snap)=>{
+/* 🔥 GLOBAL USERS */
+let allUsers = [];
 
-  document.getElementById("list").innerHTML = "";
+/* 🔥 RENDER FUNCTION */
+function renderUsers(users){
 
-  snap.forEach(d=>{
+  list.innerHTML = "";
 
-    let u = d.data();
-    let id = d.id;
+  if(users.length === 0){
+    list.innerHTML = "❌ No user found";
+    return;
+  }
+
+  users.forEach(u=>{
+
+    let id = u.id;
 
     let box = document.createElement("div");
     box.className = "card";
@@ -82,6 +97,33 @@ onSnapshot(collection(db,"users"), (snap)=>{
     list.appendChild(box);
   });
 
+}
+
+/* 🔥 LIVE USERS */
+onSnapshot(collection(db,"users"), (snap)=>{
+
+  allUsers = [];
+
+  snap.forEach(d=>{
+    let u = d.data();
+    u.id = d.id;
+    allUsers.push(u);
+  });
+
+  renderUsers(allUsers);
+
+});
+
+/* 🔥 SEARCH SYSTEM */
+document.getElementById("searchBox").addEventListener("input", function(){
+
+  let value = this.value.toLowerCase();
+
+  let filtered = allUsers.filter(u =>
+    (u.email || "").toLowerCase().includes(value)
+  );
+
+  renderUsers(filtered);
 });
 
 /* 🔥 FUNCTIONS */
@@ -108,8 +150,7 @@ window.toggleBlock = async(id,status)=>{
     blocked: status
   });
 };
-
 </script>
-
+  
 </body>
 </html>
