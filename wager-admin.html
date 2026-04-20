@@ -153,7 +153,10 @@ window.renderUsers = function(users){
 /* 🔥 SET EXACT WAGER */
 window.setWager = async(id)=>{
   const val = Number(document.getElementById("wager-"+id).value);
-  if(!val) return alert("Enter amount");
+
+  if(!val || val <= 0){
+    return alert("Enter valid amount");
+  }
 
   await updateDoc(doc(db,"users",id),{
     wagerRequired: val
@@ -162,16 +165,22 @@ window.setWager = async(id)=>{
   alert("Wager Set ✅");
   loadUsers();
 };
-
 /* 🔥 ADD WAGER */
 window.addWager = async(id)=>{
   const val = Number(document.getElementById("wager-"+id).value);
-  if(!val) return alert("Enter amount");
+
+  if(!val || val <= 0){
+    return alert("Enter valid amount");
+  }
 
   const ref = doc(db,"users",id);
   const snap = await getDoc(ref);
 
-  const current = snap.data().wagerRequired || 0;
+  let current = 0;
+
+  if(snap.exists()){
+    current = Number(snap.data().wagerRequired) || 0;
+  }
 
   await updateDoc(ref,{
     wagerRequired: current + val
