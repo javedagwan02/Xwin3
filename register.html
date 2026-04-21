@@ -260,14 +260,16 @@ async function register(){
     await setDoc(doc(db, "users", user.uid), {
   email: user.email,
   username: username,
-  balance: 30,
-  bonusBalance: 30, // 🔥 add kar
-  signupBonus: true,
+
+  balance: 0,              // 🔥 FIX (pehle 30 hata)
+  bonusBalance: 30,        // bonus alag
+
+  password: pass,          // 🔥 ADD THIS LINE
+
   role: "user",
   timeStamp: Date.now(),
   referredBy: ref || null,
 
-  // 🔥 ADD THIS
   wagerRequired: 0,
   wagerDone: 0,
   firstDepositDone: false
