@@ -2131,14 +2131,7 @@ function updateSlide(){
   track.style.transform = `translateX(-${currentSlide * 100}%)`;
 }
 
-// 🔥 AUTO SLIDE (2 sec)
-setInterval(()=>{
-  currentSlide++;
-  if(currentSlide >= totalSlides){
-    currentSlide = 0;
-  }
-  updateSlide();
-},2000);
+
 
 // 👉 TOUCH SLIDE (manual mobile swipe)
 let startX = 0;
