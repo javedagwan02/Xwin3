@@ -259,7 +259,35 @@ window.changePassword = async () => {
 </script>
   <script>
 
-// 🔥 FIXED DEPOSIT AMOUNTS
+// 🔥 100 BOYS NAMES
+const boys = [
+"aman","rahul","rohit","vikas","ajay","sonu","raj","deepak","karan","vipul",
+"sachin","ankit","pankaj","sumit","arjun","ravi","manish","nitesh","harsh","yash",
+"aditya","shivam","gopal","mohit","varun","tarun","kunal","sandeep","vishal","lokesh",
+"rajat","nikhil","prince","suraj","krishna","abhishek","hemant","dinesh","ashish","vivek",
+"sameer","rahim","faizan","irfan","salman","aslam","junaid","imran","nawab","shahid",
+"arif","danish","faisal","kamran","sohail","noman","farhan","rizwan","tariq","yasir",
+"omkar","ganesh","mahesh","ramesh","suresh","dilip","sunil","anil","babu","chandan",
+"raghav","lakhan","mukesh","rajesh","bhavesh","paresh","jignesh","hitesh","mahavir","narendra",
+"tejas","hardik","chetan","yogesh","pravin","rakesh","devendra","sanjay","kapil","vinod",
+"kuldeep","balram","bhupendra","ranjit","uday","amar","inder","karam","veer","arvinder"
+];
+
+// 🔥 100 GIRLS NAMES
+const girls = [
+"neha","pooja","khushboo","anjali","priya","sakshi","ritika","simran","komal","payal",
+"sonam","rani","kavita","rekha","meena","seema","jyoti","tina","hina","shweta",
+"nisha","monika","preeti","muskan","divya","rakhi","puja","kiran","radha","laxmi",
+"bhavna","ishita","tanvi","sneha","palak","pari","alisha","riya","aarti","chandni",
+"nikita","saloni","yamini","swati","pallavi","reshma","sonali","geeta","madhuri","varsha",
+"farah","zoya","afreen","saba","nazma","shabnam","rubina","mehjabi","tasneem","saira",
+"noor","haseena","fiza","alina","hina","sana","kulsum","nagma","rukhsar","shazia",
+"heena","poornima","chitra","deepa","usha","lata","asha","kamla","sarla","rekha",
+"gita","bina","veena","kajal","rashmi","sapna","mamta","usha","kanta","rekha",
+"trupti","manju","sunita","anita","kavya","shruti","pihu","pari","juhi","mitali"
+];
+
+// 🔥 DEPOSIT AMOUNTS
 const depositAmounts = [500,1000,1500,2000,3000,5000,10000,20000,50000];
 
 // 🔥 RANDOM TIME
@@ -270,20 +298,39 @@ function randomTime(){
   return `${h}:${m < 10 ? "0"+m : m} ${ampm}`;
 }
 
-// 🔥 AUTO GENERATE GMAIL (no repeat feel)
-function randomUser(){
-  const names = ["aman","rahul","vikas","rohit","ajay","sonu","raj","vipul","deepak","karan"];
-  let name = names[Math.floor(Math.random()*names.length)];
-  let number = Math.floor(Math.random()*9999);
-  return name + number + "@gmail.com";
+// 🔥 RANDOM NAME (BOY/GIRL MIX)
+function randomName(){
+  let all = boys.concat(girls);
+  return all[Math.floor(Math.random()*all.length)];
 }
 
-// 🔥 DEPOSIT AMOUNT
+// 🔥 UNIQUE USERS GENERATOR
+function generateUniqueUsers(count){
+
+  let users = new Set();
+
+  while(users.size < count){
+
+    let name = randomName();
+
+    let styles = ["","official","gaming","yt","live","boss","real"];
+    let style = styles[Math.floor(Math.random()*styles.length)];
+
+    let number = Math.floor(Math.random()*100000);
+
+    let email = name + style + number + "@gmail.com";
+
+    users.add(email);
+  }
+
+  return Array.from(users);
+}
+
+// 🔥 RANDOM AMOUNTS
 function randomDepositAmount(){
   return depositAmounts[Math.floor(Math.random()*depositAmounts.length)];
 }
 
-// 🔥 WITHDRAW AMOUNT (random uneven)
 function randomWithdrawAmount(){
   return Math.floor(Math.random()*50000) + 500;
 }
@@ -303,34 +350,7 @@ window.openWithdrawBoard = function(){
   document.getElementById("boardTitle").innerText = "🏆 User Withdrawal Leaderboard";
   startLive("withdraw");
 };
-function generateUniqueUsers(count){
 
-  let users = new Set();
-
-  while(users.size < count){
-
-    let name = randomString(3) + randomString(3);
-    let number = Math.floor(Math.random()*100000);
-
-    let email = name + number + "@gmail.com";
-
-    users.add(email);
-  }
-
-  return Array.from(users);
-}
-
-// 🔥 RANDOM STRING GENERATOR
-function randomString(length){
-  let chars = "abcdefghijklmnopqrstuvwxyz";
-  let result = "";
-
-  for(let i=0;i<length;i++){
-    result += chars.charAt(Math.floor(Math.random()*chars.length));
-  }
-
-  return result;
-}
 // 🔥 LIVE SYSTEM
 function startLive(type){
 
@@ -339,9 +359,7 @@ function startLive(type){
   let list = document.getElementById("boardList");
   list.innerHTML = "";
 
-  // 🔥 100 UNIQUE USERS
-  let users = generateUniqueUsers(100);
-
+  let users = generateUniqueUsers(100); // 🔥 100 UNIQUE USERS
   let index = 0;
 
   liveInterval = setInterval(()=>{
@@ -371,7 +389,7 @@ function startLive(type){
   },1000);
 }
 
-// 🔥 CLOSE POPUP
+// 🔥 CLOSE
 function closeBoard(){
   document.getElementById("leaderboardPopup").style.display="none";
   clearInterval(liveInterval);
