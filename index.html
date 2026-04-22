@@ -879,6 +879,29 @@ font-size:16px;
 <div class="game-card newgame-card" onclick="openJiliGame31()">
   <img src="images/38699-removebg-preview.png">
 </div>
+  <!-- 🔥 GAME 32 -->
+<div class="game-card newgame-card" onclick="openJiliGame32()">
+  <h3>Game 32</h3>
+  <img src="images/40046-removebg-preview.png">
+</div>
+
+<!-- 🔥 GAME 33 -->
+<div class="game-card newgame-card" onclick="openJiliGame33()">
+  <h3>Game 33</h3>
+  <img src="images/40047-removebg-preview.png">
+</div>
+
+<!-- 🔥 GAME 34 -->
+<div class="game-card newgame-card" onclick="openJiliGame34()">
+  <h3>Game 34</h3>
+  <img src="images/40048-removebg-preview.png">
+</div>
+
+<!-- 🔥 GAME 35 -->
+<div class="game-card newgame-card" onclick="openJiliGame35()">
+  <h3>Game 35</h3>
+  <img src="images/40052-removebg-preview.png">
+</div>
 <div class="spacer"></div>
 
 <!-- GIFT POPUP -->
@@ -1964,6 +1987,108 @@ window.openJiliGame31 = async function(){
   "https://jili-backend.onrender.com/start-game?userId="
   + userEmail +
   "&gameId=72ce7e04ce95ee94eef172c0dfd6dc17";
+};
+  // 🔥 GAME 32
+window.openJiliGame32 = async function(){
+
+  const userEmail = localStorage.getItem("userEmail");
+
+  const userSnap = await getDocs(
+    query(collection(db,"users"), where("email","==",userEmail))
+  );
+
+  let balance = 0;
+  userSnap.forEach(d=>{
+    balance = Number(d.data().balance || 0);
+  });
+
+  if(balance < 10){
+    document.getElementById("depositPopup").style.display="flex";
+    return;
+  }
+
+  window.location.href =
+  "https://jili-backend.onrender.com/start-game?userId="
+  + userEmail +
+  "&gameId=7b4308e95fa25021bae874f9e128c8c3";
+};
+
+
+// 🔥 GAME 33
+window.openJiliGame33 = async function(){
+
+  const userEmail = localStorage.getItem("userEmail");
+
+  const userSnap = await getDocs(
+    query(collection(db,"users"), where("email","==",userEmail))
+  );
+
+  let balance = 0;
+  userSnap.forEach(d=>{
+    balance = Number(d.data().balance || 0);
+  });
+
+  if(balance < 10){
+    document.getElementById("depositPopup").style.display="flex";
+    return;
+  }
+
+  window.location.href =
+  "https://jili-backend.onrender.com/start-game?userId="
+  + userEmail +
+  "&gameId=d6d14943efe13dd3bcf1428d0f702024";
+};
+
+
+// 🔥 GAME 34
+window.openJiliGame34 = async function(){
+
+  const userEmail = localStorage.getItem("userEmail");
+
+  const userSnap = await getDocs(
+    query(collection(db,"users"), where("email","==",userEmail))
+  );
+
+  let balance = 0;
+  userSnap.forEach(d=>{
+    balance = Number(d.data().balance || 0);
+  });
+
+  if(balance < 10){
+    document.getElementById("depositPopup").style.display="flex";
+    return;
+  }
+
+  window.location.href =
+  "https://jili-backend.onrender.com/start-game?userId="
+  + userEmail +
+  "&gameId=29c66f73e3916b8eb18c2bf78886927d";
+};
+
+
+// 🔥 GAME 35
+window.openJiliGame35 = async function(){
+
+  const userEmail = localStorage.getItem("userEmail");
+
+  const userSnap = await getDocs(
+    query(collection(db,"users"), where("email","==",userEmail))
+  );
+
+  let balance = 0;
+  userSnap.forEach(d=>{
+    balance = Number(d.data().balance || 0);
+  });
+
+  if(balance < 10){
+    document.getElementById("depositPopup").style.display="flex";
+    return;
+  }
+
+  window.location.href =
+  "https://jili-backend.onrender.com/start-game?userId="
+  + userEmail +
+  "&gameId=664fba4da609ee82b78820b1f570f4ad";
 };
   window.redeemCode = async function(){
 // 🔥 CHECK USER 24H DEPOSIT
