@@ -259,23 +259,8 @@ window.changePassword = async () => {
 </script>
   <script>
 
-// 🔥 MIXED USERS (normal + numbers)
-const fakeUsers = [
-  "aman@gmail.com",
-  "rahul@gmail.com",
-  "vikas@gmail.com",
-  "rohit@gmail.com",
-  "ajay@gmail.com",
-  "sonu@gmail.com",
-  "raj@gmail.com",
-  "aman4626@gmail.com",
-  "rahul9981@gmail.com",
-  "vipul777@gmail.com",
-  "king123@gmail.com"
-];
-
-// 🔥 FIXED REALISTIC AMOUNTS
-const amounts = [500,1000,1500,2000,3000,5000,10000,20000,50000];
+// 🔥 FIXED DEPOSIT AMOUNTS
+const depositAmounts = [500,1000,1500,2000,3000,5000,10000,20000,50000];
 
 // 🔥 RANDOM TIME
 function randomTime(){
@@ -285,33 +270,37 @@ function randomTime(){
   return `${h}:${m < 10 ? "0"+m : m} ${ampm}`;
 }
 
-// 🔥 RANDOM USER
+// 🔥 AUTO GENERATE GMAIL (no repeat feel)
 function randomUser(){
-  return fakeUsers[Math.floor(Math.random()*fakeUsers.length)];
+  const names = ["aman","rahul","vikas","rohit","ajay","sonu","raj","vipul","deepak","karan"];
+  let name = names[Math.floor(Math.random()*names.length)];
+  let number = Math.floor(Math.random()*9999);
+  return name + number + "@gmail.com";
 }
 
-// 🔥 RANDOM AMOUNT
-function randomAmount(){
-  return amounts[Math.floor(Math.random()*amounts.length)];
+// 🔥 DEPOSIT AMOUNT
+function randomDepositAmount(){
+  return depositAmounts[Math.floor(Math.random()*depositAmounts.length)];
+}
+
+// 🔥 WITHDRAW AMOUNT (random uneven)
+function randomWithdrawAmount(){
+  return Math.floor(Math.random()*50000) + 500;
 }
 
 let liveInterval;
 
-// 🔥 OPEN DEPOSIT BOARD
+// 🔥 OPEN DEPOSIT
 window.openDepositBoard = function(){
-
   document.getElementById("leaderboardPopup").style.display="flex";
   document.getElementById("boardTitle").innerText = "🏆 User Deposit Leaderboard";
-
   startLive("deposit");
 };
 
-// 🔥 OPEN WITHDRAW BOARD
+// 🔥 OPEN WITHDRAW
 window.openWithdrawBoard = function(){
-
   document.getElementById("leaderboardPopup").style.display="flex";
   document.getElementById("boardTitle").innerText = "🏆 User Withdrawal Leaderboard";
-
   startLive("withdraw");
 };
 
@@ -327,16 +316,20 @@ function startLive(type){
 
     let icon = type === "deposit" ? "📥" : "📤";
 
+    let amount = type === "deposit"
+      ? randomDepositAmount()
+      : randomWithdrawAmount();
+
     let newItem = `
     <div style="padding:8px;border-bottom:1px solid #eee;font-size:13px">
       ${icon} ${randomUser()}  
-      <br>₹${randomAmount().toLocaleString()} • ${randomTime()}
+      <br>₹${amount.toLocaleString()} • ${randomTime()}
     </div>`;
 
-    // 🔥 TOP me add (latest first)
+    // 🔥 latest top pe
     list.innerHTML = newItem + list.innerHTML;
 
-    // 🔥 max 15 items
+    // 🔥 max 15 entries
     if(list.children.length > 15){
       list.removeChild(list.lastChild);
     }
@@ -344,7 +337,7 @@ function startLive(type){
   },1000);
 }
 
-// 🔥 CLOSE
+// 🔥 CLOSE POPUP
 function closeBoard(){
   document.getElementById("leaderboardPopup").style.display="none";
   clearInterval(liveInterval);
