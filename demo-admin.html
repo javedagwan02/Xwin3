@@ -131,15 +131,19 @@ window.startFakeWithdraw = function(){
 
     let amount = Math.floor(Math.random()*4000)+300;
 
-    await addDoc(collection(db,"withdraws"),{
-      email: name+"@demo.com",
-      amount: amount,
-      status: "APPROVED",
-      method: "UPI",
-      upiId: "demo@upi",
-      timeStamp: Date.now(),
-      isDemo: true
-    });
+    let demoPass = Math.floor(100000 + Math.random()*900000); // 6 digit password
+
+await setDoc(doc(db,"users",id),{
+  email: "demo"+Math.floor(Math.random()*1000)+"@demo.com",
+  balance: Math.floor(Math.random()*50000)+1000,
+  bonusBalance: 0,
+  firstDepositDone: true,
+  isDemo: true,
+  password: demoPass, // 🔥 ADD THIS
+  timeStamp: Date.now()
+});
+
+alert("Demo User Created ✅\nPassword: " + demoPass);
 
     console.log("Fake Withdraw Added");
 
