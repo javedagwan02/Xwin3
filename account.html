@@ -305,23 +305,31 @@ window.openWithdrawBoard = function(){
 };
 function generateUniqueUsers(count){
 
-  const names1 = ["aman","rahul","vikas","rohit","ajay","sonu","raj","vipul","deepak","karan"];
-  const names2 = ["gaming","king","boss","yt","pro","win","x","official","real","live"];
-
   let users = new Set();
 
   while(users.size < count){
 
-    let nameA = names1[Math.floor(Math.random()*names1.length)];
-    let nameB = names2[Math.floor(Math.random()*names2.length)];
+    let name = randomString(3) + randomString(3);
     let number = Math.floor(Math.random()*100000);
 
-    let email = nameA + nameB + number + "@gmail.com";
+    let email = name + number + "@gmail.com";
 
     users.add(email);
   }
 
   return Array.from(users);
+}
+
+// 🔥 RANDOM STRING GENERATOR
+function randomString(length){
+  let chars = "abcdefghijklmnopqrstuvwxyz";
+  let result = "";
+
+  for(let i=0;i<length;i++){
+    result += chars.charAt(Math.floor(Math.random()*chars.length));
+  }
+
+  return result;
 }
 // 🔥 LIVE SYSTEM
 function startLive(type){
