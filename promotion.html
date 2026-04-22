@@ -123,7 +123,17 @@ body{
 
     <button class="btn" onclick="copyLink()">Copy Referral Link</button>
   </div>
-
+<div id="totalDepositBox" style="
+  background:#111;
+  color:#00e676;
+  padding:12px;
+  border-radius:12px;
+  margin-top:12px;
+  font-size:16px;
+  font-weight:bold;
+">
+  💰 Total Referral Deposit: ₹0
+</div>
   <ul class="rules">
     <li>✅ Friend must open register page from your link</li>
     <li>✅ bonus system is only for agents</li>
@@ -186,7 +196,7 @@ async function loadReferrals(){
 
   const myCode = localStorage.getItem("refCode");
   let html = "";
-
+let grandTotal = 0;
   const usersSnap = await getDocs(collection(db,"users"));
 
   for(const u of usersSnap.docs){
@@ -205,6 +215,7 @@ async function loadReferrals(){
       depSnap.forEach(d=>{
         if(d.data().status === "APPROVED"){
           total += Number(d.data().amount);
+          grandTotal += Number(d.data().amount);
         }
       });
 
@@ -223,6 +234,8 @@ async function loadReferrals(){
 
   document.getElementById("refList").innerHTML =
     html || "No referrals yet";
+  document.getElementById("totalDepositBox").innerText =
+  "💰 Total Referral Deposit: ₹" + grandTotal;
 }
 
 loadReferrals();
