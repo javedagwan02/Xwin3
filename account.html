@@ -312,7 +312,14 @@ function startLive(type){
   let list = document.getElementById("boardList");
   list.innerHTML = "";
 
+  // 🔥 100 UNIQUE USERS
+  let users = generateUniqueUsers(100);
+
+  let index = 0;
+
   liveInterval = setInterval(()=>{
+
+    if(index >= users.length) index = 0;
 
     let icon = type === "deposit" ? "📥" : "📤";
 
@@ -322,14 +329,14 @@ function startLive(type){
 
     let newItem = `
     <div style="padding:8px;border-bottom:1px solid #eee;font-size:13px">
-      ${icon} ${randomUser()}  
+      ${icon} ${users[index]}  
       <br>₹${amount.toLocaleString()} • ${randomTime()}
     </div>`;
 
-    // 🔥 latest top pe
     list.innerHTML = newItem + list.innerHTML;
 
-    // 🔥 max 15 entries
+    index++;
+
     if(list.children.length > 15){
       list.removeChild(list.lastChild);
     }
