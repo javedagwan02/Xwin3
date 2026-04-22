@@ -303,7 +303,20 @@ window.openWithdrawBoard = function(){
   document.getElementById("boardTitle").innerText = "🏆 User Withdrawal Leaderboard";
   startLive("withdraw");
 };
+function generateUniqueUsers(count){
 
+  const names = ["aman","rahul","vikas","rohit","ajay","sonu","raj","vipul","deepak","karan"];
+
+  let users = new Set();
+
+  while(users.size < count){
+    let name = names[Math.floor(Math.random()*names.length)];
+    let number = Math.floor(Math.random()*100000); // big range
+    users.add(name + number + "@gmail.com");
+  }
+
+  return Array.from(users);
+}
 // 🔥 LIVE SYSTEM
 function startLive(type){
 
