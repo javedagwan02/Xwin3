@@ -92,6 +92,7 @@ async function loadDeposits(){
   snap.forEach(d=>{
 
     let data = d.data();
+    if(data.isDemo) return;
 
     if(data.status !== "PENDING") return;
 
