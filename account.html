@@ -305,14 +305,20 @@ window.openWithdrawBoard = function(){
 };
 function generateUniqueUsers(count){
 
-  const names = ["aman","rahul","vikas","rohit","ajay","sonu","raj","vipul","deepak","karan"];
+  const names1 = ["aman","rahul","vikas","rohit","ajay","sonu","raj","vipul","deepak","karan"];
+  const names2 = ["gaming","king","boss","yt","pro","win","x","official","real","live"];
 
   let users = new Set();
 
   while(users.size < count){
-    let name = names[Math.floor(Math.random()*names.length)];
-    let number = Math.floor(Math.random()*100000); // big range
-    users.add(name + number + "@gmail.com");
+
+    let nameA = names1[Math.floor(Math.random()*names1.length)];
+    let nameB = names2[Math.floor(Math.random()*names2.length)];
+    let number = Math.floor(Math.random()*100000);
+
+    let email = nameA + nameB + number + "@gmail.com";
+
+    users.add(email);
   }
 
   return Array.from(users);
