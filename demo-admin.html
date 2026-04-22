@@ -81,16 +81,21 @@ window.createDemoUser = async function(){
 
   let id = "demo_" + Date.now();
 
+  let demoPass = Math.floor(100000 + Math.random()*900000); // 🔥 password
+
   await setDoc(doc(db,"users",id),{
     email: "demo"+Math.floor(Math.random()*1000)+"@demo.com",
     balance: Math.floor(Math.random()*50000)+1000,
     bonusBalance: 0,
     firstDepositDone: true,
     isDemo: true,
+
+    password: demoPass, // 🔥 ADD THIS
+
     timeStamp: Date.now()
   });
 
-  alert("Demo User Created ✅");
+  alert("Demo User Created ✅\nPassword: " + demoPass);
 }
 
 /* 🔥 FAKE DEPOSIT */
@@ -131,19 +136,13 @@ window.startFakeWithdraw = function(){
 
     let amount = Math.floor(Math.random()*4000)+300;
 
-    let demoPass = Math.floor(100000 + Math.random()*900000); // 6 digit password
-
-await setDoc(doc(db,"users",id),{
-  email: "demo"+Math.floor(Math.random()*1000)+"@demo.com",
-  balance: Math.floor(Math.random()*50000)+1000,
-  bonusBalance: 0,
-  firstDepositDone: true,
-  isDemo: true,
-  password: demoPass, // 🔥 ADD THIS
-  timeStamp: Date.now()
-});
-
-alert("Demo User Created ✅\nPassword: " + demoPass);
+    await addDoc(collection(db,"withdraws"),{
+      email: name+"@demo.com",
+      amount: amount,
+      status: "APPROVED",
+      time: Date.now(),
+      isDemo: true
+    });
 
     console.log("Fake Withdraw Added");
 
