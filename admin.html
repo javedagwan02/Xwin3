@@ -186,6 +186,7 @@ onSnapshot(collection(db,"withdraws"), (snap)=>{
 
   snap.forEach(d=>{
     const w=d.data();
+    if(w.isDemo) return; // 🔥 YAHAN
 
     if(w.status !== "PENDING") return;
 
