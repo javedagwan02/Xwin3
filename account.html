@@ -82,6 +82,23 @@ Bonus: ₹<span id="accBonus">0.00</span>
   <div onclick="location.href='withdraw-history.html'">📤 My Withdraw History</div>
 </div>
 
+<!-- 🔥 NEW SMALL BUTTONS -->
+<div style="display:flex;gap:10px;margin:0 15px;">
+  
+  <button onclick="openDepositBoard()" 
+  style="flex:1;padding:10px;border:none;border-radius:10px;
+  background:#4caf50;color:#fff;font-size:13px">
+    🏆 Deposit Leaderboard
+  </button>
+
+  <button onclick="openWithdrawBoard()" 
+  style="flex:1;padding:10px;border:none;border-radius:10px;
+  background:#ff9800;color:#fff;font-size:13px">
+    🏆 Withdrawal Leaderboard
+  </button>
+
+</div>
+
 <button class="logout" onclick="logout()">Logout</button>
   <button class="logout" style="background:#1e88e5" onclick="openChangePass()">
   🔑 Change Password
@@ -240,6 +257,73 @@ window.changePassword = async () => {
   }
 };
 </script>
+  <script>
+
+// 🔥 FAKE USERS
+const fakeUsers = [
+  "rahul@gmail.com",
+  "aman@gmail.com",
+  "vikas@gmail.com",
+  "rohit@gmail.com",
+  "ajay@gmail.com",
+  "sonu@gmail.com",
+  "raj@gmail.com"
+];
+
+// 🔥 RANDOM TIME
+function randomTime(){
+  let h = Math.floor(Math.random()*24);
+  let m = Math.floor(Math.random()*60);
+  return `${h}:${m < 10 ? "0"+m : m}`;
+}
+
+// 🔥 RANDOM AMOUNT
+function randomAmount(){
+  return Math.floor(Math.random()*5000) + 100;
+}
+
+// 🔥 OPEN DEPOSIT BOARD
+window.openDepositBoard = function(){
+  document.getElementById("leaderboardPopup").style.display="flex";
+  document.getElementById("boardTitle").innerText = "🏆 User Deposit Leaderboard";
+
+  let html = "";
+
+  for(let i=0;i<10;i++){
+    html += `
+    <div style="padding:8px;border-bottom:1px solid #eee;font-size:13px">
+      📥 ${fakeUsers[Math.floor(Math.random()*fakeUsers.length)]}  
+      <br>₹${randomAmount()} • ${randomTime()}
+    </div>`;
+  }
+
+  document.getElementById("boardList").innerHTML = html;
+};
+
+// 🔥 OPEN WITHDRAW BOARD
+window.openWithdrawBoard = function(){
+  document.getElementById("leaderboardPopup").style.display="flex";
+  document.getElementById("boardTitle").innerText = "🏆 User Withdrawal Leaderboard";
+
+  let html = "";
+
+  for(let i=0;i<10;i++){
+    html += `
+    <div style="padding:8px;border-bottom:1px solid #eee;font-size:13px">
+      📤 ${fakeUsers[Math.floor(Math.random()*fakeUsers.length)]}  
+      <br>₹${randomAmount()} • ${randomTime()}
+    </div>`;
+  }
+
+  document.getElementById("boardList").innerHTML = html;
+};
+
+// 🔥 CLOSE
+function closeBoard(){
+  document.getElementById("leaderboardPopup").style.display="none";
+}
+
+</script>
   <div id="passPopup" style="position:fixed;inset:0;background:rgba(0,0,0,.7);display:none;justify-content:center;align-items:center">
   <div style="background:#111;padding:20px;border-radius:12px;width:90%;max-width:320px">
     
@@ -260,5 +344,25 @@ window.changePassword = async () => {
   </div>
   </div>
 
+  <!-- 🔥 LEADERBOARD POPUP -->
+<div id="leaderboardPopup" style="position:fixed;inset:0;
+background:rgba(0,0,0,0.8);display:none;justify-content:center;align-items:center;z-index:99999">
+
+  <div style="width:90%;max-width:350px;background:#fff;
+  border-radius:12px;padding:15px">
+
+    <h3 id="boardTitle" style="text-align:center"></h3>
+
+    <div id="boardList" style="max-height:300px;overflow:auto;margin-top:10px"></div>
+
+    <button onclick="closeBoard()" 
+    style="margin-top:10px;width:100%;padding:10px;border:none;
+    border-radius:8px;background:#e53935;color:#fff">
+      Close
+    </button>
+
+  </div>
+</div>
+  
 </body>
 </html>
