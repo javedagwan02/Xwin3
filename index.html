@@ -556,6 +556,27 @@ font-size:16px;
   font-weight:bold;
   font-size:16px;
 }
+  .live-withdraw{
+  margin:10px 15px;
+  background:#111;
+  border-radius:12px;
+  padding:10px;
+  height:50px;
+  overflow:hidden;
+  border:1px solid #222;
+}
+
+#withdrawList div{
+  font-size:14px;
+  padding:6px 0;
+  color:#00e676;
+  animation:slideUp 0.5s ease;
+}
+
+@keyframes slideUp{
+  from{transform:translateY(20px);opacity:0;}
+  to{transform:translateY(0);opacity:1;}
+}
 </style>
 </head>
 
@@ -580,7 +601,9 @@ font-size:16px;
 <img src="images/36823-removebg-preview.png" onclick="openTelegram()">
 </div>
 </div>
-
+<div class="live-withdraw">
+  <div id="withdrawList"></div>
+</div>
 <!-- MENU -->
 <div class="menu">
 
@@ -2159,6 +2182,46 @@ track.addEventListener("touchend",(e)=>{
 
 
 </script>
+  <script>
+
+// 🔥 RANDOM TIME
+function randomTime(){
+  let h = Math.floor(Math.random()*12)+1;
+  let m = Math.floor(Math.random()*60);
+  let ampm = Math.random() > 0.5 ? "AM" : "PM";
+  return `${h}:${m < 10 ? "0"+m : m} ${ampm}`;
+}
+
+// 🔥 RANDOM AMOUNT (uneven)
+function randomWithdraw(){
+  return Math.floor(Math.random()*50000) + 100;
+}
+
+function startLiveWithdraw(){
+
+  const list = document.getElementById("withdrawList");
+
+  setInterval(()=>{
+
+    let item = document.createElement("div");
+
+    item.innerHTML = `💸 ₹${randomWithdraw()} • ${randomTime()}`;
+
+    // 🔥 TOP me add
+    list.prepend(item);
+
+    // 🔥 max 3 item hi dikhe
+    if(list.children.length > 3){
+      list.removeChild(list.lastChild);
+    }
+
+  },1000);
+}
+
+// 🔥 AUTO START
+startLiveWithdraw();
+
+  </script>
 <div id="blockPopup" class="block-popup">
   <div class="block-box">
     <h1>🚫 ACCESS DENIED</h1>
