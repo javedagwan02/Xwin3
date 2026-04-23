@@ -256,47 +256,75 @@ rewardValue=reward;
 
 }
 
-window.invest=async function(){
+window.invest = async function(){
 
-let amt=Number(document.getElementById("amount").value);
+let amt = Number(document.getElementById("amount").value);
 
-if(wallet<amt){
-showPopup("Low Wallet Balance");
-return;
+// ❌ MIN LIMIT
+if(amt < 1000){
+  showPopup("Minimum Invest ₹1000 hai");
+  return;
 }
 
-wallet-=amt;
+// ❌ WALLET CHECK
+if(wallet < amt){
+  showPopup("Low Wallet Balance");
+  return;
+}
 
+// 🔥 AUTO REWARD CALCULATION
+let reward = 0;
+
+// 1000 → 1500 (1.5x)
+if(amt >= 1000 && amt < 5000){
+  reward = Math.floor(amt * 1.5);
+}
+
+// 5000 → 8000 (1.6x)
+else if(amt >= 5000 && amt < 10000){
+  reward = Math.floor(amt * 1.6);
+}
+
+// 10000 → 16000 (1.6x)
+else if(amt >= 10000){
+  reward = Math.floor(amt * 1.6);
+}
+
+wallet -= amt;
+
+// 🔥 UPDATE FIRESTORE
 await updateDoc(doc(db,"users",userDocId),{
-  balance:wallet
+  balance: wallet
 });
 
-// ✅ FIRESTORE SAVE
+// 🔥 SAVE INVEST
+let unlockTime = Date.now() + (10*60*60*1000);
+
 await addDoc(collection(db,"invests"),{
   email: userEmail,
   amount: amt,
-  reward: rewardValue,
+  reward: reward,
   status: "PENDING",
   startTime: Date.now(),
-  unlockTime: Date.now() + (10*60*60*1000)
+  unlockTime: unlockTime
 });
 
-document.getElementById("wallet").innerText=wallet;
+// 🔥 LOCAL SAVE (IMPORTANT)
+localStorage.setItem("unlockTime", unlockTime);
+localStorage.setItem("investReward", reward);
 
-let unlock=Date.now()+(10*60*60*1000);
+document.getElementById("wallet").innerText = wallet;
 
-
+// 🔥 HISTORY
 let history = localStorage.getItem("investHistory") || "";
-
-history = "Invested ₹"+amt+" → ₹"+rewardValue+"<br>" + history;
+history = "Invested ₹"+amt+" → ₹"+reward+"<br>" + history;
 
 localStorage.setItem("investHistory",history);
 
 document.getElementById("history").innerHTML =
 "<b>Investment History</b><br>"+history;
-  
-showPopup("Investment Started 🚀");
 
+showPopup("Investment Started 🚀");
 }
 
 async function updateTimer(){
