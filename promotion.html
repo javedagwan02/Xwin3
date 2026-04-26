@@ -112,88 +112,117 @@ body{
 
 <body>
 
-<div class="header">🎁 Refer & Earn</div>
 
-<div class="card">
 
-  <!-- 🔥 TOP BANNER -->
-  <div style="
-    background:linear-gradient(135deg,#ff512f,#dd2476);
-    border-radius:16px;
-    padding:15px;
-    color:#fff;
-    text-align:center;
-  ">
-    <img src="images/40713-removebg-preview.png" style="width:100%;border-radius:12px;">
-  </div>
+<div class="card" style="background:#f5f6fa;padding:15px;">
 
-  <!-- 🔥 REF CODE BOX -->
-  <div style="
-    background:#fff;
-    border-radius:16px;
-    padding:15px;
-    margin-top:15px;
-  ">
+  <!-- 🔥 BANNER -->
+  <img src="images/40713-removebg-preview.png"
+       style="width:100%;border-radius:18px;">
 
-    <div style="font-weight:bold;margin-bottom:8px;">
+  <!-- 🔥 REF CODE SECTION -->
+  <div style="margin-top:20px;">
+
+    <div style="display:flex;align-items:center;gap:10px;font-weight:bold;font-size:18px;">
       👥 Your Referral Code
     </div>
 
     <div style="
+      margin-top:10px;
       border:2px dashed #ff4d6d;
+      border-radius:14px;
       padding:15px;
-      border-radius:12px;
-      font-size:26px;
+      font-size:28px;
       font-weight:bold;
       color:#ff1744;
-      letter-spacing:4px;
-    " id="refCode">----</div>
+      text-align:center;
+      letter-spacing:5px;
+      position:relative;
+    ">
+      <span id="refCode">----</span>
+    </div>
 
-    <button class="btn" onclick="copyLink()" style="
-      background:linear-gradient(90deg,#00c853,#69f0ae);
+    <button onclick="copyLink()" style="
       margin-top:15px;
+      width:100%;
+      padding:14px;
+      border:none;
+      border-radius:30px;
+      font-size:16px;
+      font-weight:bold;
+      color:#fff;
+      background:linear-gradient(90deg,#00c853,#69f0ae);
     ">
       🔗 Copy Referral Link
     </button>
 
-    <p style="text-align:center;font-size:13px;margin-top:5px;">
+    <p style="text-align:center;font-size:13px;margin-top:6px;color:#555;">
       Share this link with your friends
     </p>
 
   </div>
 
-  <!-- 🔥 TOTAL DEPOSIT BOX -->
-  <div id="totalDepositBox" style="
+  <!-- 🔥 TOTAL BOX -->
+  <div style="
+    margin-top:20px;
     background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
-    color:#ffd700;
+    border-radius:18px;
     padding:15px;
-    border-radius:16px;
-    margin-top:15px;
-    font-size:18px;
-    font-weight:bold;
+    color:#fff;
     display:flex;
-    align-items:center;
     justify-content:space-between;
+    align-items:center;
   ">
-    💰 Total Referral Deposit: ₹0
+    <div>
+      <div style="font-size:14px;opacity:0.8;">
+        Total Referral Deposit
+      </div>
+      <div style="font-size:22px;font-weight:bold;color:#ffd700;" id="totalAmount">
+        ₹0
+      </div>
+    </div>
+
+    <div style="font-size:30px;">💰</div>
   </div>
 
-  <!-- RULES -->
-  <ul class="rules">
-    <li>✅ Friend must open register page from your link</li>
-    <li>✅ bonus system is only for agents</li>
-    <li>✅ contact for agent work</li>
-  </ul>
+  <!-- 🔥 INFO BOX -->
+  <div style="
+    margin-top:15px;
+    background:#eaf7ee;
+    padding:12px;
+    border-radius:12px;
+    color:#2e7d32;
+    font-size:14px;
+  ">
+    ✔ Your friends must open the register page from your link
+  </div>
 
-  <!-- BUTTON -->
-  <button onclick="openReferralDetails()" class="btn">
-    📄 View Full Details
-  </button>
+  <!-- 🔥 BUTTON -->
+  <div onclick="openReferralDetails()" style="
+    margin-top:15px;
+    border:2px solid #ff4d6d;
+    padding:14px;
+    border-radius:14px;
+    text-align:center;
+    font-weight:bold;
+    color:#ff1744;
+    cursor:pointer;
+  ">
+    📄 View Full Details →
+  </div>
 
-  <!-- REF LIST -->
-  <div id="refList" style="margin-top:20px;"></div>
+  <!-- 🔥 NO DATA -->
+  <div id="refList" style="
+    text-align:center;
+    margin-top:10px;
+    color:#888;
+    font-size:14px;
+  ">
+    No referrals yet
+  </div>
 
 </div>
+    
 
 <!-- POPUP -->
 <div class="popup" id="popup">
