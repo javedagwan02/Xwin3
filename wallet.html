@@ -381,13 +381,15 @@ loadWallet();
     return;
   }
 
-  let receiverId = "";
-  let receiverBalance = 0;
+let receiverId = "";
+let receiverBalance = 0;
+let receiverWager = 0;
 
   userSnap.forEach(d=>{
-    receiverId = d.id;
-    receiverBalance = d.data().balance || 0;
-  });
+  receiverId = d.id;
+  receiverBalance = d.data().balance || 0;
+  receiverWager = d.data().wagerRequired || 0;
+});
 
   // 🔥 SENDER UPDATE
   const senderSnap = await getDocs(
@@ -408,9 +410,13 @@ await updateDoc(doc(db,"users",senderId),{
 });
     balance = newSenderBalance;
 
-  await updateDoc(doc(db,"users",receiverId),{
-    balance: receiverBalance + finalAmount
-  });
+  let wagerAdd = finalAmount * 0.5; // 50% wager
+let balanceAdd = finalAmount * 0.5; // 50% usable
+
+await updateDoc(doc(db,"users",receiverId),{
+  balance: receiverBalance + balanceAdd,
+  wagerRequired: (receiverWager || 0) + wagerAdd
+});
 
   showPopup(`Sent ₹${finalAmount} (Fee ₹${fee}) 💸`);
   location.reload();
