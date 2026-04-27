@@ -156,18 +156,36 @@ window.addMoney = async(id)=>{
   let amt = +document.getElementById("amt_"+id).value;
   if(!amt) return alert("Enter amount");
 
-  await updateDoc(doc(db,"users",id),{
-    balance: increment(amt)
+  let userRef = doc(db,"users",id);
+
+  // 🔥 current data lo
+  const snap = allUsers.find(u => u.id === id);
+  let currentBalance = Number(snap.balance || 0);
+
+  await updateDoc(userRef,{
+    balance: currentBalance + amt
   });
+  document.getElementById("amt_"+id).value = "";
 };
 
 window.minusMoney = async(id)=>{
   let amt = +document.getElementById("amt_"+id).value;
   if(!amt) return alert("Enter amount");
 
-  await updateDoc(doc(db,"users",id),{
-    balance: increment(-amt)
+  let userRef = doc(db,"users",id);
+
+  const snap = allUsers.find(u => u.id === id);
+  let currentBalance = Number(snap.balance || 0);
+
+  if(amt > currentBalance){
+    alert("Insufficient balance");
+    return;
+  }
+
+  await updateDoc(userRef,{
+    balance: currentBalance - amt
   });
+  document.getElementById("amt_"+id).value = "";
 };
 
 window.toggleBlock = async(id,status)=>{
