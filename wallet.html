@@ -238,9 +238,9 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 const userEmail = localStorage.getItem("userEmail");
-
+  
+let balance = 0; // ✅ GLOBAL
 async function loadWallet(){
-  let balance = 0; // 🔥 GLOBAL VARIABLE
   let totalDeposit = 0;
   let totalWithdraw = 0;
   let bonus = 0;
@@ -355,9 +355,12 @@ loadWallet();
   });
 
   // 🔥 UPDATE BOTH
-  await updateDoc(doc(db,"users",senderId),{
-  balance: Number(balance) - Number(amount)
+  let newSenderBalance = balance - amount;
+
+await updateDoc(doc(db,"users",senderId),{
+  balance: newSenderBalance
 });
+    balance = newSenderBalance;
 
   await updateDoc(doc(db,"users",receiverId),{
     balance: receiverBalance + finalAmount
