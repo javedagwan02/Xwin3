@@ -240,7 +240,7 @@ const db = getFirestore(app);
 const userEmail = localStorage.getItem("userEmail");
 
 async function loadWallet(){
-  let balance = 0;
+  let balance = 0; // 🔥 GLOBAL VARIABLE
   let totalDeposit = 0;
   let totalWithdraw = 0;
   let bonus = 0;
@@ -300,10 +300,10 @@ loadWallet();
     return;
   }
 
-  if(amount > balance){
-    alert("Insufficient balance");
-    return;
-  }
+  if(amount > Number(balance)){
+  alert("Insufficient balance");
+  return;
+}
 
   // 🔥 FEES CALCULATION
   let feePercent = 0;
@@ -356,8 +356,8 @@ loadWallet();
 
   // 🔥 UPDATE BOTH
   await updateDoc(doc(db,"users",senderId),{
-    balance: balance - amount
-  });
+  balance: Number(balance) - Number(amount)
+});
 
   await updateDoc(doc(db,"users",receiverId),{
     balance: receiverBalance + finalAmount
