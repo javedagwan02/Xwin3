@@ -624,6 +624,29 @@ font-size:16px;
   from{transform:translateY(20px);opacity:0;}
   to{transform:translateY(0);opacity:1;}
 }
+  .jackpot-box{
+  position:relative;
+  margin:15px;
+  text-align:center;
+}
+
+.jackpot-box img{
+  width:100%;
+  max-width:100%;
+  display:block;
+}
+
+/* 🔥 Center me number */
+.jackpot-text{
+  position:absolute;
+  top:55%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  font-size:26px;
+  font-weight:bold;
+  color:#fff;
+  text-shadow:0 0 10px #000, 0 0 20px #ff9800;
+}
 </style>
 </head>
 
@@ -666,28 +689,15 @@ background:#000;
 <img src="images/36823-removebg-preview.png" onclick="openTelegram()">
 </div>
 </div>
-  <div style="
-margin:15px;
-background:linear-gradient(135deg,#ff9800,#ff5722);
-border-radius:16px;
-padding:15px;
-text-align:center;
-">
+<div class="jackpot-box">
 
-<h2 style="margin:0;">🎰 JACKPOT</h2>
+  <img src="images/file_0000000030d471fabcee723a4dedf179-removebg-preview.png">
 
-<h1 id="jackpotAmount" style="
-margin:10px 0;
-font-size:28px;
-color:#fff;
-">
-₹1,25,000
-</h1>
+  <div class="jackpot-text" id="jackpotAmount">
+    ₹1,25,000
+  </div>
 
-<p style="margin:0;font-size:13px;">
-100% Random & Provable Fair
-</p>
-
+</div>
 </div>
  <div style="
 margin:10px 15px;
