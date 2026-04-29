@@ -630,12 +630,10 @@ font-size:16px;
 
 <!-- 🔥 TOP BAR -->
 <div style="
-background:linear-gradient(135deg,#0f9b6c,#0a6b4a);
 padding:12px;
 display:flex;
 justify-content:center;
-border-bottom-left-radius:20px;
-border-bottom-right-radius:20px;
+background:#000;
 ">
 
   <div style="
@@ -1118,24 +1116,35 @@ function closePopup(){
 }
 
 // 🔥 AUTO SHOW ON PAGE LOAD
-window.onload = function(){
-  
-document.getElementById("topBalance").innerText =
-localStorage.getItem("wallet") || 0;
-  
-  checkDailyReward(); // 🔥 ye add karna hai
-  // sirf 1 baar show karna ho to uncomment kar
-  // if(localStorage.getItem("seenSecurity")) return;
+window.onload = async function(){
+
+  const userEmail = localStorage.getItem("userEmail");
+
+  if(userEmail){
+
+    const userSnap = await getDocs(
+      query(collection(db,"users"), where("email","==",userEmail))
+    );
+
+    userSnap.forEach(d=>{
+      let balance = Number(d.data().balance || 0);
+
+      // 🔥 TOP WALLET UPDATE
+      document.getElementById("topBalance").innerText = balance;
+
+      // 🔥 LOCAL STORAGE SYNC (optional but best)
+      localStorage.setItem("wallet", balance);
+    });
+  }
+
+  checkDailyReward();
 
   setTimeout(()=>{
     document.getElementById("securityPopup").style.display="flex";
 
-    // auto close after 7 sec
     setTimeout(()=>{
       closeSecurityPopup();
     },7000);
-
-    // localStorage.setItem("seenSecurity","true");
 
   },1000);
 
