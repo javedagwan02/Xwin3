@@ -639,10 +639,12 @@ font-size:16px;
 /* 🔥 Center me number */
 .jackpot-text{
   position:absolute;
-  top:50%;   /* 🔥 55% → 50% kar de */
+  top:58%;   /* 🔥 yahi main fix hai */
   left:50%;
   transform:translate(-50%,-50%);
-  font-size:26px;
+  width:60%;          /* 🔥 width limit */
+  text-align:center;
+  font-size:28px;
   font-weight:bold;
   color:#fff;
   text-shadow:0 0 10px #000, 0 0 20px #ff9800;
@@ -657,9 +659,10 @@ font-size:16px;
 padding:12px;
 display:flex;
 justify-content:center;
-background:#000;
+background:rgba(0,0,0,0.2); /* halka transparent */
+backdrop-filter: blur(5px); /* glass effect 🔥 */
 ">
-
+  
   <div style="
   background:#111;
   padding:10px 20px;
