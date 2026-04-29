@@ -1156,8 +1156,6 @@ async function loadBalance(){
 
 }
 
-// 🔥 PAGE LOAD PE CALL
-loadBalance();
 
   checkDailyReward();
 
@@ -1171,14 +1169,16 @@ loadBalance();
   },1000);
 
 };
-  setInterval(()=>{
-  let val = Math.floor(Math.random()*500)+1000;
-  let current = Number(
-    document.getElementById("jackpotAmount").innerText.replace(/,/g,'').replace('₹','')
-  );
+ let jackpot = 125000;
+
+setInterval(()=>{
+  let increase = Math.floor(Math.random()*50) + 10;
+  jackpot += increase;
+
   document.getElementById("jackpotAmount").innerText =
-  "₹" + (current + val).toLocaleString();
-},2000);
+  "₹" + jackpot.toLocaleString();
+
+},1000); 
 </script>
 
 <script type="module">
@@ -1282,7 +1282,7 @@ window.openJiliGame = async function(){
   "&gameId=490096198e28f770a3f85adb6ee49e0f";
 };
   
-  window.openJiliGame3 = async function(){
+  window.openJiliGame111 = async function(){
 
   const userEmail = localStorage.getItem("userEmail");
 
@@ -2390,6 +2390,7 @@ if(!hasDeposited){
 }
 
 }
+  loadBalance();
 </script>
 <script>
   
