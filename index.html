@@ -639,15 +639,15 @@ font-size:16px;
 /* 🔥 Center me number */
 .jackpot-text{
   position:absolute;
-  top:62%;   /* 🔥 thoda aur niche */
+  top:66%;   /* 🔥 niche shift */
   left:50%;
   transform:translate(-50%,-50%);
-  width:50%;
+  width:60%;
   text-align:center;
-  font-size:30px;
+  font-size:24px;   /* 🔥 chota size */
   font-weight:bold;
   color:#fff;
-  text-shadow:0 0 12px #000, 0 0 25px #ff9800;
+  text-shadow:0 0 10px #000, 0 0 20px #ff9800;
 }
 </style>
 </head>
@@ -1130,26 +1130,34 @@ function closePopup(){
 }
 
 // 🔥 AUTO SHOW ON PAGE LOAD
-window.onload = async function(){
+// 🔥 LOAD USER BALANCE (FIXED)
+async function loadBalance(){
 
   const userEmail = localStorage.getItem("userEmail");
 
-  if(userEmail){
-
-    const userSnap = await getDocs(
-      query(collection(db,"users"), where("email","==",userEmail))
-    );
-
-    userSnap.forEach(d=>{
-      let balance = Number(d.data().balance || 0);
-
-      // 🔥 TOP WALLET UPDATE
-      document.getElementById("topBalance").innerText = balance;
-
-      // 🔥 LOCAL STORAGE SYNC (optional but best)
-      localStorage.setItem("wallet", balance);
-    });
+  if(!userEmail){
+    console.log("User not logged in");
+    return;
   }
+
+  const userSnap = await getDocs(
+    query(collection(db,"users"), where("email","==",userEmail))
+  );
+
+  userSnap.forEach(d=>{
+    let balance = Number(d.data().balance || 0);
+
+    // 🔥 TOP WALLET UPDATE
+    document.getElementById("topBalance").innerText = balance;
+
+    // 🔥 LOCAL STORAGE SYNC
+    localStorage.setItem("wallet", balance);
+  });
+
+}
+
+// 🔥 PAGE LOAD PE CALL
+loadBalance();
 
   checkDailyReward();
 
