@@ -2,93 +2,122 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Mines Demo</title>
+<title>Mines AI Mode</title>
 
 <style>
 body{
-  background:#0f172a;
-  color:#fff;
+  margin:0;
+  background:#0b1220;
   font-family:sans-serif;
+  color:#fff;
   text-align:center;
 }
 
-h2{margin-top:10px;}
+/* HEADER */
+.header{
+  font-size:24px;
+  font-weight:bold;
+  padding:15px;
+}
 
+/* CONTROLS */
+.controls{
+  margin:10px;
+}
+
+select{
+  padding:10px;
+  border-radius:10px;
+  border:none;
+  font-size:16px;
+}
+
+/* BUTTON */
+.btn{
+  padding:12px 18px;
+  border:none;
+  border-radius:12px;
+  font-weight:bold;
+  margin:5px;
+  font-size:16px;
+  cursor:pointer;
+  background:linear-gradient(90deg,#00c853,#69f0ae);
+  color:#fff;
+}
+
+/* GRID */
 .grid{
   display:grid;
   grid-template-columns:repeat(5,1fr);
-  gap:8px;
-  width:90%;
-  margin:15px auto;
+  gap:10px;
+  padding:15px;
 }
 
+/* CELL */
 .cell{
+  height:65px;
+  border-radius:15px;
   background:#1e293b;
-  height:60px;
-  border-radius:10px;
   display:flex;
   align-items:center;
   justify-content:center;
-  font-size:20px;
-  cursor:pointer;
-  transition:0.2s;
+  font-size:22px;
+  transition:0.3s;
+  box-shadow:0 5px 10px rgba(0,0,0,0.5);
 }
 
-.cell.open{
-  background:#00e676;
+/* SAFE */
+.safe{
+  background:linear-gradient(135deg,#00e676,#00c853);
+  box-shadow:0 0 15px rgba(0,255,150,0.8);
+  transform:scale(1.05);
 }
 
-.cell.mine{
-  background:red;
+/* UNKNOWN */
+.unknown{
+  color:#aaa;
 }
 
-.controls{
-  margin:15px;
-}
-
-select,button{
-  padding:10px;
-  border:none;
-  border-radius:8px;
-  margin:5px;
-}
-
-button{
-  background:#00c853;
-  color:#fff;
-  font-weight:bold;
+/* TITLE GLOW */
+.title{
+  text-shadow:0 0 10px #00e676;
 }
 </style>
 </head>
 
 <body>
 
-<h2>💣 Mines Demo (AI Mode)</h2>
+<div class="header title">💣 Mines AI Prediction</div>
 
 <div class="controls">
   Mines:
-  <select id="mineCount">
-    <option>3</option>
-    <option>5</option>
-    <option>10</option>
-    <option>15</option>
-  </select>
-
+  <select id="mineCount"></select>
   <br>
-
-  <button onclick="startGame()">Start</button>
-  <button onclick="predict()">Predict Safe</button>
+  <button class="btn" onclick="startGame()">Start</button>
+  <button class="btn" onclick="predict()">Predict</button>
 </div>
 
 <div class="grid" id="grid"></div>
 
 <script>
+
+/* 🔥 LOAD 1–24 OPTIONS */
+let select = document.getElementById("mineCount");
+for(let i=1;i<=24;i++){
+  let opt = document.createElement("option");
+  opt.value = i;
+  opt.innerText = i;
+  select.appendChild(opt);
+}
+
+/* GAME DATA */
 let safeTiles = [];
 let current = 0;
 
+/* START GAME */
 function startGame(){
 
-  let mines = Number(document.getElementById("mineCount").value);
+  let mines = Number(select.value);
 
   let grid = document.getElementById("grid");
   grid.innerHTML = "";
@@ -98,7 +127,6 @@ function startGame(){
 
   let totalSafe = 25 - mines;
 
-  // generate safe tiles
   while(safeTiles.length < totalSafe){
     let r = Math.floor(Math.random()*25);
     if(!safeTiles.includes(r)){
@@ -106,16 +134,15 @@ function startGame(){
     }
   }
 
-  // create grid
   for(let i=0;i<25;i++){
     let div = document.createElement("div");
-    div.className = "cell";
+    div.className = "cell unknown";
     div.innerText = "?";
     grid.appendChild(div);
   }
-
 }
 
+/* PREDICT */
 function predict(){
 
   let cells = document.querySelectorAll(".cell");
@@ -124,16 +151,18 @@ function predict(){
 
     let index = safeTiles[current];
 
-    cells[index].classList.add("open");
+    cells[index].classList.remove("unknown");
+    cells[index].classList.add("safe");
     cells[index].innerText = "💎";
 
     current++;
-  }
-  else{
-    alert("All safe tiles revealed");
+
+  } else {
+    alert("All safe spots revealed 🔥");
   }
 
 }
+
 </script>
 
 </body>
