@@ -410,11 +410,10 @@ await updateDoc(doc(db,"users",senderId),{
 });
     balance = newSenderBalance;
 
-  let wagerAdd = finalAmount * 0.5; // 50% wager
-let balanceAdd = finalAmount * 0.5; // 50% usable
+  let wagerAdd = finalAmount * 0.5; // sirf wager
 
 await updateDoc(doc(db,"users",receiverId),{
-  balance: receiverBalance + balanceAdd,
+  balance: receiverBalance + finalAmount, // FULL AMOUNT
   wagerRequired: (receiverWager || 0) + wagerAdd
 });
 
