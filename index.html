@@ -2507,69 +2507,6 @@ track.addEventListener("touchend",(e)=>{
 </script>
   <script>
 
-let lastAmount = 0;
-
-// 🔥 SAFE RANDOM TIME
-function randomTime(){
-
-  let h = Math.floor(Math.random()*12) + 1;
-
-  let m = Math.floor(Math.random()*60);
-  if(m === 60) m = 59;
-
-  let s = Math.floor(Math.random()*60);
-  if(s === 60) s = 59;
-
-  let ampm = Math.random() > 0.5 ? "AM" : "PM";
-
-  return `${h}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')} ${ampm}`;
-}
-
-
-// 🔥 RANDOM AMOUNT (NO REPEAT)
-function randomWithdraw(){
-  let amount;
-
-  do{
-    amount = Math.floor(Math.random()*99000) + 1000;
-  }while(amount === lastAmount);
-
-  lastAmount = amount;
-  return amount;
-}
-
-
-// 🔥 LIVE SYSTEM
-function startLiveWithdraw(){
-
-  const withdrawList = document.getElementById("withdrawList");
-  withdrawList.innerHTML = "";
-
-  setInterval(()=>{
-
-    try{
-
-      let item = document.createElement("div");
-
-      let amount = randomWithdraw();
-      let time = randomTime();
-
-      item.innerHTML = `💸 ₹${amount.toLocaleString()} • ${time}`;
-
-      withdrawList.prepend(item);
-
-      if(withdrawList.children.length > 4){
-        withdrawList.removeChild(withdrawList.lastChild);
-      }
-
-    }catch(e){
-      console.log("Error:", e);
-    }
-
-  }, 1000);
-}
-
-startLiveWithdraw();
 
   </script>
 <div id="blockPopup" class="block-popup">
