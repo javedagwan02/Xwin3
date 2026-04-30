@@ -1168,17 +1168,21 @@ async function loadBalance(){
 
   },1000);
 
-};
- let jackpot = 125000;
+let jackpot = 125000;
 
 setInterval(()=>{
-  let increase = Math.floor(Math.random()*50) + 10;
+  let random = Math.random();
+
+  let increase = random > 0.8 
+    ? Math.floor(Math.random()*500)   // 🔥 bada jump kabhi kabhi
+    : Math.floor(Math.random()*50)+5; // normal
+
   jackpot += increase;
 
   document.getElementById("jackpotAmount").innerText =
   "₹" + jackpot.toLocaleString();
 
-},1000); 
+},500);
 </script>
 
 <script type="module">
