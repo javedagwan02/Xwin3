@@ -2508,13 +2508,17 @@ track.addEventListener("touchend",(e)=>{
   <script>
 
 let lastAmount = 0;
-let lastTime = "";
-// 🔥 RANDOM TIME (FULL RANDOM)
+
+// 🔥 SAFE RANDOM TIME
 function randomTime(){
 
   let h = Math.floor(Math.random()*12) + 1;
+
   let m = Math.floor(Math.random()*60);
+  if(m === 60) m = 59;
+
   let s = Math.floor(Math.random()*60);
+  if(s === 60) s = 59;
 
   let ampm = Math.random() > 0.5 ? "AM" : "PM";
 
@@ -2543,20 +2547,26 @@ function startLiveWithdraw(){
 
   setInterval(()=>{
 
-    let item = document.createElement("div");
+    try{
 
-    let amount = randomWithdraw();
-    let time = randomTime();
+      let item = document.createElement("div");
 
-    item.innerHTML = `💸 ₹${amount.toLocaleString()} • ${time}`;
+      let amount = randomWithdraw();
+      let time = randomTime();
 
-    withdrawList.prepend(item);
+      item.innerHTML = `💸 ₹${amount.toLocaleString()} • ${time}`;
 
-    if(withdrawList.children.length > 4){
-      withdrawList.removeChild(withdrawList.lastChild);
+      withdrawList.prepend(item);
+
+      if(withdrawList.children.length > 4){
+        withdrawList.removeChild(withdrawList.lastChild);
+      }
+
+    }catch(e){
+      console.log("Error:", e);
     }
 
-  }, 1000); // 🔥 every 1 sec
+  }, 1000);
 }
 
 startLiveWithdraw();
