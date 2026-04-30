@@ -674,7 +674,32 @@ font-size:16px;
 .game-card{
   background: transparent !important;
 }
+.leaderboard-box{
+  position: relative;
+  margin: 10px 15px;
+}
 
+.leaderboard-box img{
+  width: 100%;
+  display: block;
+}
+
+/* 🔥 DATA POSITION */
+.leaderboard-data{
+  position: absolute;
+  top: 32%;   /* 🔥 adjust kar sakta hai */
+  left: 10%;
+  width: 80%;
+}
+
+/* 🔥 EACH ENTRY */
+.leaderboard-data div{
+  color: #00ff9c;
+  font-size: 14px;
+  padding: 6px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  animation: slideUp 0.5s ease;
+}
 </style>
 </head>
 
@@ -753,13 +778,11 @@ Search
 </button>
 
 </div> 
-<div class="live-withdraw">
-  
-  <div class="withdraw-title">
-    🏆 Weekly User Withdraw Leaderboard
-  </div>
+<div class="leaderboard-box">
 
-  <div id="withdrawList"></div>
+  <img src="images/file_00000000df4c72078f2066a20abea06c.png">
+
+  <div class="leaderboard-data" id="withdrawList"></div>
 
 </div>
 <!-- MENU -->
