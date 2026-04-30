@@ -649,49 +649,59 @@ font-size:16px;
   color:#fff;
   text-shadow:0 0 10px #000, 0 0 20px #ff9800;
 }
-/* 🔥 REMOVE ALL SHADOW / BG */
-.game-card{
-  background: transparent !important;
-  box-shadow: none !important;
-}
-
-.game-card::after{
+/* 🔥 REMOVE OLD */
+.game-card::before{
   display:none !important;
 }
 
-/* 🔥 ICON STYLE */
+/* 🔥 CLEAN CARD */
+.game-card{
+  background: transparent !important;
+  box-shadow: none !important;
+  padding:6px;
+  border-radius:22px;
+}
+
+/* 🔥 ICON */
 .game-card img{
   border-radius:18px;
-  position:relative;
-  z-index:2;
+  display:block;
 }
 
-/* 🔥 GLOW BORDER WRAPPER */
+/* 🔥 DARK NEON BORDER */
 .game-card{
-  padding:3px;
-  border-radius:20px;
-  position:relative;
+  border:2px solid #00cfff;
+  box-shadow:
+    0 0 8px #00cfff,
+    0 0 15px #00cfff,
+    0 0 25px #0099ff,
+    inset 0 0 8px rgba(0,255,255,0.3);
 }
 
-/* 🔥 ANIMATED SKY BLUE GLOW */
-.game-card::before{
-  content:'';
-  position:absolute;
-  inset:0;
-  border-radius:20px;
-  background: linear-gradient(45deg, #00eaff, #0099ff, #00eaff);
-  background-size: 300% 300%;
-  z-index:1;
-  filter: blur(6px);
-  opacity:0.8;
-  animation: glowMove 3s linear infinite;
+/* 🔥 PULSE ANIMATION (light blink) */
+@keyframes neonPulse{
+  0%{
+    box-shadow:
+      0 0 5px #00cfff,
+      0 0 10px #00cfff,
+      0 0 20px #0099ff;
+  }
+  50%{
+    box-shadow:
+      0 0 12px #00ffff,
+      0 0 25px #00cfff,
+      0 0 40px #0099ff;
+  }
+  100%{
+    box-shadow:
+      0 0 5px #00cfff,
+      0 0 10px #00cfff,
+      0 0 20px #0099ff;
+  }
 }
 
-/* 🔥 ANIMATION */
-@keyframes glowMove{
-  0%{background-position:0% 50%;}
-  50%{background-position:100% 50%;}
-  100%{background-position:0% 50%;}
+.game-card{
+  animation: neonPulse 2s infinite;
 }
 </style>
 </head>
