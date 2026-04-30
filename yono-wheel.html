@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+
 <title>Lucky Wheel</title>
 
 <style>
@@ -12,56 +13,87 @@ body{
   font-family:Arial;
   background:url('images/file_000000004dd8720b92d40a8b6daf265e.png') no-repeat center/cover;
   color:#fff;
+  text-align:center;
 }
 
 /* TITLE */
 .title{
-  text-align:center;
-  font-size:22px;
   margin-top:20px;
+  font-size:24px;
   font-weight:bold;
 }
 
-/* ===== BOX CONTAINER ===== */
+/* ===== TOP BOX IMAGE ===== */
 .box-wrapper{
   position:relative;
   width:90%;
   margin:20px auto;
 }
 
-/* IMAGE */
 .box-img{
   width:100%;
-  border-radius:20px;
 }
 
-/* CLICK AREAS */
+/* HIDDEN CLICK AREAS */
 .box{
   position:absolute;
   top:0;
   height:100%;
   width:33.33%;
-  cursor:pointer;
 }
 
-/* 3 BOX POSITIONS */
 .box1{ left:0; }
 .box2{ left:33.33%; }
 .box3{ left:66.66%; }
 
-/* ACTIVE EFFECT */
-.box.active{
-  box-shadow:0 0 20px #00ff88 inset, 0 0 20px #00ff88;
+/* ACTIVE GLOW (ONLY LIGHT EFFECT) */
+.active-glow{
+  position:absolute;
+  top:0;
+  height:100%;
+  width:33.33%;
   border-radius:20px;
+  box-shadow:0 0 20px #00ff88;
+  pointer-events:none;
 }
 
-/* OPTIONAL GLOW TEXT (future use) */
-.label{
+/* ===== WHEEL ===== */
+.wheel-container{
+  margin-top:20px;
+  position:relative;
+}
+
+/* WHEEL IMAGE */
+.wheel{
+  width:280px;
+}
+
+/* POINTER */
+.pointer{
+  position:absolute;
+  top:-20px;
+  left:50%;
+  transform:translateX(-50%);
+  font-size:30px;
+}
+
+/* SPIN BUTTON */
+.spin-btn{
   position:absolute;
   top:50%;
   left:50%;
   transform:translate(-50%,-50%);
+  background:#00e676;
+  color:#000;
+  padding:14px 30px;
+  border-radius:30px;
   font-weight:bold;
+}
+
+/* TEXT */
+.info{
+  margin-top:10px;
+  font-size:14px;
 }
 
 </style>
@@ -71,37 +103,66 @@ body{
 
 <div class="title">🎡 Lucky Wheel</div>
 
+<!-- ===== TOP SELECTOR ===== -->
 <div class="box-wrapper">
 
-  <!-- IMAGE -->
   <img src="images/41393-removebg-preview.png" class="box-img">
 
-  <!-- CLICKABLE AREAS -->
-  <div class="box box1 active" onclick="selectBox(1)"></div>
+  <!-- hidden click -->
+  <div class="box box1" onclick="selectBox(1)"></div>
   <div class="box box2" onclick="selectBox(2)"></div>
   <div class="box box3" onclick="selectBox(3)"></div>
 
+  <!-- glow -->
+  <div id="glow" class="active-glow" style="left:0;"></div>
+
+</div>
+
+<!-- ===== WHEEL ===== -->
+<div class="wheel-container">
+
+  <div class="pointer">⬇️</div>
+
+  <!-- wheel border -->
+  <img id="wheelImg" src="images/41383-removebg-preview.png" class="wheel">
+
+  <!-- spin button -->
+  <div class="spin-btn">SPIN</div>
+
+</div>
+
+<div class="info" id="infoText">
+  Deposit ₹100 to get spin
 </div>
 
 <script>
 
-let selected = 1;
+let current = 1;
 
-function selectBox(num){
-  selected = num;
+function selectBox(n){
+  current = n;
 
-  document.querySelectorAll('.box').forEach(b=>{
-    b.classList.remove('active');
-  });
+  // glow move (no visible click)
+  document.getElementById("glow").style.left =
+    (n-1)*33.33 + "%";
 
-  document.querySelector('.box'+num).classList.add('active');
+  // wheel change
+  let wheel = document.getElementById("wheelImg");
 
-  console.log("Selected:", num);
+  if(n==1){
+    wheel.src = "images/41383-removebg-preview.png";
+    document.getElementById("infoText").innerText = "Deposit ₹100 to get spin";
+  }
 
-  // 🔥 yaha baad me tu wheel change karega
-  // 1 = ₹100
-  // 2 = ₹500
-  // 3 = ₹1000
+  if(n==2){
+    wheel.src = "images/41384-removebg-preview.png";
+    document.getElementById("infoText").innerText = "Deposit ₹500 to get spin";
+  }
+
+  if(n==3){
+    wheel.src = "images/41387-removebg-preview.png";
+    document.getElementById("infoText").innerText = "Deposit ₹1000 to get spin";
+  }
 }
 
 </script>
