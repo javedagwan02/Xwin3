@@ -6,123 +6,188 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <style>
+
 body{
   margin:0;
   font-family:Arial;
-  background:#111;
+  background: radial-gradient(circle at top,#1a0033,#0a001a);
   color:#fff;
 }
 
+/* HEADER */
 .header{
-  padding:15px;
-  font-size:22px;
-  text-align:center;
+  padding:18px;
+  font-size:24px;
   font-weight:bold;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
 }
 
+.header::after{
+  content:"100% Secure";
+  font-size:12px;
+  color:#c77dff;
+}
+
+/* MAIN CARD */
 .card{
-  background:#1c1c1c;
   margin:15px;
-  border-radius:16px;
-  padding:15px;
+  border-radius:20px;
+  padding:18px;
+
+  background: rgba(255,255,255,0.05);
+  backdrop-filter: blur(12px);
+
+  border:1px solid rgba(255,255,255,0.1);
+
+  box-shadow:
+    0 0 25px rgba(255,0,255,0.2),
+    inset 0 0 15px rgba(255,255,255,0.05);
 }
 
-/* CHANNELS */
+/* CHANNEL TABS */
 .channels{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:10px;
+  display:flex;
+  gap:8px;
+  overflow:auto;
 }
 
 .channel{
-  background:#2a2a2a;
+  flex:1;
+  min-width:80px;
   padding:10px;
-  border-radius:10px;
+  border-radius:12px;
   text-align:center;
   font-size:12px;
+
+  background: rgba(255,255,255,0.08);
+  color:#ccc;
   cursor:pointer;
 }
 
 .channel.active{
-  background:#ff5f5f;
+  background: linear-gradient(45deg,#ff00cc,#7b00ff);
+  color:#fff;
+  box-shadow:0 0 10px #ff00cc;
 }
 
-/* QR */
+/* QR BOX */
 .qr-box{
-  background:#fff;
-  padding:10px;
-  border-radius:12px;
+  background: linear-gradient(135deg,#2b003f,#1a002e);
+  padding:15px;
+  border-radius:16px;
   text-align:center;
-  margin-top:12px;
+  margin-top:15px;
+
+  border:1px solid rgba(255,255,255,0.1);
 }
 
 .qr-box img{
-  width:180px;
+  width:200px;
+  border-radius:12px;
+  background:#fff;
+  padding:6px;
 }
 
-/* UPI */
+/* UPI BOX */
 .upi{
-  background:#000;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+
+  background: rgba(0,0,0,0.6);
   padding:12px;
-  border-radius:10px;
-  margin-top:10px;
-  text-align:center;
+  border-radius:12px;
+  margin-top:12px;
 }
 
+/* COPY BUTTON */
 .copy{
-  width:100%;
-  margin-top:8px;
-  padding:12px;
-  background:#2196f3;
+  background: linear-gradient(45deg,#ff00cc,#7b00ff);
   border:none;
+  padding:10px 14px;
   border-radius:10px;
   color:#fff;
+  margin-top:10px;
+  width:100%;
 }
 
-/* AMOUNT */
+/* AMOUNT GRID */
 .amounts{
   display:grid;
   grid-template-columns:repeat(3,1fr);
   gap:10px;
-  margin-top:10px;
+  margin-top:15px;
 }
 
 .amounts button{
   padding:12px;
-  border:none;
-  border-radius:10px;
-  background:#2a2a2a;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,0.2);
+
+  background: transparent;
   color:#fff;
+
+  transition:0.2s;
 }
 
+.amounts button:hover{
+  background:#ff00cc;
+  box-shadow:0 0 10px #ff00cc;
+}
+
+/* INPUT FIELDS */
 input{
   width:100%;
   padding:14px;
-  border:none;
-  border-radius:10px;
-  margin-top:10px;
+  border-radius:12px;
+  margin-top:12px;
+
+  background: rgba(255,255,255,0.08);
+  border:1px solid rgba(255,255,255,0.15);
+  color:#fff;
 }
 
-/* BUTTON */
+/* PAY BUTTON */
 .pay{
   width:100%;
-  padding:14px;
-  margin-top:15px;
-  background:#4caf50;
+  padding:16px;
+  margin-top:18px;
+
+  background: linear-gradient(45deg,#ff00cc,#7b00ff);
   border:none;
-  border-radius:10px;
-  font-size:16px;
-  color:#fff;
+  border-radius:14px;
+
+  font-size:18px;
+  font-weight:bold;
+
+  box-shadow:0 0 15px #ff00cc;
 }
-  .submit{
+
+/* SUBMIT BUTTON */
+.submit{
   width:100%;
   padding:14px;
   margin-top:10px;
-  background:#ff9800;
-  border:none;
-  border-radius:10px;
-  font-size:16px;
+
+  background: rgba(255,255,255,0.1);
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,0.2);
+
   color:#fff;
+}
+
+/* POPUP */
+#popup div{
+  background: linear-gradient(135deg,#1a002e,#2b003f);
+  border:1px solid rgba(255,255,255,0.1);
+  box-shadow:0 0 20px rgba(255,0,255,0.2);
+}
+
+/* SCROLL BAR HIDE */
+.channels::-webkit-scrollbar{
+  display:none;
 }
   
 </style>
@@ -170,7 +235,9 @@ input{
 
   <button class="submit" onclick="submitUTR()">Submit UTR</button>
   <button class="submit" onclick="openInsta()">📺 How To Deposit</button>
-  
+  <div style="margin-top:15px;font-size:12px;text-align:center;color:#aaa;">
+  🔒 Secure Payment &nbsp;&nbsp; ⚡ Instant Approval &nbsp;&nbsp; 🎧 24/7 Support
+  </div>
 </div>
 
 <!-- 🔥 START POPUP -->
