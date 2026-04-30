@@ -1250,8 +1250,11 @@ async function loadBalance(){
   userSnap.forEach(d=>{
     let balance = Number(d.data().balance || 0);
 
-    document.getElementById("topBalance").innerText = balance;
-
+    document.getElementById("topBalance").innerText =
+"₹" + Number(balance).toLocaleString(undefined, {
+  minimumFractionDigits: 2,
+  maximumFractionDigits: 2
+});
     localStorage.setItem("wallet", balance);
   });
 }
