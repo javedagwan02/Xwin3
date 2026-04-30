@@ -1147,15 +1147,15 @@ async function loadBalance(){
   userSnap.forEach(d=>{
     let balance = Number(d.data().balance || 0);
 
-    // 🔥 TOP WALLET UPDATE
     document.getElementById("topBalance").innerText = balance;
 
-    // 🔥 LOCAL STORAGE SYNC
     localStorage.setItem("wallet", balance);
   });
 
 }
 
+// 🔥 CALL
+loadBalance();
 
   checkDailyReward();
 
@@ -2398,7 +2398,7 @@ if(!hasDeposited){
 }
 
 }
-  loadBalance();
+  
 </script>
 <script>
   
