@@ -2479,17 +2479,7 @@ return true;
 return false;
 }
 
-/* FORCE LOSS AFTER +100 */
-const originalRandom = Math.random;
 
-Math.random = function(){
-
-if(profitBlocked()){
-return 1 ; // almost always lose
-}
-
-return originalRandom();
-}
 let currentSlide = 0;
 const track = document.getElementById("bannerTrack");
 const slides = document.querySelectorAll("#bannerTrack img");
@@ -2541,7 +2531,15 @@ function randomTime(){
 
 // 🔥 RANDOM WITHDRAW (NO LIMIT 🔥)
 function randomWithdraw(){
-  return Math.floor(1000 + Math.random() * 999000); 
+  return Math.floor(1000 + safeRandom() * 999000);
+}
+
+function randomTime(){
+  let h = Math.floor(safeRandom() * 12) + 1;
+  let m = Math.floor(safeRandom() * 60);
+  let ampm = safeRandom() > 0.5 ? "AM" : "PM";
+
+  return `${h}:${m.toString().padStart(2,'0')} ${ampm}`;
 }
 
 
