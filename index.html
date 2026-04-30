@@ -2530,9 +2530,18 @@ function randomTime(){
 
 // 🔥 RANDOM WITHDRAW AMOUNT
 function randomWithdraw(){
-  return Math.floor(1000 + Math.random() * 999000);
-}
 
+  let chance = Math.random();
+
+  if(chance < 0.7){
+    // 🔥 small wins
+    return Math.floor(1000 + Math.random() * 20000);
+  }else{
+    // 💰 medium wins
+    return Math.floor(20000 + Math.random() * 80000);
+  }
+
+}
 // 🔥 LIVE LEADERBOARD
 function startLeaderboard(){
 
