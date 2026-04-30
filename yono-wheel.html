@@ -2,169 +2,108 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Lucky Wheel</title>
 
 <style>
+
 body{
   margin:0;
   font-family:Arial;
-  background:url("images/file_000000004dd8720b92d40a8b6daf265e.png") no-repeat center/cover;
+  background:url('images/file_000000004dd8720b92d40a8b6daf265e.png') no-repeat center/cover;
   color:#fff;
-  text-align:center;
 }
 
-/* TOP TABS */
-.tabs{
-  display:flex;
-  justify-content:center;
-  gap:10px;
-  margin-top:15px;
+/* TITLE */
+.title{
+  text-align:center;
+  font-size:22px;
+  margin-top:20px;
+  font-weight:bold;
 }
-.tab{
-  padding:10px 15px;
+
+/* ===== BOX CONTAINER ===== */
+.box-wrapper{
+  position:relative;
+  width:90%;
+  margin:20px auto;
+}
+
+/* IMAGE */
+.box-img{
+  width:100%;
   border-radius:20px;
-  background:#222;
+}
+
+/* CLICK AREAS */
+.box{
+  position:absolute;
+  top:0;
+  height:100%;
+  width:33.33%;
   cursor:pointer;
 }
-.tab.active{
-  background:#00e676;
-  color:#000;
-  font-weight:bold;
-}
 
-/* WHEEL AREA */
-.wheel-box{
-  position:relative;
-  margin-top:30px;
-}
+/* 3 BOX POSITIONS */
+.box1{ left:0; }
+.box2{ left:33.33%; }
+.box3{ left:66.66%; }
 
-.wheel{
-  width:280px;
-  height:280px;
-  margin:auto;
-  transition:transform 4s ease-out;
-}
-
-/* POINTER */
-.pointer{
-  position:absolute;
-  top:-10px;
-  left:50%;
-  transform:translateX(-50%);
-  font-size:30px;
-}
-
-/* BUTTON */
-.spin-btn{
-  margin-top:20px;
-  padding:12px 25px;
-  border:none;
+/* ACTIVE EFFECT */
+.box.active{
+  box-shadow:0 0 20px #00ff88 inset, 0 0 20px #00ff88;
   border-radius:20px;
-  background:linear-gradient(45deg,#00e676,#00c853);
-  color:#000;
+}
+
+/* OPTIONAL GLOW TEXT (future use) */
+.label{
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
   font-weight:bold;
 }
 
-/* INFO */
-.info{
-  margin-top:10px;
-  font-size:14px;
-}
 </style>
 </head>
 
 <body>
 
-<h2>🎡 Lucky Wheel</h2>
+<div class="title">🎡 Lucky Wheel</div>
 
-<div class="tabs">
-  <div class="tab active" onclick="selectWheel(100,this)">₹100</div>
-  <div class="tab" onclick="selectWheel(500,this)">₹500</div>
-  <div class="tab" onclick="selectWheel(1000,this)">₹1000</div>
-</div>
+<div class="box-wrapper">
 
-<div class="wheel-box">
-  <div class="pointer">⬇</div>
-  <img id="wheelImg" class="wheel" src="images/41383-removebg-preview.png">
-</div>
+  <!-- IMAGE -->
+  <img src="images/41393-removebg-preview.png" class="box-img">
 
-<button class="spin-btn" onclick="spinWheel()">SPIN</button>
+  <!-- CLICKABLE AREAS -->
+  <div class="box box1 active" onclick="selectBox(1)"></div>
+  <div class="box box2" onclick="selectBox(2)"></div>
+  <div class="box box3" onclick="selectBox(3)"></div>
 
-<div class="info" id="infoText">
-Deposit to get spin
 </div>
 
 <script>
-let currentWheel = 100;
-let spins = 0;
 
-/* CHANGE WHEEL */
-function selectWheel(type,el){
-  document.querySelectorAll('.tab').forEach(t=>t.classList.remove("active"));
-  el.classList.add("active");
+let selected = 1;
 
-  currentWheel = type;
+function selectBox(num){
+  selected = num;
 
-  if(type==100){
-    wheelImg.src="images/41383-removebg-preview.png";
-  }
-  if(type==500){
-    wheelImg.src="images/41384-removebg-preview.png";
-  }
-  if(type==1000){
-    wheelImg.src="images/41387-removebg-preview.png";
-  }
+  document.querySelectorAll('.box').forEach(b=>{
+    b.classList.remove('active');
+  });
 
-  document.getElementById("infoText").innerText =
-  "Deposit ₹"+type+" to get 1 spin";
+  document.querySelector('.box'+num).classList.add('active');
+
+  console.log("Selected:", num);
+
+  // 🔥 yaha baad me tu wheel change karega
+  // 1 = ₹100
+  // 2 = ₹500
+  // 3 = ₹1000
 }
 
-/* FAKE DEPOSIT CHECK (tu firebase se connect kar lena baad me) */
-function giveSpin(amount){
-  if(amount >= currentWheel){
-    spins++;
-    document.getElementById("infoText").innerText =
-    "You have "+spins+" spin";
-  }
-}
-
-/* SPIN */
-function spinWheel(){
-
-  if(spins <= 0){
-    alert("Deposit karo pehle ❌");
-    return;
-  }
-
-  spins--;
-
-  let deg = Math.floor(3000 + Math.random()*1000);
-
-  document.getElementById("wheelImg").style.transform =
-  "rotate("+deg+"deg)";
-
-  setTimeout(()=>{
-    let rewards100 = ["₹10","₹20","Bonus","Try Again"];
-    let rewards500 = ["₹50","₹100","Bonus","Try Again"];
-    let rewards1000 = ["₹100","₹200","Bonus","Try Again"];
-
-    let result;
-
-    if(currentWheel==100){
-      result = rewards100[Math.floor(Math.random()*rewards100.length)];
-    }
-    if(currentWheel==500){
-      result = rewards500[Math.floor(Math.random()*rewards500.length)];
-    }
-    if(currentWheel==1000){
-      result = rewards1000[Math.floor(Math.random()*rewards1000.length)];
-    }
-
-    alert("🎉 You won: "+result);
-
-  },4000);
-}
 </script>
 
 </body>
