@@ -2519,20 +2519,21 @@ function randomTime(){
   let s = now.getSeconds();
 
   let ampm = h >= 12 ? "PM" : "AM";
-  h = h % 12;
-  h = h ? h : 12;
+  h = h % 12 || 12;
 
-  return `${h}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')} ${ampm}`;
+  return `${h}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')} ${ampm}`;
 }
 
 
 // 🔥 RANDOM AMOUNT (NO REPEAT)
+    let lastAmount = 0;
+
 function randomWithdraw(){
   let amount;
 
   do{
-    amount = Math.floor(Math.random() * 90000) + 1000;
-  }while(amount === lastAmount); // 🔥 repeat block
+    amount = Math.floor(Math.random() * 99000) + 1000;
+  }while(amount === lastAmount);
 
   lastAmount = amount;
   return amount;
