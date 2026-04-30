@@ -8,12 +8,16 @@
 
 <style>
 
-body{
+html,body{
   margin:0;
+  padding:0;
+  height:100%;
   font-family:Arial;
-  background:url('images/file_000000004dd8720b92d40a8b6daf265e.png') no-repeat center/cover;
+  background:url('images/file_000000004dd8720b92d40a8b6daf265e.png') no-repeat center center;
+  background-size:cover;
   color:#fff;
   text-align:center;
+  overflow-x:hidden;
 }
 
 /* TITLE */
@@ -23,7 +27,7 @@ body{
   font-weight:bold;
 }
 
-/* ===== TOP BOX IMAGE ===== */
+/* ===== BOX ===== */
 .box-wrapper{
   position:relative;
   width:90%;
@@ -32,9 +36,10 @@ body{
 
 .box-img{
   width:100%;
+  display:block;
 }
 
-/* HIDDEN CLICK AREAS */
+/* CLICK AREA (invisible) */
 .box{
   position:absolute;
   top:0;
@@ -46,54 +51,49 @@ body{
 .box2{ left:33.33%; }
 .box3{ left:66.66%; }
 
-/* ACTIVE GLOW (ONLY LIGHT EFFECT) */
+/* CLEAN ACTIVE HIGHLIGHT */
 .active-glow{
   position:absolute;
-  top:0;
-  height:100%;
-  width:33.33%;
-  border-radius:20px;
-  box-shadow:0 0 20px #00ff88;
+  top:5%;
+  height:90%;
+  width:30%;
+  border-radius:12px;
+  background:rgba(0,255,150,0.15);
+  box-shadow:0 0 15px #00ff88;
+  transition:0.3s;
   pointer-events:none;
 }
 
 /* ===== WHEEL ===== */
 .wheel-container{
-  margin-top:20px;
-  position:relative;
+  margin-top:10px;
 }
 
-/* WHEEL IMAGE */
 .wheel{
   width:280px;
 }
 
 /* POINTER */
 .pointer{
-  position:absolute;
-  top:-20px;
-  left:50%;
-  transform:translateX(-50%);
+  margin-top:-10px;
   font-size:30px;
-}
-
-/* SPIN BUTTON */
-.spin-btn{
-  position:absolute;
-  top:50%;
-  left:50%;
-  transform:translate(-50%,-50%);
-  background:#00e676;
-  color:#000;
-  padding:14px 30px;
-  border-radius:30px;
-  font-weight:bold;
 }
 
 /* TEXT */
 .info{
+  margin-top:15px;
+  font-size:15px;
+}
+
+/* SPIN BUTTON (NOW BELOW TEXT) */
+.spin-btn{
   margin-top:10px;
-  font-size:14px;
+  background:#00e676;
+  color:#000;
+  padding:12px 28px;
+  border-radius:25px;
+  font-weight:bold;
+  display:inline-block;
 }
 
 </style>
@@ -103,7 +103,7 @@ body{
 
 <div class="title">🎡 Lucky Wheel</div>
 
-<!-- ===== TOP SELECTOR ===== -->
+<!-- ===== SELECTOR ===== -->
 <div class="box-wrapper">
 
   <img src="images/41393-removebg-preview.png" class="box-img">
@@ -113,8 +113,8 @@ body{
   <div class="box box2" onclick="selectBox(2)"></div>
   <div class="box box3" onclick="selectBox(3)"></div>
 
-  <!-- glow -->
-  <div id="glow" class="active-glow" style="left:0;"></div>
+  <!-- highlight -->
+  <div id="glow" class="active-glow" style="left:2%;"></div>
 
 </div>
 
@@ -123,46 +123,42 @@ body{
 
   <div class="pointer">⬇️</div>
 
-  <!-- wheel border -->
   <img id="wheelImg" src="images/41383-removebg-preview.png" class="wheel">
-
-  <!-- spin button -->
-  <div class="spin-btn">SPIN</div>
 
 </div>
 
+<!-- TEXT -->
 <div class="info" id="infoText">
   Deposit ₹100 to get spin
 </div>
 
+<!-- SPIN BUTTON BELOW TEXT -->
+<div class="spin-btn">SPIN</div>
+
 <script>
 
-let current = 1;
-
 function selectBox(n){
-  current = n;
 
-  // glow move (no visible click)
-  document.getElementById("glow").style.left =
-    (n-1)*33.33 + "%";
-
-  // wheel change
-  let wheel = document.getElementById("wheelImg");
+  let glow = document.getElementById("glow");
 
   if(n==1){
-    wheel.src = "images/41383-removebg-preview.png";
-    document.getElementById("infoText").innerText = "Deposit ₹100 to get spin";
+    glow.style.left = "2%";
+    wheelImg.src = "images/41383-removebg-preview.png";
+    infoText.innerText = "Deposit ₹100 to get spin";
   }
 
   if(n==2){
-    wheel.src = "images/41384-removebg-preview.png";
-    document.getElementById("infoText").innerText = "Deposit ₹500 to get spin";
+    glow.style.left = "35%";
+    wheelImg.src = "images/41384-removebg-preview.png";
+    infoText.innerText = "Deposit ₹500 to get spin";
   }
 
   if(n==3){
-    wheel.src = "images/41387-removebg-preview.png";
-    document.getElementById("infoText").innerText = "Deposit ₹1000 to get spin";
+    glow.style.left = "68%";
+    wheelImg.src = "images/41387-removebg-preview.png";
+    infoText.innerText = "Deposit ₹1000 to get spin";
   }
+
 }
 
 </script>
