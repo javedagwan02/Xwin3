@@ -2529,46 +2529,72 @@ track.addEventListener("touchend",(e)=>{
 </script>
   <script>
 
+// 🔥 LAST VALUE STORE (repeat avoid)
+let lastAmount = 0;
+let lastTime = "";
+
+// 🔥 RANDOM TIME (proper)
 function randomTime(){
   let h = Math.floor(Math.random() * 12) + 1;
   let m = Math.floor(Math.random() * 60);
+
   let ampm = Math.random() > 0.5 ? "AM" : "PM";
 
   return `${h}:${m.toString().padStart(2,'0')} ${ampm}`;
 }
 
+// 🔥 RANDOM AMOUNT (full random)
 function randomWithdraw(){
-  let min = 1000;
-  let max = 50000;
-
-  return Math.floor(Math.random() * (max - min)) + min;
+  return Math.floor(Math.random() * 49000) + 1000;
 }
 
+// 🔥 UNIQUE DATA (same repeat nahi hoga)
+function getUniqueData(){
+  let amount, time;
+
+  do{
+    amount = randomWithdraw();
+    time = randomTime();
+  }while(amount === lastAmount || time === lastTime);
+
+  lastAmount = amount;
+  lastTime = time;
+
+  return {amount, time};
+}
+
+// 🔥 MAIN LEADERBOARD
 function startLeaderboard(){
 
   const box = document.getElementById("withdrawList");
+
+  if(!box) return;
+
   box.innerHTML = "";
 
   setInterval(()=>{
 
-    let amount = randomWithdraw();   // ✅ always number
-    let time = randomTime();         // ✅ always random
+    let data = getUniqueData();
 
     let item = document.createElement("div");
 
-    item.innerHTML = `₹${amount.toLocaleString()} &nbsp; • &nbsp; ${time}`;
+    // 🔥 ONLY amount + time
+    item.innerHTML = `₹${data.amount.toLocaleString()} &nbsp; • &nbsp; ${data.time}`;
 
     box.prepend(item);
 
-    // 🔥 ONLY 3 ENTRIES
+    // 🔥 ONLY 3 ROWS
     if(box.children.length > 3){
       box.removeChild(box.lastChild);
     }
 
-  }, 2000); // thoda slow kiya real feel ke liye
+  }, 1800); // smooth delay
+
 }
 
+// 🔥 START
 startLeaderboard();
+
   </script>
 <div id="blockPopup" class="block-popup">
   <div class="block-box">
