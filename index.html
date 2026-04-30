@@ -1251,7 +1251,7 @@ async function loadBalance(){
     let balance = Number(d.data().balance || 0);
 
     document.getElementById("topBalance").innerText =
-"₹" + Number(balance).toLocaleString(undefined, {
+Number(balance).toLocaleString(undefined, {
   minimumFractionDigits: 2,
   maximumFractionDigits: 2
 });
