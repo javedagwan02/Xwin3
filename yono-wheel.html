@@ -1,196 +1,171 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lucky Wheel</title>
 
 <style>
-
 body{
   margin:0;
   font-family:Arial;
-  background:#0b001a;
+  background:url("images/file_000000004dd8720b92d40a8b6daf265e.png") no-repeat center/cover;
   color:#fff;
   text-align:center;
 }
 
-/* TOP OPTIONS */
-.wheel-top{
+/* TOP TABS */
+.tabs{
   display:flex;
-  gap:8px;
-  padding:10px;
+  justify-content:center;
+  gap:10px;
+  margin-top:15px;
 }
-
-.wheel-option{
-  flex:1;
-  padding:10px;
-  border-radius:12px;
+.tab{
+  padding:10px 15px;
+  border-radius:20px;
   background:#222;
-  color:#aaa;
-  font-size:13px;
   cursor:pointer;
 }
-
-.wheel-option.active{
-  background:linear-gradient(45deg,#00c853,#00ff88);
+.tab.active{
+  background:#00e676;
   color:#000;
   font-weight:bold;
 }
 
-/* WHEEL */
+/* WHEEL AREA */
 .wheel-box{
-  margin:20px auto;
-  width:260px;
-  height:260px;
-  border-radius:50%;
-  border:6px solid #fff;
   position:relative;
-  overflow:hidden;
-  box-shadow:0 0 25px #ff00cc;
+  margin-top:30px;
 }
 
 .wheel{
-  width:100%;
-  height:100%;
-  border-radius:50%;
-  background:conic-gradient(
-    #ff00cc 0deg 45deg,
-    #7b00ff 45deg 90deg,
-    #ff00cc 90deg 135deg,
-    #7b00ff 135deg 180deg,
-    #ff00cc 180deg 225deg,
-    #7b00ff 225deg 270deg,
-    #ff00cc 270deg 315deg,
-    #7b00ff 315deg 360deg
-  );
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-weight:bold;
-  font-size:20px;
+  width:280px;
+  height:280px;
+  margin:auto;
+  transition:transform 4s ease-out;
 }
 
 /* POINTER */
 .pointer{
-  width:0;
-  height:0;
-  border-left:15px solid transparent;
-  border-right:15px solid transparent;
-  border-bottom:25px solid #fff;
   position:absolute;
   top:-10px;
   left:50%;
   transform:translateX(-50%);
+  font-size:30px;
 }
 
 /* BUTTON */
 .spin-btn{
-  padding:14px 30px;
+  margin-top:20px;
+  padding:12px 25px;
   border:none;
-  border-radius:30px;
-  background:linear-gradient(45deg,#ff00cc,#7b00ff);
-  color:#fff;
-  font-size:16px;
-  margin-top:15px;
+  border-radius:20px;
+  background:linear-gradient(45deg,#00e676,#00c853);
+  color:#000;
+  font-weight:bold;
 }
 
-/* TEXT */
+/* INFO */
 .info{
   margin-top:10px;
   font-size:14px;
 }
-
 </style>
 </head>
 
 <body>
 
-<div class="wheel-top">
-  <div class="wheel-option active" onclick="selectWheel(0)">₹100</div>
-  <div class="wheel-option" onclick="selectWheel(1)">₹500</div>
-  <div class="wheel-option" onclick="selectWheel(2)">₹1000</div>
-  <div class="wheel-option" onclick="selectWheel(3)">₹10000 🔒</div>
+<h2>🎡 Lucky Wheel</h2>
+
+<div class="tabs">
+  <div class="tab active" onclick="selectWheel(100,this)">₹100</div>
+  <div class="tab" onclick="selectWheel(500,this)">₹500</div>
+  <div class="tab" onclick="selectWheel(1000,this)">₹1000</div>
 </div>
 
 <div class="wheel-box">
-  <div class="pointer"></div>
-  <div id="wheel" class="wheel">SPIN</div>
+  <div class="pointer">⬇</div>
+  <img id="wheelImg" class="wheel" src="images/41383-removebg-preview.png">
 </div>
 
 <button class="spin-btn" onclick="spinWheel()">SPIN</button>
 
-<div class="info">
-  Deposit ₹30 = 1 Spin  
-  <br> Spins Left: <span id="spins">0</span>
+<div class="info" id="infoText">
+Deposit to get spin
 </div>
 
 <script>
+let currentWheel = 100;
+let spins = 0;
 
-let currentWheel = 0;
-let spins = Number(localStorage.getItem("spins") || 0);
+/* CHANGE WHEEL */
+function selectWheel(type,el){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove("active"));
+  el.classList.add("active");
 
-// 🔥 DIFFERENT REWARDS
-const rewards = [
-  [10,20,30,50,0,5,15,25],        // ₹100 wheel
-  [50,100,150,200,0,80,120,180],  // ₹500 wheel
-  [100,200,300,500,0,150,250,400],// ₹1000 wheel
-  [500,1000,2000,5000,0,800,1500,3000] // ₹10k
-];
+  currentWheel = type;
 
-document.getElementById("spins").innerText = spins;
+  if(type==100){
+    wheelImg.src="images/41383-removebg-preview.png";
+  }
+  if(type==500){
+    wheelImg.src="images/41384-removebg-preview.png";
+  }
+  if(type==1000){
+    wheelImg.src="images/41387-removebg-preview.png";
+  }
 
-// SELECT WHEEL
-function selectWheel(i){
-  currentWheel = i;
-
-  document.querySelectorAll(".wheel-option")
-    .forEach(el=>el.classList.remove("active"));
-
-  document.querySelectorAll(".wheel-option")[i]
-    .classList.add("active");
+  document.getElementById("infoText").innerText =
+  "Deposit ₹"+type+" to get 1 spin";
 }
 
-// SPIN LOGIC
+/* FAKE DEPOSIT CHECK (tu firebase se connect kar lena baad me) */
+function giveSpin(amount){
+  if(amount >= currentWheel){
+    spins++;
+    document.getElementById("infoText").innerText =
+    "You have "+spins+" spin";
+  }
+}
+
+/* SPIN */
 function spinWheel(){
 
   if(spins <= 0){
-    alert("Deposit karo pehle 😎");
+    alert("Deposit karo pehle ❌");
     return;
   }
 
   spins--;
-  localStorage.setItem("spins", spins);
-  document.getElementById("spins").innerText = spins;
 
-  let rewardArr = rewards[currentWheel];
+  let deg = Math.floor(3000 + Math.random()*1000);
 
-  let index = Math.floor(Math.random()*rewardArr.length);
-  let reward = rewardArr[index];
-
-  let rotate = 360*5 + (index * 45);
-
-  document.getElementById("wheel").style.transition="5s";
-  document.getElementById("wheel").style.transform=
-    "rotate("+rotate+"deg)";
+  document.getElementById("wheelImg").style.transform =
+  "rotate("+deg+"deg)";
 
   setTimeout(()=>{
-    alert("🎉 You won ₹"+reward);
-  },5000);
-}
+    let rewards100 = ["₹10","₹20","Bonus","Try Again"];
+    let rewards500 = ["₹50","₹100","Bonus","Try Again"];
+    let rewards1000 = ["₹100","₹200","Bonus","Try Again"];
 
-// 🔥 FAKE DEPOSIT BUTTON (TEST)
-function addDeposit(){
-  spins++;
-  localStorage.setItem("spins", spins);
-  document.getElementById("spins").innerText = spins;
-}
+    let result;
 
+    if(currentWheel==100){
+      result = rewards100[Math.floor(Math.random()*rewards100.length)];
+    }
+    if(currentWheel==500){
+      result = rewards500[Math.floor(Math.random()*rewards500.length)];
+    }
+    if(currentWheel==1000){
+      result = rewards1000[Math.floor(Math.random()*rewards1000.length)];
+    }
+
+    alert("🎉 You won: "+result);
+
+  },4000);
+}
 </script>
-
-<br><br>
-
-<button onclick="addDeposit()" style="background:#00c853;padding:10px;border:none;border-radius:10px">
-Test Deposit (+1 Spin)
-</button>
 
 </body>
 </html>
