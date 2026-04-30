@@ -1140,31 +1140,8 @@ function closePopup(){
 
 // 🔥 AUTO SHOW ON PAGE LOAD
 // 🔥 LOAD USER BALANCE (FIXED)
-async function loadBalance(){
 
-  const userEmail = localStorage.getItem("userEmail");
 
-  if(!userEmail){
-    console.log("User not logged in");
-    return;
-  }
-
-  const userSnap = await getDocs(
-    query(collection(db,"users"), where("email","==",userEmail))
-  );
-
-  userSnap.forEach(d=>{
-    let balance = Number(d.data().balance || 0);
-
-    document.getElementById("topBalance").innerText = balance;
-
-    localStorage.setItem("wallet", balance);
-  });
-
-}
-
-// 🔥 CALL
-loadBalance();
 
   checkDailyReward();
 
@@ -1216,6 +1193,31 @@ appId: "1:403688058646:web:f1753360471528f275ea37"
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+  // 🔥 LOAD BALANCE FUNCTION
+async function loadBalance(){
+
+  const userEmail = localStorage.getItem("userEmail");
+
+  if(!userEmail){
+    console.log("User not logged in");
+    return;
+  }
+
+  const userSnap = await getDocs(
+    query(collection(db,"users"), where("email","==",userEmail))
+  );
+
+  userSnap.forEach(d=>{
+    let balance = Number(d.data().balance || 0);
+
+    document.getElementById("topBalance").innerText = balance;
+
+    localStorage.setItem("wallet", balance);
+  });
+}
+
+// 🔥 CALL AFTER FIREBASE READY
+loadBalance();
   window.openJiliRoulette = async function(){
 
   const userEmail = localStorage.getItem("userEmail");
