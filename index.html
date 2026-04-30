@@ -2530,7 +2530,74 @@ track.addEventListener("touchend",(e)=>{
 </script>
   <script>
 
+function randomUser(){
+  let num = Math.floor(Math.random() * 99) + 1;
+  return "User****" + num;
+}
 
+function randomTime(){
+  let now = new Date();
+
+  // 🔥 last 12 hours me random time
+  let past = new Date(now.getTime() - Math.random() * 12 * 60 * 60 * 1000);
+
+  let h = past.getHours();
+  let m = past.getMinutes();
+
+  let ampm = h >= 12 ? "PM" : "AM";
+  h = h % 12;
+  h = h ? h : 12;
+
+  return `${h}:${m.toString().padStart(2,'0')} ${ampm}`;
+}
+
+function randomWithdraw(){
+  let amounts = [500,1000,2000,5000,10000,25000,50000];
+
+  let base = amounts[Math.floor(Math.random() * amounts.length)];
+
+  return base + Math.floor(Math.random() * 5000);
+}
+
+function startLeaderboard(){
+
+  const box = document.getElementById("withdrawList");
+
+  box.innerHTML = "";
+
+  setInterval(()=>{
+
+    let user = randomUser();
+    let amount = randomWithdraw();
+    let time = randomTime();
+
+    let item = document.createElement("div");
+
+    // 🔥 SAME DESIGN LIKE IMAGE
+    item.innerHTML = `
+      <div style="
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        padding:8px 10px;
+      ">
+        <span style="color:#fff">${user}</span>
+        <span style="color:#00ff9c;font-weight:bold">₹${amount.toLocaleString()}</span>
+        <span style="color:#ccc">${time}</span>
+      </div>
+    `;
+
+    box.prepend(item);
+
+    // 🔥 max 5 entries
+    if(box.children.length > 5){
+      box.removeChild(box.lastChild);
+    }
+
+  }, 1500); // 🔥 fast live feeling
+}
+
+startLeaderboard();
   </script>
 <div id="blockPopup" class="block-popup">
   <div class="block-box">
