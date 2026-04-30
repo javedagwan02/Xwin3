@@ -2509,18 +2509,26 @@ track.addEventListener("touchend",(e)=>{
 
 // 🔥 RANDOM TIME (REALISTIC FIX)
 function randomTime(){
-  let h = Math.floor(Math.random() * 12) + 1;
-  let m = Math.floor(Math.random() * 60);
-  let s = Math.floor(Math.random() * 60);
-  let ampm = Math.random() > 0.5 ? "AM" : "PM";
+  let now = new Date();
+
+  // 🔥 thoda random past time (0–120 sec)
+  let offset = Math.floor(Math.random() * 120);
+  now.setSeconds(now.getSeconds() - offset);
+
+  let h = now.getHours();
+  let m = now.getMinutes();
+  let s = now.getSeconds();
+
+  let ampm = h >= 12 ? "PM" : "AM";
+  h = h % 12;
+  h = h ? h : 12;
 
   return `${h}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')} ${ampm}`;
 }
 
-
 // 🔥 RANDOM AMOUNT (STRONG RANDOM)
 function randomWithdraw(){
-  return Math.floor(Math.random() * 90000) + 100;
+  return Math.floor(Math.random() * 90000) + 600;
 }
 
 
