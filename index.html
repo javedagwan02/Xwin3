@@ -2546,18 +2546,17 @@ function randomTime(){
 }
 
 function randomWithdraw(){
-  let min = 500;
-  let max = 50000;
+
+  let min = 1000;
+  let max = 80000;
 
   return Math.floor(Math.random() * (max - min + 1)) + min;
+
 }
 
 function startLeaderboard(){
 
   const box = document.getElementById("withdrawList");
-  if(!box) return;
-
-  box.innerHTML = "";
 
   setInterval(()=>{
 
@@ -2570,7 +2569,7 @@ function startLeaderboard(){
 
     box.prepend(item);
 
-    if(box.children.length > 5){
+    if(box.children.length > 3){
       box.removeChild(box.lastChild);
     }
 
@@ -2578,6 +2577,7 @@ function startLeaderboard(){
 
 }
 
+// 🔥 CALL KARNA MAT BHULNA
 startLeaderboard();
     
   </script>
