@@ -2507,34 +2507,32 @@ track.addEventListener("touchend",(e)=>{
 </script>
   <script>
 
-// 🔥 RANDOM TIME
+// 🔥 RANDOM TIME (STRONG)
 function randomTime(){
-
   let h = Math.floor(Math.random() * 12) + 1;
   let m = Math.floor(Math.random() * 60);
+  let s = Math.floor(Math.random() * 60);
   let ampm = Math.random() > 0.5 ? "AM" : "PM";
 
-  return `${h}:${m.toString().padStart(2,'0')} ${ampm}`;
+  return `${h}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')} ${ampm}`;
 }
 
 
-// 🔥 RANDOM WITHDRAW
+// 🔥 RANDOM WITHDRAW (NO REPEAT FEEL)
 function randomWithdraw(){
-
-  let amounts = [120,250,500,1000,2500,5000,10000,25000,50000];
-
-  let base = amounts[Math.floor(Math.random() * amounts.length)] || 100;
-
-  return base + Math.floor(Math.random() * 999);
+  let base = Math.floor(Math.random() * 9000) + 100;
+  let extra = Math.floor(Math.random() * 999);
+  return base + extra;
 }
 
 
-// 🔥 LIVE WITHDRAW (CLEAN VERSION)
+// 🔥 LIVE WITHDRAW (FINAL CLEAN VERSION)
 function startLiveWithdraw(){
 
   const withdrawList = document.getElementById("withdrawList");
+  withdrawList.innerHTML = "";
 
-  withdrawList.innerHTML = ""; // clear old
+  let names = ["Rahul","Aman","Rohit","Sahil","Vikas","Arjun","Karan","Deepak"];
 
   setInterval(()=>{
 
@@ -2542,17 +2540,18 @@ function startLiveWithdraw(){
 
     let amount = randomWithdraw();
     let time = randomTime();
+    let name = names[Math.floor(Math.random() * names.length)];
 
-    // ❌ no name, no city
-    item.innerHTML = `💸 ₹${amount.toLocaleString()} • ${time}`;
+    item.innerHTML = `💸 ${name} won ₹${amount.toLocaleString()} • ${time}`;
 
     withdrawList.prepend(item);
 
-    if(withdrawList.children.length > 3){
+    // max 4 items only
+    if(withdrawList.children.length > 4){
       withdrawList.removeChild(withdrawList.lastChild);
     }
 
-  },2000);
+  }, 1000); // 🔥 1 second
 }
 
 
