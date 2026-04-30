@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+
+body{
+  margin:0;
+  font-family:Arial;
+  background:#0b001a;
+  color:#fff;
+  text-align:center;
+}
+
+/* TOP OPTIONS */
+.wheel-top{
+  display:flex;
+  gap:8px;
+  padding:10px;
+}
+
+.wheel-option{
+  flex:1;
+  padding:10px;
+  border-radius:12px;
+  background:#222;
+  color:#aaa;
+  font-size:13px;
+  cursor:pointer;
+}
+
+.wheel-option.active{
+  background:linear-gradient(45deg,#00c853,#00ff88);
+  color:#000;
+  font-weight:bold;
+}
+
+/* WHEEL */
+.wheel-box{
+  margin:20px auto;
+  width:260px;
+  height:260px;
+  border-radius:50%;
+  border:6px solid #fff;
+  position:relative;
+  overflow:hidden;
+  box-shadow:0 0 25px #ff00cc;
+}
+
+.wheel{
+  width:100%;
+  height:100%;
+  border-radius:50%;
+  background:conic-gradient(
+    #ff00cc 0deg 45deg,
+    #7b00ff 45deg 90deg,
+    #ff00cc 90deg 135deg,
+    #7b00ff 135deg 180deg,
+    #ff00cc 180deg 225deg,
+    #7b00ff 225deg 270deg,
+    #ff00cc 270deg 315deg,
+    #7b00ff 315deg 360deg
+  );
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:bold;
+  font-size:20px;
+}
+
+/* POINTER */
+.pointer{
+  width:0;
+  height:0;
+  border-left:15px solid transparent;
+  border-right:15px solid transparent;
+  border-bottom:25px solid #fff;
+  position:absolute;
+  top:-10px;
+  left:50%;
+  transform:translateX(-50%);
+}
+
+/* BUTTON */
+.spin-btn{
+  padding:14px 30px;
+  border:none;
+  border-radius:30px;
+  background:linear-gradient(45deg,#ff00cc,#7b00ff);
+  color:#fff;
+  font-size:16px;
+  margin-top:15px;
+}
+
+/* TEXT */
+.info{
+  margin-top:10px;
+  font-size:14px;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="wheel-top">
+  <div class="wheel-option active" onclick="selectWheel(0)">₹100</div>
+  <div class="wheel-option" onclick="selectWheel(1)">₹500</div>
+  <div class="wheel-option" onclick="selectWheel(2)">₹1000</div>
+  <div class="wheel-option" onclick="selectWheel(3)">₹10000 🔒</div>
+</div>
+
+<div class="wheel-box">
+  <div class="pointer"></div>
+  <div id="wheel" class="wheel">SPIN</div>
+</div>
+
+<button class="spin-btn" onclick="spinWheel()">SPIN</button>
+
+<div class="info">
+  Deposit ₹30 = 1 Spin  
+  <br> Spins Left: <span id="spins">0</span>
+</div>
+
+<script>
+
+let currentWheel = 0;
+let spins = Number(localStorage.getItem("spins") || 0);
+
+// 🔥 DIFFERENT REWARDS
+const rewards = [
+  [10,20,30,50,0,5,15,25],        // ₹100 wheel
+  [50,100,150,200,0,80,120,180],  // ₹500 wheel
+  [100,200,300,500,0,150,250,400],// ₹1000 wheel
+  [500,1000,2000,5000,0,800,1500,3000] // ₹10k
+];
+
+document.getElementById("spins").innerText = spins;
+
+// SELECT WHEEL
+function selectWheel(i){
+  currentWheel = i;
+
+  document.querySelectorAll(".wheel-option")
+    .forEach(el=>el.classList.remove("active"));
+
+  document.querySelectorAll(".wheel-option")[i]
+    .classList.add("active");
+}
+
+// SPIN LOGIC
+function spinWheel(){
+
+  if(spins <= 0){
+    alert("Deposit karo pehle 😎");
+    return;
+  }
+
+  spins--;
+  localStorage.setItem("spins", spins);
+  document.getElementById("spins").innerText = spins;
+
+  let rewardArr = rewards[currentWheel];
+
+  let index = Math.floor(Math.random()*rewardArr.length);
+  let reward = rewardArr[index];
+
+  let rotate = 360*5 + (index * 45);
+
+  document.getElementById("wheel").style.transition="5s";
+  document.getElementById("wheel").style.transform=
+    "rotate("+rotate+"deg)";
+
+  setTimeout(()=>{
+    alert("🎉 You won ₹"+reward);
+  },5000);
+}
+
+// 🔥 FAKE DEPOSIT BUTTON (TEST)
+function addDeposit(){
+  spins++;
+  localStorage.setItem("spins", spins);
+  document.getElementById("spins").innerText = spins;
+}
+
+</script>
+
+<br><br>
+
+<button onclick="addDeposit()" style="background:#00c853;padding:10px;border:none;border-radius:10px">
+Test Deposit (+1 Spin)
+</button>
+
+</body>
+</html>
