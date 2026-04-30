@@ -2531,29 +2531,17 @@ track.addEventListener("touchend",(e)=>{
 
 // 🔥 RANDOM TIME (last 12 hours realistic)
 function randomTime(){
+  let h = Math.floor(Math.random() * 12) + 1;
+  let m = Math.floor(Math.random() * 60);
+  let ampm = Math.random() > 0.5 ? "AM" : "PM";
 
-  let now = new Date();
-  let past = new Date(now.getTime() - Math.random() * 12 * 60 * 60 * 1000);
-
-  let h = past.getHours();
-  let m = past.getMinutes();
-
-  let ampm = h >= 12 ? "PM" : "AM";
-  h = h % 12;
-  h = h ? h : 12;
-
-  return h + ":" + (m < 10 ? "0"+m : m) + " " + ampm;
+  return `${h}:${m.toString().padStart(2,'0')} ${ampm}`;
 }
 
 
 // 🔥 RANDOM WITHDRAW (NO LIMIT 🔥)
 function randomWithdraw(){
-
-  // 🔥 1k se leke 10 lakh tak random
-  let min = 1000;
-  let max = 1000000;
-
-  return Math.floor(Math.random() * (max - min + 1)) + min;
+  return Math.floor(1000 + Math.random() * 999000); 
 }
 
 
@@ -2563,30 +2551,25 @@ function startLeaderboard(){
   const box = document.getElementById("withdrawList");
   if(!box) return;
 
-  box.innerHTML = "";
-
   setInterval(()=>{
 
-    let amount = randomWithdraw();   // 🔥 हर बार नया
-    let time = randomTime();         // 🔥 हर बार नया
+    let amount = randomWithdraw();
+    let time = randomTime();
 
     let item = document.createElement("div");
 
-    // 🔥 EXACT FORMAT
     item.innerText = "₹" + amount.toLocaleString() + " • " + time;
 
     box.prepend(item);
 
-    // 🔥 max 3 entries (fit in design)
     if(box.children.length > 3){
       box.removeChild(box.lastChild);
     }
 
-  }, 1200); // 🔥 fast live feel
+  }, 1200);
+
 }
 
-
-// 🔥 START
 startLeaderboard();
     
   </script>
