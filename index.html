@@ -2508,6 +2508,8 @@ track.addEventListener("touchend",(e)=>{
   <script>
 
 // 🔥 RANDOM TIME  
+let lastAmount = 0;
+
 function randomTime(){
   let h = Math.floor(Math.random() * 12) + 1;
   let m = Math.floor(Math.random() * 60);
@@ -2518,17 +2520,20 @@ function randomTime(){
 
 function randomWithdraw(){
 
-  // 🔥 wide range (zyada variation)
-  let min = 100;
-  let max = 50000;
+  let amount;
 
-  return Math.floor(Math.random() * (max - min + 1)) + min;
+  do{
+    amount = Math.floor(Math.random() * 50000) + 100;
+  }while(amount === lastAmount); // 🔥 repeat block
+
+  lastAmount = amount;
+
+  return amount;
 }
 
 function startLiveWithdraw(){
 
   const withdrawList = document.getElementById("withdrawList");
-
   withdrawList.innerHTML = "";
 
   setInterval(()=>{
@@ -2546,7 +2551,7 @@ function startLiveWithdraw(){
       withdrawList.removeChild(withdrawList.lastChild);
     }
 
-  },1000); // 🔥 fast update (1 sec)
+  }, 1200); // 🔥 natural speed
 }
 
 startLiveWithdraw();
