@@ -2517,9 +2517,9 @@ track.addEventListener("touchend",(e)=>{
 
 
 </script>
-  <script>
+<script>
 
-// 🔥 RANDOM TIME (last 12 hours realistic)
+// 🔥 RANDOM TIME (REALISTIC)
 function randomTime(){
   let h = Math.floor(Math.random() * 12) + 1;
   let m = Math.floor(Math.random() * 60);
@@ -2528,20 +2528,10 @@ function randomTime(){
   return `${h}:${m.toString().padStart(2,'0')} ${ampm}`;
 }
 
-
-// 🔥 RANDOM WITHDRAW (NO LIMIT 🔥)
+// 🔥 RANDOM WITHDRAW AMOUNT
 function randomWithdraw(){
-  return Math.floor(1000 + safeRandom() * 999000);
+  return Math.floor(1000 + Math.random() * 999000);
 }
-
-function randomTime(){
-  let h = Math.floor(safeRandom() * 12) + 1;
-  let m = Math.floor(safeRandom() * 60);
-  let ampm = safeRandom() > 0.5 ? "AM" : "PM";
-
-  return `${h}:${m.toString().padStart(2,'0')} ${ampm}`;
-}
-
 
 // 🔥 LIVE LEADERBOARD
 function startLeaderboard(){
@@ -2560,6 +2550,7 @@ function startLeaderboard(){
 
     box.prepend(item);
 
+    // 🔥 only 3 entries visible
     if(box.children.length > 3){
       box.removeChild(box.lastChild);
     }
@@ -2568,9 +2559,12 @@ function startLeaderboard(){
 
 }
 
-startLeaderboard();
-    
-  </script>
+// 🔥 RUN AFTER PAGE LOAD
+window.onload = () => {
+  startLeaderboard();
+};
+
+</script>
 <div id="blockPopup" class="block-popup">
   <div class="block-box">
     <h1>🚫 ACCESS DENIED</h1>
