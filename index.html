@@ -2546,7 +2546,6 @@ function randomTime(){
 }
 
 function randomWithdraw(){
-  // 🔥 bada realistic range
   let min = 500;
   let max = 50000;
 
@@ -2556,7 +2555,7 @@ function randomWithdraw(){
 function startLeaderboard(){
 
   const box = document.getElementById("withdrawList");
-  if(!box) return; // 🔥 important
+  if(!box) return;
 
   box.innerHTML = "";
 
@@ -2567,7 +2566,7 @@ function startLeaderboard(){
 
     let item = document.createElement("div");
 
-    item.textContent = `₹${amount.toLocaleString()} • ${time}`;
+    item.innerText = "₹" + amount.toLocaleString() + " • " + time;
 
     box.prepend(item);
 
@@ -2575,8 +2574,10 @@ function startLeaderboard(){
       box.removeChild(box.lastChild);
     }
 
-  }, 1200);
+  }, 1500);
+
 }
+
 startLeaderboard();
     
   </script>
