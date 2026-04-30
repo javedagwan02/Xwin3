@@ -1168,17 +1168,21 @@ async function loadBalance(){
 
   },1000);
 
-let jackpot = 125000;
+let jackpot = Number(localStorage.getItem("jackpot")) || 125000;
 
 setInterval(()=>{
   let random = Math.random();
 
   let increase = random > 0.8 
-    ? Math.floor(Math.random()*500)   // 🔥 bada jump kabhi kabhi
+    ? Math.floor(Math.random()*500)   // bada jump
     : Math.floor(Math.random()*50)+5; // normal
 
   jackpot += increase;
 
+  // 💾 SAVE VALUE
+  localStorage.setItem("jackpot", jackpot);
+
+  // 🎯 UI UPDATE
   document.getElementById("jackpotAmount").innerText =
   "₹" + jackpot.toLocaleString();
 
