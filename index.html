@@ -687,16 +687,17 @@ font-size:16px;
 /* 🔥 DATA POSITION */
 .leaderboard-data{
   position:absolute;
-  top:38%;     /* 🔥 adjust kar */
+  top:38%;
   left:8%;
-  width:60%;   /* 🔥 full nahi, sirf left side */
+  width:55%;
+  height:90px;      /* 🔥 height fix */
+  overflow:hidden;  /* 🔥 bahar nahi niklega */
 }
 
 .leaderboard-data div{
   color:#00ff9c;
   font-size:14px;
   padding:6px 0;
-  text-align:left;
 }
 </style>
 </head>
@@ -2529,26 +2530,18 @@ track.addEventListener("touchend",(e)=>{
   <script>
 
 function randomTime(){
-  let now = new Date();
-  let past = new Date(now.getTime() - Math.random() * 12 * 60 * 60 * 1000);
-
-  let h = past.getHours();
-  let m = past.getMinutes();
-
-  let ampm = h >= 12 ? "PM" : "AM";
-  h = h % 12;
-  h = h ? h : 12;
+  let h = Math.floor(Math.random() * 12) + 1;
+  let m = Math.floor(Math.random() * 60);
+  let ampm = Math.random() > 0.5 ? "AM" : "PM";
 
   return `${h}:${m.toString().padStart(2,'0')} ${ampm}`;
 }
 
 function randomWithdraw(){
-  let amounts = [1000,2000,5000,10000,25000,50000];
+  let min = 1000;
+  let max = 50000;
 
-  let base = amounts[Math.floor(Math.random() * amounts.length)];
-  let extra = Math.floor(Math.random() * 900);
-
-  return base + extra;
+  return Math.floor(Math.random() * (max - min)) + min;
 }
 
 function startLeaderboard(){
@@ -2558,22 +2551,21 @@ function startLeaderboard(){
 
   setInterval(()=>{
 
-    let amount = randomWithdraw();
-    let time = randomTime();
+    let amount = randomWithdraw();   // ✅ always number
+    let time = randomTime();         // ✅ always random
 
     let item = document.createElement("div");
 
-    // 🔥 SIRF AMOUNT + TIME (NO USER)
-    item.innerHTML = `₹${amount.toLocaleString()} &nbsp;&nbsp; • &nbsp;&nbsp; ${time}`;
+    item.innerHTML = `₹${amount.toLocaleString()} &nbsp; • &nbsp; ${time}`;
 
     box.prepend(item);
 
-    if(box.children.length > 5){
+    // 🔥 ONLY 3 ENTRIES
+    if(box.children.length > 3){
       box.removeChild(box.lastChild);
     }
 
-  }, 1500);
-
+  }, 2000); // thoda slow kiya real feel ke liye
 }
 
 startLeaderboard();
