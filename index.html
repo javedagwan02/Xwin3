@@ -2507,54 +2507,7 @@ track.addEventListener("touchend",(e)=>{
 </script>
   <script>
 
-// 🔥 RANDOM TIME  
-let lastAmount = 0;
 
-function randomTime(){
-  let h = Math.floor(Math.random() * 12) + 1;
-  let m = Math.floor(Math.random() * 60);
-  let ampm = Math.random() < 0.5 ? "AM" : "PM";
-
-  return `${h}:${m.toString().padStart(2,'0')} ${ampm}`;
-}
-
-function randomWithdraw(){
-
-  let amount;
-
-  do{
-    amount = Math.floor(Math.random() * 50000) + 100;
-  }while(amount === lastAmount); // 🔥 repeat block
-
-  lastAmount = amount;
-
-  return amount;
-}
-
-function startLiveWithdraw(){
-
-  const withdrawList = document.getElementById("withdrawList");
-  withdrawList.innerHTML = "";
-
-  setInterval(()=>{
-
-    let item = document.createElement("div");
-
-    let amount = randomWithdraw();
-    let time = randomTime();
-
-    item.innerHTML = `💸 ₹${amount.toLocaleString()} • ${time}`;
-
-    withdrawList.prepend(item);
-
-    if(withdrawList.children.length > 3){
-      withdrawList.removeChild(withdrawList.lastChild);
-    }
-
-  }, 1200); // 🔥 natural speed
-}
-
-startLiveWithdraw();
   </script>
 <div id="blockPopup" class="block-popup">
   <div class="block-box">
