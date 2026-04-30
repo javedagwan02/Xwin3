@@ -649,23 +649,49 @@ font-size:16px;
   color:#fff;
   text-shadow:0 0 10px #000, 0 0 20px #ff9800;
 }
-  /* 🔥 PURE CLEAN ICON MODE */
-
+/* 🔥 REMOVE ALL SHADOW / BG */
 .game-card{
   background: transparent !important;
-  border-radius: 0 !important;
-  overflow: visible !important;
   box-shadow: none !important;
 }
 
 .game-card::after{
-  display: none !important;   /* 🔥 ye main shadow remove */
+  display:none !important;
 }
 
+/* 🔥 ICON STYLE */
 .game-card img{
-  border-radius: 18px;
-  box-shadow: none !important;
-  display: block;   /* 🔥 bottom gap remove */
+  border-radius:18px;
+  position:relative;
+  z-index:2;
+}
+
+/* 🔥 GLOW BORDER WRAPPER */
+.game-card{
+  padding:3px;
+  border-radius:20px;
+  position:relative;
+}
+
+/* 🔥 ANIMATED SKY BLUE GLOW */
+.game-card::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  border-radius:20px;
+  background: linear-gradient(45deg, #00eaff, #0099ff, #00eaff);
+  background-size: 300% 300%;
+  z-index:1;
+  filter: blur(6px);
+  opacity:0.8;
+  animation: glowMove 3s linear infinite;
+}
+
+/* 🔥 ANIMATION */
+@keyframes glowMove{
+  0%{background-position:0% 50%;}
+  50%{background-position:100% 50%;}
+  100%{background-position:0% 50%;}
 }
 </style>
 </head>
