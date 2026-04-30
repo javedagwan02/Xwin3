@@ -2529,7 +2529,58 @@ track.addEventListener("touchend",(e)=>{
 </script>
   <script>
 
+function randomTime(){
+  let now = new Date();
 
+  // 🔥 last 12 ghante me random time
+  let past = new Date(now.getTime() - Math.floor(Math.random() * 12 * 60 * 60 * 1000));
+
+  let h = past.getHours();
+  let m = past.getMinutes();
+
+  let ampm = h >= 12 ? "PM" : "AM";
+  h = h % 12;
+  h = h ? h : 12;
+
+  return h + ":" + (m < 10 ? "0"+m : m) + " " + ampm;
+}
+
+function randomWithdraw(){
+  // 🔥 bada realistic range
+  let min = 500;
+  let max = 50000;
+
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function startLeaderboard(){
+
+  const box = document.getElementById("withdrawList");
+
+  box.innerHTML = "";
+
+  setInterval(()=>{
+
+    let amount = randomWithdraw();
+    let time = randomTime();
+
+    let item = document.createElement("div");
+
+    // 🔥 ONLY AMOUNT + TIME
+    item.innerHTML = "₹" + amount.toLocaleString() + " • " + time;
+
+    box.prepend(item);
+
+    // 🔥 max 5 rows
+    if(box.children.length > 5){
+      box.removeChild(box.lastChild);
+    }
+
+  }, 1200); // 🔥 fast & live feel
+
+}
+
+startLeaderboard();
     
   </script>
 <div id="blockPopup" class="block-popup">
