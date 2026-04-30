@@ -2509,30 +2509,25 @@ track.addEventListener("touchend",(e)=>{
 
 let lastAmount = 0;
 let lastTime = "";
-
-// 🔥 RANDOM TIME (SAFE)
+// 🔥 RANDOM TIME (FULL RANDOM)
 function randomTime(){
-  let now = new Date();
 
-  let h = now.getHours();
-  let m = now.getMinutes();
-  let s = now.getSeconds();
+  let h = Math.floor(Math.random()*12) + 1;
+  let m = Math.floor(Math.random()*60);
+  let s = Math.floor(Math.random()*60);
 
-  let ampm = h >= 12 ? "PM" : "AM";
-  h = h % 12 || 12;
+  let ampm = Math.random() > 0.5 ? "AM" : "PM";
 
   return `${h}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')} ${ampm}`;
 }
 
 
 // 🔥 RANDOM AMOUNT (NO REPEAT)
-    let lastAmount = 0;
-
 function randomWithdraw(){
   let amount;
 
   do{
-    amount = Math.floor(Math.random() * 99000) + 1000;
+    amount = Math.floor(Math.random()*99000) + 1000;
   }while(amount === lastAmount);
 
   lastAmount = amount;
@@ -2553,7 +2548,6 @@ function startLiveWithdraw(){
     let amount = randomWithdraw();
     let time = randomTime();
 
-    // 🔥 FINAL OUTPUT
     item.innerHTML = `💸 ₹${amount.toLocaleString()} • ${time}`;
 
     withdrawList.prepend(item);
@@ -2562,7 +2556,7 @@ function startLiveWithdraw(){
       withdrawList.removeChild(withdrawList.lastChild);
     }
 
-  }, 1000);
+  }, 1000); // 🔥 every 1 sec
 }
 
 startLiveWithdraw();
