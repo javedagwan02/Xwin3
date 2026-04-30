@@ -2507,7 +2507,7 @@ track.addEventListener("touchend",(e)=>{
 </script>
   <script>
 
-// 🔥 RANDOM TIME (STRONG)
+// 🔥 RANDOM TIME (REALISTIC FIX)
 function randomTime(){
   let h = Math.floor(Math.random() * 12) + 1;
   let m = Math.floor(Math.random() * 60);
@@ -2518,21 +2518,17 @@ function randomTime(){
 }
 
 
-// 🔥 RANDOM WITHDRAW (NO REPEAT FEEL)
+// 🔥 RANDOM AMOUNT (STRONG RANDOM)
 function randomWithdraw(){
-  let base = Math.floor(Math.random() * 9000) + 100;
-  let extra = Math.floor(Math.random() * 999);
-  return base + extra;
+  return Math.floor(Math.random() * 90000) + 100;
 }
 
 
-// 🔥 LIVE WITHDRAW (FINAL CLEAN VERSION)
+// 🔥 LIVE WITHDRAW (ONLY AMOUNT + TIME)
 function startLiveWithdraw(){
 
   const withdrawList = document.getElementById("withdrawList");
   withdrawList.innerHTML = "";
-
-  let names = ["Rahul","Aman","Rohit","Sahil","Vikas","Arjun","Karan","Deepak"];
 
   setInterval(()=>{
 
@@ -2540,13 +2536,13 @@ function startLiveWithdraw(){
 
     let amount = randomWithdraw();
     let time = randomTime();
-    let name = names[Math.floor(Math.random() * names.length)];
 
-    item.innerHTML = `💸 ${name} won ₹${amount.toLocaleString()} • ${time}`;
+    // ❌ NO NAME (fix)
+    item.innerHTML = `💸 ₹${amount.toLocaleString()} • ${time}`;
 
     withdrawList.prepend(item);
 
-    // max 4 items only
+    // max 4 items
     if(withdrawList.children.length > 4){
       withdrawList.removeChild(withdrawList.lastChild);
     }
