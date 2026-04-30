@@ -2556,6 +2556,7 @@ function randomWithdraw(){
 function startLeaderboard(){
 
   const box = document.getElementById("withdrawList");
+  if(!box) return; // 🔥 important
 
   box.innerHTML = "";
 
@@ -2566,20 +2567,16 @@ function startLeaderboard(){
 
     let item = document.createElement("div");
 
-    // 🔥 ONLY AMOUNT + TIME
-    item.innerHTML = "₹" + amount.toLocaleString() + " • " + time;
+    item.textContent = `₹${amount.toLocaleString()} • ${time}`;
 
     box.prepend(item);
 
-    // 🔥 max 5 rows
     if(box.children.length > 5){
       box.removeChild(box.lastChild);
     }
 
-  }, 1200); // 🔥 fast & live feel
-
+  }, 1200);
 }
-
 startLeaderboard();
     
   </script>
