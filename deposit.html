@@ -147,6 +147,8 @@ input{
   background: rgba(255,255,255,0.08);
   border:1px solid rgba(255,255,255,0.15);
   color:#fff;
+
+  box-sizing: border-box; /* 🔥 important */
 }
 
 /* PAY BUTTON */
@@ -317,6 +319,7 @@ window.setAmount = function(a){
 
 /* 🔥 PAY */
 window.payNow = function(){
+
   let amt = document.getElementById("amount").value;
 
   if(amt < 100){
@@ -325,7 +328,16 @@ window.payNow = function(){
   }
 
   let upi = channels[current].upi;
-  location.href = `upi://pay?pa=${upi}&pn=ColourCash&am=${amt}&cu=INR`;
+
+  let url = `upi://pay?pa=${upi}&pn=ColourCash&am=${amt}&cu=INR`;
+
+  // 🔥 ANDROID FIX (force open app)
+  window.location.href = url;
+
+  // 🔥 fallback (agar app nahi open hua)
+  setTimeout(()=>{
+    window.open(url,"_blank");
+  },500);
 }
 
 /* 🔥 SUBMIT UTR */
