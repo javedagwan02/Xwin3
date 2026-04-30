@@ -1,102 +1,62 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-
-<title>Deposit Spin</title>
-
 <style>
 
 body{
   margin:0;
-  font-family:Arial;
-  background:url('images/file_000000004dd8720b92d40a8b6daf265e.png') no-repeat center/cover;
-  color:#fff;
-  text-align:center;
-}
-
-/* TOP BAR */
-.top{
-  display:flex;
-  justify-content:space-between;
-  padding:15px;
-}
-
-.wallet{
-  font-weight:bold;
-}
-
-.help{
   background:#111;
-  width:30px;
-  height:30px;
-  border-radius:50%;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  cursor:pointer;
+  text-align:center;
+  font-family:Arial;
+}
+
+/* TOP BOX */
+.top-box{
+  background:#fff;
+  padding:10px;
+  border-bottom:2px solid red;
+}
+
+.stats{
+  margin:10px;
+  background:#f2f2f2;
+  padding:10px;
+  border-radius:10px;
 }
 
 /* WHEEL */
-.wheel-box{
+.wheel-container{
+  position:relative;
   margin-top:20px;
 }
 
-.wheel{
+#wheel{
   width:280px;
+  height:280px;
+  border-radius:50%;
+  border:10px solid gold;
+  transition:4s cubic-bezier(.17,.67,.83,.67);
 }
 
-/* SPINS */
-.spin-count{
-  margin-top:10px;
-  font-size:16px;
+/* POINTER */
+.pointer{
+  position:absolute;
+  top:-10px;
+  left:50%;
+  transform:translateX(-50%);
+  font-size:30px;
 }
 
 /* BUTTON */
 .spin-btn{
-  margin-top:15px;
-  background:#00e676;
-  color:#000;
+  margin-top:20px;
+  background:red;
+  color:#fff;
   padding:12px 30px;
-  border-radius:25px;
+  border-radius:30px;
   font-weight:bold;
   display:inline-block;
-}
-
-/* POPUP */
-.popup{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,0.8);
-  display:none;
-  align-items:center;
-  justify-content:center;
-}
-
-.popup-box{
-  background:#111;
-  padding:20px;
-  border-radius:12px;
-  width:80%;
-}
-
-.popup-box h3{
-  margin-top:0;
-}
-
-.popup-box div{
-  margin:8px 0;
-}
-
-.close{
-  margin-top:10px;
-  padding:10px;
-  background:#ff3b3b;
-  border:none;
-  border-radius:8px;
-  color:#fff;
-  width:100%;
 }
 
 </style>
@@ -104,101 +64,82 @@ body{
 
 <body>
 
-<!-- TOP -->
-<div class="top">
-  <div class="wallet">₹ <span id="balance">0</span></div>
-  <div class="help" onclick="openPopup()">?</div>
+<div class="top-box">
+  <h3>Wheel Spin</h3>
 </div>
 
-<!-- WHEEL -->
-<div class="wheel-box">
-  <img src="images/41387-removebg-preview.png" class="wheel">
+<div class="stats">
+  Total Recharge: ₹0 <br>
+  Spins: <span id="spins">3</span>
 </div>
 
-<div class="spin-count">
-  Spins: <span id="spins">0</span>
+<div class="wheel-container">
+
+  <div class="pointer">⬇️</div>
+
+  <canvas id="wheel" width="300" height="300"></canvas>
+
 </div>
 
-<div class="spin-btn" onclick="spin()">SPIN</div>
-
-<!-- RULE POPUP -->
-<div class="popup" id="popup">
-  <div class="popup-box">
-    <h3>🎁 Spin Rules</h3>
-
-    <div>Deposit ₹200 → 1 Spin</div>
-    <div>Deposit ₹1000 → 2 Spins</div>
-    <div>Deposit ₹5000 → 7 Spins</div>
-    <div>Deposit ₹10,000 → 12 Spins</div>
-    <div>Deposit ₹50,000 → 20 Spins</div>
-
-    <button class="close" onclick="closePopup()">Close</button>
-  </div>
-</div>
+<div class="spin-btn" onclick="spin()">GO</div>
 
 <script>
 
-/* ===== INIT ===== */
-if(!localStorage.getItem("balance")) localStorage.setItem("balance",0);
-if(!localStorage.getItem("spins")) localStorage.setItem("spins",0);
+let canvas = document.getElementById("wheel");
+let ctx = canvas.getContext("2d");
 
-updateUI();
+let options = [
+  10, 28, 58, 88, 128, 588, 2000, "IPHONE"
+];
 
-/* ===== DEPOSIT LOGIC ===== */
-function addDeposit(amount){
+let colors = [
+  "#ff6384","#36a2eb","#4bc0c0","#ffcd56",
+  "#8e44ad","#2ecc71","#e67e22","#e74c3c"
+];
 
-  let spins = Number(localStorage.getItem("spins"));
+let startAngle = 0;
 
-  if(amount >= 50000) spins += 20;
-  else if(amount >= 10000) spins += 12;
-  else if(amount >= 5000) spins += 7;
-  else if(amount >= 1000) spins += 2;
-  else if(amount >= 200) spins += 1;
+/* DRAW WHEEL */
+function drawWheel(){
+  let arc = Math.PI * 2 / options.length;
 
-  localStorage.setItem("spins", spins);
+  for(let i=0;i<options.length;i++){
+    let angle = startAngle + i * arc;
 
-  alert("Deposit successful + spins added 🎉");
+    ctx.beginPath();
+    ctx.fillStyle = colors[i];
+    ctx.moveTo(150,150);
+    ctx.arc(150,150,140,angle,angle+arc);
+    ctx.fill();
 
-  updateUI();
+    ctx.save();
+    ctx.fillStyle = "#fff";
+    ctx.translate(150,150);
+    ctx.rotate(angle + arc/2);
+    ctx.fillText(options[i],70,0);
+    ctx.restore();
+  }
 }
 
-/* ===== SPIN ===== */
+drawWheel();
+
+/* SPIN */
 function spin(){
 
-  let spins = Number(localStorage.getItem("spins"));
+  let spins = Number(document.getElementById("spins").innerText);
 
   if(spins <= 0){
-    return alert("No spins available ❌");
+    alert("No spins");
+    return;
   }
 
   spins--;
-  localStorage.setItem("spins", spins);
+  document.getElementById("spins").innerText = spins;
 
-  // 🔥 RANDOM CASH WIN
-  let win = Math.floor(Math.random() * 500) + 10;
+  let deg = Math.floor(5000 + Math.random()*5000);
 
-  let bal = Number(localStorage.getItem("balance"));
-  bal += win;
+  canvas.style.transform = "rotate("+deg+"deg)";
 
-  localStorage.setItem("balance", bal);
-
-  alert("🎉 You won ₹" + win);
-
-  updateUI();
-}
-
-/* ===== UI ===== */
-function updateUI(){
-  balance.innerText = localStorage.getItem("balance");
-  spins.innerText = localStorage.getItem("spins");
-}
-
-/* ===== POPUP ===== */
-function openPopup(){
-  document.getElementById("popup").style.display="flex";
-}
-function closePopup(){
-  document.getElementById("popup").style.display="none";
 }
 
 </script>
