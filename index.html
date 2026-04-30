@@ -2507,7 +2507,57 @@ track.addEventListener("touchend",(e)=>{
 </script>
   <script>
 
-
+// 🔥 RANDOM TIME  
+function randomTime(){  
+  
+  let h = Math.floor(Math.random() * 12) + 1;  
+  let m = Math.floor(Math.random() * 60);  
+  let ampm = Math.random() > 0.5 ? "AM" : "PM";  
+  
+  return `${h}:${m.toString().padStart(2,'0')} ${ampm}`;  
+}  
+  
+  
+// 🔥 RANDOM WITHDRAW  
+function randomWithdraw(){  
+  
+  let amounts = [120,250,500,1000,2500,5000,10000,25000,50000];  
+  
+  let base = amounts[Math.floor(Math.random() * amounts.length)] || 100;  
+  
+  return base + Math.floor(Math.random() * 999);  
+}  
+  
+  
+// 🔥 LIVE WITHDRAW (CLEAN VERSION)  
+function startLiveWithdraw(){  
+  
+  const withdrawList = document.getElementById("withdrawList");  
+  
+  withdrawList.innerHTML = ""; // clear old  
+  
+  setInterval(()=>{  
+  
+    let item = document.createElement("div");  
+  
+    let amount = randomWithdraw();  
+    let time = randomTime();  
+  
+    // ❌ no name, no city  
+    item.innerHTML = `💸 ₹${amount.toLocaleString()} • ${time}`;  
+  
+    withdrawList.prepend(item);  
+  
+    if(withdrawList.children.length > 3){  
+      withdrawList.removeChild(withdrawList.lastChild);  
+    }  
+  
+  },2000);  
+}  
+  
+  
+// 🔥 AUTO START  
+startLiveWithdraw();  
   </script>
 <div id="blockPopup" class="block-popup">
   <div class="block-box">
