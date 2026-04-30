@@ -649,26 +649,31 @@ font-size:16px;
   color:#fff;
   text-shadow:0 0 10px #000, 0 0 20px #ff9800;
 }
-/* 🔥 REMOVE OLD */
-.game-card::before{
-  display:none !important;
-}
 
-/* 🔥 CLEAN CARD */
-.game-card{
-  background: transparent !important;
+/* 🔥 REMOVE ALL SHADOWS */
+.game-card,
+.game-card *{
   box-shadow: none !important;
-  padding:6px;
-  border-radius:22px;
+  filter: none !important;
 }
 
-/* 🔥 ICON */
+/* 🔥 REMOVE IMAGE SHADOW */
 .game-card img{
   border-radius:18px;
   display:block;
+  box-shadow: none !important;
+  filter: drop-shadow(0 0 0 transparent) !important;
 }
 
+/* 🔥 REMOVE FAKE BOTTOM SHADOW */
+.game-card::after{
+  display:none !important;
+}
 
+/* 🔥 REMOVE ANY BG LEFT */
+.game-card{
+  background: transparent !important;
+}
 </style>
 </head>
 
