@@ -2596,5 +2596,55 @@ window.onload = () => {
 
   </div>
 </div>
+  <script>
+const music = document.getElementById("bgMusic");
+
+// 🎵 START ON FIRST CLICK
+document.addEventListener("click", () => {
+  if (music.paused) {
+    music.play().catch(()=>{});
+  }
+}, { once: true });
+
+// 🔊 VOLUME
+music.volume = 0.3;
+
+// 🔥 APP MINIMIZE
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden) {
+    music.pause();
+  } else {
+    music.play().catch(()=>{});
+  }
+});
+
+// 🔥 ANDROID SWITCH FIX
+window.addEventListener("blur", () => {
+  music.pause();
+});
+
+window.addEventListener("focus", () => {
+  music.play().catch(()=>{});
+});
+
+// 🎮 GAME OPEN → STOP MUSIC
+document.querySelectorAll(".game-card").forEach(card => {
+  card.addEventListener("click", () => {
+    music.pause();
+    music.currentTime = 0;
+  });
+});
+
+// 🔥 openGame override
+const originalOpenGame = window.openGame;
+window.openGame = async function(url){
+  music.pause();
+  music.currentTime = 0;
+
+  if(originalOpenGame){
+    return originalOpenGame(url);
+  }
+};
+  </script>
 </body>
 </html>
