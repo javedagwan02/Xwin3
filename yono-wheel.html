@@ -2,61 +2,90 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
+
 <style>
 
 body{
   margin:0;
-  background:#111;
-  text-align:center;
   font-family:Arial;
-}
-
-/* TOP BOX */
-.top-box{
-  background:#fff;
-  padding:10px;
-  border-bottom:2px solid red;
-}
-
-.stats{
-  margin:10px;
-  background:#f2f2f2;
-  padding:10px;
-  border-radius:10px;
-}
-
-/* WHEEL */
-.wheel-container{
-  position:relative;
-  margin-top:20px;
-}
-
-#wheel{
-  width:280px;
-  height:280px;
-  border-radius:50%;
-  border:10px solid gold;
-  transition:4s cubic-bezier(.17,.67,.83,.67);
-}
-
-/* POINTER */
-.pointer{
-  position:absolute;
-  top:-10px;
-  left:50%;
-  transform:translateX(-50%);
-  font-size:30px;
-}
-
-/* BUTTON */
-.spin-btn{
-  margin-top:20px;
-  background:red;
+  background:url('images/file_000000004dd8720b92d40a8b6daf265e.png') no-repeat center center;
+  background-size:cover;
   color:#fff;
-  padding:12px 30px;
-  border-radius:30px;
+  text-align:center;
+}
+
+/* TITLE */
+.title{
+  margin-top:15px;
+  font-size:22px;
   font-weight:bold;
+}
+
+/* ===== TOP BUTTON IMAGE ===== */
+.box-wrapper{
+  position:relative;
+  width:90%;
+  margin:15px auto;
+}
+
+.box-img{
+  width:100%;
+}
+
+/* invisible click areas */
+.box{
+  position:absolute;
+  top:0;
+  height:100%;
+  width:33.33%;
+}
+
+.box1{left:0;}
+.box2{left:33.33%;}
+.box3{left:66.66%;}
+
+/* glow */
+.glow{
+  position:absolute;
+  top:5%;
+  height:90%;
+  width:30%;
+  border-radius:12px;
+  background:rgba(0,255,150,0.2);
+  box-shadow:0 0 15px #00ff88;
+  transition:0.3s;
+}
+
+/* ===== WHEEL ===== */
+.wheel-section{
+  margin-top:10px;
+  position:relative;
+}
+
+.pointer{
+  font-size:30px;
+  margin-bottom:-10px;
+}
+
+.wheel{
+  width:260px;
+}
+
+/* TEXT */
+.info{
+  margin-top:10px;
+  font-size:14px;
+}
+
+/* DEPOSIT BUTTON */
+.deposit-btn{
+  margin-top:15px;
   display:inline-block;
+  background:linear-gradient(#00e676,#00c853);
+  padding:12px 35px;
+  border-radius:25px;
+  font-weight:bold;
+  color:#000;
 }
 
 </style>
@@ -64,81 +93,63 @@ body{
 
 <body>
 
-<div class="top-box">
-  <h3>Wheel Spin</h3>
+<div class="title">🎡 Lucky Wheel</div>
+
+<!-- ===== TOP SELECT ===== -->
+<div class="box-wrapper">
+
+  <img src="images/41393-removebg-preview.png" class="box-img">
+
+  <div class="box box1" onclick="selectBox(1)"></div>
+  <div class="box box2" onclick="selectBox(2)"></div>
+  <div class="box box3" onclick="selectBox(3)"></div>
+
+  <div id="glow" class="glow" style="left:2%;"></div>
+
 </div>
 
-<div class="stats">
-  Total Recharge: ₹0 <br>
-  Spins: <span id="spins">3</span>
-</div>
-
-<div class="wheel-container">
+<!-- ===== WHEEL ===== -->
+<div class="wheel-section">
 
   <div class="pointer">⬇️</div>
 
-  <canvas id="wheel" width="300" height="300"></canvas>
+  <img id="wheelImg" src="images/41383-removebg-preview.png" class="wheel">
 
 </div>
 
-<div class="spin-btn" onclick="spin()">GO</div>
+<!-- TEXT -->
+<div id="infoText" class="info">
+  Deposit ₹100 to get 1 spin
+</div>
+
+<!-- BUTTON -->
+<div class="deposit-btn">Deposit</div>
 
 <script>
 
-let canvas = document.getElementById("wheel");
-let ctx = canvas.getContext("2d");
+function selectBox(n){
 
-let options = [
-  10, 28, 58, 88, 128, 588, 2000, "IPHONE"
-];
+  let glow = document.getElementById("glow");
+  let wheel = document.getElementById("wheelImg");
+  let text = document.getElementById("infoText");
 
-let colors = [
-  "#ff6384","#36a2eb","#4bc0c0","#ffcd56",
-  "#8e44ad","#2ecc71","#e67e22","#e74c3c"
-];
-
-let startAngle = 0;
-
-/* DRAW WHEEL */
-function drawWheel(){
-  let arc = Math.PI * 2 / options.length;
-
-  for(let i=0;i<options.length;i++){
-    let angle = startAngle + i * arc;
-
-    ctx.beginPath();
-    ctx.fillStyle = colors[i];
-    ctx.moveTo(150,150);
-    ctx.arc(150,150,140,angle,angle+arc);
-    ctx.fill();
-
-    ctx.save();
-    ctx.fillStyle = "#fff";
-    ctx.translate(150,150);
-    ctx.rotate(angle + arc/2);
-    ctx.fillText(options[i],70,0);
-    ctx.restore();
-  }
-}
-
-drawWheel();
-
-/* SPIN */
-function spin(){
-
-  let spins = Number(document.getElementById("spins").innerText);
-
-  if(spins <= 0){
-    alert("No spins");
-    return;
+  if(n==1){
+    glow.style.left = "2%";
+    wheel.src = "images/41383-removebg-preview.png";
+    text.innerText = "Deposit ₹100 to get 1 spin";
   }
 
-  spins--;
-  document.getElementById("spins").innerText = spins;
+  if(n==2){
+    glow.style.left = "35%";
+    wheel.src = "images/41384-removebg-preview.png";
+    text.innerText = "Deposit ₹500 to get 1 spin";
+  }
 
-  let deg = Math.floor(5000 + Math.random()*5000);
-
-  canvas.style.transform = "rotate("+deg+"deg)";
+  if(n==3){
+    glow.style.left = "68%";
+    wheel.src = "images/41387-removebg-preview.png";
+    text.innerText = "Deposit ₹1000 to get 1 spin";
+  }
 
 }
 
