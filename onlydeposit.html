@@ -156,7 +156,12 @@ await updateDoc(doc(db,"users",u.id),{
   hasDeposited: true,
 
   wagerRequired: (userData.wagerRequired || 0) + (amount * 2),
-  wagerDone: userData.wagerDone || 0
+  wagerDone: userData.wagerDone || 0,
+
+  // 🔥 ADD THIS
+  unlocked100: (userData.unlocked100 || false) || amount >= 100,
+  unlocked500: (userData.unlocked500 || false) || amount >= 500,
+  unlocked1000: (userData.unlocked1000 || false) || amount >= 1000
 });
 
     });
