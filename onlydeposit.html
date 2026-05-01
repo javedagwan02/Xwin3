@@ -141,7 +141,22 @@ let bonus = userData.bonusBalance || 0;
 let firstDepositDone = userData.firstDepositDone || false;
 
 let newBalance = bal + amount;
+// 🔥 SPIN CALCULATION
+let spinsToAdd = Math.floor(amount / 100);
 
+let spin100 = userData.spin100 || 0;
+let spin500 = userData.spin500 || 0;
+let spin1000 = userData.spin1000 || 0;
+
+if(amount >= 100 && amount < 500){
+  spin100 += spinsToAdd;
+}
+else if(amount >= 500 && amount < 1000){
+  spin500 += spinsToAdd;
+}
+else if(amount >= 1000){
+  spin1000 += spinsToAdd;
+}
 // 🔥 FIRST DEPOSIT BONUS UNLOCK
 if(!firstDepositDone && bonus > 0){
   newBalance += bonus; // bonus add
@@ -158,10 +173,14 @@ await updateDoc(doc(db,"users",u.id),{
   wagerRequired: (userData.wagerRequired || 0) + (amount * 2),
   wagerDone: userData.wagerDone || 0,
 
-  // 🔥 ADD THIS
   unlocked100: (userData.unlocked100 || false) || amount >= 100,
   unlocked500: (userData.unlocked500 || false) || amount >= 500,
-  unlocked1000: (userData.unlocked1000 || false) || amount >= 1000
+  unlocked1000: (userData.unlocked1000 || false) || amount >= 1000,
+
+  // 🔥 ADD THIS
+  spin100: spin100,
+  spin500: spin500,
+  spin1000: spin1000
 });
 
     });
