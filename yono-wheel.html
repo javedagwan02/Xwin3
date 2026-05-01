@@ -316,33 +316,71 @@ window.spin = function(){
     1000:["cash_500","cash_170","bonus_400","cash_100","bonus_700","cash_300","cash_200","cash_100"]
   };
 
-  setTimeout(async ()=>{
+  
+setTimeout(async ()=>{
 
-    let result = rewards[current][rand];
-    let type = result.split("_")[0];
-    let amount = Number(result.split("_")[1]);
+  let rewards = {
+    100:["cash_30","cash_60","cash_15","cash_75","bonus_100","bonus_300","cash_100","cash_50"],
+    500:["cash_200","cash_300","cash_150","bonus_500","cash_70","cash_300","cash_200","cash_100"],
+    1000:["cash_500","cash_170","bonus_400","cash_100","bonus_700","cash_300","cash_200","cash_100"]
+  };
 
-    await updateWallet(type, amount);
+  let list = rewards[current];
 
-    spins[current]--;
+  let cashList = list.filter(x => x.includes("cash"));
+  let bonusList = list.filter(x => x.includes("bonus"));
 
-    const snap = await getDocs(
-      query(collection(db,"users"), where("email","==",localStorage.getItem("userEmail")))
-    );
+  // 🔥 LOW CASH ONLY (₹15, ₹30, ₹60 etc)
+  let lowCash = cashList.filter(x => {
+    let amt = Number(x.split("_")[1]);
+    return amt <= 60;  // 👉 low amount control
+  });
 
-    snap.forEach(async (docSnap)=>{
-      await updateDoc(doc(db,"users",docSnap.id),{
-        ["spin"+current]: spins[current]
-      });
+  let rand = Math.random();
+  let finalResult;
+
+  // 🔴 2% CASH (LOW ONLY)
+  if(rand < 0.02){
+    finalResult = lowCash[Math.floor(Math.random()*lowCash.length)];
+  }
+
+  // 🟢 85% BONUS
+  else if(rand < 0.87){
+    finalResult = bonusList[Math.floor(Math.random()*bonusList.length)];
+  }
+
+  // 🟡 बाकी 13% RANDOM (mix feel)
+  else{
+    finalResult = list[Math.floor(Math.random()*list.length)];
+  }
+
+  let type = finalResult.split("_")[0];
+  let amount = Number(finalResult.split("_")[1]);
+
+  await updateWallet(type, amount);
+
+  spins[current]--;
+
+  const snap = await getDocs(
+    query(collection(db,"users"), where("email","==",localStorage.getItem("userEmail")))
+  );
+
+  snap.forEach(async (docSnap)=>{
+    await updateDoc(doc(db,"users",docSnap.id),{
+      ["spin"+current]: spins[current]
     });
+  });
 
-    updateUI();
+  updateUI();
 
-    showPopup("🎉 You Won", "₹"+amount);
+  if(type=="cash"){
+    showPopup("🎉 Cash Win", "₹"+amount+" Added");
+  }else{
+    showPopup("🎁 Bonus Win", "₹"+amount+" Added");
+  }
 
-  },4000);
+},4000);
 }
-
 /* DEPOSIT */
 window.goDeposit = function(){
   window.location.href = "deposit.html";
