@@ -96,16 +96,21 @@ async function loadUsers(){
 
   const snap = await getDocs(collection(db,"users"));
 
-  allUsers = []; // reset
+ allUsers = [];
 
-  snap.forEach(d=>{
-    allUsers.push({
-      id: d.id,
-      ...d.data()
-    });
+snap.forEach(d=>{
+  allUsers.push({
+    id: d.id,
+    ...d.data()
   });
+});
 
-  renderUsers(allUsers); // 🔥 first render
+// 🔥 SORT
+allUsers.sort((a, b) => {
+  return (b.wagerRequired || 0) - (a.wagerRequired || 0);
+});
+
+renderUsers(allUsers); 
 }
 
 /* 🔥 RENDER USERS + SEARCH */
