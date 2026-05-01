@@ -234,23 +234,37 @@ window.selectWheel = function(n){
 
   let glow = document.getElementById("glow");
   let infoText = document.getElementById("infoText");
+  let wheel = document.getElementById("wheel");
+  let border = document.getElementById("border");
 
   if(n==1){
     current = 100;
     glow.style.left = "2%";
     infoText.innerText = "Deposit ₹100 to get 1 spin";
+
+    // 🔥 IMAGE CHANGE
+    wheel.src = "images/41422-removebg-preview.png";
+    border.src = "images/41383-removebg-preview.png";
   }
 
   if(n==2){
     current = 500;
     glow.style.left = "35%";
     infoText.innerText = "Deposit ₹500 to get 1 spin";
+
+    // 🔥 IMAGE CHANGE
+    wheel.src = "images/41433-removebg-preview.png";
+    border.src = "images/41384-removebg-preview.png";
   }
 
   if(n==3){
     current = 1000;
     glow.style.left = "68%";
     infoText.innerText = "Deposit ₹1000 to get 1 spin";
+
+    // 🔥 IMAGE CHANGE
+    wheel.src = "images/41464-removebg-preview.png";
+    border.src = "images/41387-removebg-preview.png";
   }
 
   updateUI();
