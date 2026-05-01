@@ -396,19 +396,17 @@ else if(amt >= 100){
   status: "PENDING",
   time: Date.now(),
   referredBy: referredBy,
-
-  // 🔥 IMPORTANT
   wheel: wheelType
-});
-  .then(()=>{
-    showPopup("Deposit Submitted ✅");
+})
+.then(()=>{
+  showPopup("Deposit Submitted ✅");
 
-    document.getElementById("amount").value="";
-    document.getElementById("utr").value="";
-  })
-  .catch(e=>{
-    showPopup("Error: " + e.message);
-  });
+  document.getElementById("amount").value="";
+  document.getElementById("utr").value="";
+})
+.catch(e=>{
+  showPopup("Error: " + e.message);
+});
 
 };
 /* 🔥 POPUP */
