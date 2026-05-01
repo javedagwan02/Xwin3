@@ -345,6 +345,17 @@ window.submitUTR = async function(){
 
   let amt = document.getElementById("amount").value;
   let utr = document.getElementById("utr").value.trim();
+  let wheelType = 0;
+
+if(amt >= 1000){
+  wheelType = 1000;
+}
+else if(amt >= 500){
+  wheelType = 500;
+}
+else if(amt >= 100){
+  wheelType = 100;
+}
 
   if(amt < 100){
     showPopup("Minimum ₹100");
@@ -379,13 +390,16 @@ window.submitUTR = async function(){
 
   // 🔥 BACKGROUND SAVE
   addDoc(collection(db,"deposits"),{
-    email: userEmail,
-    amount: Number(amt),
-    utr: utr,
-    status: "PENDING",
-    time: Date.now(),
-    referredBy: referredBy
-  })
+  email: userEmail,
+  amount: Number(amt),
+  utr: utr,
+  status: "PENDING",
+  time: Date.now(),
+  referredBy: referredBy,
+
+  // 🔥 IMPORTANT
+  wheel: wheelType
+});
   .then(()=>{
     showPopup("Deposit Submitted ✅");
 
