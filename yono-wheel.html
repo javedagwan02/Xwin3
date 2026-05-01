@@ -36,28 +36,23 @@ body{
   position:relative;
   width:90%;
   margin:15px auto;
-  z-index:50; /* 🔥 ADD */
 }
-  .box-bg{
-  position:absolute;
-  inset:0;
-  background-image:url("images/41393-removebg-preview.png");
-  background-size:cover;
-  background-position:center;
-  z-index:1;
-}
+
 .box-img{
   width:100%;
-  pointer-events: none; /* 🔥 IMPORTANT */
+  display:block;
 }
 
 .box{
   position:absolute;
   top:0;
+  left:0;
   height:100%;
   width:33.33%;
-  z-index:100; /* 🔥 VERY IMPORTANT */
+  z-index:20;
+  pointer-events:auto;
 }
+
 .box1{left:0;}
 .box2{left:33.33%;}
 .box3{left:66.66%;}
@@ -70,9 +65,7 @@ body{
   border-radius:12px;
   background:rgba(0,255,150,0.2);
   box-shadow:0 0 15px #00ff88;
-  transition:0.3s;
-
-  z-index:10; /* 🔥 FIX */
+  z-index:5;
 }
 
 /* POINTER */
@@ -157,7 +150,8 @@ body{
 <div class="title">🎡 Lucky Wheel</div>
 
 <div class="box-wrapper">
-<div class="box-bg"></div>
+  <img src="images/41393-removebg-preview.png" class="box-img">
+
   <div class="box box1" onclick="selectWheel(1)"></div>
   <div class="box box2" onclick="selectWheel(2)"></div>
   <div class="box box3" onclick="selectWheel(3)"></div>
