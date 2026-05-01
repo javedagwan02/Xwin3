@@ -103,7 +103,71 @@ body{
   font-weight:bold;
   display:inline-block;
 }
+/* 🔥 POPUP FULL SCREEN */
+.popup{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.8);
+  display:none;
+  justify-content:center;
+  align-items:center;
+  z-index:9999;
+}
 
+/* 🔥 BOX DESIGN */
+.popup-box{
+  width:85%;
+  max-width:320px;
+  padding:20px;
+  border-radius:20px;
+  text-align:center;
+
+  background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+
+  box-shadow:
+    0 0 20px rgba(0,255,150,0.6),
+    inset 0 0 10px rgba(255,255,255,0.1);
+
+  animation:popupAnim 0.3s ease;
+}
+
+/* 🔥 ICON */
+.popup-icon{
+  font-size:40px;
+  margin-bottom:10px;
+}
+
+/* 🔥 TITLE */
+.popup-box h2{
+  margin:5px 0;
+  color:#00ffcc;
+}
+
+/* 🔥 MESSAGE */
+.popup-box p{
+  margin:10px 0;
+  font-size:15px;
+  color:#ddd;
+}
+
+/* 🔥 BUTTON */
+.popup-box button{
+  margin-top:10px;
+  width:100%;
+  padding:12px;
+  border:none;
+  border-radius:12px;
+
+  background:linear-gradient(45deg,#00ffcc,#00c853);
+  color:#000;
+  font-weight:bold;
+}
+
+/* 🔥 ANIMATION */
+@keyframes popupAnim{
+  from{transform:scale(0.6);opacity:0;}
+  to{transform:scale(1);opacity:1;}
+}
 </style>
 </head>
 
@@ -147,6 +211,17 @@ body{
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getFirestore, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
+  function showPopup(title, message, icon="💰"){
+  document.getElementById("popupTitle").innerText = title;
+  document.getElementById("popupMessage").innerText = message;
+  document.getElementById("popupIcon").innerText = icon;
+
+  document.getElementById("popup").style.display = "flex";
+}
+
+function closePopup(){
+  document.getElementById("popup").style.display = "none";
+}
 /* 🔥 FIREBASE */
 const app = initializeApp({
   apiKey:"AIzaSyBx3J9aGn_98rTPgurMMKw_GR3puIMj4Ms",
@@ -251,17 +326,17 @@ window.spin = function(){
 
   /* ❌ BLOCK WITHOUT UNLOCK */
   if(current==1 && !unlocked[100]){
-    alert("Deposit ₹100 required");
+    showPopup("❌ Access Denied", "Deposit ₹100 required", "🚫");
     return;
   }
 
   if(current==2 && !unlocked[500]){
-    alert("Deposit ₹500 required");
+    showPopup("❌ Access Denied", "Deposit ₹500 required", "🚫");
     return;
   }
 
   if(current==3 && !unlocked[1000]){
-    alert("Deposit ₹1000 required");
+    showPopup("❌ Access Denied", "Deposit ₹1000 required", "🚫");
     return;
   }
 
@@ -289,9 +364,9 @@ window.spin = function(){
     let amount = result.split("_")[1];
 
     if(type=="cash"){
-      alert("💰 Cash Won: ₹" + amount);
+      showPopup("🎉 You Won!", "₹" + amount + " Cash Added", "💰");
     }else{
-      alert("🎁 Bonus Won: ₹" + amount);
+      showPopup("🎁 Bonus Win!", "₹" + amount + " Bonus Added", "🎁");
     }
 
   },4000);
@@ -299,6 +374,18 @@ window.spin = function(){
 }
 
 </script>
+<div id="popup" class="popup">
+  <div class="popup-box">
 
+    <div id="popupIcon" class="popup-icon">💰</div>
+
+    <h2 id="popupTitle">Title</h2>
+
+    <p id="popupMessage">Message</p>
+
+    <button onclick="closePopup()">OK</button>
+
+  </div>
+</div>
 </body>
 </html>
