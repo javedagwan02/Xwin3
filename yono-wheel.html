@@ -8,7 +8,7 @@
 body{
   margin:0;
   font-family:Arial;
-  background:url('images/file_000000004dd8720b92d40a8b6daf265e.png') no-repeat center center;
+  background:url('images/file_000000004dd8720b92d40a8b6daf265e.png') no-repeat center;
   background-size:cover;
   color:#fff;
   text-align:center;
@@ -21,30 +21,24 @@ body{
   font-weight:bold;
 }
 
-/* ===== TOP BUTTON IMAGE ===== */
+/* SELECT BOX */
 .box-wrapper{
   position:relative;
   width:90%;
   margin:15px auto;
 }
+.box-img{width:100%;}
 
-.box-img{
-  width:100%;
-}
-
-/* invisible click areas */
 .box{
   position:absolute;
   top:0;
   height:100%;
   width:33.33%;
 }
-
 .box1{left:0;}
-.box2{left:33.33%;}
-.box3{left:66.66%;}
+.box2{left:33%;}
+.box3{left:66%;}
 
-/* glow */
 .glow{
   position:absolute;
   top:5%;
@@ -56,7 +50,7 @@ body{
   transition:0.3s;
 }
 
-/* ===== WHEEL ===== */
+/* WHEEL */
 .wheel-section{
   margin-top:10px;
   position:relative;
@@ -69,23 +63,22 @@ body{
 
 .wheel{
   width:260px;
+  transition:4s ease-out;
 }
 
 /* TEXT */
 .info{
   margin-top:10px;
-  font-size:14px;
 }
 
-/* DEPOSIT BUTTON */
-.deposit-btn{
+/* BUTTON */
+.btn{
   margin-top:15px;
-  display:inline-block;
-  background:linear-gradient(#00e676,#00c853);
-  padding:12px 35px;
+  background:#00e676;
+  padding:12px 30px;
   border-radius:25px;
-  font-weight:bold;
   color:#000;
+  font-weight:bold;
 }
 
 </style>
@@ -95,9 +88,8 @@ body{
 
 <div class="title">🎡 Lucky Wheel</div>
 
-<!-- ===== TOP SELECT ===== -->
+<!-- SELECT -->
 <div class="box-wrapper">
-
   <img src="images/41393-removebg-preview.png" class="box-img">
 
   <div class="box box1" onclick="selectBox(1)"></div>
@@ -105,51 +97,83 @@ body{
   <div class="box box3" onclick="selectBox(3)"></div>
 
   <div id="glow" class="glow" style="left:2%;"></div>
-
 </div>
 
-<!-- ===== WHEEL ===== -->
+<!-- WHEEL -->
 <div class="wheel-section">
-
   <div class="pointer">⬇️</div>
 
-  <img id="wheelImg" src="images/41383-removebg-preview.png" class="wheel">
+  <!-- BORDER -->
+  <img id="border" src="images/41383-removebg-preview.png" class="wheel">
 
+  <!-- INNER WHEEL -->
+  <img id="innerWheel" src="images/41422-removebg-preview.png" 
+       style="width:200px; position:absolute; top:30px; left:50%; transform:translateX(-50%); transition:4s;">
 </div>
 
-<!-- TEXT -->
 <div id="infoText" class="info">
   Deposit ₹100 to get 1 spin
 </div>
 
-<!-- BUTTON -->
-<div class="deposit-btn">Deposit</div>
+<div class="btn" onclick="spin()">SPIN</div>
 
 <script>
 
+let current = 1;
+let rotation = 0;
+
+/* REWARD DATA */
+let rewards = {
+  1:["₹30","₹60","₹15","₹75","Bonus ₹100","Bonus ₹300","₹100","₹50"],
+  2:["₹200","₹300","₹150","Bonus ₹500","₹70","₹300","₹200","₹100"],
+  3:["₹500","₹170","Bonus ₹400","₹100","Bonus ₹700","₹300","₹200","₹100"]
+};
+
+/* SELECT */
 function selectBox(n){
 
+  current = n;
+
   let glow = document.getElementById("glow");
-  let wheel = document.getElementById("wheelImg");
-  let text = document.getElementById("infoText");
 
   if(n==1){
-    glow.style.left = "2%";
-    wheel.src = "images/41383-removebg-preview.png";
-    text.innerText = "Deposit ₹100 to get 1 spin";
+    glow.style.left="2%";
+    border.src="images/41383-removebg-preview.png";
+    innerWheel.src="images/41422-removebg-preview.png";
+    infoText.innerText="Deposit ₹100 to get 1 spin";
   }
 
   if(n==2){
-    glow.style.left = "35%";
-    wheel.src = "images/41384-removebg-preview.png";
-    text.innerText = "Deposit ₹500 to get 1 spin";
+    glow.style.left="35%";
+    border.src="images/41384-removebg-preview.png";
+    innerWheel.src="images/41433-removebg-preview.png";
+    infoText.innerText="Deposit ₹500 to get 1 spin";
   }
 
   if(n==3){
-    glow.style.left = "68%";
-    wheel.src = "images/41387-removebg-preview.png";
-    text.innerText = "Deposit ₹1000 to get 1 spin";
+    glow.style.left="68%";
+    border.src="images/41387-removebg-preview.png";
+    innerWheel.src="images/41464-removebg-preview.png";
+    infoText.innerText="Deposit ₹1000 to get 1 spin";
   }
+}
+
+/* SPIN */
+function spin(){
+
+  let wheel = document.getElementById("innerWheel");
+
+  let rand = Math.floor(Math.random()*8);
+  let deg = 360*5 + (rand * 45);
+
+  rotation += deg;
+
+  wheel.style.transform = "translateX(-50%) rotate("+rotation+"deg)";
+
+  setTimeout(()=>{
+    let reward = rewards[current][rand];
+    alert("You got: " + reward);
+  },4000);
 
 }
 
