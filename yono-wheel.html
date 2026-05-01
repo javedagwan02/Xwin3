@@ -391,29 +391,27 @@ window.spin = function(){
     2:["cash_200","cash_300","cash_150","bonus_500","cash_70","cash_300","cash_200","cash_100"],
     3:["cash_500","cash_170","bonus_400","cash_100","bonus_700","cash_300","cash_200","cash_100"]
   };
+setTimeout(async ()=>{
 
-  setTimeout(()=>{
+  let result = rewards[current][rand];
 
-    let result = rewards[current][rand];
+  let type = result.split("_")[0];
+  let amount = Number(result.split("_")[1]);
 
-    let type = result.split("_")[0];
-    let amount = result.split("_")[1];
+  if(type=="cash"){
 
-    if(type=="cash"){
+    await updateWallet("cash", amount);
+    showPopup("🎉 You Won!", "₹" + amount + " Cash Added", "💰");
 
-  await updateWallet("cash", amount);
+  }else{
 
-  showPopup("🎉 You Won!", "₹" + amount + " Cash Added", "💰");
+    await updateWallet("bonus", amount);
+    showPopup("🎁 Bonus Win!", "₹" + amount + " Bonus Added", "🎁");
 
-}else{
+  }
 
-  await updateWallet("bonus", amount);
-
-  showPopup("🎁 Bonus Win!", "₹" + amount + " Bonus Added", "🎁");
-
-    }
-  },4000);
-
+},4000);
+  
 }
 
     </script>
