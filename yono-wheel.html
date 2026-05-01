@@ -142,20 +142,86 @@ body{
 
 <div class="btn" onclick="spin()">SPIN</div>
 
-<script>
+<script type="module">
 
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getFirestore, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+/* 🔥 FIREBASE */
+const app = initializeApp({
+  apiKey:"AIzaSyBx3J9aGn_98rTPgurMMKw_GR3puIMj4Ms",
+  authDomain:"colourcash-ea60e.firebaseapp.com",
+  projectId:"colourcash-ea60e"
+});
+
+const db = getFirestore(app);
+
+/* 🔥 VARIABLES */
 let rotation = 0;
 let current = 1;
 
-/* ===== SELECT WHEEL ===== */
-function selectWheel(n){
+let unlocked = {
+  100:false,
+  500:false,
+  1000:false
+};
 
-  current = n;
+/* 🔥 LOAD USER UNLOCK */
+async function loadUser(){
+
+  const userEmail = localStorage.getItem("userEmail");
+
+  if(!userEmail){
+    alert("Login required ❌");
+    return;
+  }
+
+  const snap = await getDocs(
+    query(collection(db,"users"), where("email","==",userEmail))
+  );
+
+  snap.forEach(doc=>{
+    let data = doc.data();
+
+    unlocked[100] = data.unlocked100 || false;
+    unlocked[500] = data.unlocked500 || false;
+    unlocked[1000] = data.unlocked1000 || false;
+  });
+
+  console.log("UNLOCK STATUS:", unlocked);
+}
+
+loadUser();
+
+/* 🔥 SELECT WHEEL */
+window.selectWheel = function(n){
 
   let glow = document.getElementById("glow");
   let border = document.getElementById("border");
   let wheel = document.getElementById("wheel");
   let infoText = document.getElementById("infoText");
+
+  /* ❌ BLOCK IF NOT UNLOCKED */
+  if(n==1 && !unlocked[100]){
+    alert("❌ Deposit ₹100 first");
+    return;
+  }
+
+  if(n==2 && !unlocked[500]){
+    alert("❌ Deposit ₹500 first");
+    return;
+  }
+
+  if(n==3 && !unlocked[1000]){
+    alert("❌ Deposit ₹1000 first");
+    return;
+  }
+
+  /* 🔄 RESET */
+  rotation = 0;
+  wheel.style.transform = "translate(-50%,-50%) rotate(0deg)";
+
+  current = n;
 
   if(n==1){
     glow.style.left="2%";
@@ -164,12 +230,12 @@ function selectWheel(n){
     infoText.innerText="Deposit ₹100 to get 1 spin";
   }
 
-if(n==2){
-  glow.style.left="35%";
-  border.src="images/41384-removebg-preview.png";
-  wheel.src = "images/41433-removebg-preview.png?v=" + Date.now();
-  infoText.innerText="Deposit ₹500 to get 1 spin";
-}
+  if(n==2){
+    glow.style.left="35%";
+    border.src="images/41384-removebg-preview.png";
+    wheel.src="images/41433-removebg-preview.png";
+    infoText.innerText="Deposit ₹500 to get 1 spin";
+  }
 
   if(n==3){
     glow.style.left="68%";
@@ -177,11 +243,27 @@ if(n==2){
     wheel.src="images/41464-removebg-preview.png";
     infoText.innerText="Deposit ₹1000 to get 1 spin";
   }
+
 }
 
+/* 🔥 SPIN */
+window.spin = function(){
 
-/* ===== SPIN ===== */
-function spin(){
+  /* ❌ BLOCK WITHOUT UNLOCK */
+  if(current==1 && !unlocked[100]){
+    alert("Deposit ₹100 required");
+    return;
+  }
+
+  if(current==2 && !unlocked[500]){
+    alert("Deposit ₹500 required");
+    return;
+  }
+
+  if(current==3 && !unlocked[1000]){
+    alert("Deposit ₹1000 required");
+    return;
+  }
 
   let wheel = document.getElementById("wheel");
 
@@ -192,7 +274,7 @@ function spin(){
 
   wheel.style.transform = "translate(-50%,-50%) rotate("+rotation+"deg)";
 
-  /* ===== REWARD DATA ===== */
+  /* 🎁 REWARDS */
   let rewards = {
     1:["cash_30","cash_60","cash_15","cash_75","bonus_100","bonus_300","cash_100","cash_50"],
     2:["cash_200","cash_300","cash_150","bonus_500","cash_70","cash_300","cash_200","cash_100"],
@@ -203,13 +285,13 @@ function spin(){
 
     let result = rewards[current][rand];
 
-    let type = result.split("_")[0];   // cash / bonus
+    let type = result.split("_")[0];
     let amount = result.split("_")[1];
 
     if(type=="cash"){
-      alert("💰 Cash Won: ₹" + amount + "\n➡️ Main Wallet");
+      alert("💰 Cash Won: ₹" + amount);
     }else{
-      alert("🎁 Bonus Won: ₹" + amount + "\n➡️ Bonus Wallet");
+      alert("🎁 Bonus Won: ₹" + amount);
     }
 
   },4000);
