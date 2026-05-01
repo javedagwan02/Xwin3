@@ -4,7 +4,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <style>
-
 body{
   margin:0;
   font-family:Arial;
@@ -12,6 +11,7 @@ body{
   background-size:cover;
   color:#fff;
   text-align:center;
+  overflow-x:hidden;
 }
 
 /* TITLE */
@@ -21,24 +21,31 @@ body{
   font-weight:bold;
 }
 
-/* SELECT BOX */
+/* ===== SELECT BOX ===== */
 .box-wrapper{
   position:relative;
   width:90%;
   margin:15px auto;
 }
-.box-img{width:100%;}
 
+.box-img{
+  width:100%;
+  display:block;
+}
+
+/* invisible click */
 .box{
   position:absolute;
   top:0;
   height:100%;
   width:33.33%;
+  cursor:pointer;
 }
 .box1{left:0;}
-.box2{left:33%;}
-.box3{left:66%;}
+.box2{left:33.33%;}
+.box3{left:66.66%;}
 
+/* glow highlight */
 .glow{
   position:absolute;
   top:5%;
@@ -46,61 +53,65 @@ body{
   width:30%;
   border-radius:12px;
   background:rgba(0,255,150,0.2);
-  box-shadow:0 0 15px #00ff88;
+  box-shadow:0 0 20px #00ff88;
   transition:0.3s;
+  pointer-events:none;
 }
 
-/* WHEEL */
+/* ===== WHEEL SECTION ===== */
 .wheel-section{
   margin-top:10px;
   position:relative;
 }
 
+/* POINTER */
 .pointer{
   font-size:30px;
-  margin-bottom:-10px;
+  margin-bottom:-20px; /* 👈 perfect alignment */
 }
 
-.wheel{
+/* ===== WHEEL BOX ===== */
+.wheel-box{
+  position:relative;
   width:260px;
+  margin:0 auto;
+  margin-top:25px; /* 👈 arrow upar lane ke liye */
+}
+
+/* BORDER IMAGE */
+.border{
+  width:100%;
+  display:block;
+}
+
+/* INNER WHEEL (PERFECT FIT) */
+.inner{
+  position:absolute;
+  top:50%;
+  left:50%;
+  width:88%;  /* 👈 FULL COVER */
+  transform:translate(-50%, -50%) rotate(0deg);
   transition:4s ease-out;
 }
 
 /* TEXT */
 .info{
-  margin-top:10px;
+  margin-top:12px;
+  font-size:15px;
 }
 
 /* BUTTON */
 .btn{
   margin-top:15px;
   background:#00e676;
-  padding:12px 30px;
-  border-radius:25px;
+  padding:14px 40px;
+  border-radius:30px;
   color:#000;
   font-weight:bold;
+  font-size:16px;
+  box-shadow:0 5px 15px rgba(0,0,0,0.3);
+  display:inline-block;
 }
-  .wheel-box{
-  position:relative;
-  width:280px;
-  margin:0 auto;
-}
-
-/* BORDER */
-.border{
-  width:100%;
-}
-
-/* INNER PERFECT FIT */
-.inner{
-  position:absolute;
-  top:50%;
-  left:50%;
-  width:72%;   /* 👈 ye main fix hai */
-  transform:translate(-50%,-50%) rotate(0deg);
-  transition:4s ease-out;
-}
-
 </style>
 </head>
 
