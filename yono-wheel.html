@@ -58,58 +58,47 @@ body{
   pointer-events:none;
 }
 
-/* ===== WHEEL SECTION ===== */
+
+  /* WHEEL SECTION */
 .wheel-section{
-  margin-top:10px;
-  position:relative;
+  margin-top:20px;
+  text-align:center;
 }
 
 /* POINTER */
 .pointer{
-  font-size:30px;
-  margin-bottom:-20px; /* 👈 perfect alignment */
+  font-size:32px;
+  margin-bottom:-15px;
 }
 
-/* ===== WHEEL BOX ===== */
+/* BOX */
 .wheel-box{
-  position:relative;
-  width:260px;
+  width:280px;
   margin:0 auto;
-  margin-top:25px; /* 👈 arrow upar lane ke liye */
+  position:relative;
 }
 
-/* BORDER IMAGE */
-.border{
+/* WHEEL IMAGE */
+.wheel{
   width:100%;
-  display:block;
-}
-
-/* INNER WHEEL (PERFECT FIT) */
-.inner{
-  position:absolute;
-  top:50%;
-  left:50%;
-  width:88%;  /* 👈 FULL COVER */
-  transform:translate(-50%, -50%) rotate(0deg);
   transition:4s ease-out;
+  transform:rotate(0deg);
 }
 
 /* TEXT */
 .info{
-  margin-top:12px;
-  font-size:15px;
+  margin-top:15px;
+  font-size:16px;
 }
 
 /* BUTTON */
-.btn{
-  margin-top:15px;
+.spin-btn{
+  margin-top:12px;
   background:#00e676;
-  padding:14px 40px;
-  border-radius:30px;
   color:#000;
+  padding:12px 30px;
+  border-radius:30px;
   font-weight:bold;
-  font-size:16px;
-  box-shadow:0 5px 15px rgba(0,0,0,0.3);
   display:inline-block;
 }
 </style>
@@ -133,82 +122,79 @@ body{
 <!-- WHEEL -->
 <div class="wheel-section">
 
+  <!-- POINTER -->
   <div class="pointer">⬇️</div>
 
+  <!-- WHEEL -->
   <div class="wheel-box">
-
-    <!-- BORDER -->
-    <img id="border" src="images/41383-removebg-preview.png" class="border">
-
-    <!-- INNER -->
-    <img id="innerWheel" src="images/41422-removebg-preview.png" class="inner">
-
+    <img id="wheel" src="images/41422-removebg-preview.png" class="wheel">
   </div>
 
+  <!-- TEXT -->
+  <div id="infoText" class="info">
+    Deposit ₹100 to get 1 spin
+  </div>
+
+  <!-- BUTTON -->
+  <div class="spin-btn" onclick="spin()">SPIN</div>
+
 </div>
-
-<div id="infoText" class="info">
-  Deposit ₹100 to get 1 spin
-</div>
-
-<div class="btn" onclick="spin()">SPIN</div>
-
 <script>
 
-let current = 1;
 let rotation = 0;
+let current = 1;
 
-/* REWARD DATA */
-let rewards = {
-  1:["₹30","₹60","₹15","₹75","Bonus ₹100","Bonus ₹300","₹100","₹50"],
-  2:["₹200","₹300","₹150","Bonus ₹500","₹70","₹300","₹200","₹100"],
-  3:["₹500","₹170","Bonus ₹400","₹100","Bonus ₹700","₹300","₹200","₹100"]
-};
+/* ===== SELECT WHEEL (100 / 500 / 1000) ===== */
+function selectWheel(type){
 
-/* SELECT */
-function selectBox(n){
+  current = type;
 
-  current = n;
+  let wheel = document.getElementById("wheel");
+  let infoText = document.getElementById("infoText");
 
-  let glow = document.getElementById("glow");
-
-  if(n==1){
-    glow.style.left="2%";
-    border.src="images/41383-removebg-preview.png";
-    innerWheel.src="images/41422-removebg-preview.png";
+  if(type==1){
+    wheel.src="images/41422-removebg-preview.png";
     infoText.innerText="Deposit ₹100 to get 1 spin";
   }
 
-  if(n==2){
-    glow.style.left="35%";
-    border.src="images/41384-removebg-preview.png";
-    innerWheel.src="images/41433-removebg-preview.png";
+  if(type==2){
+    wheel.src="images/41433-removebg-preview.png";
     infoText.innerText="Deposit ₹500 to get 1 spin";
   }
 
-  if(n==3){
-    glow.style.left="68%";
-    border.src="images/41387-removebg-preview.png";
-    innerWheel.src="images/41464-removebg-preview.png";
+  if(type==3){
+    wheel.src="images/41464-removebg-preview.png";
     infoText.innerText="Deposit ₹1000 to get 1 spin";
   }
+
 }
 
-/* SPIN */
+
+/* ===== SPIN FUNCTION ===== */
 function spin(){
 
-  let wheel = document.getElementById("innerWheel");
+  let wheel = document.getElementById("wheel");
 
-  let rand = Math.floor(Math.random()*8);
-  let deg = 360*5 + (rand * 45);
+  let rand = Math.floor(Math.random()*8);   // 8 sections
+  let deg = 360*5 + (rand * 45);            // smooth spin
 
   rotation += deg;
 
-  wheel.style.transform = "translate(-50%, -50%) rotate("+rotation+"deg)";
+  wheel.style.transform = "rotate("+rotation+"deg)";
 
+  /* RESULT */
   setTimeout(()=>{
+
+    let rewards = {
+      1:["₹30","₹60","₹15","₹75","Bonus ₹100","Bonus ₹300","₹100","₹50"],
+      2:["₹200","₹300","₹150","Bonus ₹500","₹70","₹300","₹200","₹100"],
+      3:["₹500","₹170","Bonus ₹400","₹100","Bonus ₹700","₹300","₹200","₹100"]
+    };
+
     let reward = rewards[current][rand];
-    alert("You got: " + reward);
+
+    alert("🎉 You won: " + reward);
+
   },4000);
 
 }
