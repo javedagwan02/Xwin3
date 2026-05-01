@@ -4,7 +4,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <style>
-
 html, body{
   margin:0;
   padding:0;
@@ -13,7 +12,8 @@ html, body{
 
 body{
   font-family:Arial;
-  min-height:100vh;
+  height:100vh;
+  overflow:hidden; /* 🔥 SCROLL FIX */
 
   background-image: url("images/file_000000004dd8720b92d40a8b6daf265e.png");
   background-size: cover;
@@ -57,28 +57,22 @@ body{
   border-radius:12px;
   background:rgba(0,255,150,0.2);
   box-shadow:0 0 15px #00ff88;
-  transition:0.3s;
 }
 
 /* POINTER */
 .pointer{
   font-size:30px;
-  margin-top:5px;
 }
 
-/* WHEEL BOX */
+/* WHEEL */
 .wheel-box{
   position:relative;
   width:280px;
   margin:10px auto;
 }
 
-/* BORDER */
-.border{
-  width:100%;
-}
+.border{width:100%;}
 
-/* INNER WHEEL PERFECT CENTER */
 .inner{
   position:absolute;
   top:50%;
@@ -89,11 +83,20 @@ body{
 }
 
 /* TEXT */
-.info{
-  margin-top:10px;
+.info{margin-top:10px;}
+
+#spinLeft{
+  margin-top:5px;
+  color:#00ffcc;
 }
 
-/* BUTTON */
+/* BUTTONS */
+.btn-container{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
+
 .btn{
   margin-top:15px;
   background:#00e676;
@@ -101,9 +104,9 @@ body{
   border-radius:25px;
   color:#000;
   font-weight:bold;
-  display:inline-block;
 }
-/* 🔥 POPUP FULL SCREEN */
+
+/* POPUP */
 .popup{
   position:fixed;
   inset:0;
@@ -111,62 +114,24 @@ body{
   display:none;
   justify-content:center;
   align-items:center;
-  z-index:9999;
 }
 
-/* 🔥 BOX DESIGN */
 .popup-box{
   width:85%;
   max-width:320px;
   padding:20px;
   border-radius:20px;
+  background:#1e293b;
   text-align:center;
-
-  background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
-
-  box-shadow:
-    0 0 20px rgba(0,255,150,0.6),
-    inset 0 0 10px rgba(255,255,255,0.1);
-
-  animation:popupAnim 0.3s ease;
 }
 
-/* 🔥 ICON */
-.popup-icon{
-  font-size:40px;
-  margin-bottom:10px;
-}
-
-/* 🔥 TITLE */
-.popup-box h2{
-  margin:5px 0;
-  color:#00ffcc;
-}
-
-/* 🔥 MESSAGE */
-.popup-box p{
-  margin:10px 0;
-  font-size:15px;
-  color:#ddd;
-}
-
-/* 🔥 BUTTON */
 .popup-box button{
   margin-top:10px;
   width:100%;
   padding:12px;
   border:none;
   border-radius:12px;
-
-  background:linear-gradient(45deg,#00ffcc,#00c853);
-  color:#000;
-  font-weight:bold;
-}
-
-/* 🔥 ANIMATION */
-@keyframes popupAnim{
-  from{transform:scale(0.6);opacity:0;}
-  to{transform:scale(1);opacity:1;}
+  background:#00c853;
 }
 </style>
 </head>
@@ -175,7 +140,6 @@ body{
 
 <div class="title">🎡 Lucky Wheel</div>
 
-<!-- SELECT -->
 <div class="box-wrapper">
   <img src="images/41393-removebg-preview.png" class="box-img">
 
@@ -186,218 +150,130 @@ body{
   <div id="glow" class="glow" style="left:2%;"></div>
 </div>
 
-<!-- POINTER -->
 <div class="pointer">⬇️</div>
 
-<!-- WHEEL -->
 <div class="wheel-box">
-
-  <!-- BORDER -->
   <img id="border" src="images/41383-removebg-preview.png" class="border">
-
-  <!-- INNER -->
   <img id="wheel" src="images/41422-removebg-preview.png" class="inner">
-
 </div>
 
-<div id="infoText" class="info">
-  Deposit ₹100 to get 1 spin
-</div>
-<div id="spinLeft" style="margin-top:5px;color:#00ffcc;">
-  Spins Left: 0
-</div>
-<div class="btn" onclick="spin()">SPIN</div>
-  <div class="btn" style="background:#ff00cc;color:#fff;margin-top:10px;"
-onclick="goDeposit()">
-  💰 Deposit
-  </div>
+<div id="infoText" class="info">Deposit ₹100 to get 1 spin</div>
+<div id="spinLeft">Spins Left: 0</div>
 
-      <script type="module">
+<div class="btn-container">
+  <div class="btn" onclick="spin()">SPIN</div>
 
+  <div class="btn" style="background:#ff00cc;color:#fff;"
+  onclick="goDeposit()">💰 Deposit</div>
+</div>
+
+<script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getFirestore, collection, getDocs, query, where, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-import { 
-  getFirestore, 
-  collection, 
-  getDocs, 
-  query, 
-  where,
-  doc,
-  updateDoc
-} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-
-/* 🔥 FIREBASE */
+/* FIREBASE */
 const app = initializeApp({
   apiKey:"AIzaSyBx3J9aGn_98rTPgurMMKw_GR3puIMj4Ms",
   authDomain:"colourcash-ea60e.firebaseapp.com",
   projectId:"colourcash-ea60e"
 });
-
 const db = getFirestore(app);
 
-/* 🔥 GLOBAL POPUP */
-window.showPopup = function(title, message, icon="💰"){
+/* POPUP */
+window.showPopup = function(title, message){
   document.getElementById("popupTitle").innerText = title;
   document.getElementById("popupMessage").innerText = message;
-  document.getElementById("popupIcon").innerText = icon;
   document.getElementById("popup").style.display = "flex";
 }
-
 window.closePopup = function(){
   document.getElementById("popup").style.display = "none";
 }
 
-/* 🔥 VARIABLES */
+/* VARIABLES */
 let rotation = 0;
-let current = 1;
+let current = 100;
 
-let unlocked = {
-  100:false,
-  500:false,
-  1000:false
-};
+let spins = {100:0,500:0,1000:0};
 
-let spins = {
-  100:0,
-  500:0,
-  1000:0
-};
-
-/* 🔥 LOAD USER */
+/* LOAD USER */
 async function loadUser(){
-
-  const userEmail = localStorage.getItem("userEmail");
-
-  if(!userEmail){
-    showPopup("❌ Login Required","Please login first","🚫");
-    return;
-  }
+  const email = localStorage.getItem("userEmail");
 
   const snap = await getDocs(
-    query(collection(db,"users"), where("email","==",userEmail))
+    query(collection(db,"users"), where("email","==",email))
   );
 
-  snap.forEach(docSnap=>{
-    let data = docSnap.data();
-
-    unlocked[100] = data.unlocked100 || false;
-    unlocked[500] = data.unlocked500 || false;
-    unlocked[1000] = data.unlocked1000 || false;
-
+  snap.forEach(d=>{
+    let data = d.data();
     spins[100] = data.spin100 || 0;
     spins[500] = data.spin500 || 0;
     spins[1000] = data.spin1000 || 0;
   });
 
-  updateSpinUI();
+  updateUI();
 }
-
 loadUser();
 
-/* 🔥 SPIN UI */
-function updateSpinUI(){
+/* UI */
+function updateUI(){
   document.getElementById("spinLeft").innerText =
-    "Spins Left: " + spins[current];
+    "Spins Left: " + (spins[current] || 0);
 }
 
-/* 🔥 SELECT WHEEL */
+/* SELECT */
 window.selectWheel = function(n){
 
-  let glow = document.getElementById("glow");
-  let border = document.getElementById("border");
-  let wheel = document.getElementById("wheel");
-  let infoText = document.getElementById("infoText");
+  if(n==1) current = 100;
+  if(n==2) current = 500;
+  if(n==3) current = 1000;
 
-  if(n==1 && !unlocked[100]){
-    showPopup("❌ Access Denied","Deposit ₹100 required","🚫");
-    return;
-  }
-
-  if(n==2 && !unlocked[500]){
-    showPopup("❌ Access Denied","Deposit ₹500 required","🚫");
-    return;
-  }
-
-  if(n==3 && !unlocked[1000]){
-    showPopup("❌ Access Denied","Deposit ₹1000 required","🚫");
-    return;
-  }
-
-  rotation = 0;
-  wheel.style.transform = "translate(-50%,-50%) rotate(0deg)";
-  current = n;
-
-  if(n==1){
-    glow.style.left="2%";
-    infoText.innerText="Deposit ₹100 to get 1 spin";
-  }
-
-  if(n==2){
-    glow.style.left="35%";
-    infoText.innerText="Deposit ₹500 to get 1 spin";
-  }
-
-  if(n==3){
-    glow.style.left="68%";
-    infoText.innerText="Deposit ₹1000 to get 1 spin";
-  }
-
-  updateSpinUI();
+  updateUI();
 }
 
-/* 🔥 UPDATE WALLET */
+/* WALLET UPDATE */
 async function updateWallet(type, amount){
-
-  const userEmail = localStorage.getItem("userEmail");
+  const email = localStorage.getItem("userEmail");
 
   const snap = await getDocs(
-    query(collection(db,"users"), where("email","==",userEmail))
+    query(collection(db,"users"), where("email","==",email))
   );
 
   snap.forEach(async (docSnap)=>{
-
     let data = docSnap.data();
 
-    let currentBalance = data.balance || 0;
-    let currentBonus = data.bonusBalance || 0;
+    let bal = data.balance || 0;
+    let bonus = data.bonusBalance || 0;
 
-    if(type === "cash"){
-      currentBalance += Number(amount);
-    }
-
-    if(type === "bonus"){
-      currentBonus += Number(amount);
-    }
+    if(type=="cash") bal += amount;
+    else bonus += amount;
 
     await updateDoc(doc(db,"users",docSnap.id),{
-      balance: currentBalance,
-      bonusBalance: currentBonus
+      balance:bal,
+      bonusBalance:bonus
     });
-
   });
-
 }
 
-/* 🔥 SPIN */
+/* SPIN */
 window.spin = function(){
 
-  if(spins[current] <= 0){
-    showPopup("❌ No Spins Left","Please deposit again","🚫");
+  if((spins[current] || 0) <= 0){
+    showPopup("❌ No Spins","Deposit required");
     return;
   }
 
   let wheel = document.getElementById("wheel");
 
   let rand = Math.floor(Math.random()*8);
-  let deg = 360*5 + (rand * 45);
+  let deg = 360*5 + rand*45;
 
   rotation += deg;
-  wheel.style.transform = "translate(-50%,-50%) rotate("+rotation+"deg)";
+  wheel.style.transform = `translate(-50%,-50%) rotate(${rotation}deg)`;
 
   let rewards = {
-    1:["cash_30","cash_60","cash_15","cash_75","bonus_100","bonus_300","cash_100","cash_50"],
-    2:["cash_200","cash_300","cash_150","bonus_500","cash_70","cash_300","cash_200","cash_100"],
-    3:["cash_500","cash_170","bonus_400","cash_100","bonus_700","cash_300","cash_200","cash_100"]
+    100:["cash_30","cash_60","cash_15","cash_75","bonus_100","bonus_300","cash_100","cash_50"],
+    500:["cash_200","cash_300","cash_150","bonus_500","cash_70","cash_300","cash_200","cash_100"],
+    1000:["cash_500","cash_170","bonus_400","cash_100","bonus_700","cash_300","cash_200","cash_100"]
   };
 
   setTimeout(async ()=>{
@@ -406,13 +282,10 @@ window.spin = function(){
     let type = result.split("_")[0];
     let amount = Number(result.split("_")[1]);
 
-    // 🔥 wallet update
     await updateWallet(type, amount);
 
-    // 🔥 spin reduce
     spins[current]--;
 
-    // 🔥 update firebase spin
     const snap = await getDocs(
       query(collection(db,"users"), where("email","==",localStorage.getItem("userEmail")))
     );
@@ -423,37 +296,26 @@ window.spin = function(){
       });
     });
 
-    updateSpinUI();
+    updateUI();
 
-    // 🔥 popup
-    if(type=="cash"){
-      showPopup("🎉 You Won!", "₹" + amount + " Cash Added", "💰");
-    }else{
-      showPopup("🎁 Bonus Win!", "₹" + amount + " Bonus Added", "🎁");
-    }
+    showPopup("🎉 You Won", "₹"+amount);
 
   },4000);
 }
 
-/* 🔥 DEPOSIT BUTTON */
+/* DEPOSIT */
 window.goDeposit = function(){
   window.location.href = "deposit.html";
 }
+</script>
 
-
-    </script>
 <div id="popup" class="popup">
   <div class="popup-box">
-
-    <div id="popupIcon" class="popup-icon">💰</div>
-
-    <h2 id="popupTitle">Title</h2>
-
-    <p id="popupMessage">Message</p>
-
+    <h3 id="popupTitle"></h3>
+    <p id="popupMessage"></p>
     <button onclick="closePopup()">OK</button>
-
   </div>
 </div>
+
 </body>
 </html>
