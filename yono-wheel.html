@@ -44,6 +44,7 @@ body{
   top:0;
   height:100%;
   width:33.33%;
+  z-index: 10; /* 🔥 ADD THIS */
 }
 .box1{left:0;}
 .box2{left:33.33%;}
@@ -307,6 +308,7 @@ window.spin = function(){
 window.goDeposit = function(){
   window.location.href = "deposit.html";
 }
+  window.addEventListener("focus", loadUser);
 </script>
 
 <div id="popup" class="popup">
