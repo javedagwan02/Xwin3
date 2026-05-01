@@ -37,14 +37,17 @@ body{
   width:90%;
   margin:15px auto;
 }
-.box-img{width:100%;}
+.box-img{
+  width:100%;
+  pointer-events: none; /* 🔥 IMPORTANT */
+}
 
 .box{
   position:absolute;
   top:0;
   height:100%;
   width:33.33%;
-  z-index: 10; /* 🔥 ADD THIS */
+  z-index: 20; /* 🔥 increase */
 }
 .box1{left:0;}
 .box2{left:33.33%;}
@@ -58,6 +61,9 @@ body{
   border-radius:12px;
   background:rgba(0,255,150,0.2);
   box-shadow:0 0 15px #00ff88;
+  transition:0.3s;
+
+  z-index:5; /* 🔥 FIX */
 }
 
 /* POINTER */
