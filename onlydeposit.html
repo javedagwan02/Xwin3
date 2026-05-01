@@ -163,10 +163,19 @@ if(!firstDepositDone && bonus > 0){
   bonus = 0; // bonus reset
   firstDepositDone = true;
 }
+// 🔥 TOTAL DEPOSIT TRACK
+let totalDeposit = (userData.totalDeposit || 0) + amount;
 
+// 🔥 BONUS UNLOCK SYSTEM
+if(bonus > 0 && totalDeposit >= bonus * 4){
+  newBalance += bonus;   // bonus main wallet me
+  bonus = 0;             // reset
+}
 await updateDoc(doc(db,"users",u.id),{
   balance: newBalance,
   bonusBalance: bonus,
+  totalDeposit: totalDeposit, // 🔥 ADD THIS
+
   firstDepositDone: firstDepositDone,
   hasDeposited: true,
 
@@ -177,7 +186,6 @@ await updateDoc(doc(db,"users",u.id),{
   unlocked500: (userData.unlocked500 || false) || amount >= 500,
   unlocked1000: (userData.unlocked1000 || false) || amount >= 1000,
 
-  // 🔥 ADD THIS
   spin100: spin100,
   spin500: spin500,
   spin1000: spin1000
