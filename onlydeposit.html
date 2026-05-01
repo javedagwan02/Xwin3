@@ -157,12 +157,7 @@ else if(amount >= 500 && amount < 1000){
 else if(amount >= 1000){
   spin1000 += spinsToAdd;
 }
-// 🔥 FIRST DEPOSIT BONUS UNLOCK
-if(!firstDepositDone && bonus > 0){
-  newBalance += bonus; // bonus add
-  bonus = 0; // bonus reset
-  firstDepositDone = true;
-}
+
 // 🔥 TOTAL DEPOSIT TRACK
 let totalDeposit = (userData.totalDeposit || 0) + amount;
 
