@@ -11,10 +11,10 @@ html, body{
 }
 
 body{
-  font-family:Arial;
   height:100vh;
-  overflow:hidden; /* 🔥 SCROLL FIX */
-
+  overflow-y:auto;   /* ✅ allow scroll */
+  overscroll-behavior: none;
+}
   background-image: url("images/file_000000004dd8720b92d40a8b6daf265e.png");
   background-size: cover;
   background-position: center;
@@ -41,8 +41,8 @@ body{
 .box-img{
   width:100%;
   display:block;
+  pointer-events:none;  /* 🔥 THIS IS THE REAL FIX */
 }
-
 .box{
   position:absolute;
   top:0;
@@ -232,9 +232,26 @@ function updateUI(){
 /* SELECT */
 window.selectWheel = function(n){
 
-  if(n==1) current = 100;
-  if(n==2) current = 500;
-  if(n==3) current = 1000;
+  let glow = document.getElementById("glow");
+  let infoText = document.getElementById("infoText");
+
+  if(n==1){
+    current = 100;
+    glow.style.left = "2%";
+    infoText.innerText = "Deposit ₹100 to get 1 spin";
+  }
+
+  if(n==2){
+    current = 500;
+    glow.style.left = "35%";
+    infoText.innerText = "Deposit ₹500 to get 1 spin";
+  }
+
+  if(n==3){
+    current = 1000;
+    glow.style.left = "68%";
+    infoText.innerText = "Deposit ₹1000 to get 1 spin";
+  }
 
   updateUI();
 }
