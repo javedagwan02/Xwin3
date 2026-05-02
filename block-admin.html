@@ -125,21 +125,24 @@ onSnapshot(collection(db,"users"), (snap)=>{
 
   allUsers = [];
 
-snap.forEach(d=>{
-  let u = d.data();
-  u.id = d.id;
+  snap.forEach(d=>{
+    let u = d.data();
+    u.id = d.id;
 
-  u.password = u.password || "";
+    u.password = u.password || "";
 
-  allUsers.push(u);
+    allUsers.push(u);
+  });
+
+  // 🔥 SORT LATEST USER FIRST
+  allUsers.sort((a,b)=>{
+    return (b.timeStamp || 0) - (a.timeStamp || 0);
+  });
+
+  // 🔥 FIRST RENDER
+  renderUsers(allUsers);
 });
-
-// 🔥 SORT LATEST USER FIRST
-allUsers.sort((a,b)=>{
-  return (b.timeStamp || 0) - (a.timeStamp || 0);
-});
-
-/* 🔥 SEARCH SYSTEM */
+// 🔍 SEARCH SYSTEM
 document.getElementById("searchBox").addEventListener("input", function(){
 
   let value = this.value.toLowerCase();
@@ -150,7 +153,6 @@ document.getElementById("searchBox").addEventListener("input", function(){
 
   renderUsers(filtered);
 });
-
 /* 🔥 FUNCTIONS */
 window.addMoney = async(id)=>{
   let amt = +document.getElementById("amt_"+id).value;
