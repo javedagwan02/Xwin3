@@ -125,18 +125,18 @@ onSnapshot(collection(db,"users"), (snap)=>{
 
   allUsers = [];
 
-  snap.forEach(d=>{
-    let u = d.data();
-u.id = d.id;
+snap.forEach(d=>{
+  let u = d.data();
+  u.id = d.id;
 
-// 🔥 force password fix
-u.password = u.password || "";
+  u.password = u.password || "";
 
-allUsers.push(u);
-  });
+  allUsers.push(u);
+});
 
-  renderUsers(allUsers);
-
+// 🔥 SORT LATEST USER FIRST
+allUsers.sort((a,b)=>{
+  return (b.timeStamp || 0) - (a.timeStamp || 0);
 });
 
 /* 🔥 SEARCH SYSTEM */
