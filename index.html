@@ -1093,6 +1093,8 @@ Search
   <h3>Game 39</h3>
   <img src="images/41892-removebg-preview.png">
 </div>
+  <!-- 🔥 AUTO GAMES (ADMIN PANEL SE AAYENGE) -->
+<div id="autoGames"></div>
 <div class="spacer"></div>
 
 <!-- GIFT POPUP -->
@@ -2432,6 +2434,59 @@ window.openJiliGame39 = async function(){
   + userEmail +
   "&gameId=731e642b1fee94725e7313f3dfba8f45";
 };
+  // 🔥 LOAD AUTO GAMES FROM FIREBASE
+async function loadAutoGames(){
+
+  const snap = await getDocs(collection(db,"games"));
+
+  const container = document.getElementById("autoGames");
+
+  snap.forEach(docSnap=>{
+
+    let g = docSnap.data();
+
+    let div = document.createElement("div");
+
+    div.className = "game-card newgame-card";
+
+    div.innerHTML = `
+      <h3>${g.name}</h3>
+      <img src="${g.image}">
+    `;
+
+    div.onclick = async ()=>{
+
+      const userEmail = localStorage.getItem("userEmail");
+
+      const userSnap = await getDocs(
+        query(collection(db,"users"), where("email","==",userEmail))
+      );
+
+      let balance = 0;
+
+      userSnap.forEach(d=>{
+        balance = Number(d.data().balance || 0);
+      });
+
+      if(balance < 10){
+        document.getElementById("depositPopup").style.display="flex";
+        return;
+      }
+
+      window.location.href =
+      "https://jili-backend.onrender.com/start-game?userId="
+      + userEmail +
+      "&gameId=" + g.uid;
+    };
+
+    container.appendChild(div);
+
+  });
+
+}
+
+// 🔥 CALL
+loadAutoGames();
   window.redeemCode = async function(){
 // 🔥 CHECK USER 24H DEPOSIT
 async function checkDeposit(userId){
