@@ -386,7 +386,7 @@ await updateDoc(doc(db,"users",userDocId),{
     ifsc: bankIfsc.value
   } : null,
   status: "PENDING",
-  time: new Date().toLocaleString(),   // ✅ comma add
+  time: Date.now(),   // ✅ comma add
   timeStamp: Date.now()               // ✅ now ok
 });
 
