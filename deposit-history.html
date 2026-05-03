@@ -113,8 +113,20 @@ async function loadDeposits(){
     list.innerHTML += `
     <div class="card">
       <div class="row"><span>Amount</span><span>₹${d.amount}</span></div>
-      <
+      <div class="row"><span>Order ID</span><span>${d.orderId || "N/A"}</span></div>
+      <div class="row"><span>UTR</span><span>${d.utr}</span></div>
+      
+      <div class="row"><span>Time</span><span>${new Date(d.time).toLocaleString()}</span></div>
+      
+      <div class="row">
+        <span>Status</span>
+        <span class="status ${statusClass}">${d.status}</span>
+      </div>
+    </div>
+    `;
+  });
 
+}
 loadDeposits();
 </script>
 
