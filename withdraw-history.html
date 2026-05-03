@@ -101,8 +101,8 @@ async function loadWithdrawHistory(){
 
   // 🔥 STEP 2: SORT (LATEST FIRST)
   withdraws.sort((a,b)=>{
-    return (b.time || 0) - (a.time || 0);
-  });
+  return new Date(b.time).getTime() - new Date(a.time).getTime();
+});
 
   // 🔥 STEP 3: RENDER
   list.innerHTML = "";
