@@ -84,23 +84,35 @@ function formatTime(t){
 
   if(!t) return "N/A";
 
-  // 🔥 Firestore timestamp
+  let date;
+
+  // Firestore timestamp
   if(t.seconds){
-    return new Date(t.seconds * 1000).toLocaleString();
+    date = new Date(t.seconds * 1000);
   }
 
-  // 🔥 number (Date.now)
-  if(typeof t === "number"){
-    return new Date(t).toLocaleString();
+  // number
+  else if(typeof t === "number"){
+    date = new Date(t);
   }
 
-  // 🔥 string
-  if(typeof t === "string"){
-    let d = new Date(t);
-    return isNaN(d) ? "N/A" : d.toLocaleString();
+  // string (DD/MM/YYYY FIX)
+  else if(typeof t === "string"){
+
+    // 🔥 manual split
+    let parts = t.split(/[/, :]/);
+
+    if(parts.length >= 3){
+      // assume DD/MM/YYYY
+      date = new Date(parts[2], parts[1]-1, parts[0], parts[3]||0, parts[4]||0, parts[5]||0);
+    }else{
+      date = new Date(t);
+    }
   }
 
-  return "N/A";
+  if(!date || isNaN(date)) return "N/A";
+
+  return date.toLocaleString("en-IN"); // 🔥 Indian format
 }
 
 
@@ -109,16 +121,26 @@ function getTimeValue(t){
 
   if(!t) return 0;
 
-  if(t.seconds) return t.seconds * 1000;
+  let date;
 
-  if(typeof t === "number") return t;
+  if(t.seconds){
+    date = new Date(t.seconds * 1000);
+  }
+  else if(typeof t === "number"){
+    date = new Date(t);
+  }
+  else if(typeof t === "string"){
 
-  if(typeof t === "string"){
-    let d = new Date(t);
-    return isNaN(d) ? 0 : d.getTime();
+    let parts = t.split(/[/, :]/);
+
+    if(parts.length >= 3){
+      date = new Date(parts[2], parts[1]-1, parts[0], parts[3]||0, parts[4]||0);
+    }else{
+      date = new Date(t);
+    }
   }
 
-  return 0;
+  return date && !isNaN(date) ? date.getTime() : 0;
 }
 
 
