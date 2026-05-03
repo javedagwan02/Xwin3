@@ -89,9 +89,25 @@ async function loadWithdrawHistory(){
     return;
   }
 
+  // 🔥 STEP 1: ARRAY BANAAO
+  let withdraws = [];
+
+  snap.forEach(doc=>{
+    withdraws.push({
+      id: doc.id,
+      ...doc.data()
+    });
+  });
+
+  // 🔥 STEP 2: SORT (LATEST FIRST)
+  withdraws.sort((a,b)=>{
+    return (b.time || 0) - (a.time || 0);
+  });
+
+  // 🔥 STEP 3: RENDER
   list.innerHTML = "";
-  snap.docs.reverse().forEach(d=>{
-    const w = d.data();
+
+  withdraws.forEach(w=>{
 
     const statusClass =
       w.status === "APPROVED" ? "approved" :
@@ -101,8 +117,11 @@ async function loadWithdrawHistory(){
       <div class="card">
         <div class="row"><span>Amount</span><span>₹${w.amount}</span></div>
         <div class="row"><span>Method</span><span>${w.method}</span></div>
-        <div class="row"><span>Order ID</span><span>${d.id}</span></div>
-        <div class="row"><span>Time</span><span>${w.time}</span></div>
+        <div class="row"><span>Order ID</span><span>${w.id}</span></div>
+        
+        <!-- 🔥 TIME FIX -->
+        <div class="row"><span>Time</span><span>${new Date(w.time).toLocaleString()}</span></div>
+        
         <div class="row">
           <span>Status</span>
           <span class="status ${statusClass}">${w.status}</span>
@@ -110,8 +129,8 @@ async function loadWithdrawHistory(){
       </div>
     `;
   });
-}
 
+}
 loadWithdrawHistory();
 </script>
 
