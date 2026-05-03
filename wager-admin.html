@@ -146,9 +146,10 @@ window.renderUsers = function(users){
       </div>
 
       <div class="row">
-        <button onclick="addWager('${u.id}')">+ ADD</button>
-        <button onclick="resetWager('${u.id}')">RESET</button>
-      </div>
+  <button onclick="addWager('${u.id}')">+ ADD</button>
+  <button onclick="minusWager('${u.id}')">- CUT</button>
+  <button onclick="resetWager('${u.id}')">RESET</button>
+</div>
 
     </div>`;
   });
@@ -194,7 +195,37 @@ window.addWager = async(id)=>{
   alert("Wager Increased 🔥");
   loadUsers();
 };
+window.minusWager = async(id)=>{
+  const val = Number(document.getElementById("wager-"+id).value);
 
+  if(!val || val <= 0){
+    return alert("Enter valid amount");
+  }
+
+  const ref = doc(db,"users",id);
+  const snap = await getDoc(ref);
+
+  let current = 0;
+
+  if(snap.exists()){
+    current = Number(snap.data().wagerRequired) || 0;
+  }
+
+  let newValue = current - val;
+
+  // 🔥 Negative na ho
+  if(newValue < 0){
+    newValue = 0;
+  }
+
+  await updateDoc(ref,{
+    wagerRequired: newValue
+  });
+
+  alert("Wager Decreased 🔻");
+
+  loadUsers();
+};
 /* 🔥 RESET */
 window.resetWager = async(id)=>{
   await updateDoc(doc(db,"users",id),{
