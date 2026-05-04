@@ -335,41 +335,42 @@ if(!unlock)return;
 
 let diff=unlock-Date.now();
 
+
 if(diff<=0){
 
-let reward = Number(localStorage.getItem("investReward")) || 0;
+  if(localStorage.getItem("rewardGiven")) return;
+  localStorage.setItem("rewardGiven","true");
 
-// 🔥 FIRESTORE SE USER DATA LO
-let userSnap = await getDocs(
-  query(collection(db,"users"), where("email","==",userEmail))
-);
+  let reward = Number(localStorage.getItem("investReward")) || 0;
 
-userSnap.forEach(async d=>{
+  let userSnap = await getDocs(
+    query(collection(db,"users"), where("email","==",userEmail))
+  );
 
-  let data = d.data();
+  userSnap.forEach(async d=>{
 
-  let currentBalance = data.balance || 0;
-  let currentWager = data.wagerRequired || 0;
+    let data = d.data();
 
-  let newBalance = currentBalance + reward;
-  let newWager = currentWager + reward;
+    let currentBalance = data.balance || 0;
+    let currentWager = data.wagerRequired || 0;
 
-  await updateDoc(doc(db,"users",d.id),{
-    balance: newBalance,        // ✅ wallet me paisa
-    wagerRequired: newWager     // 🔥 wager lock
+    let newBalance = currentBalance + reward;
+    let newWager = currentWager + reward;
+
+    await updateDoc(doc(db,"users",d.id),{
+      balance: newBalance,
+      wagerRequired: newWager
+    });
+
+    document.getElementById("wallet").innerText = newBalance;
+
   });
 
-  // 🔥 UI update
-  document.getElementById("wallet").innerText = newBalance;
+  showPopup("💰 Reward ₹"+reward+" Added");
 
-});
-
-showPopup("💰 Reward ₹"+reward+" Added");
-
-localStorage.removeItem("unlockTime");
-
+  localStorage.removeItem("unlockTime");
+  localStorage.removeItem("rewardGiven");
 }
-
 let h=Math.floor(diff/3600000);
 let m=Math.floor((diff%3600000)/60000);
 let s=Math.floor((diff%60000)/1000);
