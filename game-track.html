@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>2xWin Admin Panel</title>
+
+<style>
+body{
+  margin:0;
+  font-family:Arial;
+  background:#0f0f0f;
+  color:#fff;
+}
+
+.header{
+  padding:15px;
+  text-align:center;
+  font-size:22px;
+  font-weight:bold;
+  background:#111;
+  border-bottom:1px solid #222;
+}
+
+.stats{
+  display:flex;
+  justify-content:space-around;
+  padding:10px;
+  background:#111;
+  border-bottom:1px solid #222;
+}
+
+.stat-box{
+  text-align:center;
+}
+
+.stat-box h2{
+  margin:0;
+  color:#00e676;
+}
+
+.stat-box p{
+  margin:0;
+  font-size:12px;
+  opacity:0.7;
+}
+
+.table-box{
+  padding:10px;
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+}
+
+th,td{
+  padding:10px;
+  border-bottom:1px solid #222;
+  text-align:center;
+  font-size:14px;
+}
+
+th{
+  background:#1a1a1a;
+}
+
+.online{
+  color:#00e676;
+  font-weight:bold;
+}
+
+.offline{
+  color:#ff5252;
+  font-weight:bold;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="header">🔥 LIVE USER DASHBOARD</div>
+
+<div class="stats">
+  <div class="stat-box">
+    <h2 id="totalUsers">0</h2>
+    <p>Total Users</p>
+  </div>
+  <div class="stat-box">
+    <h2 id="onlineUsers">0</h2>
+    <p>Online</p>
+  </div>
+  <div class="stat-box">
+    <h2 id="offlineUsers">0</h2>
+    <p>Offline</p>
+  </div>
+</div>
+
+<div class="table-box">
+<table>
+<thead>
+<tr>
+<th>User</th>
+<th>Game</th>
+<th>Status</th>
+<th>Time</th>
+</tr>
+</thead>
+
+<tbody id="tableBody"></tbody>
+</table>
+</div>
+
+<script>
+
+async function loadUsers(){
+
+  const res = await fetch("http://187.127.162.97:3000/admin/live-users");
+  const data = await res.json();
+
+  let html = "";
+  let online = 0;
+  let offline = 0;
+
+  data.forEach(u=>{
+
+    let time = "-";
+
+    if(u.startTime){
+      let sec = Math.floor((Date.now() - u.startTime)/1000);
+      time = sec + " sec";
+    }
+
+    if(u.status === "online") online++;
+    else offline++;
+
+    html += `
+    <tr>
+      <td>${u.email}</td>
+      <td>${u.gameId}</td>
+      <td class="${u.status === 'online' ? 'online' : 'offline'}">
+        ${u.status}
+      </td>
+      <td>${time}</td>
+    </tr>
+    `;
+  });
+
+  document.getElementById("tableBody").innerHTML = html;
+
+  document.getElementById("totalUsers").innerText = data.length;
+  document.getElementById("onlineUsers").innerText = online;
+  document.getElementById("offlineUsers").innerText = offline;
+}
+
+// 🔥 AUTO REFRESH
+setInterval(loadUsers, 2000);
+loadUsers();
+
+</script>
+
+</body>
+</html>
