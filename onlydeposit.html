@@ -152,6 +152,11 @@ let bal = userData.balance || 0;
 let bonus = userData.bonusBalance || 0;
 let firstDepositDone = userData.firstDepositDone || false;
 
+// 🔥 ADD THIS EXACTLY HERE
+if(!firstDepositDone){
+  firstDepositDone = true;
+}
+
 let newBalance = bal + amount;
 // 🔥 SPIN CALCULATION
 let spinsToAdd = Math.floor(amount / 100);
