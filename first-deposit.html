@@ -117,7 +117,28 @@ body{
 <p>• Fake activity = account block</p>
 </div>
 
-<script>
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+
+import {
+  getFirestore,
+  collection,
+  getDocs,
+  query,
+  where,
+  updateDoc,
+  doc
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+// 🔥 FIREBASE CONFIG
+const app = initializeApp({
+  apiKey:"AIzaSyBx3J9aGn_98rTPgurMMKw_GR3puIMj4Ms",
+  authDomain:"colourcash-ea60e.firebaseapp.com",
+  projectId:"colourcash-ea60e"
+});
+
+const db = getFirestore(app);
 
 // 🔥 PLANS
 const plans = [
@@ -130,12 +151,38 @@ const plans = [
   {amount:240000, bonus:8888}
 ];
 
-// 🔥 USER DATA (later Firebase se replace karega)
-let totalDeposit = Number(localStorage.getItem("totalDeposit")) || 0;
+let totalDeposit = 0;
 let claimed = JSON.parse(localStorage.getItem("claimedBonus") || "[]");
 
 const list = document.getElementById("list");
 
+// 🔥 LOAD DEPOSIT DATA
+async function loadDeposit(){
+
+  const userEmail = localStorage.getItem("userEmail");
+
+  if(!userEmail){
+    alert("Login required");
+    return;
+  }
+
+  const snap = await getDocs(
+    query(collection(db,"deposits"), where("email","==",userEmail))
+  );
+
+  totalDeposit = 0;
+
+  snap.forEach(d=>{
+    const data = d.data();
+    if(data.status === "APPROVED"){
+      totalDeposit += Number(data.amount);
+    }
+  });
+
+  render();
+}
+
+// 🔥 UI RENDER
 function render(){
 
   list.innerHTML = "";
@@ -146,24 +193,24 @@ function render(){
 
     let btnText = "Deposit";
     let btnClass = "btn";
-    let click = `goDeposit(${p.amount})`;
+    let clickFn = () => goDeposit(p.amount);
 
-    // 🔥 CLAIM CONDITION
     if(totalDeposit >= p.amount && !claimed.includes(index)){
       btnText = "Claim";
       btnClass = "btn claim";
-      click = `claimBonus(${index})`;
+      clickFn = () => claimBonus(index);
     }
 
-    // 🔥 DONE
     if(claimed.includes(index)){
       btnText = "Claimed";
       btnClass = "btn done";
-      click = "";
+      clickFn = () => {};
     }
 
-    list.innerHTML += `
-    <div class="card">
+    const card = document.createElement("div");
+    card.className = "card";
+
+    card.innerHTML = `
       <div class="row">
         <div class="title">First deposit ${p.amount}</div>
         <div class="bonus">+ ₹${p.bonus}</div>
@@ -179,19 +226,18 @@ function render(){
 
       <div class="row" style="margin-top:8px;">
         <div>${Math.min(totalDeposit,p.amount)}/${p.amount}</div>
-        <button class="${btnClass}" onclick="${click}">
-          ${btnText}
-        </button>
+        <button class="${btnClass}">${btnText}</button>
       </div>
-    </div>
     `;
+
+    card.querySelector("button").onclick = clickFn;
+
+    list.appendChild(card);
   });
 
 }
 
-render();
-
-// 🔥 GO DEPOSIT
+// 🔥 GO TO DEPOSIT
 function goDeposit(amount){
   localStorage.setItem("depositAmount", amount);
   window.location.href = "deposit.html";
@@ -206,8 +252,6 @@ async function claimBonus(index){
     alert("Login required");
     return;
   }
-
-  let plan = plans[index];
 
   const userSnap = await getDocs(
     query(collection(db,"users"), where("email","==",userEmail))
@@ -226,22 +270,23 @@ async function claimBonus(index){
     currentBonus = d.data().bonusBalance || 0;
   });
 
-  // 🔥 REAL BONUS ADD
+  const plan = plans[index];
+
   await updateDoc(doc(db,"users",userId),{
     bonusBalance: currentBonus + plan.bonus
   });
 
-  // 🔥 MARK CLAIMED
   claimed.push(index);
   localStorage.setItem("claimedBonus", JSON.stringify(claimed));
 
   alert("Bonus ₹"+plan.bonus+" added 🎉");
 
-  render();
+  loadDeposit();
 }
 
+// 🔥 INIT
+loadDeposit();
 
 </script>
-
 </body>
 </html>
