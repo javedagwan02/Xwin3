@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>First Deposit Bonus</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+body{
+  margin:0;
+  font-family:Arial;
+  background:#f2f2f2;
+}
+
+.header{
+  padding:15px;
+  text-align:center;
+  font-size:20px;
+  font-weight:bold;
+  background:#fff;
+}
+
+.card{
+  background:#fff;
+  margin:12px;
+  padding:15px;
+  border-radius:12px;
+}
+
+.row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.title{
+  font-size:16px;
+  font-weight:bold;
+}
+
+.bonus{
+  color:#ff9800;
+  font-weight:bold;
+}
+
+.desc{
+  font-size:12px;
+  color:#777;
+  margin:5px 0;
+}
+
+.bar{
+  height:8px;
+  background:#ddd;
+  border-radius:5px;
+  overflow:hidden;
+  margin-top:8px;
+}
+
+.fill{
+  height:100%;
+  background:#bbb;
+}
+
+.btn{
+  border:1px solid #ff9800;
+  color:#ff9800;
+  padding:6px 14px;
+  border-radius:6px;
+  cursor:pointer;
+  background:#fff;
+}
+
+.claim{
+  background:#4caf50;
+  color:#fff;
+  border:none;
+}
+
+.done{
+  background:#aaa;
+  color:#fff;
+  border:none;
+}
+
+/* RULE BOX */
+.rules{
+  background:#fff;
+  margin:12px;
+  padding:15px;
+  border-radius:12px;
+}
+
+.rules h3{
+  margin:0 0 10px;
+}
+
+.rules p{
+  font-size:13px;
+  color:#555;
+  margin:6px 0;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">First Deposit Bonus</div>
+
+<div id="list"></div>
+
+<div class="rules">
+<h3>📜 Activity Rules</h3>
+<p>• Only valid for first deposit</p>
+<p>• Bonus can be claimed once</p>
+<p>• Bonus requires wagering before withdrawal</p>
+<p>• Fake activity = account block</p>
+</div>
+
+<script>
+
+// 🔥 PLANS
+const plans = [
+  {amount:400, bonus:48},
+  {amount:1000, bonus:108},
+  {amount:2000, bonus:188},
+  {amount:10000, bonus:488},
+  {amount:24000, bonus:1388},
+  {amount:120000, bonus:5888},
+  {amount:240000, bonus:8888}
+];
+
+// 🔥 USER DATA (later Firebase se replace karega)
+let totalDeposit = Number(localStorage.getItem("totalDeposit")) || 0;
+let claimed = JSON.parse(localStorage.getItem("claimedBonus") || "[]");
+
+const list = document.getElementById("list");
+
+function render(){
+
+  list.innerHTML = "";
+
+  plans.forEach((p,index)=>{
+
+    let percent = Math.min((totalDeposit / p.amount)*100, 100);
+
+    let btnText = "Deposit";
+    let btnClass = "btn";
+    let click = `goDeposit(${p.amount})`;
+
+    // 🔥 CLAIM CONDITION
+    if(totalDeposit >= p.amount && !claimed.includes(index)){
+      btnText = "Claim";
+      btnClass = "btn claim";
+      click = `claimBonus(${index})`;
+    }
+
+    // 🔥 DONE
+    if(claimed.includes(index)){
+      btnText = "Claimed";
+      btnClass = "btn done";
+      click = "";
+    }
+
+    list.innerHTML += `
+    <div class="card">
+      <div class="row">
+        <div class="title">First deposit ${p.amount}</div>
+        <div class="bonus">+ ₹${p.bonus}</div>
+      </div>
+
+      <div class="desc">
+        Deposit ${p.amount} and get ${p.bonus} bonus
+      </div>
+
+      <div class="bar">
+        <div class="fill" style="width:${percent}%"></div>
+      </div>
+
+      <div class="row" style="margin-top:8px;">
+        <div>${Math.min(totalDeposit,p.amount)}/${p.amount}</div>
+        <button class="${btnClass}" onclick="${click}">
+          ${btnText}
+        </button>
+      </div>
+    </div>
+    `;
+  });
+
+}
+
+render();
+
+// 🔥 GO DEPOSIT
+function goDeposit(amount){
+  localStorage.setItem("depositAmount", amount);
+  window.location.href = "deposit.html";
+}
+
+// 🔥 CLAIM BONUS
+function claimBonus(index){
+
+  let plan = plans[index];
+
+  // 🔥 add bonus wallet me (demo)
+  let wallet = Number(localStorage.getItem("wallet")) || 0;
+  wallet += plan.bonus;
+
+  localStorage.setItem("wallet", wallet);
+
+  // 🔥 mark claimed
+  claimed.push(index);
+  localStorage.setItem("claimedBonus", JSON.stringify(claimed));
+
+  alert("Bonus ₹"+plan.bonus+" added successfully 🎉");
+
+  render();
+}
+
+</script>
+
+</body>
+</html>
