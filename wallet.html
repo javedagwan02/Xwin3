@@ -410,6 +410,7 @@ let firstDepositDone = false;
   bonus = d.data().bonusBalance || 0;
   firstDepositDone = d.data().firstDepositDone || false;
 });
+  localStorage.setItem("firstDepositDone", firstDepositDone);
 // 🔥 SYNC BALANCE TO LOCALSTORAGE (IMPORTANT)
 localStorage.setItem("wallet", balance);
 localStorage.setItem("coin_wallet", balance);
@@ -426,6 +427,8 @@ localStorage.setItem("walletUpdated", "1");
       totalDeposit += Number(x.amount);
     }
   });
+  // 🔥 ADD THIS
+localStorage.setItem("totalDeposit", totalDeposit);
 
   /* ✅ WITHDRAWS (🔥 FIXED – FIRESTORE) */
   const wdSnap = await getDocs(
