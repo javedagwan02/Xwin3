@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Offers</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+body{
+  margin:0;
+  background:#0f0f0f;
+  font-family:Arial;
+  color:#fff;
+}
+
+.header{
+  padding:15px;
+  text-align:center;
+  font-size:22px;
+  font-weight:bold;
+}
+
+.banner{
+  margin:15px;
+  border-radius:15px;
+  overflow:hidden;
+  cursor:pointer;
+  box-shadow:0 0 15px rgba(255,0,255,0.3);
+}
+
+.banner img{
+  width:100%;
+  display:block;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">🎁 Latest Offers</div>
+
+<!-- 🔥 Banner 1 -->
+<div class="banner" onclick="openEvent('offer1')">
+  <img src="images/offer1.jpg">
+</div>
+
+<!-- 🔥 Banner 2 -->
+<div class="banner" onclick="openEvent('offer2')">
+  <img src="images/offer2.jpg">
+</div>
+
+<script>
+function openEvent(id){
+  window.location.href = "event-detail.html?id=" + id;
+}
+</script>
+
+</body>
+</html>
