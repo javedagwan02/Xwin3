@@ -198,24 +198,48 @@ function goDeposit(amount){
 }
 
 // 🔥 CLAIM BONUS
-function claimBonus(index){
+async function claimBonus(index){
+
+  const userEmail = localStorage.getItem("userEmail");
+
+  if(!userEmail){
+    alert("Login required");
+    return;
+  }
 
   let plan = plans[index];
 
-  // 🔥 add bonus wallet me (demo)
-  let wallet = Number(localStorage.getItem("wallet")) || 0;
-  wallet += plan.bonus;
+  const userSnap = await getDocs(
+    query(collection(db,"users"), where("email","==",userEmail))
+  );
 
-  localStorage.setItem("wallet", wallet);
+  if(userSnap.empty){
+    alert("User not found");
+    return;
+  }
 
-  // 🔥 mark claimed
+  let userId = "";
+  let currentBonus = 0;
+
+  userSnap.forEach(d=>{
+    userId = d.id;
+    currentBonus = d.data().bonusBalance || 0;
+  });
+
+  // 🔥 REAL BONUS ADD
+  await updateDoc(doc(db,"users",userId),{
+    bonusBalance: currentBonus + plan.bonus
+  });
+
+  // 🔥 MARK CLAIMED
   claimed.push(index);
   localStorage.setItem("claimedBonus", JSON.stringify(claimed));
 
-  alert("Bonus ₹"+plan.bonus+" added successfully 🎉");
+  alert("Bonus ₹"+plan.bonus+" added 🎉");
 
   render();
 }
+
 
 </script>
 
