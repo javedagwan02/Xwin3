@@ -318,49 +318,27 @@ window.setAmount = function(a){
 }
 
 /* 🔥 PAY */
-window.payNow = async function(){
+window.payNow = function(){
 
   let amt = document.getElementById("amount").value;
-  const email = localStorage.getItem("userEmail");
 
   if(amt < 100){
     showPopup("Minimum ₹100");
     return;
   }
 
-  if(!email){
-    showPopup("Login required");
-    return;
-  }
+  let upi = channels[current].upi;
 
-  showPopup("Processing Payment... ⏳");
+  let url = `upi://pay?pa=${upi}&pn=ColourCash&am=${amt}&cu=INR`;
 
-  try{
+  // 🔥 ANDROID FIX (force open app)
+  window.location.href = url;
 
-    const res = await fetch("http://187.127.162.97:3000/create-order",{
-      method:"POST",
-      headers:{
-        "Content-Type":"application/json"
-      },
-      body: JSON.stringify({
-        amount: amt,
-        email: email
-      })
-    });
-
-    const data = await res.json();
-
-    if(data.payUrl){
-      window.location.href = data.payUrl;
-    }else{
-      showPopup(data.error || "Payment Failed ❌");
-    }
-
-  }catch(e){
-    showPopup("Server Error ❌");
-  }
-
-};
+  // 🔥 fallback (agar app nahi open hua)
+  setTimeout(()=>{
+    window.open(url,"_blank");
+  },500);
+}
 
 /* 🔥 SUBMIT UTR */
 window.submitUTR = async function(){
