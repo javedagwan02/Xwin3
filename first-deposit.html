@@ -263,19 +263,18 @@ async function claimBonus(index){
   }
 
   let userId = "";
-  let currentBonus = 0;
+  let currentBalance = 0;
 
-  userSnap.forEach(d=>{
-    userId = d.id;
-    currentBonus = d.data().bonusBalance || 0;
-  });
+userSnap.forEach(d=>{
+  userId = d.id;
+  currentBalance = d.data().balance || 0;
+});
 
   const plan = plans[index];
 
   await updateDoc(doc(db,"users",userId),{
-    bonusBalance: currentBonus + plan.bonus
-  });
-
+  balance: currentBalance + plan.bonus
+});
   claimed.push(index);
   localStorage.setItem("claimedBonus", JSON.stringify(claimed));
 
