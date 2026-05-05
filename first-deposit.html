@@ -116,11 +116,9 @@ body{
 <p>• Bonus requires wagering before withdrawal</p>
 <p>• Fake activity = account block</p>
 </div>
-
 <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-
 import {
   getFirestore,
   collection,
@@ -131,7 +129,7 @@ import {
   doc
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-// 🔥 FIREBASE CONFIG
+// 🔥 FIREBASE
 const app = initializeApp({
   apiKey:"AIzaSyBx3J9aGn_98rTPgurMMKw_GR3puIMj4Ms",
   authDomain:"colourcash-ea60e.firebaseapp.com",
@@ -154,12 +152,9 @@ const plans = [
 let totalDeposit = 0;
 let claimed = [];
 
-userSnap.forEach(d=>{
-  claimed = d.data().claimedBonus || [];
-});
 const list = document.getElementById("list");
 
-// 🔥 LOAD DEPOSIT DATA
+// 🔥 LOAD DATA
 async function loadDeposit(){
 
   const userEmail = localStorage.getItem("userEmail");
@@ -169,6 +164,16 @@ async function loadDeposit(){
     return;
   }
 
+  // 🔥 USER DATA (claimed load)
+  const userSnap = await getDocs(
+    query(collection(db,"users"), where("email","==",userEmail))
+  );
+
+  userSnap.forEach(d=>{
+    claimed = d.data().claimedBonus || [];
+  });
+
+  // 🔥 DEPOSIT DATA
   const snap = await getDocs(
     query(collection(db,"deposits"), where("email","==",userEmail))
   );
@@ -185,7 +190,7 @@ async function loadDeposit(){
   render();
 }
 
-// 🔥 UI RENDER
+// 🔥 UI
 function render(){
 
   list.innerHTML = "";
@@ -240,7 +245,7 @@ function render(){
 
 }
 
-// 🔥 GO TO DEPOSIT
+// 🔥 DEPOSIT PAGE
 function goDeposit(amount){
   localStorage.setItem("depositAmount", amount);
   window.location.href = "deposit.html";
@@ -251,54 +256,41 @@ async function claimBonus(index){
 
   const userEmail = localStorage.getItem("userEmail");
 
-  if(!userEmail){
-    alert("Login required");
-    return;
-  }
-
   const userSnap = await getDocs(
     query(collection(db,"users"), where("email","==",userEmail))
   );
 
-  if(userSnap.empty){
-    alert("User not found");
+  let userId = "";
+  let currentBalance = 0;
+  let oldClaimed = [];
+
+  userSnap.forEach(d=>{
+    userId = d.id;
+    currentBalance = d.data().balance || 0;
+    oldClaimed = d.data().claimedBonus || [];
+  });
+
+  // ❌ DOUBLE CLAIM BLOCK
+  if(oldClaimed.includes(index)){
+    alert("Already claimed ❌");
     return;
   }
 
-  let userId = "";
-  let currentBalance = 0;
-
-userSnap.forEach(d=>{
-  userId = d.id;
-  currentBalance = d.data().balance || 0;
-});
-
   const plan = plans[index];
 
+  oldClaimed.push(index);
+
   await updateDoc(doc(db,"users",userId),{
-  balance: currentBalance + plan.bonus
-});
-  // 🔥 GET OLD CLAIMED FROM FIREBASE
-let oldClaimed = [];
+    balance: currentBalance + plan.bonus,
+    claimedBonus: oldClaimed
+  });
 
-userSnap.forEach(d=>{
-  oldClaimed = d.data().claimedBonus || [];
-});
-
-// 🔥 ADD NEW CLAIM
-oldClaimed.push(index);
-
-// 🔥 SAVE IN FIREBASE
-await updateDoc(doc(db,"users",userId),{
-  balance: currentBalance + plan.bonus,
-  claimedBonus: oldClaimed
-});
   alert("Bonus ₹"+plan.bonus+" added 🎉");
 
   loadDeposit();
 }
 
-// 🔥 INIT
+// 🔥 START
 loadDeposit();
 
 </script>
