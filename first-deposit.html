@@ -152,8 +152,11 @@ const plans = [
 ];
 
 let totalDeposit = 0;
-let claimed = JSON.parse(localStorage.getItem("claimedBonus") || "[]");
+let claimed = [];
 
+userSnap.forEach(d=>{
+  claimed = d.data().claimedBonus || [];
+});
 const list = document.getElementById("list");
 
 // 🔥 LOAD DEPOSIT DATA
@@ -275,9 +278,21 @@ userSnap.forEach(d=>{
   await updateDoc(doc(db,"users",userId),{
   balance: currentBalance + plan.bonus
 });
-  claimed.push(index);
-  localStorage.setItem("claimedBonus", JSON.stringify(claimed));
+  // 🔥 GET OLD CLAIMED FROM FIREBASE
+let oldClaimed = [];
 
+userSnap.forEach(d=>{
+  oldClaimed = d.data().claimedBonus || [];
+});
+
+// 🔥 ADD NEW CLAIM
+oldClaimed.push(index);
+
+// 🔥 SAVE IN FIREBASE
+await updateDoc(doc(db,"users",userId),{
+  balance: currentBalance + plan.bonus,
+  claimedBonus: oldClaimed
+});
   alert("Bonus ₹"+plan.bonus+" added 🎉");
 
   loadDeposit();
