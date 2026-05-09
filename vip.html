@@ -2,185 +2,218 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>VIP System</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
 <style>
 
 *{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:Arial,sans-serif;
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial;
 }
 
 body{
-    background:#f3f3f3;
-    padding:15px;
+background: radial-gradient(circle at top,#1a0033,#0a001a);
+color:#fff;
+padding:15px;
+padding-bottom:100px;
 }
 
 .vip-header{
-    background:linear-gradient(135deg,#ff7d7d,#ff9f9f);
-    border-radius:22px;
-    padding:20px;
-    color:white;
-    margin-bottom:20px;
+background:linear-gradient(135deg,#ff00cc,#7b00ff,#0044ff);
+padding:20px;
+border-radius:22px;
+box-shadow:0 0 25px rgba(255,0,255,0.3);
 }
 
 .profile{
-    display:flex;
-    align-items:center;
-    gap:15px;
+display:flex;
+align-items:center;
+gap:15px;
 }
 
 .profile img{
-    width:75px;
-    height:75px;
-    border-radius:50%;
-    border:3px solid white;
+width:75px;
+height:75px;
+border-radius:50%;
+border:3px solid #fff;
 }
 
 .profile h2{
-    font-size:22px;
+font-size:28px;
 }
 
 .profile p{
-    margin-top:5px;
-    opacity:0.95;
+margin-top:5px;
+opacity:0.9;
 }
 
 .timer-box{
-    margin-top:18px;
-    background:rgba(255,255,255,0.2);
-    padding:12px;
-    border-radius:14px;
-    text-align:center;
+margin-top:18px;
+padding:15px;
+border-radius:16px;
+background:rgba(255,255,255,0.08);
+text-align:center;
 }
 
 .timer-title{
-    font-size:14px;
-    margin-bottom:5px;
+font-size:14px;
+opacity:0.9;
+margin-bottom:8px;
 }
 
 #timer{
-    font-size:22px;
-    font-weight:bold;
+font-size:24px;
+font-weight:bold;
+color:#ffd700;
 }
 
 .vip-card{
-    background:white;
-    border-radius:22px;
-    padding:18px;
-    margin-bottom:20px;
-    box-shadow:0 2px 12px rgba(0,0,0,0.08);
+background:rgba(255,255,255,0.06);
+backdrop-filter:blur(12px);
+border:1px solid rgba(255,255,255,0.1);
+padding:18px;
+border-radius:22px;
+margin-top:20px;
 }
 
 .top{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-bottom:15px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:15px;
 }
 
 .vip-name{
-    font-size:30px;
-    font-weight:bold;
-    color:#ff5a5a;
+font-size:32px;
+font-weight:bold;
+color:#ff4dff;
 }
 
 .deposit-box{
-    background:#fff1f1;
-    color:#ff4d4d;
-    padding:10px 15px;
-    border-radius:12px;
-    font-weight:bold;
+background:rgba(255,255,255,0.08);
+padding:10px 14px;
+border-radius:12px;
+font-weight:bold;
+color:#ffd700;
 }
 
 .progress-title{
-    margin-bottom:10px;
-    font-size:18px;
+margin-bottom:10px;
+font-size:17px;
 }
 
 .progress{
-    width:100%;
-    height:13px;
-    background:#e5e5e5;
-    border-radius:20px;
-    overflow:hidden;
+width:100%;
+height:12px;
+background:#333;
+border-radius:20px;
+overflow:hidden;
 }
 
 .progress-bar{
-    height:100%;
-    width:100%;
-    background:linear-gradient(90deg,#ff5858,#ffb258);
+height:100%;
+background:linear-gradient(90deg,#ff00cc,#7b00ff);
 }
 
 .reward-grid{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:12px;
-    margin-top:18px;
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:12px;
+margin-top:18px;
 }
 
 .reward{
-    background:#fff5f5;
-    border-radius:18px;
-    padding:15px;
-    transition:0.3s;
+background:rgba(255,255,255,0.05);
+padding:15px;
+border-radius:18px;
+transition:0.3s;
+border:1px solid rgba(255,255,255,0.08);
 }
 
 .reward.active{
-    background:#20b15a;
-    color:white;
-}
-
-.reward.active h3,
-.reward.active p,
-.reward.active .amount{
-    color:white;
+background:#00c853;
 }
 
 .reward h3{
-    color:#ff5a5a;
-    margin-bottom:8px;
+font-size:18px;
+margin-bottom:8px;
 }
 
 .reward p{
-    font-size:14px;
-    line-height:22px;
-    color:#666;
+font-size:13px;
+line-height:21px;
+opacity:0.9;
 }
 
 .amount{
-    font-size:34px;
-    font-weight:bold;
-    margin-top:14px;
-    color:#111;
+font-size:30px;
+font-weight:bold;
+margin-top:15px;
 }
 
 .claim-btn{
-    margin-top:12px;
-    width:100%;
-    padding:12px;
-    border:none;
-    border-radius:12px;
-    background:#ff5a5a;
-    color:white;
-    font-size:15px;
-    cursor:pointer;
-    font-weight:bold;
+width:100%;
+padding:12px;
+margin-top:14px;
+border:none;
+border-radius:12px;
+font-size:15px;
+font-weight:bold;
+background:linear-gradient(45deg,#ff00cc,#7b00ff);
+color:#fff;
 }
 
 .reward.active .claim-btn{
-    background:white;
-    color:#20b15a;
+background:#fff;
+color:#00c853;
 }
 
 .note{
-    margin-top:15px;
-    color:#555;
-    line-height:24px;
-    font-size:14px;
+margin-top:15px;
+font-size:13px;
+line-height:22px;
+opacity:0.9;
+}
+
+.locked{
+opacity:0.45;
+}
+
+.popup{
+position:fixed;
+inset:0;
+background:rgba(0,0,0,0.7);
+display:none;
+justify-content:center;
+align-items:center;
+z-index:9999;
+}
+
+.popup-box{
+background:#1c1c1c;
+padding:25px;
+border-radius:18px;
+width:85%;
+max-width:320px;
+text-align:center;
+}
+
+.popup-box h3{
+margin-bottom:10px;
+}
+
+.popup-box button{
+margin-top:15px;
+width:100%;
+padding:12px;
+border:none;
+border-radius:12px;
+background:#00c853;
+color:#fff;
+font-weight:bold;
 }
 
 </style>
@@ -190,193 +223,259 @@ body{
 
 <div class="vip-header">
 
-    <div class="profile">
+<div class="profile">
 
-        <img src="https://i.pravatar.cc/150?img=12">
+<img src="https://i.pravatar.cc/150?img=12">
 
-        <div>
-            <h2>MR ARMAN</h2>
-            <p>Deposit More & Unlock VIP Rewards</p>
-        </div>
+<div>
+<h2>MR ARMAN</h2>
+<p>Deposit More & Unlock VIP Rewards</p>
+</div>
 
-    </div>
+</div>
 
-    <div class="timer-box">
+<div class="timer-box">
 
-        <div class="timer-title">
-            Next Monthly Reward In
-        </div>
+<div class="timer-title">
+Next Monthly Reward In
+</div>
 
-        <div id="timer">
-            Loading...
-        </div>
+<div id="timer">
+Loading...
+</div>
 
-    </div>
+</div>
 
 </div>
 
 <div id="vipContainer"></div>
 
-<script>
+<div class="popup" id="popup">
+
+<div class="popup-box">
+
+<h3 id="popupText">Success</h3>
+
+<button onclick="closePopup()">
+OK
+</button>
+
+</div>
+
+</div>
+
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+
+import {
+getFirestore,
+collection,
+getDocs,
+query,
+where,
+doc,
+updateDoc
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+const firebaseConfig = {
+apiKey:"AIzaSyBx3J9aGn_98rTPgurMMKw_GR3puIMj4Ms",
+authDomain:"colourcash-ea60e.firebaseapp.com",
+projectId:"colourcash-ea60e"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+const userEmail = localStorage.getItem("userEmail");
 
 const vipData = [
 
 {
-vip:"VIP1",
-depositNeed:"1000",
-monthlyReward:"30",
-levelReward:"60",
-completed:true
+vip:1,
+depositNeed:1000,
+monthlyReward:30,
+levelReward:60
 },
 
 {
-vip:"VIP2",
-depositNeed:"3000",
-monthlyReward:"90",
-levelReward:"180",
-completed:false
+vip:2,
+depositNeed:3000,
+monthlyReward:90,
+levelReward:180
 },
 
 {
-vip:"VIP3",
-depositNeed:"40000",
-monthlyReward:"290",
-levelReward:"690",
-completed:false
+vip:3,
+depositNeed:40000,
+monthlyReward:290,
+levelReward:690
 },
 
 {
-vip:"VIP4",
-depositNeed:"4000000",
-monthlyReward:"690",
-levelReward:"1690",
-completed:false
+vip:4,
+depositNeed:4000000,
+monthlyReward:690,
+levelReward:1690
 },
 
 {
-vip:"VIP5",
-depositNeed:"20000000",
-monthlyReward:"1690",
-levelReward:"6900",
-completed:false
+vip:5,
+depositNeed:20000000,
+monthlyReward:1690,
+levelReward:6900
 },
 
 {
-vip:"VIP6",
-depositNeed:"80000000",
-monthlyReward:"6900",
-levelReward:"16900",
-completed:false
+vip:6,
+depositNeed:80000000,
+monthlyReward:6900,
+levelReward:16900
 },
 
 {
-vip:"VIP7",
-depositNeed:"300000000",
-monthlyReward:"16900",
-levelReward:"69000",
-completed:false
+vip:7,
+depositNeed:300000000,
+monthlyReward:16900,
+levelReward:69000
 },
 
 {
-vip:"VIP8",
-depositNeed:"1000000000",
-monthlyReward:"69000",
-levelReward:"169000",
-completed:false
+vip:8,
+depositNeed:1000000000,
+monthlyReward:69000,
+levelReward:169000
 },
 
 {
-vip:"VIP9",
-depositNeed:"5000000000",
-monthlyReward:"169000",
-levelReward:"690000",
-completed:false
+vip:9,
+depositNeed:5000000000,
+monthlyReward:169000,
+levelReward:690000
 },
 
 {
-vip:"VIP10",
-depositNeed:"9999999999",
-monthlyReward:"690000",
-levelReward:"1690000",
-completed:false
+vip:10,
+depositNeed:9999999999,
+monthlyReward:690000,
+levelReward:1690000
 }
 
 ];
 
+let currentUserId = "";
+let userData = {};
+
+async function loadUser(){
+
+const snap = await getDocs(
+query(collection(db,"users"),where("email","==",userEmail))
+);
+
+snap.forEach(d=>{
+
+currentUserId = d.id;
+userData = d.data();
+
+});
+
+renderVIP();
+
+}
+
+loadUser();
+
+function renderVIP(){
+
 const container = document.getElementById("vipContainer");
 
-vipData.forEach((item,index)=>{
+container.innerHTML = "";
+
+vipData.forEach(item=>{
+
+let unlocked = (userData.vipLevel || 0) >= item.vip;
+
+let claimed =
+userData["vipLevelClaimed"+item.vip] || false;
 
 container.innerHTML += `
 
-<div class="vip-card">
+<div class="vip-card ${unlocked ? '' : 'locked'}">
 
-    <div class="top">
+<div class="top">
 
-        <div class="vip-name">
-            ${item.vip}
-        </div>
+<div class="vip-name">
+VIP${item.vip}
+</div>
 
-        <div class="deposit-box">
-            Deposit ₹${Number(item.depositNeed).toLocaleString()}
-        </div>
+<div class="deposit-box">
+Deposit ₹${item.depositNeed.toLocaleString()}
+</div>
 
-    </div>
+</div>
 
-    <div class="progress-title">
-        VIP Level Progress
-    </div>
+<div class="progress-title">
+VIP Level Progress
+</div>
 
-    <div class="progress">
-        <div class="progress-bar"></div>
-    </div>
+<div class="progress">
 
-    <div class="reward-grid">
+<div class="progress-bar"
+style="
+width:${unlocked ? '100' : ((userData.totalDeposit || 0)/item.depositNeed)*100}%;
+">
+</div>
 
-        <div class="reward ${item.completed ? 'active' : ''}" id="monthly${index}">
+</div>
 
-            <h3>Monthly Reward</h3>
+<div class="reward-grid">
 
-            <p>
-                Har month active VIP users ko ye reward milega.
-            </p>
+<div class="reward ${unlocked ? 'active' : ''}">
 
-            <div class="amount">
-                ₹${Number(item.monthlyReward).toLocaleString()}
-            </div>
+<h3>Monthly Reward</h3>
 
-            <button class="claim-btn"
-            onclick="claimReward('monthly${index}')">
-                Claim Reward
-            </button>
+<p>
+Har month active VIP users ko reward milega.
+</p>
 
-        </div>
+<div class="amount">
+₹${item.monthlyReward.toLocaleString()}
+</div>
 
-        <div class="reward ${item.completed ? 'active' : ''}" id="level${index}">
+<button class="claim-btn"
+onclick="claimMonthly(${item.vip})">
+Claim Monthly
+</button>
 
-            <h3>Level Up Reward</h3>
+</div>
 
-            <p>
-                Sirf 1 baar milega jab VIP level complete ho jayega.
-            </p>
+<div class="reward ${claimed ? '' : unlocked ? 'active' : ''}">
 
-            <div class="amount">
-                ₹${Number(item.levelReward).toLocaleString()}
-            </div>
+<h3>Level Up Reward</h3>
 
-            <button class="claim-btn"
-            onclick="claimReward('level${index}')">
-                Claim Reward
-            </button>
+<p>
+Sirf 1 baar milega VIP complete hone per.
+</p>
 
-        </div>
+<div class="amount">
+₹${item.levelReward.toLocaleString()}
+</div>
 
-    </div>
+<button class="claim-btn"
+onclick="claimLevelReward(${item.vip})">
 
-    <div class="note">
-        Deposit karne per VIP level increase hoga.
-        VIP complete hone per reward green ho jayega.
-    </div>
+${claimed ? 'Claimed' : 'Claim Reward'}
+
+</button>
+
+</div>
+
+</div>
+
+<div class="note">
+Deposit complete hone per VIP unlock hoga.
+Claimed reward direct wallet balance me add ho jayega.
+</div>
 
 </div>
 
@@ -384,23 +483,101 @@ container.innerHTML += `
 
 });
 
-function claimReward(id){
+}
 
-let box = document.getElementById(id);
+window.claimMonthly = async function(level){
 
-if(box.classList.contains("active")){
+if((userData.vipLevel || 0) < level){
 
-    alert("Reward Claimed Successfully ✅");
-
-    box.classList.remove("active");
-
-    let btn = box.querySelector(".claim-btn");
-
-    btn.innerHTML = "Claimed";
-
-    btn.disabled = true;
+showPopup("VIP Locked ❌");
+return;
 
 }
+
+let reward = vipData[level-1].monthlyReward;
+
+let lastClaim =
+userData["monthlyClaim"+level] || 0;
+
+let now = Date.now();
+
+let nextMonth = 30*24*60*60*1000;
+
+if(now - lastClaim < nextMonth){
+
+showPopup("Already Claimed This Month ❌");
+return;
+
+}
+
+let balance = userData.balance || 0;
+
+await updateDoc(doc(db,"users",currentUserId),{
+
+balance: balance + reward,
+
+["monthlyClaim"+level]: now
+
+});
+
+showPopup("Monthly Reward Claimed ✅");
+
+setTimeout(()=>{
+location.reload();
+},1200);
+
+}
+
+window.claimLevelReward = async function(level){
+
+if((userData.vipLevel || 0) < level){
+
+showPopup("VIP Locked ❌");
+return;
+
+}
+
+let claimed =
+userData["vipLevelClaimed"+level] || false;
+
+if(claimed){
+
+showPopup("Already Claimed ❌");
+return;
+
+}
+
+let reward = vipData[level-1].levelReward;
+
+let balance = userData.balance || 0;
+
+await updateDoc(doc(db,"users",currentUserId),{
+
+balance: balance + reward,
+
+["vipLevelClaimed"+level]: true
+
+});
+
+showPopup("VIP Reward Claimed ✅");
+
+setTimeout(()=>{
+location.reload();
+},1200);
+
+}
+
+window.showPopup = function(msg){
+
+document.getElementById("popupText").innerText = msg;
+
+document.getElementById("popup").style.display = "flex";
+
+}
+
+window.closePopup = function(){
+
+document.getElementById("popup").style.display = "none";
 
 }
 
@@ -417,10 +594,17 @@ now.getMonth()+1,
 
 const diff = nextMonth - now;
 
-const days = Math.floor(diff / (1000*60*60*24));
-const hours = Math.floor((diff / (1000*60*60)) % 24);
-const mins = Math.floor((diff / (1000*60)) % 60);
-const secs = Math.floor((diff / 1000) % 60);
+const days =
+Math.floor(diff/(1000*60*60*24));
+
+const hours =
+Math.floor((diff/(1000*60*60))%24);
+
+const mins =
+Math.floor((diff/(1000*60))%60);
+
+const secs =
+Math.floor((diff/1000)%60);
 
 document.getElementById("timer").innerHTML =
 `${days}D ${hours}H ${mins}M ${secs}S`;
