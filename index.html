@@ -699,6 +699,32 @@ font-size:16px;
   font-size:14px;
   padding:6px 0;
 }
+  .top-balance{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:12px;
+    margin-top:10px;
+}
+
+.balance-box{
+    background:#111;
+    color:#fff;
+    padding:10px 20px;
+    border-radius:20px;
+    font-weight:bold;
+    font-size:18px;
+}
+
+.download-btn{
+    background:linear-gradient(45deg,#00c853,#64dd17);
+    color:white;
+    padding:10px 16px;
+    border-radius:10px;
+    text-decoration:none;
+    font-weight:bold;
+    font-size:14px;
+}
 </style>
 </head>
 
@@ -707,26 +733,20 @@ font-size:16px;
   <source src="audio/casino-vip-music-vip-casino-music-7-469284.mp3" type="audio/mpeg">
 </audio>
 <!-- 🔥 TOP BAR -->
-<div style="
-padding:12px;
-display:flex;
-justify-content:center;
-background:rgba(0,0,0,0.2); /* halka transparent */
-backdrop-filter: blur(5px); /* glass effect 🔥 */
-">
-  
-  <div style="
-  background:#111;
-  padding:10px 20px;
-  border-radius:20px;
-  font-weight:bold;
-  font-size:18px;
-  ">
-    ₹<span id="topBalance">0</span>
+
+<div class="top-balance">
+
+  <div class="balance-box">
+    <span id="topBalance">₹0</span>
   </div>
 
-</div>
+  <a href="app/app-apk-69ff57fa6b7b9-1778341882.apk"
+     download
+     class="download-btn">
+     ⬇ Download
+  </a>
 
+</div>
 <div id="giftIcon" onclick="openGiftBox()">🎁</div>
 <div id="supportIcon" onclick="openSupportMail()">✉️</div>
 
