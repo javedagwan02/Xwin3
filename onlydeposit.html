@@ -177,6 +177,49 @@ else if(amount >= 1000){
 
 // 🔥 TOTAL DEPOSIT TRACK
 let totalDeposit = (userData.totalDeposit || 0) + amount;
+      /* VIP LEVEL SYSTEM */
+
+let vipLevel = 0;
+
+if(totalDeposit >= 1000){
+  vipLevel = 1;
+}
+
+if(totalDeposit >= 3000){
+  vipLevel = 2;
+}
+
+if(totalDeposit >= 40000){
+  vipLevel = 3;
+}
+
+if(totalDeposit >= 4000000){
+  vipLevel = 4;
+}
+
+if(totalDeposit >= 20000000){
+  vipLevel = 5;
+}
+
+if(totalDeposit >= 80000000){
+  vipLevel = 6;
+}
+
+if(totalDeposit >= 300000000){
+  vipLevel = 7;
+}
+
+if(totalDeposit >= 1000000000){
+  vipLevel = 8;
+}
+
+if(totalDeposit >= 5000000000){
+  vipLevel = 9;
+}
+
+if(totalDeposit >= 9999999999){
+  vipLevel = 10;
+}
 
 // 🔥 BONUS UNLOCK SYSTEM
 if(bonus > 0 && totalDeposit >= bonus * 4){
@@ -187,7 +230,7 @@ await updateDoc(doc(db,"users",u.id),{
   balance: newBalance,
   bonusBalance: bonus,
   totalDeposit: totalDeposit, // 🔥 ADD THIS
-
+vipLevel: vipLevel,
   firstDepositDone: firstDepositDone,
   hasDeposited: true,
 
