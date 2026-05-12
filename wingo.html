@@ -299,6 +299,40 @@ pointer-events:none;
   border-radius:10px;
   font-weight:bold;
 }
+  /* NUMBER STYLE */
+
+.num{
+height:62px;
+width:62px;
+border-radius:50% !important;
+font-size:30px !important;
+font-weight:bold;
+border:none;
+color:#fff;
+box-shadow:0 3px 8px rgba(0,0,0,.25);
+}
+
+/* PURPLE */
+.num0,
+.num5{
+background:linear-gradient(135deg,#d946ef,#9333ea);
+}
+
+/* GREEN */
+.num1,
+.num3,
+.num7,
+.num9{
+background:linear-gradient(135deg,#22c55e,#16a34a);
+}
+
+/* RED */
+.num2,
+.num4,
+.num6,
+.num8{
+background:linear-gradient(135deg,#ff4d4d,#dc2626);
+}
 </style>
 </head>
 
@@ -366,18 +400,21 @@ RED
 
 </div>
 
-<button class="btn num0" onclick="bet('number',0)">0</button>
-<button class="btn num1" onclick="bet('number',1)">1</button>
-<button class="btn num2" onclick="bet('number',2)">2</button>
-<button class="btn num3" onclick="bet('number',3)">3</button>
-<button class="btn num4" onclick="bet('number',4)">4</button>
+<div class="grid5">
 
-<button class="btn num5" onclick="bet('number',5)">5</button>
-<button class="btn num6" onclick="bet('number',6)">6</button>
-<button class="btn num7" onclick="bet('number',7)">7</button>
-<button class="btn num8" onclick="bet('number',8)">8</button>
-<button class="btn num9" onclick="bet('number',9)">9</button>
+<button class="btn num num0" onclick="bet('number',0)">0</button>
+<button class="btn num num1" onclick="bet('number',1)">1</button>
+<button class="btn num num2" onclick="bet('number',2)">2</button>
+<button class="btn num num3" onclick="bet('number',3)">3</button>
+<button class="btn num num4" onclick="bet('number',4)">4</button>
 
+<button class="btn num num5" onclick="bet('number',5)">5</button>
+<button class="btn num num6" onclick="bet('number',6)">6</button>
+<button class="btn num num7" onclick="bet('number',7)">7</button>
+<button class="btn num num8" onclick="bet('number',8)">8</button>
+<button class="btn num num9" onclick="bet('number',9)">9</button>
+
+</div>
 <div class="bigsmall">
 
 <button class="big"
