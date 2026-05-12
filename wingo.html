@@ -220,7 +220,85 @@ font-weight:bold;
 opacity:.5;
 pointer-events:none;
 }
+/* NUMBER BUTTON COLORS */
+.num0,.num5{
+  background:linear-gradient(135deg,#d946ef,#9333ea);
+  color:#fff;
+}
 
+.num1,.num3,.num7,.num9{
+  background:linear-gradient(135deg,#22c55e,#16a34a);
+  color:#fff;
+}
+
+.num2,.num4,.num6,.num8{
+  background:linear-gradient(135deg,#ff4d4d,#dc2626);
+  color:#fff;
+}
+
+/* HISTORY BUTTONS */
+.history-tabs{
+  display:flex;
+  gap:10px;
+  margin-top:15px;
+}
+
+.history-btn{
+  flex:1;
+  padding:12px;
+  border:none;
+  border-radius:12px;
+  font-weight:bold;
+  font-size:16px;
+}
+
+.activeTab{
+  background:#ff6b6b;
+  color:#fff;
+}
+
+.inactiveTab{
+  background:#ececec;
+  color:#777;
+}
+
+/* MY BET CARD */
+.bet-card{
+  background:#fff;
+  border-radius:14px;
+  padding:14px;
+  margin-top:12px;
+  color:#000;
+}
+
+.bet-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.bet-type{
+  padding:8px 16px;
+  border-radius:12px;
+  color:#fff;
+  font-weight:bold;
+}
+
+.bet-win{
+  border:2px solid #22c55e;
+  color:#22c55e;
+  padding:6px 14px;
+  border-radius:10px;
+  font-weight:bold;
+}
+
+.bet-loss{
+  border:2px solid #ef4444;
+  color:#ef4444;
+  padding:6px 14px;
+  border-radius:10px;
+  font-weight:bold;
+}
 </style>
 </head>
 
@@ -288,20 +366,17 @@ RED
 
 </div>
 
-<div class="numbers">
+<button class="btn num0" onclick="bet('number',0)">0</button>
+<button class="btn num1" onclick="bet('number',1)">1</button>
+<button class="btn num2" onclick="bet('number',2)">2</button>
+<button class="btn num3" onclick="bet('number',3)">3</button>
+<button class="btn num4" onclick="bet('number',4)">4</button>
 
-<button onclick="openBetModal('number',0)">0</button>
-<button onclick="openBetModal('number',1)">1</button>
-<button onclick="openBetModal('number',2)">2</button>
-<button onclick="openBetModal('number',3)">3</button>
-<button onclick="openBetModal('number',4)">4</button>
-<button onclick="openBetModal('number',5)">5</button>
-<button onclick="openBetModal('number',6)">6</button>
-<button onclick="openBetModal('number',7)">7</button>
-<button onclick="openBetModal('number',8)">8</button>
-<button onclick="openBetModal('number',9)">9</button>
-
-</div>
+<button class="btn num5" onclick="bet('number',5)">5</button>
+<button class="btn num6" onclick="bet('number',6)">6</button>
+<button class="btn num7" onclick="bet('number',7)">7</button>
+<button class="btn num8" onclick="bet('number',8)">8</button>
+<button class="btn num9" onclick="bet('number',9)">9</button>
 
 <div class="bigsmall">
 
@@ -321,21 +396,21 @@ SMALL
 
 <div class="card">
 
-<table>
+<div class="history-tabs">
 
-<thead>
-<tr>
-<th>Period</th>
-<th>Number</th>
-<th>BS</th>
-<th>Color</th>
-</tr>
-</thead>
+<button class="history-btn activeTab"
+onclick="showTab('game',this)">
+Game History
+</button>
 
-<tbody id="historyBody">
-</tbody>
+<button class="history-btn inactiveTab"
+onclick="showTab('bets',this)">
+My Bets
+</button>
 
-</table>
+</div>
+
+<div id="historyArea"></div>
 
 </div>
 
@@ -462,6 +537,24 @@ document.getElementById("btn"+g)
 render();
 
 }
+  function showTab(t,e){
+
+tab=t;
+
+document.querySelectorAll(".history-btn")
+.forEach(btn=>{
+
+btn.classList.remove("activeTab");
+btn.classList.add("inactiveTab");
+
+});
+
+e.classList.remove("inactiveTab");
+e.classList.add("activeTab");
+
+draw();
+
+}
 
 function openBetModal(type,val){
 
@@ -566,31 +659,179 @@ color:c
 render();
 
 }
+function showPopup(type,msg){
 
-function drawHistory(){
+popupOverlay.style.display="flex";
 
-historyBody.innerHTML = "";
+if(type=="win"){
 
-S().history.slice(0,10).forEach(r=>{
+popupBox.innerHTML=`
+<div style="
+background:linear-gradient(180deg,#ff7a59,#ff4d4d);
+padding:25px;
+border-radius:25px;
+text-align:center;
+color:#fff">
 
-historyBody.innerHTML += `
+<h1>Congratulations</h1>
 
-<tr>
+<div style="font-size:22px">
+${msg}
+</div>
 
-<td>${r.period}</td>
-
-<td>${r.number}</td>
-
-<td>${r.bs}</td>
-
-<td>${r.color}</td>
-
-</tr>
-
+</div>
 `;
 
-});
+}else if(type=="loss"){
 
+popupBox.innerHTML=`
+<div style="
+background:linear-gradient(180deg,#dbeafe,#bfdbfe);
+padding:25px;
+border-radius:25px;
+text-align:center;
+color:#334155">
+
+<h1>Sorry</h1>
+
+<div style="font-size:22px">
+${msg}
+</div>
+
+</div>
+`;
+
+}else{
+
+popupBox.innerHTML=`
+<div style="
+background:#fff;
+padding:25px;
+border-radius:25px;
+text-align:center;
+color:#000">
+
+${msg}
+
+</div>
+`;
+
+}
+
+setTimeout(()=>{
+popupOverlay.style.display="none";
+},3000);
+
+}
+function draw(){
+
+let area = document.getElementById("historyArea");
+
+if(tab=="game"){
+
+  let html = `
+  <table>
+    <thead>
+      <tr>
+        <th>Period</th>
+        <th>Number</th>
+        <th>Big Small</th>
+        <th>Color</th>
+      </tr>
+    </thead>
+    <tbody>
+  `;
+
+  S.history.forEach(r=>{
+
+    let clr =
+      r.c=="GREEN" ? "#22c55e" :
+      r.c=="RED" ? "#ef4444" :
+      "#a855f7";
+
+    html += `
+    <tr>
+      <td>${r.p}</td>
+
+      <td style="
+        color:${clr};
+        font-size:28px;
+        font-weight:bold">
+        ${r.n}
+      </td>
+
+      <td>${r.bs}</td>
+
+      <td>
+        <div style="
+          width:14px;
+          height:14px;
+          border-radius:50%;
+          background:${clr};
+          margin:auto">
+        </div>
+      </td>
+
+    </tr>`;
+  });
+
+  html += "</tbody></table>";
+
+  area.innerHTML = html;
+
+}else{
+
+  let html = "";
+
+  S.mybets.forEach(b=>{
+
+    html += `
+
+    <div class="bet-card">
+
+      <div class="bet-top">
+
+        <div class="bet-type"
+        style="
+        background:
+        ${b.b.includes('Big') ? '#f59e0b' :
+          b.b.includes('Small') ? '#60a5fa' :
+          '#ff6b6b'}">
+
+          ${b.b}
+
+        </div>
+
+        <div class="${
+          b.w ? 'bet-win':'bet-loss'
+        }">
+
+          ${b.w ? 'Succeed':'Failed'}
+
+        </div>
+
+      </div>
+
+      <div style="margin-top:10px;color:#777">
+        ${b.p}
+      </div>
+
+      <div style="
+      margin-top:8px;
+      font-size:22px;
+      font-weight:bold;
+      color:${b.w ? '#22c55e':'#ef4444'}">
+
+        ${b.r}
+
+      </div>
+
+    </div>
+    `;
+  });
+
+  area.innerHTML = html;
+}
 }
 
 setInterval(()=>{
