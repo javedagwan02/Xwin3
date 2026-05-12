@@ -351,6 +351,44 @@ font-weight:bold;
 color:#fff;
 box-shadow:0 3px 8px rgba(0,0,0,.25);
 }
+  /* RESULT POPUP */
+
+#popupOverlay{
+position:fixed;
+inset:0;
+background:rgba(0,0,0,.45);
+display:none;
+justify-content:center;
+align-items:center;
+z-index:99999;
+animation:fadeIn .25s ease;
+}
+
+#popupBox{
+width:85%;
+max-width:320px;
+animation:pop .25s ease;
+}
+
+@keyframes pop{
+from{
+transform:scale(.7);
+opacity:0;
+}
+to{
+transform:scale(1);
+opacity:1;
+}
+}
+
+@keyframes fadeIn{
+from{
+opacity:0;
+}
+to{
+opacity:1;
+}
+}
 </style>
 </head>
 
@@ -931,6 +969,12 @@ render();
 render();
 
 </script>
+<!-- RESULT POPUP -->
 
+<div class="popup-overlay" id="popupOverlay">
+
+<div id="popupBox"></div>
+
+</div>
 </body>
 </html>
