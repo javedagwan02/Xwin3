@@ -1,320 +1,623 @@
-<!DOCTYPE html>  <html>  
-<head>  
-<meta charset="UTF-8">  
-<title>WIN GO</title>  
-<meta name="viewport" content="width=device-width,initial-scale=1">  <style>  
-/* ⚠️ ORIGINAL CSS – NOT TOUCHED */  
-body{margin:0;font-family:Arial;background:#0f0f0f;color:#fff}  
-.header{text-align:center;padding:15px;font-size:22px}  
-.top{display:flex;justify-content:space-between;padding:0 15px;color:#bbb}  
-.timer{text-align:center;font-size:34px;color:#ff4081;margin:10px}  
-.card{background:#1c1c1c;margin:15px;padding:15px;border-radius:12px}  
-input{width:100%;padding:12px;font-size:18px;border-radius:8px;border:none;text-align:center}  
-.grid3,.grid5{display:grid;gap:8px;margin-top:10px}  
-.grid3{grid-template-columns:repeat(3,1fr)}  
-.grid5{grid-template-columns:repeat(5,1fr)}  
-.btn{padding:14px;border:none;border-radius:10px;font-weight:bold;color:#fff}  
-.red{background:#e53935}  
-.green{background:#43a047}  
-.violet{background:#8e24aa}  
-.dark{background:#333}  
-.multi{background:#eee;color:#000}  
-.multi.active{background:#43a047;color:#fff}  
-.bigsmall{display:flex;margin-top:10px}  
-.bigsmall button{flex:1;padding:12px;border:none;font-size:16px}  
-.big{background:#f4a261}  
-.small{background:#4dabf7}  
-.tabs{display:flex;gap:10px;margin:15px}  
-.tab{flex:1;padding:12px;border-radius:10px;text-align:center;font-weight:bold}  
-.active{background:#ff6f6f}  
-.inactive{background:#333}  
-table{width:100%;border-collapse:collapse;font-size:14px}  
-th,td{padding:8px;text-align:center}  
-th{background:#ff6f6f}  
-.win{color:#4caf50}  
-.loss{color:#f44336}  
-.lock{pointer-events:none;opacity:.4}  
-  
-/* POPUP */  
-.popup-overlay{  
-  position:fixed;inset:0;background:rgba(0,0,0,.65);  
-  display:none;align-items:center;justify-content:center;z-index:9999  
-}  
-.popup{  
-  background:#1c1c1c;border-radius:16px;padding:22px;  
-  text-align:center;width:80%;max-width:320px  
-}  
-.popup.win{border:2px solid #4caf50}  
-.popup.loss{border:2px solid #f44336}  
-.popup.bet{border:2px solid #2196f3}  
-</style>  </head>  <body>  <div class="header">🎨 WIN GO</div>  <div class="top">  
-  <div>Period: <span id="period"></span></div>  
-  <div>Wallet: ₹<span id="wallet"></span></div>  
-</div>  <div class="timer">⏳ <span id="time"></span>s</div>  <div class="card" id="betBox">  
-  <input id="amount" type="number" placeholder="Min ₹1">    <div class="grid3">  
-    <button class="btn red" onclick="bet('color','RED')">RED</button>  
-    <button class="btn green" onclick="bet('color','GREEN')">GREEN</button>  
-    <button class="btn violet" onclick="bet('color','VIOLET')">VIOLET</button>  
-  </div>    <div class="grid5">  
-    <button class="btn dark" onclick="bet('number',0)">0</button>  
-    <button class="btn dark" onclick="bet('number',1)">1</button>  
-    <button class="btn dark" onclick="bet('number',2)">2</button>  
-    <button class="btn dark" onclick="bet('number',3)">3</button>  
-    <button class="btn dark" onclick="bet('number',4)">4</button>  
-    <button class="btn dark" onclick="bet('number',5)">5</button>  
-    <button class="btn dark" onclick="bet('number',6)">6</button>  
-    <button class="btn dark" onclick="bet('number',7)">7</button>  
-    <button class="btn dark" onclick="bet('number',8)">8</button>  
-    <button class="btn dark" onclick="bet('number',9)">9</button>  
-  </div>    <div class="grid5">  
-    <button class="multi active" onclick="setMulti(1,this)">X1</button>  
-    <button class="multi" onclick="setMulti(5,this)">X5</button>  
-    <button class="multi" onclick="setMulti(10,this)">X10</button>  
-    <button class="multi" onclick="setMulti(20,this)">X20</button>  
-    <button class="multi" onclick="setMulti(50,this)">X50</button>  
-  </div>    <div class="bigsmall">  
-    <button class="big" onclick="bet('bs','BIG')">Big</button>  
-    <button class="small" onclick="bet('bs','SMALL')">Small</button>  
-  </div>  
-</div>  <div class="tabs">  
-  <div class="tab active" onclick="showTab('game')">Game History</div>  
-  <div class="tab inactive" onclick="showTab('bets')">My Bets</div>  
-</div>  <div class="card">  
-  <table>  
-    <thead id="thead"></thead>  
-    <tbody id="tbody"></tbody>  
-  </table>  
-</div>  <div class="popup-overlay" id="popupOverlay">  
-  <div class="popup" id="popupBox"></div>  
-</div>   
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>WIN GO PRO</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
 
-    <script type="module">
+<style>
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getFirestore,getDocs,collection,query,where,doc,updateDoc,onSnapshot,increment } 
-from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+body{
+margin:0;
+font-family:Arial;
+background:#f5f5f5;
+color:#111;
+}
 
-const app = initializeApp({
-  apiKey:"AIzaSyBx3J9aGn_98rTPgurMMKw_GR3puIMj4Ms",
-  authDomain:"colourcash-ea60e.firebaseapp.com",
-  projectId:"colourcash-ea60e"
-});
-const db = getFirestore(app);
+.header{
+background:#ff6f6f;
+padding:15px;
+text-align:center;
+font-size:26px;
+font-weight:bold;
+color:#fff;
+}
 
-const userEmail = localStorage.getItem("userEmail");
-let userDocId="";
+.wallet-box{
+background:#fff;
+margin:10px;
+padding:15px;
+border-radius:15px;
+text-align:center;
+font-size:22px;
+font-weight:bold;
+}
 
-let HOUSE_EDGE = 50;
+.game-tabs{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:8px;
+padding:10px;
+}
 
-onSnapshot(doc(db,"settings","houseEdge"), (snap)=>{
-  if(snap.exists()){
-    HOUSE_EDGE = snap.data().wingo ?? 50;
-  }
-});
+.game-tabs button{
+padding:10px;
+border:none;
+border-radius:10px;
+background:#ddd;
+font-weight:bold;
+}
 
-let S=JSON.parse(localStorage.getItem("WG"))||{
- period:20260120100001,time:30,wallet:0,
- bets:[],history:[],mybets:[]
+.active-game{
+background:#ff6f6f !important;
+color:#fff;
+}
+
+.timer-card{
+background:#ff6f6f;
+margin:10px;
+padding:15px;
+border-radius:15px;
+color:#fff;
+text-align:center;
+}
+
+.timer{
+font-size:45px;
+font-weight:bold;
+}
+
+.period{
+font-size:18px;
+margin-top:8px;
+}
+
+.colors{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:10px;
+padding:10px;
+}
+
+.colors button{
+padding:15px;
+border:none;
+border-radius:12px;
+color:#fff;
+font-size:18px;
+font-weight:bold;
+}
+
+.green{background:#1db954;}
+.red{background:#ff3b30;}
+.violet{background:#9c27b0;}
+
+.numbers{
+display:grid;
+grid-template-columns:repeat(5,1fr);
+gap:10px;
+padding:10px;
+}
+
+.numbers button{
+height:60px;
+border:none;
+border-radius:50%;
+font-size:22px;
+font-weight:bold;
+background:#fff;
+box-shadow:0 2px 5px rgba(0,0,0,.2);
+}
+
+.bigsmall{
+display:flex;
+padding:10px;
+gap:10px;
+}
+
+.bigsmall button{
+flex:1;
+padding:15px;
+border:none;
+border-radius:12px;
+font-size:20px;
+font-weight:bold;
+color:#fff;
+}
+
+.big{
+background:#f4a261;
+}
+
+.small{
+background:#4dabf7;
+}
+
+.card{
+background:#fff;
+margin:10px;
+padding:10px;
+border-radius:15px;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+}
+
+th,td{
+padding:10px;
+text-align:center;
+}
+
+th{
+background:#ff6f6f;
+color:#fff;
+}
+
+.popup-overlay{
+position:fixed;
+inset:0;
+background:rgba(0,0,0,.6);
+display:none;
+align-items:flex-end;
+justify-content:center;
+z-index:9999;
+}
+
+.popup{
+background:#fff;
+width:100%;
+max-width:500px;
+border-radius:20px 20px 0 0;
+padding:20px;
+}
+
+.popup h2{
+text-align:center;
+}
+
+.bet-amounts{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:10px;
+margin-top:15px;
+}
+
+.bet-amounts button{
+padding:12px;
+border:none;
+border-radius:10px;
+font-size:18px;
+}
+
+.multi-grid{
+display:grid;
+grid-template-columns:repeat(5,1fr);
+gap:10px;
+margin-top:15px;
+}
+
+.multi-grid button{
+padding:10px;
+border:none;
+border-radius:10px;
+}
+
+.total-btn{
+width:100%;
+padding:15px;
+margin-top:20px;
+border:none;
+border-radius:12px;
+background:#f4a261;
+color:#fff;
+font-size:22px;
+font-weight:bold;
+}
+
+.lock{
+opacity:.5;
+pointer-events:none;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="header">
+91 CLUB WIN GO
+</div>
+
+<div class="wallet-box">
+Wallet ₹<span id="wallet">0</span>
+</div>
+
+<div class="game-tabs">
+
+<button id="btnw30" class="active-game" onclick="switchGame('w30')">
+30Sec
+</button>
+
+<button id="btnw1" onclick="switchGame('w1')">
+1Min
+</button>
+
+<button id="btnw3" onclick="switchGame('w3')">
+3Min
+</button>
+
+<button id="btnw5" onclick="switchGame('w5')">
+5Min
+</button>
+
+</div>
+
+<div class="timer-card">
+
+<div class="timer" id="time">
+30
+</div>
+
+<div class="period">
+Period:
+<span id="period"></span>
+</div>
+
+</div>
+
+<div id="betArea">
+
+<div class="colors">
+
+<button class="green"
+onclick="openBetModal('color','GREEN')">
+GREEN
+</button>
+
+<button class="violet"
+onclick="openBetModal('color','VIOLET')">
+VIOLET
+</button>
+
+<button class="red"
+onclick="openBetModal('color','RED')">
+RED
+</button>
+
+</div>
+
+<div class="numbers">
+
+<button onclick="openBetModal('number',0)">0</button>
+<button onclick="openBetModal('number',1)">1</button>
+<button onclick="openBetModal('number',2)">2</button>
+<button onclick="openBetModal('number',3)">3</button>
+<button onclick="openBetModal('number',4)">4</button>
+<button onclick="openBetModal('number',5)">5</button>
+<button onclick="openBetModal('number',6)">6</button>
+<button onclick="openBetModal('number',7)">7</button>
+<button onclick="openBetModal('number',8)">8</button>
+<button onclick="openBetModal('number',9)">9</button>
+
+</div>
+
+<div class="bigsmall">
+
+<button class="big"
+onclick="openBetModal('bs','BIG')">
+BIG
+</button>
+
+<button class="small"
+onclick="openBetModal('bs','SMALL')">
+SMALL
+</button>
+
+</div>
+
+</div>
+
+<div class="card">
+
+<table>
+
+<thead>
+<tr>
+<th>Period</th>
+<th>Number</th>
+<th>BS</th>
+<th>Color</th>
+</tr>
+</thead>
+
+<tbody id="historyBody">
+</tbody>
+
+</table>
+
+</div>
+
+<div class="popup-overlay" id="betModal">
+
+<div class="popup">
+
+<h2 id="selectedBet"></h2>
+
+<div class="bet-amounts">
+
+<button onclick="setAmount(1)">1</button>
+<button onclick="setAmount(10)">10</button>
+<button onclick="setAmount(100)">100</button>
+<button onclick="setAmount(1000)">1000</button>
+
+</div>
+
+<div class="multi-grid">
+
+<button onclick="setMulti(1)">X1</button>
+<button onclick="setMulti(5)">X5</button>
+<button onclick="setMulti(10)">X10</button>
+<button onclick="setMulti(20)">X20</button>
+<button onclick="setMulti(50)">X50</button>
+
+</div>
+
+<button class="total-btn"
+onclick="confirmBet()">
+
+Total Amount ₹
+<span id="totalAmount">
+1
+</span>
+
+</button>
+
+</div>
+
+</div>
+
+<script>
+
+let wallet = 5000;
+
+const GAME_TIMES = {
+w30:30,
+w1:60,
+w3:180,
+w5:300
 };
 
-let multi=1,tab="game",locked=false;
-let selectedBet=null;
-let roundDone=false;
+let currentGame = "w30";
 
-const save=()=>localStorage.setItem("WG",JSON.stringify(S));
-const $=i=>document.getElementById(i);
+let games = {
 
-function showPopup(type,msg){
- popupBox.className="popup "+type;
- popupBox.innerHTML=msg;
- popupOverlay.style.display="flex";
- setTimeout(()=>popupOverlay.style.display="none",2000);
+w30:{
+time:30,
+period:20260120100001,
+history:[]
+},
+
+w1:{
+time:60,
+period:20260120110001,
+history:[]
+},
+
+w3:{
+time:180,
+period:20260120130001,
+history:[]
+},
+
+w5:{
+time:300,
+period:20260120150001,
+history:[]
 }
 
-async function loadMainWallet(){
- const snap=await getDocs(query(collection(db,"users"),where("email","==",userEmail)));
- snap.forEach(d=>{
-   userDocId=d.id;
-   S.wallet=d.data().balance||0;
- });
- save();render();
-}
+};
 
-function setMulti(x,e){
- multi=x;
- document.querySelectorAll('.multi').forEach(b=>b.classList.remove('active'));
- e.classList.add('active');
-}
+let currentType = "";
+let currentValue = "";
 
-async function bet(type,val){
- if(locked) return;
+let amount = 1;
+let multi = 1;
 
- let amt = Number(amount.value||0);
- if(amt < 1) return showPopup("loss","<h2>Min ₹1</h2>");
-
- let total = amt * multi;
- if(total > S.wallet) return showPopup("loss","<h2>Low Balance</h2>");
-
- if(selectedBet && (selectedBet.type !== type || selectedBet.val !== val)){
-   return showPopup("loss","<h2>Only 1 Bet Allowed</h2>");
- }
-
- selectedBet = {type,val};
-
- S.wallet -= total;
-
- await updateDoc(doc(db,"users",userDocId),{
-   balance:S.wallet,
-   wagerDone:increment(total)
- });
-
- S.bets.push({type,val,amt:total,p:S.period});
-
- showPopup("bet","<h2>Bet Placed</h2><p>₹"+total+"</p>");
-
- save();render();
-}
-
-async function finish(){
-
- let rand = Math.random()*100;
- let isWinRound = HOUSE_EDGE>=100 ? true : HOUSE_EDGE<=0 ? false : rand < HOUSE_EDGE;
-
- let possible=[];
-
- for(let i=0;i<=9;i++){
-
-   let c;
-   if([1,3,7,9].includes(i)) c="GREEN";
-   else if([2,4,6,8].includes(i)) c="RED";
-   else c="VIOLET";
-
-   let bs=i>=5?'BIG':'SMALL';
-
-   if(isWinRound){
-     if(S.bets.some(b =>
-       (b.type=='number'&&b.val==i) ||
-       (b.type=='color'&&b.val==c) ||
-       (b.type=='bs'&&b.val==bs)
-     )) possible.push(i);
-   }else{
-     if(S.bets.every(b =>
-       !((b.type=='number'&&b.val==i) ||
-         (b.type=='color'&&b.val==c) ||
-         (b.type=='bs'&&b.val==bs))
-     )) possible.push(i);
-   }
- }
-
- let n = possible.length ? possible[Math.floor(Math.random()*possible.length)] : Math.floor(Math.random()*10);
-
- let c;
- if([1,3,7,9].includes(n)) c="GREEN";
- else if([2,4,6,8].includes(n)) c="RED";
- else c="VIOLET";
-
- let bs=n>=5?'BIG':'SMALL';
-
- S.history.unshift({p:S.period,n,bs,c});
- S.history=S.history.slice(0,10);
-
- for(const b of S.bets){
-
-  let win=0;
-
-  if(b.type=='number'&&b.val==n) win=b.amt*10;
-  if(b.type=='color'&&b.val==c) win=b.amt*(c=='VIOLET'?5:2);
-  if(b.type=='bs'&&b.val==bs) win=b.amt*2;
-
-  S.wallet+=win;
-
-  showPopup(win?"win":"loss",
-    `<h2>${win?"YOU WIN":"YOU LOST"}</h2><p>₹${win||b.amt}</p>`);
-
-  S.mybets.unshift({
-    p:b.p,
-    b:b.type+":"+b.val,
-    a:b.amt,
-    r:win?`+₹${win}`:`-₹${b.amt}`,
-    w:win>0
-  });
- }
-
- await updateDoc(doc(db,"users",userDocId),{balance:S.wallet});
-
- S.bets=[];
- S.period++;
- S.time=30;
- locked=false;
- selectedBet=null;
- roundDone=false;
-
- save();draw();render();
+function S(){
+return games[currentGame];
 }
 
 function render(){
- period.innerText=S.period;
- wallet.innerText=S.wallet;
- time.innerText=S.time;
- betBox.className=S.time<=5?'card lock':'card';
+
+walletEl.innerText = wallet;
+
+time.innerText = S().time;
+
+period.innerText = S().period;
+
+drawHistory();
+
+if(S().time <= 5){
+betArea.classList.add("lock");
+}else{
+betArea.classList.remove("lock");
 }
 
-function draw(){
- let th=$("thead"),tb=$("tbody");
- th.innerHTML=tb.innerHTML="";
- if(tab=="game"){
-  th.innerHTML="<tr><th>Period</th><th>Number</th><th>Big/Small</th><th>Color</th></tr>";
-  S.history.forEach(r=>{
-    tb.innerHTML+=`<tr>
-      <td>${r.p}</td>
-      <td>${r.n}</td>
-      <td>${r.bs}</td>
-      <td style="color:${r.c=='GREEN'?'#4caf50':r.c=='RED'?'#f44336':'#8e24aa'}">${r.c}</td>
-    </tr>`;
-  });
- }else{
-  th.innerHTML="<tr><th>Period</th><th>Bet</th><th>Amount</th><th>Result</th></tr>";
-  S.mybets.forEach(b=>tb.innerHTML+=`<tr><td>${b.p}</td><td>${b.b}</td><td>₹${b.a}</td><td class="${b.w?'win':'loss'}">${b.r}</td></tr>`);
- }
 }
 
-function showTab(t){
- tab=t;
- document.querySelectorAll('.tab')[0].className="tab "+(t=="game"?"active":"inactive");
- document.querySelectorAll('.tab')[1].className="tab "+(t=="bets"?"active":"inactive");
- draw();
+const walletEl = document.getElementById("wallet");
+
+function switchGame(g){
+
+currentGame = g;
+
+document.querySelectorAll(".game-tabs button")
+.forEach(b=>b.classList.remove("active-game"));
+
+document.getElementById("btn"+g)
+.classList.add("active-game");
+
+render();
+
 }
 
-window.bet=bet;
-window.setMulti=setMulti;
-window.showTab=showTab;
+function openBetModal(type,val){
 
-/* 🔥 FINAL TIMER FIX */
-setInterval(()=>{
+if(S().time <= 5){
+alert("Bet Locked");
+return;
+}
 
- if(S.time <= 0){
-   if(!roundDone){
-     roundDone = true;
-     finish();
-   }
-   return; // 🔥 STOP HERE (IMPORTANT)
- }
+currentType = type;
+currentValue = val;
 
- S.time--;
+selectedBet.innerText =
+type + " : " + val;
 
- if(S.time <= 5){
-   locked = true;
- }
+betModal.style.display = "flex";
 
- save();
- render();
+}
+
+function setAmount(x){
+
+amount = x;
+
+updateTotal();
+
+}
+
+function setMulti(x){
+
+multi = x;
+
+updateTotal();
+
+}
+
+function updateTotal(){
+
+totalAmount.innerText =
+amount * multi;
+
+}
+
+function confirmBet(){
+
+let total = amount * multi;
+
+if(total > wallet){
+alert("Low Balance");
+return;
+}
+
+wallet -= total;
+
+betModal.style.display = "none";
+
+let n = Math.floor(Math.random()*10);
+
+let c =
+[1,3,7,9].includes(n)
+?"GREEN"
+:[2,4,6,8].includes(n)
+?"RED"
+:"VIOLET";
+
+let bs = n >= 5 ? "BIG":"SMALL";
+
+let win = false;
+
+if(currentType=="number" && currentValue==n)
+win = true;
+
+if(currentType=="color" && currentValue==c)
+win = true;
+
+if(currentType=="bs" && currentValue==bs)
+win = true;
+
+setTimeout(()=>{
+
+if(win){
+
+let reward = total * 2;
+
+wallet += reward;
+
+alert("YOU WIN ₹"+reward);
+
+}else{
+
+alert("YOU LOST ₹"+total);
+
+}
 
 },1000);
-loadMainWallet();
-render();
-draw();
 
-    </script>
-  
-  </body>  
-</html>  
+S().history.unshift({
+period:S().period,
+number:n,
+bs:bs,
+color:c
+});
+
+render();
+
+}
+
+function drawHistory(){
+
+historyBody.innerHTML = "";
+
+S().history.slice(0,10).forEach(r=>{
+
+historyBody.innerHTML += `
+
+<tr>
+
+<td>${r.period}</td>
+
+<td>${r.number}</td>
+
+<td>${r.bs}</td>
+
+<td>${r.color}</td>
+
+</tr>
+
+`;
+
+});
+
+}
+
+setInterval(()=>{
+
+Object.keys(games).forEach(g=>{
+
+let game = games[g];
+
+game.time--;
+
+if(game.time <= 0){
+
+game.time = GAME_TIMES[g];
+
+game.period++;
+
+}
+
+});
+
+render();
+
+},1000);
+
+render();
+
+</script>
+
+</body>
+</html>
