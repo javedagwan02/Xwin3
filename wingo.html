@@ -792,7 +792,7 @@ if(tab=="game"){
     <tbody>
   `;
 
-  S.history.forEach(r=>{
+S().history.slice(0,10).forEach(r=>{
 
     let clr =
       r.c=="GREEN" ? "#22c55e" :
