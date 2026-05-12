@@ -220,21 +220,7 @@ font-weight:bold;
 opacity:.5;
 pointer-events:none;
 }
-/* NUMBER BUTTON COLORS */
-.num0,.num5{
-  background:linear-gradient(135deg,#d946ef,#9333ea);
-  color:#fff;
-}
 
-.num1,.num3,.num7,.num9{
-  background:linear-gradient(135deg,#22c55e,#16a34a);
-  color:#fff;
-}
-
-.num2,.num4,.num6,.num8{
-  background:linear-gradient(135deg,#ff4d4d,#dc2626);
-  color:#fff;
-}
 
 /* HISTORY BUTTONS */
 .history-tabs{
@@ -312,35 +298,6 @@ color:#fff;
 box-shadow:0 3px 8px rgba(0,0,0,.25);
 }
 
-/* PURPLE */
-.num0,
-.num5{
-background:linear-gradient(135deg,#d946ef,#9333ea);
-}
-
-/* GREEN */
-.num1,
-.num3,
-.num7,
-.num9{
-background:linear-gradient(135deg,#22c55e,#16a34a);
-}
-
-/* RED */
-.num2,
-.num4,
-.num6,
-.num8{
-background:linear-gradient(135deg,#ff4d4d,#dc2626);
-}
-.numbers{
-display:grid;
-grid-template-columns:repeat(5,1fr);
-gap:10px;
-padding:10px;
-justify-items:center;
-}
-
 .numbers button{
 width:58px;
 height:58px;
@@ -348,8 +305,30 @@ border:none;
 border-radius:50%;
 font-size:30px;
 font-weight:bold;
-color:#fff;
+color:#fff !important;
 box-shadow:0 3px 8px rgba(0,0,0,.25);
+}
+
+/* PURPLE */
+.num0,
+.num5{
+background:linear-gradient(135deg,#d946ef,#9333ea) !important;
+}
+
+/* GREEN */
+.num1,
+.num3,
+.num7,
+.num9{
+background:linear-gradient(135deg,#22c55e,#16a34a) !important;
+}
+
+/* RED */
+.num2,
+.num4,
+.num6,
+.num8{
+background:linear-gradient(135deg,#ff4d4d,#dc2626) !important;
 }
   /* RESULT POPUP */
 
@@ -458,17 +437,17 @@ RED
 
 <div class="numbers">
 
-<button class="btn num0" onclick="openBetModal('number',0)">0</button>
-<button class="btn num1" onclick="openBetModal('number',1)">1</button>
-<button class="btn num2" onclick="openBetModal('number',2)">2</button>
-<button class="btn num3" onclick="openBetModal('number',3)">3</button>
-<button class="btn num4" onclick="openBetModal('number',4)">4</button>
+<button class="num0" onclick="openBetModal('number',0)">0</button>
+<button class="num1" onclick="openBetModal('number',1)">1</button>
+<button class="num2" onclick="openBetModal('number',2)">2</button>
+<button class="num3" onclick="openBetModal('number',3)">3</button>
+<button class="num4" onclick="openBetModal('number',4)">4</button>
 
-<button class="btn num5" onclick="openBetModal('number',5)">5</button>
-<button class="btn num6" onclick="openBetModal('number',6)">6</button>
-<button class="btn num7" onclick="openBetModal('number',7)">7</button>
-<button class="btn num8" onclick="openBetModal('number',8)">8</button>
-<button class="btn num9" onclick="openBetModal('number',9)">9</button>
+<button class="num5" onclick="openBetModal('number',5)">5</button>
+<button class="num6" onclick="openBetModal('number',6)">6</button>
+<button class="num7" onclick="openBetModal('number',7)">7</button>
+<button class="num8" onclick="openBetModal('number',8)">8</button>
+<button class="num9" onclick="openBetModal('number',9)">9</button>
 
 </div>
 <div class="bigsmall">
