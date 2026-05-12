@@ -576,6 +576,7 @@ let currentValue = "";
 let amount = 1;
 let multi = 1;
   let tab = "game";
+  let pendingBets = [];
 
 function S(){
 return games[currentGame];
@@ -673,6 +674,7 @@ amount * multi;
 
 }
 
+
 function confirmBet(){
 
 let total = amount * multi;
@@ -686,63 +688,22 @@ wallet -= total;
 
 betModal.style.display = "none";
 
-let n = Math.floor(Math.random()*10);
-
-let c =
-[1,3,7,9].includes(n)
-?"GREEN"
-:[2,4,6,8].includes(n)
-?"RED"
-:"VIOLET";
-
-let bs = n >= 5 ? "BIG":"SMALL";
-
-let win = false;
-
-if(currentType=="number" && currentValue==n)
-win = true;
-
-if(currentType=="color" && currentValue==c)
-win = true;
-
-if(currentType=="bs" && currentValue==bs)
-win = true;
-
-let reward = 0;
-
-if(win){
-
-reward = total * 2;
-
-wallet += reward;
-
-}
-
-S().history.unshift({
-p:S().period,
-n:n,
-bs:bs,
-c:c
-});
-
-S().mybets.unshift({
-p:S().period,
-b:currentType+" : "+currentValue,
-a:total,
-r:win ? "+₹"+reward : "-₹"+total,
-w:win
-});
-
-setTimeout(()=>{
-
+/* BET SUCCESS POPUP */
 showPopup(
-win ? "win" : "loss",
-win
-? "YOU WIN ₹"+reward
-: "YOU LOST ₹"+total
+"success",
+"Bet Placed Successfully"
 );
 
-},1000);
+/* SAVE BET */
+pendingBets.push({
+
+game:currentGame,
+type:currentType,
+value:currentValue,
+amount:total,
+period:S().period
+
+});
 
 render();
 draw();
