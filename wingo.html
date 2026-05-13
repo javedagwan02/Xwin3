@@ -577,6 +577,43 @@ let amount = 1;
 let multi = 1;
   let tab = "game";
   let pendingBets = [];
+  /* SAVE LOAD SYSTEM */
+
+function saveGame(){
+
+localStorage.setItem(
+"wingoData",
+JSON.stringify({
+
+wallet,
+games,
+pendingBets,
+currentGame
+
+})
+);
+
+}
+
+function loadGame(){
+
+const data = localStorage.getItem("wingoData");
+
+if(data){
+
+const parsed = JSON.parse(data);
+
+wallet = parsed.wallet || 0;
+
+games = parsed.games || games;
+
+pendingBets = parsed.pendingBets || [];
+
+currentGame = parsed.currentGame || "w30";
+
+}
+
+  }
 
 function S(){
 return games[currentGame];
@@ -611,7 +648,7 @@ document.querySelectorAll(".game-tabs button")
 
 document.getElementById("btn"+g)
 .classList.add("active-game");
-
+saveGame();
 render();
 
 }
@@ -722,7 +759,7 @@ amount:total,
 period:S().period
 
 });
-
+saveGame();
 render();
 draw();
 
@@ -995,6 +1032,7 @@ b=>b.game != g
 game.time = GAME_TIMES[g];
 
 game.period++;
+  saveGame();
 
 }
 
@@ -1003,7 +1041,7 @@ game.period++;
 render();
 
 },1000);
-
+loadGame();
 render();
 </script>
 <!-- RESULT POPUP -->
