@@ -527,7 +527,7 @@ Total Amount ₹
 
 <script>
 
-let wallet = 5000;
+let wallet = 0;
 
 const GAME_TIMES = {
 w30:30,
@@ -675,7 +675,7 @@ amount * multi;
 }
 
 
-function confirmBet(){
+async function confirmBet(){
 
 let total = amount * multi;
 
@@ -684,17 +684,35 @@ alert("Low Balance");
 return;
 }
 
+/* WALLET CUT */
+
 wallet -= total;
+
+/* FIREBASE UPDATE */
+
+if(userDocId){
+
+await updateDoc(
+doc(db,"users",userDocId),
+{
+balance: wallet,
+wagerDone: increment(total)
+}
+);
+
+}
 
 betModal.style.display = "none";
 
 /* BET SUCCESS POPUP */
+
 showPopup(
 "success",
 "Bet Placed Successfully"
 );
 
 /* SAVE BET */
+
 pendingBets.push({
 
 game:currentGame,
@@ -937,7 +955,16 @@ if(win){
 reward = bet.amount * 2;
 
 wallet += reward;
+if(userDocId){
 
+updateDoc(
+doc(db,"users",userDocId),
+{
+balance: wallet
+}
+);
+
+}
 }
 
 game.mybets.unshift({
@@ -986,5 +1013,77 @@ render();
 <div id="popupBox"></div>
 
 </div>
+  <script type="module">
+
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+import {
+getFirestore,
+collection,
+query,
+where,
+getDocs,
+doc,
+updateDoc,
+increment
+}
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+/* FIREBASE CONFIG */
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBx3J9aGn_98rTPgurMMKw_GR3puIMj4Ms",
+  authDomain: "colourcash-ea60e.firebaseapp.com",
+  projectId: "colourcash-ea60e",
+  storageBucket: "colourcash-ea60e.firebasestorage.app",
+  messagingSenderId: "403688058646",
+  appId: "1:403688058646:web:f1753360471528f275ea37"
+};
+
+const app = initializeApp(firebaseConfig);
+
+const db = getFirestore(app);
+
+/* USER */
+
+const userEmail = localStorage.getItem("userEmail");
+
+let userDocId = "";
+
+/* LOAD WALLET */
+
+async function loadWallet(){
+
+const q = query(
+collection(db,"users"),
+where("email","==",userEmail)
+);
+
+const snap = await getDocs(q);
+
+snap.forEach(d=>{
+
+userDocId = d.id;
+
+wallet = d.data().balance || 0;
+
+});
+
+render();
+
+}
+
+loadWallet();
+
+/* GLOBAL */
+
+window.db = db;
+window.userDocId = userDocId;
+window.updateDoc = updateDoc;
+window.doc = doc;
+window.increment = increment;
+
+</script>
 </body>
 </html>
