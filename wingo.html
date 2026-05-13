@@ -884,6 +884,99 @@ S().mybets.slice(0,10).forEach(b=>{
 }
 }
 
+setInterval(()=>{
+
+Object.keys(games).forEach(g=>{
+
+let game = games[g];
+
+game.time--;
+
+if(game.time <= 0){
+
+/* RESULT GENERATE */
+let n = Math.floor(Math.random()*10);
+
+let c =
+[1,3,7,9].includes(n)
+?"GREEN"
+:[2,4,6,8].includes(n)
+?"RED"
+:"VIOLET";
+
+let bs = n >= 5 ? "BIG":"SMALL";
+
+/* HISTORY */
+game.history.unshift({
+p:game.period,
+n:n,
+bs:bs,
+c:c
+});
+
+/* CHECK PENDING BETS */
+pendingBets.forEach((bet,index)=>{
+
+if(bet.game != g) return;
+
+let win = false;
+
+if(bet.type=="number" && bet.value==n)
+win = true;
+
+if(bet.type=="color" && bet.value==c)
+win = true;
+
+if(bet.type=="bs" && bet.value==bs)
+win = true;
+
+let reward = 0;
+
+if(win){
+
+reward = bet.amount * 2;
+
+wallet += reward;
+
+}
+
+game.mybets.unshift({
+
+p:bet.period,
+b:bet.type+" : "+bet.value,
+a:bet.amount,
+r:win ? "+₹"+reward : "-₹"+bet.amount,
+w:win
+
+});
+
+/* WIN LOSS POPUP */
+showPopup(
+win ? "win":"loss",
+win
+? "YOU WIN ₹"+reward
+: "YOU LOST ₹"+bet.amount
+);
+
+});
+
+/* CLEAR BETS */
+pendingBets = pendingBets.filter(
+b=>b.game != g
+);
+
+game.time = GAME_TIMES[g];
+
+game.period++;
+
+}
+
+});
+
+render();
+
+},1000);
+
 render();
 </script>
 <!-- RESULT POPUP -->
@@ -893,91 +986,5 @@ render();
 <div id="popupBox"></div>
 
 </div>
-  <script type="module">
-
-/* FIREBASE */
-
-import { initializeApp }
-from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-
-import {
-getFirestore,
-doc,
-onSnapshot
-}
-from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-/* YOUR FIREBASE CONFIG */
-
-const firebaseConfig = {
-  apiKey: "AIzaSyBx3J9aGn_98rTPgurMMKw_GR3puIMj4Ms",
-  authDomain: "colourcash-ea60e.firebaseapp.com",
-  projectId: "colourcash-ea60e",
-  storageBucket: "colourcash-ea60e.firebasestorage.app",
-  messagingSenderId: "403688058646",
-  appId: "1:403688058646:web:f1753360471528f275ea37"
-};
-
-/* INIT */
-
-const app = initializeApp(firebaseConfig);
-
-const db = getFirestore(app);
-
-/* LIVE RESULT LISTENER */
-
-onSnapshot(doc(db,"gameRooms","w30"),(snap)=>{
-
-let d = snap.data();
-
-if(!d) return;
-
-/* RESULT */
-
-let n = d.result;
-
-let c =
-[1,3,7,9].includes(n)
-?"GREEN"
-:[2,4,6,8].includes(n)
-?"RED"
-:"VIOLET";
-
-let bs = n >= 5
-? "BIG"
-: "SMALL";
-
-/* SAVE HISTORY */
-
-if(
-games.w30.history.length == 0 ||
-games.w30.history[0].p != d.period
-){
-
-games.w30.history.unshift({
-
-p:d.period,
-n:n,
-bs:bs,
-c:c
-
-});
-
-}
-
-/* AUTO UPDATE */
-
-games.w30.period = Number(d.period);
-
-games.w30.time = d.timer;
-
-/* RE-RENDER */
-
-draw();
-render();
-
-});
-    
-</script>
 </body>
 </html>
