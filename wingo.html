@@ -970,6 +970,21 @@ draw();
 render();
 
 });
+    /* LIVE TIMER */
+
+setInterval(()=>{
+
+games.w30.time--;
+
+if(games.w30.time <= 0){
+
+games.w30.time = 30;
+
+}
+
+render();
+
+},1000);
 </script>
 </body>
 </html>
