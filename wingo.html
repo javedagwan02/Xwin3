@@ -886,86 +886,17 @@ S().mybets.slice(0,10).forEach(b=>{
 
 setInterval(()=>{
 
-Object.keys(games).forEach(g=>{
+games.w30.time--;
 
-let game = games[g];
+if(games.w30.time <= 0){
 
-game.time--;
-
-if(game.time <= 0){
-
-
-/* HISTORY */
-game.history.unshift({
-p:game.period,
-n:n,
-bs:bs,
-c:c
-});
-
-/* CHECK PENDING BETS */
-pendingBets.forEach((bet,index)=>{
-
-if(bet.game != g) return;
-
-let win = false;
-
-if(bet.type=="number" && bet.value==n)
-win = true;
-
-if(bet.type=="color" && bet.value==c)
-win = true;
-
-if(bet.type=="bs" && bet.value==bs)
-win = true;
-
-let reward = 0;
-
-if(win){
-
-reward = bet.amount * 2;
-
-wallet += reward;
+games.w30.time = 30;
 
 }
-
-game.mybets.unshift({
-
-p:bet.period,
-b:bet.type+" : "+bet.value,
-a:bet.amount,
-r:win ? "+₹"+reward : "-₹"+bet.amount,
-w:win
-
-});
-
-/* WIN LOSS POPUP */
-showPopup(
-win ? "win":"loss",
-win
-? "YOU WIN ₹"+reward
-: "YOU LOST ₹"+bet.amount
-);
-
-});
-
-/* CLEAR BETS */
-pendingBets = pendingBets.filter(
-b=>b.game != g
-);
-
-game.time = GAME_TIMES[g];
-
-game.period++;
-
-}
-
-});
 
 render();
 
 },1000);
-
 render();
 </script>
 <!-- RESULT POPUP -->
