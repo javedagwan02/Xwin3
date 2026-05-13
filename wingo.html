@@ -884,19 +884,6 @@ S().mybets.slice(0,10).forEach(b=>{
 }
 }
 
-setInterval(()=>{
-
-games.w30.time--;
-
-if(games.w30.time <= 0){
-
-games.w30.time = 30;
-
-}
-
-render();
-
-},1000);
 render();
 </script>
 <!-- RESULT POPUP -->
@@ -939,7 +926,7 @@ const db = getFirestore(app);
 
 /* LIVE RESULT LISTENER */
 
-onSnapshot(doc(db,"gameStatus","w30"),(snap)=>{
+onSnapshot(doc(db,"gameRooms","w30"),(snap)=>{
 
 let d = snap.data();
 
@@ -971,9 +958,11 @@ c:c
 
 });
 
-/* AUTO UPDATE PERIOD */
+/* AUTO UPDATE */
 
 games.w30.period = Number(d.period);
+
+games.w30.time = d.timer;
 
 /* RE-RENDER */
 
@@ -981,7 +970,6 @@ draw();
 render();
 
 });
-
 </script>
 </body>
 </html>
