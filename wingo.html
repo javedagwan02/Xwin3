@@ -949,6 +949,11 @@ let bs = n >= 5
 
 /* SAVE HISTORY */
 
+if(
+games.w30.history.length == 0 ||
+games.w30.history[0].p != d.period
+){
+
 games.w30.history.unshift({
 
 p:d.period,
@@ -957,6 +962,8 @@ bs:bs,
 c:c
 
 });
+
+}
 
 /* AUTO UPDATE */
 
@@ -979,6 +986,9 @@ games.w30.time--;
 if(games.w30.time <= 0){
 
 games.w30.time = 30;
+
+/* PERIOD CHANGE */
+games.w30.period++;
 
 }
 
