@@ -938,8 +938,10 @@ S().mybets.slice(0,10).forEach(b=>{
   area.innerHTML = html;
 }
 }
-
-setInterval(()=>{
+if(window.gameLoop){
+clearInterval(window.gameLoop);
+}
+window.gameLoop = setInterval(()=>{
 
 Object.keys(games).forEach(g=>{
 
@@ -1039,7 +1041,7 @@ game.period++;
 });
 
 render();
-
+saveGame();
 },1000);
 loadGame();
 render();
