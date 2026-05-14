@@ -1941,30 +1941,50 @@ window.openJiliGame21 = async function(){
 };
 
 
-// 🔥 GAME 22
+// 🔥 GAME 22 FIXED
 window.openJiliGame22 = async function(){
 
-  const userEmail = localStorage.getItem("userEmail");
+  try{
 
-  const userSnap = await getDocs(
-    query(collection(db,"users"), where("email","==",userEmail))
-  );
+    const userEmail = localStorage.getItem("userEmail");
 
-  let balance = 0;
+    if(!userEmail){
+      alert("User not logged in");
+      return;
+    }
 
-  userSnap.forEach(d=>{
-    balance = Number(d.data().balance || 0);
-  });
+    const userSnap = await getDocs(
+      query(collection(db,"users"), where("email","==",userEmail))
+    );
 
-  if(balance < 10){
-    document.getElementById("depositPopup").style.display="flex";
-    return;
+    let balance = 0;
+
+    userSnap.forEach(d=>{
+      balance = Number(d.data().balance || 0);
+    });
+
+    // 🔥 MINIMUM BALANCE CHECK
+    if(balance < 10){
+      document.getElementById("depositPopup").style.display="flex";
+      return;
+    }
+
+    // 🔥 ENCODE EMAIL FIX
+    const safeUserId = encodeURIComponent(userEmail);
+
+    // 🔥 GAME OPEN
+    window.location.href =
+    "https://jili-backend.onrender.com/start-game?userId="
+    + safeUserId +
+    "&gameId=00d92d5cec10cf85623938222a6c2bb6";
+
+  }catch(e){
+
+    console.log("GAME 22 ERROR:", e);
+    alert("Game Launch Failed ❌");
+
   }
 
-  window.location.href =
-  "https://jili-backend.onrender.com/start-game?userId="
-  + userEmail +
-  "&gameId=00d92d5cec10cf85623938222a6c2bb6";
 };
 
 
