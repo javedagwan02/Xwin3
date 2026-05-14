@@ -941,7 +941,7 @@ S().mybets.slice(0,10).forEach(b=>{
 if(window.gameLoop){
 clearInterval(window.gameLoop);
 }
-window.gameLoop = setInterval(()=>{
+window.gameLoop = setInterval(async ()=>{
 
 Object.keys(games).forEach(g=>{
 
@@ -1241,6 +1241,7 @@ collection,
 query,
 where,
 getDocs,
+getDoc,
 doc,
 updateDoc,
 increment
