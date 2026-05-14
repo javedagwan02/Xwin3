@@ -943,10 +943,9 @@ clearInterval(window.gameLoop);
 }
 window.gameLoop = setInterval(async ()=>{
 
-Object.keys(games).forEach(g=>{
+for (const g of Object.keys(games)) {
 
 let game = games[g];
-
 game.time--;
 
 if(game.time <= 0){
@@ -1215,10 +1214,11 @@ game.period++;
 
 }
 
-});
+}
 
 render();
 saveGame();
+
 },1000);
 loadGame();
 render();
