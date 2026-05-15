@@ -1376,6 +1376,9 @@ userDocId = d.id;
 
 wallet = d.data().balance || 0;
 
+/* 🔥 IMPORTANT */
+window.userDocId = userDocId;
+
 });
 
 render();
@@ -1387,7 +1390,6 @@ loadWallet();
 /* GLOBAL */
 
 window.db = db;
-window.userDocId = userDocId;
 window.updateDoc = updateDoc;
 window.doc = doc;
 window.increment = increment;
