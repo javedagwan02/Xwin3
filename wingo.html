@@ -991,15 +991,21 @@ let edge = 50;
 
 try {
 
-  const snap = await getDoc(
-    doc(db, "settings", "houseEdge")
+  const snap = await window.getDoc(
+    window.doc(window.db, "settings", "houseEdge")
   );
 
   if (snap.exists()) {
     edge = snap.data().wingo || 50;
   }
 
-} catch (e) {}
+  console.log("EDGE =", edge);
+
+} catch (e) {
+
+  console.log(e);
+
+}
 
 /*
 0%   = all lose
@@ -1377,6 +1383,7 @@ window.userDocId = userDocId;
 window.updateDoc = updateDoc;
 window.doc = doc;
 window.increment = increment;
+window.getDoc = getDoc;
 
 </script>
 </body>
