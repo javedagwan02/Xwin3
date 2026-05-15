@@ -1115,750 +1115,8 @@ Number(balance).toLocaleString(undefined, {
   
 // 🔥 CALL AFTER FIREBASE READY  
 loadBalance();  
-  window.openJiliRoulette = async function(){  
-  
-  const userEmail = localStorage.getItem("userEmail");  
-  
-  const userSnap = await getDocs(  
-    query(collection(db,"users"), where("email","==",userEmail))  
-  );  
-  
-  let balance = 0;  
-  
-  userSnap.forEach(d=>{  
-    balance = Number(d.data().balance || 0);  
-  });  
-  
-  if(balance < 10){  
-    document.getElementById("depositPopup").style.display="flex";  
-    return;  
-  }  
-  
-  // 🔥 NEW GAME UID  
-  window.location.href =  
-  "https://jili-backend.onrender.com/start-game?userId="  
-  + userEmail +  
-  "&gameId=d4fc911a31b3a61edd83bdd95e36f3bf";  
-};  
-window.openJiliGame = async function(){  
-  
-  const userEmail = localStorage.getItem("userEmail");  
-  
-  const userSnap = await getDocs(  
-    query(collection(db,"users"), where("email","==",userEmail))  
-  );  
-  
-  let balance = 0;  
-  
-  userSnap.forEach(d=>{  
-    balance = Number(d.data().balance || 0);  
-  });  
-  
-  if(balance < 10){  
-    document.getElementById("depositPopup").style.display="flex";  
-    return;  
-  }  
-  
-  // ✅ FIXED  
-  window.location.href =  
-  "https://jili-backend.onrender.com/start-game?userId="  
-  + userEmail +  
-  "&gameId=39775cdc4170e56c5f768bdee8b4fa00";  
-};  
-  window.openJiliGamePlinko = async function(){  
-  
-  console.log("🔥 PLINKO CLICKED");  
-  
-  const userEmail = localStorage.getItem("userEmail");  
-  
-  if(!userEmail){  
-    alert("User not logged in");  
-    return;  
-  }  
-  
-  const userSnap = await getDocs(  
-    query(collection(db,"users"), where("email","==",userEmail))  
-  );  
-  
-  let balance = 0;  
-  
-  userSnap.forEach(d=>{  
-    balance = Number(d.data().balance || 0);  
-  });  
-  
-  if(balance < 10){  
-    document.getElementById("depositPopup").style.display="flex";  
-    return;  
-  }  
-  
-  // ✅ FINAL UID (Plinko)  
-  window.location.href =  
-  "https://jili-backend.onrender.com/start-game?userId="  
-  + userEmail +  
-  "&gameId=490096198e28f770a3f85adb6ee49e0f";  
-};  
-    
-  window.openJiliGame111 = async function(){  
-  
-  const userEmail = localStorage.getItem("userEmail");  
-  
-  const userSnap = await getDocs(  
-    query(collection(db,"users"), where("email","==",userEmail))  
-  );  
-  
-  let balance = 0;  
-  
-  userSnap.forEach(d=>{  
-    balance = Number(d.data().balance || 0);  
-  });  
-  
-  if(balance < 10){  
-    document.getElementById("depositPopup").style.display="flex";  
-    return;  
-  }  
-  
-  // 🔥 GAME 1 UID  
-  window.location.href =  
-  "https://jili-backend.onrender.com/start-game?userId="  
-  + userEmail +  
-  "&gameId=582a58791928760c28ec4cef3392a49f";  
-};  
-  window.openJiliGame2 = async function(){  
-  
-  const userEmail = localStorage.getItem("userEmail");  
-  
-  const userSnap = await getDocs(  
-    query(collection(db,"users"), where("email","==",userEmail))  
-  );  
-  
-  let balance = 0;  
-  
-  userSnap.forEach(d=>{  
-    balance = Number(d.data().balance || 0);  
-  });  
-  
-  if(balance < 10){  
-    document.getElementById("depositPopup").style.display="flex";  
-    return;  
-  }  
-  
-  // ❌ OLD UID  
-  window.location.href =  
-  "https://jili-backend.onrender.com/start-game?userId="  
-  + userEmail +  
-  "&gameId=cc686634b4f953754b306317799f1f39";  
-};  
-  window.openJiliGame3 = async function(){  
-  
-  const userEmail = localStorage.getItem("userEmail");  
-  
-  const userSnap = await getDocs(  
-    query(collection(db,"users"), where("email","==",userEmail))  
-  );  
-  
-  let balance = 0;  
-  
-  userSnap.forEach(d=>{  
-    balance = Number(d.data().balance || 0);  
-  });  
-  
-  if(balance < 10){  
-    document.getElementById("depositPopup").style.display="flex";  
-    return;  
-  }  
-  
-  // 🔥 3rd GAME UID  
-  window.location.href =  
-  "https://jili-backend.onrender.com/start-game?userId="  
-  + userEmail +  
-  "&gameId=582a58791928760c28ec4cef3392a49f";  
-};  
-  window.openJiliGame4 = async function(){  
-  
-  const userEmail = localStorage.getItem("userEmail");  
-  
-  const userSnap = await getDocs(  
-    query(collection(db,"users"), where("email","==",userEmail))  
-  );  
-  
-  let balance = 0;  
-  
-  userSnap.forEach(d=>{  
-    balance = Number(d.data().balance || 0);  
-  });  
-  
-  if(balance < 10){  
-    document.getElementById("depositPopup").style.display="flex";  
-    return;  
-  }  
-  
-  // 🔥 GAME 4 UID  
-  window.location.href =  
-  "https://jili-backend.onrender.com/start-game?userId="  
-  + userEmail +  
-  "&gameId=2c17b7c4e2ce5b8bebf4bd10e3e958d7";  
-};  
-  window.openJiliGame5 = async function(){  
-  
-  const userEmail = localStorage.getItem("userEmail");  
-  
-  const userSnap = await getDocs(  
-    query(collection(db,"users"), where("email","==",userEmail))  
-  );  
-  
-  let balance = 0;  
-  
-  userSnap.forEach(d=>{  
-    balance = Number(d.data().balance || 0);  
-  });  
-  
-  if(balance < 10){  
-    document.getElementById("depositPopup").style.display="flex";  
-    return;  
-  }  
-  
-  // 🔥 GAME 5 UID  
-  window.location.href =  
-  "https://jili-backend.onrender.com/start-game?userId="  
-  + userEmail +  
-  "&gameId=6b283c434fd44250d83b7c2420f164f9";  
-};  
-  window.openJiliGame6 = async function(){  
-  
-  const userEmail = localStorage.getItem("userEmail");  
-  
-  const userSnap = await getDocs(  
-    query(collection(db,"users"), where("email","==",userEmail))  
-  );  
-  
-  let balance = 0;  
-  
-  userSnap.forEach(d=>{  
-    balance = Number(d.data().balance || 0);  
-  });  
-  
-  if(balance < 10){  
-    document.getElementById("depositPopup").style.display="flex";  
-    return;  
-  }  
-  
-  // 🔥 GAME 6 UID  
-  window.location.href =  
-  "https://jili-backend.onrender.com/start-game?userId="  
-  + userEmail +  
-  "&gameId=82c5c404cf4c0790deb42a2b5653533c";  
-};  
-  window.openJiliGame7 = async function(){  
-  
-  const userEmail = localStorage.getItem("userEmail");  
-  
-  const userSnap = await getDocs(  
-    query(collection(db,"users"), where("email","==",userEmail))  
-  );  
-  
-  let balance = 0;  
-  
-  userSnap.forEach(d=>{  
-    balance = Number(d.data().balance || 0);  
-  });  
-  
-  if(balance < 10){  
-    document.getElementById("depositPopup").style.display="flex";  
-    return;  
-  }  
-  
-  // 🔥 GAME 7 UID  
-  window.location.href =  
-  "https://jili-backend.onrender.com/start-game?userId="  
-  + userEmail +  
-  "&gameId=28bc4a33c985ddce6acd92422626b76f";  
-};  
-  window.openJiliGame8 = async function(){  
-  
-  const userEmail = localStorage.getItem("userEmail");  
-  
-  const userSnap = await getDocs(  
-    query(collection(db,"users"), where("email","==",userEmail))  
-  );  
-  
-  let balance = 0;  
-  
-  userSnap.forEach(d=>{  
-    balance = Number(d.data().balance || 0);  
-  });  
-  
-  if(balance < 10){  
-    document.getElementById("depositPopup").style.display="flex";  
-    return;  
-  }  
-  
-  // 🔥 GAME 8 UID  
-  window.location.href =  
-  "https://jili-backend.onrender.com/start-game?userId="  
-  + userEmail +  
-  "&gameId=6a7e156ceec5c581cd6b9251854fe504";  
-};  
-  window.openJiliGame9 = async function(){  
-  
-  const userEmail = localStorage.getItem("userEmail");  
-  
-  const userSnap = await getDocs(  
-    query(collection(db,"users"), where("email","==",userEmail))  
-  );  
-  
-  let balance = 0;  
-  
-  userSnap.forEach(d=>{  
-    balance = Number(d.data().balance || 0);  
-  });  
-  
-  if(balance < 10){  
-    document.getElementById("depositPopup").style.display="flex";  
-    return;  
-  }  
-  
-  // 🔥 GAME 9 UID  
-  window.location.href =  
-  "https://jili-backend.onrender.com/start-game?userId="  
-  + userEmail +  
-  "&gameId=893669898cd25d9da589a384f1d004df";  
-};  
-  window.openJiliGame10 = async function(){  
-  
-  const userEmail = localStorage.getItem("userEmail");  
-  
-  const userSnap = await getDocs(  
-    query(collection(db,"users"), where("email","==",userEmail))  
-  );  
-  
-  let balance = 0;  
-  
-  userSnap.forEach(d=>{  
-    balance = Number(d.data().balance || 0);  
-  });  
-  
-  if(balance < 10){  
-    document.getElementById("depositPopup").style.display="flex";  
-    return;  
-  }  
-  
-  // 🔥 GAME 10 UID  
-  window.location.href =  
-  "https://jili-backend.onrender.com/start-game?userId="  
-  + userEmail +  
-  "&gameId=c3f86b78938eab1b7f34159d98796e88";  
-};  
-  // 🔥 GAME 11  
-window.openJiliGame11 = async function(){  
-  const userEmail = localStorage.getItem("userEmail");  
-  
-  const userSnap = await getDocs(  
-    query(collection(db,"users"), where("email","==",userEmail))  
-  );  
-  
-  let balance = 0;  
-  userSnap.forEach(d=>{  
-    balance = Number(d.data().balance || 0);  
-  });  
-  
-  if(balance < 10){  
-    document.getElementById("depositPopup").style.display="flex";  
-    return;  
-  }  
-  
-  window.location.href =  
-  "https://jili-backend.onrender.com/start-game?userId="  
-  + userEmail +  
-  "&gameId=5a962d0e31e0d4c0798db5f331327e4f";  
-};  
-  
-  
-// 🔥 GAME 12  
-window.openJiliGame12 = async function(){  
-  const userEmail = localStorage.getItem("userEmail");  
-  
-  const userSnap = await getDocs(  
-    query(collection(db,"users"), where("email","==",userEmail))  
-  );  
-  
-  let balance = 0;  
-  userSnap.forEach(d=>{  
-    balance = Number(d.data().balance || 0);  
-  });  
-  
-  if(balance < 10){  
-    document.getElementById("depositPopup").style.display="flex";  
-    return;  
-  }  
-  
-  window.location.href =  
-  "https://jili-backend.onrender.com/start-game?userId="  
-  + userEmail +  
-  "&gameId=bdfb23c974a2517198c5443adeea77a8";  
-};  
-  
-  
-// 🔥 GAME 13  
-window.openJiliGame13 = async function(){  
-  const userEmail = localStorage.getItem("userEmail");  
-  
-  const userSnap = await getDocs(  
-    query(collection(db,"users"), where("email","==",userEmail))  
-  );  
-  
-  let balance = 0;  
-  userSnap.forEach(d=>{  
-    balance = Number(d.data().balance || 0);  
-  });  
-  
-  if(balance < 10){  
-    document.getElementById("depositPopup").style.display="flex";  
-    return;  
-  }  
-  
-  window.location.href =  
-  "https://jili-backend.onrender.com/start-game?userId="  
-  + userEmail +  
-  "&gameId=db249defce63610fccabfa829a405232";  
-};  
-  
-  
-// 🔥 GAME 14  
-window.openJiliGame14 = async function(){  
-  const userEmail = localStorage.getItem("userEmail");  
-  
-  const userSnap = await getDocs(  
-    query(collection(db,"users"), where("email","==",userEmail))  
-  );  
-  
-  let balance = 0;  
-  userSnap.forEach(d=>{  
-    balance = Number(d.data().balance || 0);  
-  });  
-  
-  if(balance < 10){  
-    document.getElementById("depositPopup").style.display="flex";  
-    return;  
-  }  
-  
-  window.location.href =  
-  "https://jili-backend.onrender.com/start-game?userId="  
-  + userEmail +  
-  "&gameId=8de99455c2f23f6827666fd798eb80ef";  
-};  
-  
-  
-// 🔥 GAME 15  
-window.openJiliGame15 = async function(){  
-  const userEmail = localStorage.getItem("userEmail");  
-  
-  const userSnap = await getDocs(  
-    query(collection(db,"users"), where("email","==",userEmail))  
-  );  
-  
-  let balance = 0;  
-  userSnap.forEach(d=>{  
-    balance = Number(d.data().balance || 0);  
-  });  
-  
-  if(balance < 10){  
-    document.getElementById("depositPopup").style.display="flex";  
-    return;  
-  }  
-  
-  window.location.href =  
-  "https://jili-backend.onrender.com/start-game?userId="  
-  + userEmail +  
-  "&gameId=4db0ec24ff55a685573c888efed47d7f";  
-};  
-  // 🔥 GAME 16  
-window.openJiliGame16 = async function(){  
-  
-  const userEmail = localStorage.getItem("userEmail");  
-  
-  const userSnap = await getDocs(  
-    query(collection(db,"users"), where("email","==",userEmail))  
-  );  
-  
-  let balance = 0;  
-  
-  userSnap.forEach(d=>{  
-    balance = Number(d.data().balance || 0);  
-  });  
-  
-  if(balance < 10){  
-    document.getElementById("depositPopup").style.display="flex";  
-    return;  
-  }  
-  
-  window.location.href =  
-  "https://jili-backend.onrender.com/start-game?userId="  
-  + userEmail +  
-  "&gameId=e7ac92d2fdd2aedca92a3521b4416f47";  
-};  
-  
-  
-// 🔥 GAME 17  
-window.openJiliGame17 = async function(){  
-  
-  const userEmail = localStorage.getItem("userEmail");  
-  
-  const userSnap = await getDocs(  
-    query(collection(db,"users"), where("email","==",userEmail))  
-  );  
-  
-  let balance = 0;  
-  
-  userSnap.forEach(d=>{  
-    balance = Number(d.data().balance || 0);  
-  });  
-  
-  if(balance < 10){  
-    document.getElementById("depositPopup").style.display="flex";  
-    return;  
-  }  
-  
-  window.location.href =  
-  "https://jili-backend.onrender.com/start-game?userId="  
-  + userEmail +  
-  "&gameId=dcf220f4e3ecca0278911a55e6f11c77";  
-};  
-  
-  
-// 🔥 GAME 18  
-window.openJiliGame18 = async function(){  
-  
-  const userEmail = localStorage.getItem("userEmail");  
-  
-  const userSnap = await getDocs(  
-    query(collection(db,"users"), where("email","==",userEmail))  
-  );  
-  
-  let balance = 0;  
-  
-  userSnap.forEach(d=>{  
-    balance = Number(d.data().balance || 0);  
-  });  
-  
-  if(balance < 10){  
-    document.getElementById("depositPopup").style.display="flex";  
-    return;  
-  }  
-  
-  window.location.href =  
-  "https://jili-backend.onrender.com/start-game?userId="  
-  + userEmail +  
-  "&gameId=edef29b5eda8e2eaf721d7315491c51d";  
-};  
-  // 🔥 GAME 19  
-window.openJiliGame19 = async function(){  
-  
-  const userEmail = localStorage.getItem("userEmail");  
-  
-  const userSnap = await getDocs(  
-    query(collection(db,"users"), where("email","==",userEmail))  
-  );  
-  
-  let balance = 0;  
-  
-  userSnap.forEach(d=>{  
-    balance = Number(d.data().balance || 0);  
-  });  
-  
-  if(balance < 10){  
-    document.getElementById("depositPopup").style.display="flex";  
-    return;  
-  }  
-  
-  window.location.href =  
-  "https://jili-backend.onrender.com/start-game?userId="  
-  + userEmail +  
-  "&gameId=c7a69ab382bd1ff0e6eb65b90a793bdd";  
-};  
-  
-  
-// 🔥 GAME 20  
-window.openJiliGame20 = async function(){  
-  
-  const userEmail = localStorage.getItem("userEmail");  
-  
-  const userSnap = await getDocs(  
-    query(collection(db,"users"), where("email","==",userEmail))  
-  );  
-  
-  let balance = 0;  
-  
-  userSnap.forEach(d=>{  
-    balance = Number(d.data().balance || 0);  
-  });  
-  
-  if(balance < 10){  
-    document.getElementById("depositPopup").style.display="flex";  
-    return;  
-  }  
-  
-  window.location.href =  
-  "https://jili-backend.onrender.com/start-game?userId="  
-  + userEmail +  
-  "&gameId=5c2383ef253f9c36dacec4b463d61622";  
-};  
-  
-  
-// 🔥 GAME 21  
-window.openJiliGame21 = async function(){  
-  
-  const userEmail = localStorage.getItem("userEmail");  
-  
-  const userSnap = await getDocs(  
-    query(collection(db,"users"), where("email","==",userEmail))  
-  );  
-  
-  let balance = 0;  
-  
-  userSnap.forEach(d=>{  
-    balance = Number(d.data().balance || 0);  
-  });  
-  
-  if(balance < 10){  
-    document.getElementById("depositPopup").style.display="flex";  
-    return;  
-  }  
-  
-  window.location.href =  
-  "https://jili-backend.onrender.com/start-game?userId="  
-  + userEmail +  
-  "&gameId=d2b48fe98ac2956eeefd2bc4f7e0335a";  
-};  
-  
-  
-// 🔥 GAME 22 FIXED  
-window.openJiliGame22 = async function(){  
-  
-  try{  
-  
-    const userEmail = localStorage.getItem("userEmail");  
-  
-    if(!userEmail){  
-      alert("User not logged in");  
-      return;  
-    }  
-  
-    const userSnap = await getDocs(  
-      query(collection(db,"users"), where("email","==",userEmail))  
-    );  
-  
-    let balance = 0;  
-  
-    userSnap.forEach(d=>{  
-      balance = Number(d.data().balance || 0);  
-    });  
-  
-    // 🔥 MINIMUM BALANCE CHECK  
-    if(balance < 10){  
-      document.getElementById("depositPopup").style.display="flex";  
-      return;  
-    }  
-  
-    // 🔥 ENCODE EMAIL FIX  
-    const safeUserId = encodeURIComponent(userEmail);  
-  
-    // 🔥 GAME OPEN  
-    window.location.href =  
-    "https://jili-backend.onrender.com/start-game?userId="  
-    + safeUserId +  
-    "&gameId=00d92d5cec10cf85623938222a6c2bb6";  
-  
-  }catch(e){  
-  
-    console.log("GAME 22 ERROR:", e);  
-    alert("Game Launch Failed ❌");  
-  
-  }  
-  
-};  
-  
-  
-// 🔥 GAME 23  
-window.openJiliGame23 = async function(){  
-  
-  const userEmail = localStorage.getItem("userEmail");  
-  
-  const userSnap = await getDocs(  
-    query(collection(db,"users"), where("email","==",userEmail))  
-  );  
-  
-  let balance = 0;  
-  
-  userSnap.forEach(d=>{  
-    balance = Number(d.data().balance || 0);  
-  });  
-  
-  if(balance < 10){  
-    document.getElementById("depositPopup").style.display="flex";  
-    return;  
-  }  
-  
-  window.location.href =  
-  "https://jili-backend.onrender.com/start-game?userId="  
-  + userEmail +  
-  "&gameId=4702eb871271aa62ef3f3d78f5d968c1";  
-};  
-  // 🔥 GAME 24  
-window.openJiliGame24 = async function(){  
-  
-  const userEmail = localStorage.getItem("userEmail");  
-  
-  const userSnap = await getDocs(  
-    query(collection(db,"users"), where("email","==",userEmail))  
-  );  
-  
-  let balance = 0;  
-  
-  userSnap.forEach(d=>{  
-    balance = Number(d.data().balance || 0);  
-  });  
-  
-  if(balance < 10){  
-    document.getElementById("depositPopup").style.display="flex";  
-    return;  
-  }  
-  
-  window.location.href =  
-  "https://jili-backend.onrender.com/start-game?userId="  
-  + userEmail +  
-  "&gameId=981f5f9675002fbeaaf24c4128b938d7";  
-};  
-  
-  
-// 🔥 GAME 25  
-window.openJiliGame25 = async function(){  
-  
-  const userEmail = localStorage.getItem("userEmail");  
-  
-  const userSnap = await getDocs(  
-    query(collection(db,"users"), where("email","==",userEmail))  
-  );  
-  
-  let balance = 0;  
-  
-  userSnap.forEach(d=>{  
-    balance = Number(d.data().balance || 0);  
-  });  
-  
-  if(balance < 10){  
-    document.getElementById("depositPopup").style.display="flex";  
-    return;  
-  }  
-  
-  window.location.href =  
-  "https://jili-backend.onrender.com/start-game?userId="  
-  + userEmail +  
-  "&gameId=1d1f267e3a078ade8e5ccd56582ac94f";  
-};  
-  
-  
-// 🔥 GAME 26  
-window.openJiliGame26 = async function(){
+  // 🔥 MASTER FUNCTION
+async function openJiliGame(gameId){
 
   try{
 
@@ -1866,11 +1124,12 @@ window.openJiliGame26 = async function(){
       localStorage.getItem("userEmail");
 
     if(!userEmail){
+
       alert("Login required");
       return;
     }
 
-    // 🔥 CHECK BALANCE
+    // 🔥 GET USER
     const userSnap = await getDocs(
       query(
         collection(db,"users"),
@@ -1881,33 +1140,38 @@ window.openJiliGame26 = async function(){
     let balance = 0;
 
     userSnap.forEach(d=>{
-      balance =
-        Number(d.data().balance || 0);
+
+      balance = Number(
+        d.data().balance || 0
+      );
+
     });
 
+    // 🔥 MIN BALANCE CHECK
     if(balance < 10){
 
       document.getElementById(
         "depositPopup"
-      ).style.display="flex";
+      ).style.display = "flex";
 
       return;
     }
 
-    // 🔥 WAKE UP RENDER
+    // 🔥 WAKE RENDER
     await fetch(
       "https://jili-backend.onrender.com/ping"
     );
 
     // 🔥 LOADING
-    document.body.style.opacity="0.7";
+    document.body.style.opacity = "0.7";
 
-    // 🔥 CALL BACKEND
+    // 🔥 BACKEND CALL
     const res = await fetch(
 
       "https://jili-backend.onrender.com/start-game?userId="
       + encodeURIComponent(userEmail)
-      + "&gameId=50a1bcbc2ef4a5f761e0e4d338a41699"
+      + "&gameId="
+      + encodeURIComponent(gameId)
 
     );
 
@@ -1915,7 +1179,7 @@ window.openJiliGame26 = async function(){
 
     console.log(data);
 
-    document.body.style.opacity="1";
+    document.body.style.opacity = "1";
 
     // ❌ ERROR
     if(!data.success){
@@ -1937,407 +1201,232 @@ window.openJiliGame26 = async function(){
 
     console.log(e);
 
-    alert("Server error");
+    alert("Server Error");
 
-    document.body.style.opacity="1";
+    document.body.style.opacity = "1";
   }
 
-};
-  
-  
-// 🔥 GAME 27  
-window.openJiliGame27 = async function(){  
-  
-  const userEmail = localStorage.getItem("userEmail");  
-  
-  const userSnap = await getDocs(  
-    query(collection(db,"users"), where("email","==",userEmail))  
-  );  
-  
-  let balance = 0;  
-  
-  userSnap.forEach(d=>{  
-    balance = Number(d.data().balance || 0);  
-  });  
-  
-  if(balance < 10){  
-    document.getElementById("depositPopup").style.display="flex";  
-    return;  
-  }  
-  
-  window.location.href =  
-  "https://jili-backend.onrender.com/start-game?userId="  
-  + userEmail +  
-  "&gameId=1310248a5eab24b4bf113a6e0ee7962a";  
-};  
-  
-  
-// 🔥 GAME 28  
-window.openJiliGame28 = async function(){  
-  
-  const userEmail = localStorage.getItem("userEmail");  
-  
-  const userSnap = await getDocs(  
-    query(collection(db,"users"), where("email","==",userEmail))  
-  );  
-  
-  let balance = 0;  
-  
-  userSnap.forEach(d=>{  
-    balance = Number(d.data().balance || 0);  
-  });  
-  
-  if(balance < 10){  
-    document.getElementById("depositPopup").style.display="flex";  
-    return;  
-  }  
-  
-  window.location.href =  
-  "https://jili-backend.onrender.com/start-game?userId="  
-  + userEmail +  
-  "&gameId=b4fe8cea772a7643551a12de806472e8";  
-};  
-  
-  
-// 🔥 GAME 29  
-window.openJiliGame29 = async function(){  
-  
-  const userEmail = localStorage.getItem("userEmail");  
-  
-  const userSnap = await getDocs(  
-    query(collection(db,"users"), where("email","==",userEmail))  
-  );  
-  
-  let balance = 0;  
-  
-  userSnap.forEach(d=>{  
-    balance = Number(d.data().balance || 0);  
-  });  
-  
-  if(balance < 10){  
-    document.getElementById("depositPopup").style.display="flex";  
-    return;  
-  }  
-  
-  window.location.href =  
-  "https://jili-backend.onrender.com/start-game?userId="  
-  + userEmail +  
-  "&gameId=3836fb2d7549281c8d339b2bce8c9086";  
-};  
-  
-  
-// 🔥 GAME 30  
-window.openJiliGame30 = async function(){  
-  
-  const userEmail = localStorage.getItem("userEmail");  
-  
-  const userSnap = await getDocs(  
-    query(collection(db,"users"), where("email","==",userEmail))  
-  );  
-  
-  let balance = 0;  
-  
-  userSnap.forEach(d=>{  
-    balance = Number(d.data().balance || 0);  
-  });  
-  
-  if(balance < 10){  
-    document.getElementById("depositPopup").style.display="flex";  
-    return;  
-  }  
-  
-  window.location.href =  
-  "https://jili-backend.onrender.com/start-game?userId="  
-  + userEmail +  
-  "&gameId=3d1d559874bb0e282580ac6415fde13f";  
-};  
-  // 🔥 GAME 31  
-window.openJiliGame31 = async function(){  
-  
-  const userEmail = localStorage.getItem("userEmail");  
-  
-  const userSnap = await getDocs(  
-    query(collection(db,"users"), where("email","==",userEmail))  
-  );  
-  
-  let balance = 0;  
-  
-  userSnap.forEach(d=>{  
-    balance = Number(d.data().balance || 0);  
-  });  
-  
-  if(balance < 10){  
-    document.getElementById("depositPopup").style.display="flex";  
-    return;  
-  }  
-  
-  window.location.href =  
-  "https://jili-backend.onrender.com/start-game?userId="  
-  + userEmail +  
-  "&gameId=ba858ec8e3b5e2b4da0d16b3a2330ca7";  
-};  
-  window.openJiliChicken = async function(){  
-  
-  const userEmail = localStorage.getItem("userEmail");  
-  
-  const userSnap = await getDocs(  
-    query(collection(db,"users"), where("email","==",userEmail))  
-  );  
-  
-  let balance = 0;  
-  
-  userSnap.forEach(d=>{  
-    balance = Number(d.data().balance || 0);  
-  });  
-  
-  // 🔥 deposit check (same system)  
-  if(balance < 10){  
-    document.getElementById("depositPopup").style.display="flex";  
-    return;  
-  }  
-  
-  // ✅ TERA JILI GAME UID  
-  window.location.href =  
-  "https://jili-backend.onrender.com/start-game?userId="  
-  + userEmail +  
-  "&gameId=7b373d897e2e7990222ed0a33b47ffba";  
-};  
-  window.openJiliGameMines = async function(){  
-  
-  console.log("🔥 MINES CLICKED");  
-  
-  const userEmail = localStorage.getItem("userEmail");  
-  
-  if(!userEmail){  
-    alert("User not logged in");  
-    return;  
-  }  
-  
-  const userSnap = await getDocs(  
-    query(collection(db,"users"), where("email","==",userEmail))  
-  );  
-  
-  let balance = 0;  
-  
-  userSnap.forEach(d=>{  
-    balance = Number(d.data().balance || 0);  
-  });  
-  
-  if(balance < 10){  
-    document.getElementById("depositPopup").style.display="flex";  
-    return;  
-  }  
-  
-  // ✅ FINAL UID (MINES)  
-  window.location.href =  
-  "https://jili-backend.onrender.com/start-game?userId="  
-  + userEmail +  
-  "&gameId=72ce7e04ce95ee94eef172c0dfd6dc17";  
-};  
-  // 🔥 GAME 32  
-window.openJiliGame32 = async function(){  
-  
-  const userEmail = localStorage.getItem("userEmail");  
-  
-  const userSnap = await getDocs(  
-    query(collection(db,"users"), where("email","==",userEmail))  
-  );  
-  
-  let balance = 0;  
-  userSnap.forEach(d=>{  
-    balance = Number(d.data().balance || 0);  
-  });  
-  
-  if(balance < 10){  
-    document.getElementById("depositPopup").style.display="flex";  
-    return;  
-  }  
-  
-  window.location.href =  
-  "https://jili-backend.onrender.com/start-game?userId="  
-  + userEmail +  
-  "&gameId=7b4308e95fa25021bae874f9e128c8c3";  
-};  
-  
-  
-// 🔥 GAME 33  
-window.openJiliGame33 = async function(){  
-  
-  const userEmail = localStorage.getItem("userEmail");  
-  
-  const userSnap = await getDocs(  
-    query(collection(db,"users"), where("email","==",userEmail))  
-  );  
-  
-  let balance = 0;  
-  userSnap.forEach(d=>{  
-    balance = Number(d.data().balance || 0);  
-  });  
-  
-  if(balance < 10){  
-    document.getElementById("depositPopup").style.display="flex";  
-    return;  
-  }  
-  
-  window.location.href =  
-  "https://jili-backend.onrender.com/start-game?userId="  
-  + userEmail +  
-  "&gameId=8a4b4929e796fda657a2d38264346509";  
-};  
-  
-  
-// 🔥 GAME 34  
-window.openJiliGame34 = async function(){  
-  
-  const userEmail = localStorage.getItem("userEmail");  
-  
-  const userSnap = await getDocs(  
-    query(collection(db,"users"), where("email","==",userEmail))  
-  );  
-  
-  let balance = 0;  
-  userSnap.forEach(d=>{  
-    balance = Number(d.data().balance || 0);  
-  });  
-  
-  if(balance < 10){  
-    document.getElementById("depositPopup").style.display="flex";  
-    return;  
-  }  
-  
-  window.location.href =  
-  "https://jili-backend.onrender.com/start-game?userId="  
-  + userEmail +  
-  "&gameId=29c66f73e3916b8eb18c2bf78886927d";  
-};  
-  
-  
-// 🔥 GAME 35  
-window.openJiliGame35 = async function(){  
-  
-  const userEmail = localStorage.getItem("userEmail");  
-  
-  const userSnap = await getDocs(  
-    query(collection(db,"users"), where("email","==",userEmail))  
-  );  
-  
-  let balance = 0;  
-  userSnap.forEach(d=>{  
-    balance = Number(d.data().balance || 0);  
-  });  
-  
-  if(balance < 10){  
-    document.getElementById("depositPopup").style.display="flex";  
-    return;  
-  }  
-  
-  window.location.href =  
-  "https://jili-backend.onrender.com/start-game?userId="  
-  + userEmail +  
-  "&gameId=3b502aee6c9e1ef0f698332ee1b76634";  
-};  
-  // 🎮 Game 36  
-window.openJiliGame36 = async function(){  
-  
-  const userEmail = localStorage.getItem("userEmail");  
-  
-  const userSnap = await getDocs(  
-    query(collection(db,"users"), where("email","==",userEmail))  
-  );  
-  
-  let balance = 0;  
-  userSnap.forEach(d=>{  
-    balance = Number(d.data().balance || 0);  
-  });  
-  
-  if(balance < 10){  
-    document.getElementById("depositPopup").style.display="flex";  
-    return;  
-  }  
-  
-  window.location.href =  
-  "https://jili-backend.onrender.com/start-game?userId="  
-  + userEmail +  
-  "&gameId=6acff19b2d911a8c695ba24371964807";  
-};  
-  
-  
-// 🎮 Game 37  
-window.openJiliGame37 = async function(){  
-  
-  const userEmail = localStorage.getItem("userEmail");  
-  
-  const userSnap = await getDocs(  
-    query(collection(db,"users"), where("email","==",userEmail))  
-  );  
-  
-  let balance = 0;  
-  userSnap.forEach(d=>{  
-    balance = Number(d.data().balance || 0);  
-  });  
-  
-  if(balance < 10){  
-    document.getElementById("depositPopup").style.display="flex";  
-    return;  
-  }  
-  
-  window.location.href =  
-  "https://jili-backend.onrender.com/start-game?userId="  
-  + userEmail +  
-  "&gameId=aab3048abc6a88e0759679fbe26e6a8d";  
-};  
-  
-  
-// 🎮 Game 38  
-window.openJiliGame38 = async function(){  
-  
-  const userEmail = localStorage.getItem("userEmail");  
-  
-  const userSnap = await getDocs(  
-    query(collection(db,"users"), where("email","==",userEmail))  
-  );  
-  
-  let balance = 0;  
-  userSnap.forEach(d=>{  
-    balance = Number(d.data().balance || 0);  
-  });  
-  
-  if(balance < 10){  
-    document.getElementById("depositPopup").style.display="flex";  
-    return;  
-  }  
-  
-  window.location.href =  
-  "https://jili-backend.onrender.com/start-game?userId="  
-  + userEmail +  
-  "&gameId=6b60d159f0939a45f7b4c88a9b57499a";  
-};  
-  
-  
-// 🎮 Game 39  
-window.openJiliGame39 = async function(){  
-  
-  const userEmail = localStorage.getItem("userEmail");  
-  
-  const userSnap = await getDocs(  
-    query(collection(db,"users"), where("email","==",userEmail))  
-  );  
-  
-  let balance = 0;  
-  userSnap.forEach(d=>{  
-    balance = Number(d.data().balance || 0);  
-  });  
-  
-  if(balance < 10){  
-    document.getElementById("depositPopup").style.display="flex";  
-    return;  
-  }  
-  
-  window.location.href =  
-  "https://jili-backend.onrender.com/start-game?userId="  
-  + userEmail +  
-  "&gameId=731e642b1fee94725e7313f3dfba8f45";  
-};  
+}
+
+
+// 🔥 ROULETTE
+window.openJiliRoulette = () =>
+openJiliGame("d4fc911a31b3a61edd83bdd95e36f3bf");
+
+
+// 🔥 MAIN GAME
+window.openJiliGame = () =>
+openJiliGame("39775cdc4170e56c5f768bdee8b4fa00");
+
+
+// 🔥 PLINKO
+window.openJiliGamePlinko = () =>
+openJiliGame("490096198e28f770a3f85adb6ee49e0f");
+
+
+// 🔥 GAME 1
+window.openJiliGame111 = () =>
+openJiliGame("582a58791928760c28ec4cef3392a49f");
+
+
+// 🔥 GAME 2
+window.openJiliGame2 = () =>
+openJiliGame("cc686634b4f953754b306317799f1f39");
+
+
+// 🔥 GAME 3
+window.openJiliGame3 = () =>
+openJiliGame("582a58791928760c28ec4cef3392a49f");
+
+
+// 🔥 GAME 4
+window.openJiliGame4 = () =>
+openJiliGame("2c17b7c4e2ce5b8bebf4bd10e3e958d7");
+
+
+// 🔥 GAME 5
+window.openJiliGame5 = () =>
+openJiliGame("6b283c434fd44250d83b7c2420f164f9");
+
+
+// 🔥 GAME 6
+window.openJiliGame6 = () =>
+openJiliGame("82c5c404cf4c0790deb42a2b5653533c");
+
+
+// 🔥 GAME 7
+window.openJiliGame7 = () =>
+openJiliGame("28bc4a33c985ddce6acd92422626b76f");
+
+
+// 🔥 GAME 8
+window.openJiliGame8 = () =>
+openJiliGame("6a7e156ceec5c581cd6b9251854fe504");
+
+
+// 🔥 GAME 9
+window.openJiliGame9 = () =>
+openJiliGame("893669898cd25d9da589a384f1d004df");
+
+
+// 🔥 GAME 10
+window.openJiliGame10 = () =>
+openJiliGame("c3f86b78938eab1b7f34159d98796e88");
+
+
+// 🔥 GAME 11
+window.openJiliGame11 = () =>
+openJiliGame("5a962d0e31e0d4c0798db5f331327e4f");
+
+
+// 🔥 GAME 12
+window.openJiliGame12 = () =>
+openJiliGame("bdfb23c974a2517198c5443adeea77a8");
+
+
+// 🔥 GAME 13
+window.openJiliGame13 = () =>
+openJiliGame("db249defce63610fccabfa829a405232");
+
+
+// 🔥 GAME 14
+window.openJiliGame14 = () =>
+openJiliGame("8de99455c2f23f6827666fd798eb80ef");
+
+
+// 🔥 GAME 15
+window.openJiliGame15 = () =>
+openJiliGame("4db0ec24ff55a685573c888efed47d7f");
+
+
+// 🔥 GAME 16
+window.openJiliGame16 = () =>
+openJiliGame("e7ac92d2fdd2aedca92a3521b4416f47");
+
+
+// 🔥 GAME 17
+window.openJiliGame17 = () =>
+openJiliGame("dcf220f4e3ecca0278911a55e6f11c77");
+
+
+// 🔥 GAME 18
+window.openJiliGame18 = () =>
+openJiliGame("edef29b5eda8e2eaf721d7315491c51d");
+
+
+// 🔥 GAME 19
+window.openJiliGame19 = () =>
+openJiliGame("c7a69ab382bd1ff0e6eb65b90a793bdd");
+
+
+// 🔥 GAME 20
+window.openJiliGame20 = () =>
+openJiliGame("5c2383ef253f9c36dacec4b463d61622");
+
+
+// 🔥 GAME 21
+window.openJiliGame21 = () =>
+openJiliGame("d2b48fe98ac2956eeefd2bc4f7e0335a");
+
+
+// 🔥 GAME 22
+window.openJiliGame22 = () =>
+openJiliGame("00d92d5cec10cf85623938222a6c2bb6");
+
+
+// 🔥 GAME 23
+window.openJiliGame23 = () =>
+openJiliGame("4702eb871271aa62ef3f3d78f5d968c1");
+
+
+// 🔥 GAME 24
+window.openJiliGame24 = () =>
+openJiliGame("981f5f9675002fbeaaf24c4128b938d7");
+
+
+// 🔥 GAME 25
+window.openJiliGame25 = () =>
+openJiliGame("1d1f267e3a078ade8e5ccd56582ac94f");
+
+
+// 🔥 GAME 26
+window.openJiliGame26 = () =>
+openJiliGame("50a1bcbc2ef4a5f761e0e4d338a41699");
+
+
+// 🔥 GAME 27
+window.openJiliGame27 = () =>
+openJiliGame("1310248a5eab24b4bf113a6e0ee7962a");
+
+
+// 🔥 GAME 28
+window.openJiliGame28 = () =>
+openJiliGame("b4fe8cea772a7643551a12de806472e8");
+
+
+// 🔥 GAME 29
+window.openJiliGame29 = () =>
+openJiliGame("3836fb2d7549281c8d339b2bce8c9086");
+
+
+// 🔥 GAME 30
+window.openJiliGame30 = () =>
+openJiliGame("3d1d559874bb0e282580ac6415fde13f");
+
+
+// 🔥 GAME 31
+window.openJiliGame31 = () =>
+openJiliGame("ba858ec8e3b5e2b4da0d16b3a2330ca7");
+
+
+// 🔥 CHICKEN GAME
+window.openJiliChicken = () =>
+openJiliGame("7b373d897e2e7990222ed0a33b47ffba");
+
+
+// 🔥 MINES GAME
+window.openJiliGameMines = () =>
+openJiliGame("72ce7e04ce95ee94eef172c0dfd6dc17");
+
+
+// 🔥 GAME 32
+window.openJiliGame32 = () =>
+openJiliGame("7b4308e95fa25021bae874f9e128c8c3");
+
+
+// 🔥 GAME 33
+window.openJiliGame33 = () =>
+openJiliGame("8a4b4929e796fda657a2d38264346509");
+
+
+// 🔥 GAME 34
+window.openJiliGame34 = () =>
+openJiliGame("29c66f73e3916b8eb18c2bf78886927d");
+
+
+// 🔥 GAME 35
+window.openJiliGame35 = () =>
+openJiliGame("3b502aee6c9e1ef0f698332ee1b76634");
+
+
+// 🔥 GAME 36
+window.openJiliGame36 = () =>
+openJiliGame("6acff19b2d911a8c695ba24371964807");
+
+
+// 🔥 GAME 37
+window.openJiliGame37 = () =>
+openJiliGame("aab3048abc6a88e0759679fbe26e6a8d");
+
+
+// 🔥 GAME 38
+window.openJiliGame38 = () =>
+openJiliGame("6b60d159f0939a45f7b4c88a9b57499a");
+
+
+// 🔥 GAME 39
+window.openJiliGame39 = () =>
+openJiliGame("731e642b1fee94725e7313f3dfba8f45");
   // 🔥 LOAD AUTO GAMES FROM FIREBASE  
 async function loadAutoGames(){  
   
