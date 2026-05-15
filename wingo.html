@@ -500,7 +500,20 @@ My Bets
 <button onclick="setAmount(1000)">1000</button>
 
 </div>
-
+<input type="number"
+id="customAmount"
+placeholder="Enter Amount"
+style="
+width:100%;
+padding:14px;
+margin-top:15px;
+border:none;
+border-radius:12px;
+font-size:20px;
+text-align:center;
+background:#f3f3f3;
+box-sizing:border-box;
+">
 <div class="multi-grid">
 
 <button onclick="setMulti(1)">X1</button>
@@ -706,15 +719,35 @@ updateTotal();
 
 function updateTotal(){
 
+let custom =
+document.getElementById("customAmount");
+
+if(custom && custom.value > 0){
+
+totalAmount.innerText =
+Number(custom.value) * multi;
+
+}else{
+
 totalAmount.innerText =
 amount * multi;
+
+}
 
 }
 
 
 async function confirmBet(){
 
-let total = amount * multi;
+let custom =
+document.getElementById("customAmount");
+
+let finalAmount =
+(custom && custom.value > 0)
+? Number(custom.value)
+: amount;
+
+let total = finalAmount * multi;
 
 if(total > wallet){
 alert("Low Balance");
@@ -1222,6 +1255,13 @@ saveGame();
 },1000);
 loadGame();
 render();
+  document.addEventListener("input",(e)=>{
+
+if(e.target.id=="customAmount"){
+updateTotal();
+}
+
+});
 </script>
 <!-- RESULT POPUP -->
 
