@@ -1200,9 +1200,44 @@ let reward = 0;
 
 if(win){
 
-reward = bet.amount * 2;
+/* NUMBER = 9.8X */
+if(bet.type=="number"){
+
+reward = bet.amount * 9.8;
+
+}
+
+/* COLOR */
+else if(bet.type=="color"){
+
+/* VIOLET = 4.9X */
+if(bet.value=="VIOLET"){
+
+reward = bet.amount * 4.9;
+
+}
+
+/* GREEN / RED = 1.98X */
+else{
+
+reward = bet.amount * 1.98;
+
+}
+
+}
+
+/* BIG SMALL = 1.98X */
+else if(bet.type=="bs"){
+
+reward = bet.amount * 1.98;
+
+}
+
+/* FINAL ROUND */
+reward = Number(reward.toFixed(2));
 
 wallet += reward;
+
 if(userDocId){
 
 updateDoc(
@@ -1213,6 +1248,7 @@ balance: wallet
 );
 
 }
+
 }
 
 game.mybets.unshift({
