@@ -404,7 +404,7 @@ Wallet ₹<span id="wallet">0</span>
 <div class="timer-card">
 
 <div class="timer" id="time">
-30
+⏳ 00:30
 </div>
 
 <div class="period">
@@ -636,8 +636,16 @@ function render(){
 
 walletEl.innerText = wallet;
 
-time.innerText = S().time;
+let t = S().time;
 
+let min = Math.floor(t / 60);
+let sec = t % 60;
+
+if(sec < 10){
+sec = "0" + sec;
+}
+
+time.innerText = "⏳ " + min + ":" + sec;
 period.innerText = S().period;
 
 draw();
