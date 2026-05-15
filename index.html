@@ -1858,30 +1858,91 @@ window.openJiliGame25 = async function(){
   
   
 // 🔥 GAME 26  
-window.openJiliGame26 = async function(){  
-  
-  const userEmail = localStorage.getItem("userEmail");  
-  
-  const userSnap = await getDocs(  
-    query(collection(db,"users"), where("email","==",userEmail))  
-  );  
-  
-  let balance = 0;  
-  
-  userSnap.forEach(d=>{  
-    balance = Number(d.data().balance || 0);  
-  });  
-  
-  if(balance < 10){  
-    document.getElementById("depositPopup").style.display="flex";  
-    return;  
-  }  
-  
-  window.location.href =  
-  "https://jili-backend.onrender.com/start-game?userId="  
-  + userEmail +  
-  "&gameId=50a1bcbc2ef4a5f761e0e4d338a41699";  
-};  
+window.openJiliGame26 = async function(){
+
+  try{
+
+    const userEmail =
+      localStorage.getItem("userEmail");
+
+    if(!userEmail){
+      alert("Login required");
+      return;
+    }
+
+    // 🔥 CHECK BALANCE
+    const userSnap = await getDocs(
+      query(
+        collection(db,"users"),
+        where("email","==",userEmail)
+      )
+    );
+
+    let balance = 0;
+
+    userSnap.forEach(d=>{
+      balance =
+        Number(d.data().balance || 0);
+    });
+
+    if(balance < 10){
+
+      document.getElementById(
+        "depositPopup"
+      ).style.display="flex";
+
+      return;
+    }
+
+    // 🔥 WAKE UP RENDER
+    await fetch(
+      "https://jili-backend.onrender.com/ping"
+    );
+
+    // 🔥 LOADING
+    document.body.style.opacity="0.7";
+
+    // 🔥 CALL BACKEND
+    const res = await fetch(
+
+      "https://jili-backend.onrender.com/start-game?userId="
+      + encodeURIComponent(userEmail)
+      + "&gameId=50a1bcbc2ef4a5f761e0e4d338a41699"
+
+    );
+
+    const data = await res.json();
+
+    console.log(data);
+
+    document.body.style.opacity="1";
+
+    // ❌ ERROR
+    if(!data.success){
+
+      alert(
+        data.error ||
+        "Game launch failed"
+      );
+
+      console.log(data);
+
+      return;
+    }
+
+    // ✅ OPEN GAME
+    window.location.href = data.url;
+
+  }catch(e){
+
+    console.log(e);
+
+    alert("Server error");
+
+    document.body.style.opacity="1";
+  }
+
+};
   
   
 // 🔥 GAME 27  
