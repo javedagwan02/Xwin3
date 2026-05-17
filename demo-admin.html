@@ -325,12 +325,12 @@ window.addDeposit = async function(){
     // ADD DEPOSIT HISTORY
 
     await addDoc(
-      collection(db,"deposits"),
-      {
+collection(db,"deposits"),
+{
 
-        uid:userData.uid,
+  uid:userDoc.id,
 
-        email:email,
+  email:email,
 
         amount:amount,
 
@@ -437,7 +437,7 @@ window.addWithdraw = async function(){
       collection(db,"withdraws"),
       {
 
-        uid:userData.uid,
+        uid:userDoc.id,
 
         email:email,
 
@@ -455,7 +455,7 @@ window.addWithdraw = async function(){
     // UPDATE BALANCE
 
     await updateDoc(
-      doc(db,"users",userData.uid),
+      doc(db,"users",userDoc.id)
       {
 
         balance:
