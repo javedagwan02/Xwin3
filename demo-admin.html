@@ -2,36 +2,48 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Demo Admin Panel</title>
+<title>Manual Demo Admin Panel</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <style>
 
 body{
   margin:0;
-  font-family:Arial;
+  padding:0;
   background:#111;
+  font-family:Arial;
   color:#fff;
 }
 
 .header{
-  padding:15px;
   text-align:center;
-  font-size:22px;
+  padding:18px;
+  font-size:24px;
   font-weight:bold;
 }
 
 .card{
-  background:#1c1c1c;
+  background:#1d1d1d;
   margin:15px;
   padding:15px;
-  border-radius:12px;
+  border-radius:14px;
+}
+
+input{
+  width:100%;
+  padding:12px;
+  margin-top:10px;
+  border:none;
+  border-radius:10px;
+  outline:none;
+  font-size:16px;
+  box-sizing:border-box;
 }
 
 button{
   width:100%;
-  padding:12px;
-  margin-top:10px;
+  padding:13px;
+  margin-top:12px;
   border:none;
   border-radius:10px;
   font-size:16px;
@@ -39,23 +51,18 @@ button{
   cursor:pointer;
 }
 
-.create{
+.deposit{
   background:#4caf50;
   color:#fff;
 }
 
-.fakeDep{
-  background:#2196f3;
-  color:#fff;
-}
-
-.fakeWith{
+.withdraw{
   background:#ff9800;
   color:#fff;
 }
 
-.stop{
-  background:#f44336;
+.create{
+  background:#2196f3;
   color:#fff;
 }
 
@@ -65,8 +72,10 @@ button{
 <body>
 
 <div class="header">
-  🤖 Demo Admin Panel
+  🤖 Manual Admin Panel
 </div>
+
+<!-- CREATE DEMO USER -->
 
 <div class="card">
 
@@ -79,30 +88,45 @@ button{
 
 </div>
 
+<!-- MANUAL ACTIVITY -->
+
 <div class="card">
 
-  <h3>Fake Activity</h3>
+  <h3>Manual Deposit / Withdraw</h3>
 
-  <button class="fakeDep"
-  onclick="startFakeDeposit()">
-    Start Fake Deposit
+  <input
+  type="text"
+  id="email"
+  placeholder="User Gmail">
+
+  <input
+  type="number"
+  id="amount"
+  placeholder="Amount">
+
+  <input
+  type="datetime-local"
+  id="time">
+
+  <button
+  class="deposit"
+  onclick="addDeposit()">
+    Add Deposit
   </button>
 
-  <button class="fakeWith"
-  onclick="startFakeWithdraw()">
-    Start Fake Withdraw
-  </button>
-
-  <button class="stop"
-  onclick="stopFake()">
-    Stop All
+  <button
+  class="withdraw"
+  onclick="addWithdraw()">
+    Add Withdraw
   </button>
 
 </div>
 
 <script type="module">
 
-/* 🔥 FIREBASE IMPORTS */
+/* ==================================================
+   🔥 FIREBASE IMPORTS
+================================================== */
 
 import { initializeApp }
 from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
@@ -112,7 +136,11 @@ import {
   collection,
   addDoc,
   setDoc,
-  doc
+  doc,
+  getDocs,
+  query,
+  where,
+  updateDoc
 }
 from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
@@ -123,7 +151,9 @@ import {
 from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
 
-/* 🔥 FIREBASE CONFIG */
+/* ==================================================
+   🔥 FIREBASE CONFIG
+================================================== */
 
 const app = initializeApp({
 
@@ -135,25 +165,14 @@ const app = initializeApp({
 
 });
 
-
-/* 🔥 DATABASE */
-
 const db = getFirestore(app);
-
-
-/* 🔥 AUTH */
 
 const auth = getAuth(app);
 
 
-/* 🔥 INTERVAL */
-
-let fakeInterval;
-
-
-/* =======================================================
+/* ==================================================
    🔥 CREATE DEMO USER
-======================================================= */
+================================================== */
 
 window.createDemoUser = async function(){
 
@@ -165,30 +184,32 @@ window.createDemoUser = async function(){
     let email =
     "demo"+random+"@demo.com";
 
-    let demoPass =
+    let pass =
     String(
       Math.floor(
         100000 + Math.random()*900000
       )
     );
 
-    /* 🔥 CREATE AUTH USER */
+    // CREATE AUTH USER
 
     const userCredential =
     await createUserWithEmailAndPassword(
       auth,
       email,
-      demoPass
+      pass
     );
 
     let uid =
     userCredential.user.uid;
 
-    /* 🔥 SAVE FIRESTORE DATA */
+    // SAVE USER DATA
 
     await setDoc(
       doc(db,"users",uid),
       {
+
+        uid: uid,
 
         email: email,
 
@@ -197,15 +218,15 @@ window.createDemoUser = async function(){
           Math.random()*50000
         ) + 1000,
 
-        bonusBalance: 0,
+        bonusBalance:0,
 
-        firstDepositDone: true,
+        isDemo:true,
 
-        isDemo: true,
+        firstDepositDone:true,
 
-        password: demoPass,
+        password:pass,
 
-        timeStamp: Date.now()
+        timeStamp:Date.now()
 
       }
     );
@@ -213,151 +234,244 @@ window.createDemoUser = async function(){
     alert(
       "✅ Demo User Created\n\n"+
       "Email: "+email+
-      "\nPassword: "+demoPass
+      "\nPassword: "+pass
     );
 
   }catch(err){
 
-    alert(
-      "❌ "+err.message
-    );
+    alert(err.message);
 
   }
 
 }
 
 
-/* =======================================================
-   🔥 FAKE DEPOSIT
-======================================================= */
+/* ==================================================
+   🔥 FIND USER BY EMAIL
+================================================== */
 
-window.startFakeDeposit = function(){
+async function findUserByEmail(email){
 
-  stopFake();
+  const q = query(
+    collection(db,"users"),
+    where("email","==",email)
+  );
 
-  fakeInterval = setInterval(
-  async ()=>{
+  const snap =
+  await getDocs(q);
 
-    let names = [
-      "Rahul",
-      "Aman",
-      "Rohit",
-      "Sameer",
-      "Vikas"
-    ];
+  if(snap.empty){
 
-    let name =
-    names[
-      Math.floor(
-        Math.random()*names.length
-      )
-    ];
+    return null;
+
+  }
+
+  return snap.docs[0];
+
+}
+
+
+/* ==================================================
+   🔥 ADD DEPOSIT
+================================================== */
+
+window.addDeposit = async function(){
+
+  try{
+
+    let email =
+    document.getElementById(
+      "email"
+    ).value.trim();
 
     let amount =
-    Math.floor(
-      Math.random()*5000
-    ) + 500;
+    Number(
+      document.getElementById(
+        "amount"
+      ).value
+    );
+
+    let time =
+    new Date(
+      document.getElementById(
+        "time"
+      ).value
+    ).getTime();
+
+    if(!email || !amount){
+
+      alert("Fill all fields");
+
+      return;
+
+    }
+
+    // FIND USER
+
+    const userDoc =
+    await findUserByEmail(email);
+
+    if(!userDoc){
+
+      alert("User Not Found ❌");
+
+      return;
+
+    }
+
+    let userData =
+    userDoc.data();
+
+    // ADD DEPOSIT HISTORY
 
     await addDoc(
       collection(db,"deposits"),
       {
 
-        email:
-        name+"@demo.com",
+        uid:userData.uid,
 
-        amount: amount,
+        email:email,
 
-        utr:
-        "DEMO"+
-        Math.floor(
-          Math.random()*1000000
-        ),
+        amount:amount,
 
         status:"APPROVED",
 
-        time: Date.now(),
+        time:time,
 
-        isDemo:true
+        isManual:true
 
       }
     );
 
-    console.log(
-      "Fake Deposit Added"
+    // UPDATE BALANCE
+
+    await updateDoc(
+      doc(db,"users",userData.uid),
+      {
+
+        balance:
+        (userData.balance || 0)
+        + amount
+
+      }
     );
 
-  },5000);
+    alert("✅ Deposit Added");
+
+  }catch(err){
+
+    alert(err.message);
+
+  }
 
 }
 
 
-/* =======================================================
-   🔥 FAKE WITHDRAW
-======================================================= */
+/* ==================================================
+   🔥 ADD WITHDRAW
+================================================== */
 
-window.startFakeWithdraw = function(){
+window.addWithdraw = async function(){
 
-  stopFake();
+  try{
 
-  fakeInterval = setInterval(
-  async ()=>{
-
-    let names = [
-      "Ravi",
-      "Sahil",
-      "Arjun",
-      "Karan",
-      "Deepak"
-    ];
-
-    let name =
-    names[
-      Math.floor(
-        Math.random()*names.length
-      )
-    ];
+    let email =
+    document.getElementById(
+      "email"
+    ).value.trim();
 
     let amount =
-    Math.floor(
-      Math.random()*4000
-    ) + 300;
+    Number(
+      document.getElementById(
+        "amount"
+      ).value
+    );
+
+    let time =
+    new Date(
+      document.getElementById(
+        "time"
+      ).value
+    ).getTime();
+
+    if(!email || !amount){
+
+      alert("Fill all fields");
+
+      return;
+
+    }
+
+    // FIND USER
+
+    const userDoc =
+    await findUserByEmail(email);
+
+    if(!userDoc){
+
+      alert("User Not Found ❌");
+
+      return;
+
+    }
+
+    let userData =
+    userDoc.data();
+
+    // CHECK BALANCE
+
+    if(
+      (userData.balance || 0)
+      < amount
+    ){
+
+      alert("Insufficient Balance ❌");
+
+      return;
+
+    }
+
+    // ADD WITHDRAW HISTORY
 
     await addDoc(
       collection(db,"withdraws"),
       {
 
-        email:
-        name+"@demo.com",
+        uid:userData.uid,
 
-        amount: amount,
+        email:email,
+
+        amount:amount,
 
         status:"APPROVED",
 
-        time: Date.now(),
+        time:time,
 
-        isDemo:true
+        isManual:true
 
       }
     );
 
-    console.log(
-      "Fake Withdraw Added"
+    // UPDATE BALANCE
+
+    await updateDoc(
+      doc(db,"users",userData.uid),
+      {
+
+        balance:
+        (userData.balance || 0)
+        - amount
+
+      }
     );
 
-  },6000);
+    alert("✅ Withdraw Added");
 
-}
+  }catch(err){
 
+    alert(err.message);
 
-/* =======================================================
-   🔥 STOP
-======================================================= */
-
-window.stopFake = function(){
-
-  clearInterval(fakeInterval);
-
-  alert("❌ Stopped");
+  }
 
 }
 
