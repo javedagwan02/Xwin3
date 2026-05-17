@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Manual Demo Admin Panel</title>
+<title>Manual Admin Panel</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <style>
@@ -18,7 +18,7 @@ body{
 .header{
   text-align:center;
   padding:18px;
-  font-size:24px;
+  font-size:26px;
   font-weight:bold;
 }
 
@@ -51,6 +51,11 @@ button{
   cursor:pointer;
 }
 
+.create{
+  background:#2196f3;
+  color:#fff;
+}
+
 .deposit{
   background:#4caf50;
   color:#fff;
@@ -61,417 +66,428 @@ button{
   color:#fff;
 }
 
-.create{
-  background:#2196f3;
-  color:#fff;
-}
-
 </style>
 </head>
 
 <body>
 
 <div class="header">
-  🤖 Manual Admin Panel
+🤖 Manual Admin Panel
 </div>
 
 <!-- CREATE DEMO USER -->
 
 <div class="card">
 
-  <h3>Create Demo User</h3>
+<h3>Create Demo User</h3>
 
-  <button class="create"
-  onclick="createDemoUser()">
-    Create Demo User
-  </button>
+<button
+class="create"
+onclick="createDemoUser()">
+
+Create Demo User
+
+</button>
 
 </div>
 
-<!-- MANUAL ACTIVITY -->
+<!-- MANUAL DEPOSIT / WITHDRAW -->
 
 <div class="card">
 
-  <h3>Manual Deposit / Withdraw</h3>
+<h3>Manual Deposit / Withdraw</h3>
 
-  <input
-  type="text"
-  id="email"
-  placeholder="User Gmail">
+<input
+type="text"
+id="email"
+placeholder="User Gmail">
 
-  <input
-  type="number"
-  id="amount"
-  placeholder="Amount">
+<input
+type="number"
+id="amount"
+placeholder="Amount">
 
-  <input
-  type="datetime-local"
-  id="time">
+<input
+type="datetime-local"
+id="time">
 
-  <button
-  class="deposit"
-  onclick="addDeposit()">
-    Add Deposit
-  </button>
+<button
+class="deposit"
+onclick="addDeposit()">
 
-  <button
-  class="withdraw"
-  onclick="addWithdraw()">
-    Add Withdraw
-  </button>
+Add Deposit
+
+</button>
+
+<button
+class="withdraw"
+onclick="addWithdraw()">
+
+Add Withdraw
+
+</button>
 
 </div>
 
 <script type="module">
 
-/* ==================================================
+/* =====================================================
    🔥 FIREBASE IMPORTS
-================================================== */
+===================================================== */
 
-import { initializeApp }
+import {
+initializeApp
+}
 from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 
 import {
-  getFirestore,
-  collection,
-  addDoc,
-  setDoc,
-  doc,
-  getDocs,
-  query,
-  where,
-  updateDoc
+getFirestore,
+collection,
+addDoc,
+setDoc,
+doc,
+getDocs,
+query,
+where,
+updateDoc
 }
 from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 import {
-  getAuth,
-  createUserWithEmailAndPassword
+getAuth,
+createUserWithEmailAndPassword
 }
 from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
 
-/* ==================================================
+/* =====================================================
    🔥 FIREBASE CONFIG
-================================================== */
+===================================================== */
 
-const app = initializeApp({
+const firebaseConfig = {
 
-  apiKey:"AIzaSyBx3J9aGn_98rTPgurMMKw_GR3puIMj4Ms",
+apiKey:"AIzaSyBx3J9aGn_98rTPgurMMKw_GR3puIMj4Ms",
 
-  authDomain:"colourcash-ea60e.firebaseapp.com",
+authDomain:"colourcash-ea60e.firebaseapp.com",
 
-  projectId:"colourcash-ea60e"
+projectId:"colourcash-ea60e"
 
-});
+};
 
-const db = getFirestore(app);
+const app =
+initializeApp(firebaseConfig);
 
-const auth = getAuth(app);
+const db =
+getFirestore(app);
+
+const auth =
+getAuth(app);
 
 
-/* ==================================================
+/* =====================================================
    🔥 CREATE DEMO USER
-================================================== */
+===================================================== */
 
 window.createDemoUser = async function(){
 
-  try{
+try{
 
-    let random =
-    Math.floor(Math.random()*100000);
+let random =
+Math.floor(Math.random()*100000);
 
-    let email =
-    "demo"+random+"@demo.com";
+let email =
+"demo"+random+"@demo.com";
 
-    let pass =
-    String(
-      Math.floor(
-        100000 + Math.random()*900000
-      )
-    );
+let pass =
+String(
+Math.floor(
+100000 + Math.random()*900000
+)
+);
 
-    // CREATE AUTH USER
+/* CREATE AUTH USER */
 
-    const userCredential =
-    await createUserWithEmailAndPassword(
-      auth,
-      email,
-      pass
-    );
+const userCredential =
+await createUserWithEmailAndPassword(
+auth,
+email,
+pass
+);
 
-    let uid =
-    userCredential.user.uid;
+let uid =
+userCredential.user.uid;
 
-    // SAVE USER DATA
+/* SAVE FIRESTORE USER */
 
-    await setDoc(
-      doc(db,"users",uid),
-      {
+await setDoc(
+doc(db,"users",uid),
+{
 
-        uid: uid,
+uid:uid,
 
-        email: email,
+email:email,
 
-        balance:
-        Math.floor(
-          Math.random()*50000
-        ) + 1000,
+balance:
+Math.floor(
+Math.random()*50000
+)+1000,
 
-        bonusBalance:0,
+bonusBalance:0,
 
-        isDemo:true,
+firstDepositDone:true,
 
-        firstDepositDone:true,
+isDemo:true,
 
-        password:pass,
+password:pass,
 
-        timeStamp:Date.now()
+timeStamp:Date.now()
 
-      }
-    );
+}
+);
 
-    alert(
-      "✅ Demo User Created\n\n"+
-      "Email: "+email+
-      "\nPassword: "+pass
-    );
+alert(
+"✅ Demo User Created\n\n"+
+"Email: "+email+
+"\nPassword: "+pass
+);
 
-  }catch(err){
+}catch(err){
 
-    alert(err.message);
+alert(err.message);
 
-  }
+}
 
 }
 
 
-/* ==================================================
+/* =====================================================
    🔥 FIND USER BY EMAIL
-================================================== */
+===================================================== */
 
 async function findUserByEmail(email){
 
-  const q = query(
-    collection(db,"users"),
-    where("email","==",email)
-  );
+const q = query(
+collection(db,"users"),
+where("email","==",email)
+);
 
-  const snap =
-  await getDocs(q);
+const snap =
+await getDocs(q);
 
-  if(snap.empty){
+if(snap.empty){
 
-    return null;
+return null;
 
-  }
+}
 
-  return snap.docs[0];
+return snap.docs[0];
 
 }
 
 
-/* ==================================================
+/* =====================================================
    🔥 ADD DEPOSIT
-================================================== */
+===================================================== */
 
 window.addDeposit = async function(){
 
-  try{
+try{
 
-    let email =
-    document.getElementById(
-      "email"
-    ).value.trim();
+let email =
+document.getElementById(
+"email"
+).value.trim();
 
-    let amount =
-    Number(
-      document.getElementById(
-        "amount"
-      ).value
-    );
+let amount =
+Number(
+document.getElementById(
+"amount"
+).value
+);
 
-    let time =
-    new Date(
-      document.getElementById(
-        "time"
-      ).value
-    ).getTime();
+let timeValue =
+document.getElementById(
+"time"
+).value;
 
-    if(!email || !amount){
+if(!email || !amount || !timeValue){
 
-      alert("Fill all fields");
+alert("Fill all fields ❌");
 
-      return;
+return;
 
-    }
+}
 
-    // FIND USER
+let time =
+new Date(timeValue).getTime();
 
-    const userDoc =
-    await findUserByEmail(email);
+/* FIND USER */
 
-    if(!userDoc){
+const userDoc =
+await findUserByEmail(email);
 
-      alert("User Not Found ❌");
+if(!userDoc){
 
-      return;
+alert("User Not Found ❌");
 
-    }
+return;
 
-    let userData =
-    userDoc.data();
+}
 
-    // ADD DEPOSIT HISTORY
+let userData =
+userDoc.data();
 
-    await addDoc(
+/* ADD DEPOSIT HISTORY */
+
+await addDoc(
 collection(db,"deposits"),
 {
 
-  uid:userDoc.id,
+uid:userDoc.id,
 
-  email:email,
+email:email,
 
-        amount:amount,
+amount:amount,
 
-        status:"APPROVED",
+status:"APPROVED",
 
-        time:time,
+time:time,
 
-        isManual:true
+isManual:true
 
-      }
-    );
+}
+);
 
-    // UPDATE BALANCE
+/* UPDATE USER BALANCE */
 
-    await updateDoc(
-      doc(db,"users",userData.uid),
-      {
+await updateDoc(
+doc(db,"users",userDoc.id),
+{
 
-        balance:
-        (userData.balance || 0)
-        + amount
+balance:
+(userData.balance || 0)
++ amount
 
-      }
-    );
+}
+);
 
-    alert("✅ Deposit Added");
+alert("✅ Deposit Added");
 
-  }catch(err){
+}catch(err){
 
-    alert(err.message);
+alert(err.message);
 
-  }
+}
 
 }
 
 
-/* ==================================================
+/* =====================================================
    🔥 ADD WITHDRAW
-================================================== */
+===================================================== */
 
 window.addWithdraw = async function(){
 
-  try{
+try{
 
-    let email =
-    document.getElementById(
-      "email"
-    ).value.trim();
+let email =
+document.getElementById(
+"email"
+).value.trim();
 
-    let amount =
-    Number(
-      document.getElementById(
-        "amount"
-      ).value
-    );
+let amount =
+Number(
+document.getElementById(
+"amount"
+).value
+);
 
-    let time =
-    new Date(
-      document.getElementById(
-        "time"
-      ).value
-    ).getTime();
+let timeValue =
+document.getElementById(
+"time"
+).value;
 
-    if(!email || !amount){
+if(!email || !amount || !timeValue){
 
-      alert("Fill all fields");
+alert("Fill all fields ❌");
 
-      return;
+return;
 
-    }
+}
 
-    // FIND USER
+let time =
+new Date(timeValue).getTime();
 
-    const userDoc =
-    await findUserByEmail(email);
+/* FIND USER */
 
-    if(!userDoc){
+const userDoc =
+await findUserByEmail(email);
 
-      alert("User Not Found ❌");
+if(!userDoc){
 
-      return;
+alert("User Not Found ❌");
 
-    }
+return;
 
-    let userData =
-    userDoc.data();
+}
 
-    // CHECK BALANCE
+let userData =
+userDoc.data();
 
-    if(
-      (userData.balance || 0)
-      < amount
-    ){
+/* CHECK BALANCE */
 
-      alert("Insufficient Balance ❌");
+if(
+(userData.balance || 0)
+< amount
+){
 
-      return;
+alert("Insufficient Balance ❌");
 
-    }
+return;
 
-    // ADD WITHDRAW HISTORY
+}
 
-    await addDoc(
-      collection(db,"withdraws"),
-      {
+/* ADD WITHDRAW HISTORY */
 
-        uid:userDoc.id,
+await addDoc(
+collection(db,"withdraws"),
+{
 
-        email:email,
+uid:userDoc.id,
 
-        amount:amount,
+email:email,
 
-        status:"APPROVED",
+amount:amount,
 
-        time:time,
+status:"APPROVED",
 
-        isManual:true
+time:time,
 
-      }
-    );
+isManual:true
 
-    // UPDATE BALANCE
+}
+);
 
-    await updateDoc(
-      doc(db,"users",userDoc.id)
-      {
+/* UPDATE USER BALANCE */
 
-        balance:
-        (userData.balance || 0)
-        - amount
+await updateDoc(
+doc(db,"users",userDoc.id),
+{
 
-      }
-    );
+balance:
+(userData.balance || 0)
+- amount
 
-    alert("✅ Withdraw Added");
+}
+);
 
-  }catch(err){
+alert("✅ Withdraw Added");
 
-    alert(err.message);
+}catch(err){
 
-  }
+alert(err.message);
+
+}
 
 }
 
