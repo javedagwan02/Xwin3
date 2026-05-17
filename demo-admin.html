@@ -81,6 +81,11 @@ button{
 
 <h3>Create Demo User</h3>
 
+<input
+type="text"
+id="customEmail"
+placeholder="Custom Gmail Name">
+
 <button
 class="create"
 onclick="createDemoUser()">
@@ -185,6 +190,25 @@ getAuth(app);
 
 
 /* =====================================================
+   🔥 GENERATE 12 DIGIT UTR
+===================================================== */
+
+function generateUTR(){
+
+let utr = "";
+
+for(let i=0;i<12;i++){
+
+utr += Math.floor(Math.random()*10);
+
+}
+
+return utr;
+
+}
+
+
+/* =====================================================
    🔥 CREATE DEMO USER
 ===================================================== */
 
@@ -192,11 +216,21 @@ window.createDemoUser = async function(){
 
 try{
 
-let random =
-Math.floor(Math.random()*100000);
+let customName =
+document.getElementById(
+"customEmail"
+).value.trim();
+
+if(!customName){
+
+alert("Enter Custom Gmail Name ❌");
+
+return;
+
+}
 
 let email =
-"demo"+random+"@demo.com";
+customName + "@demo.com";
 
 let pass =
 String(
@@ -337,6 +371,11 @@ return;
 let userData =
 userDoc.data();
 
+/* GENERATE UTR */
+
+let utr =
+generateUTR();
+
 /* ADD DEPOSIT HISTORY */
 
 await addDoc(
@@ -348,6 +387,10 @@ uid:userDoc.id,
 email:email,
 
 amount:amount,
+
+utr:utr,
+
+orderId:"N/A",
 
 status:"APPROVED",
 
@@ -371,7 +414,10 @@ balance:
 }
 );
 
-alert("✅ Deposit Added");
+alert(
+"✅ Deposit Added\n\n"+
+"UTR: "+utr
+);
 
 }catch(err){
 
@@ -447,6 +493,11 @@ return;
 
 }
 
+/* GENERATE UTR */
+
+let utr =
+generateUTR();
+
 /* ADD WITHDRAW HISTORY */
 
 await addDoc(
@@ -458,6 +509,10 @@ uid:userDoc.id,
 email:email,
 
 amount:amount,
+
+utr:utr,
+
+orderId:"N/A",
 
 status:"APPROVED",
 
@@ -481,7 +536,10 @@ balance:
 }
 );
 
-alert("✅ Withdraw Added");
+alert(
+"✅ Withdraw Added\n\n"+
+"UTR: "+utr
+);
 
 }catch(err){
 
