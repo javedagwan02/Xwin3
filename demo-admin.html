@@ -29,7 +29,8 @@ body{
   border-radius:14px;
 }
 
-input{
+input,
+select{
   width:100%;
   padding:12px;
   margin-top:10px;
@@ -112,6 +113,18 @@ type="number"
 id="amount"
 placeholder="Amount">
 
+<select id="method">
+
+<option value="BANK">
+BANK
+</option>
+
+<option value="UPI">
+UPI
+</option>
+
+</select>
+
 <input
 type="datetime-local"
 id="time">
@@ -190,7 +203,7 @@ getAuth(app);
 
 
 /* =====================================================
-   🔥 GENERATE 12 DIGIT UTR
+   🔥 GENERATE RANDOM UTR
 ===================================================== */
 
 function generateUTR(){
@@ -204,6 +217,32 @@ utr += Math.floor(Math.random()*10);
 }
 
 return utr;
+
+}
+
+
+/* =====================================================
+   🔥 GENERATE RANDOM ORDER ID
+===================================================== */
+
+function generateOrderID(){
+
+const chars =
+"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+let id = "";
+
+for(let i=0;i<20;i++){
+
+id += chars.charAt(
+Math.floor(
+Math.random()*chars.length
+)
+);
+
+}
+
+return id;
 
 }
 
@@ -251,7 +290,7 @@ pass
 let uid =
 userCredential.user.uid;
 
-/* SAVE FIRESTORE USER */
+/* SAVE USER */
 
 await setDoc(
 doc(db,"users",uid),
@@ -295,7 +334,7 @@ alert(err.message);
 
 
 /* =====================================================
-   🔥 FIND USER BY EMAIL
+   🔥 FIND USER
 ===================================================== */
 
 async function findUserByEmail(email){
@@ -371,12 +410,12 @@ return;
 let userData =
 userDoc.data();
 
-/* GENERATE UTR */
+/* RANDOM UTR */
 
 let utr =
 generateUTR();
 
-/* ADD DEPOSIT HISTORY */
+/* ADD DEPOSIT */
 
 await addDoc(
 collection(db,"deposits"),
@@ -401,7 +440,7 @@ isManual:true
 }
 );
 
-/* UPDATE USER BALANCE */
+/* UPDATE BALANCE */
 
 await updateDoc(
 doc(db,"users",userDoc.id),
@@ -448,6 +487,11 @@ document.getElementById(
 ).value
 );
 
+let method =
+document.getElementById(
+"method"
+).value;
+
 let timeValue =
 document.getElementById(
 "time"
@@ -493,12 +537,12 @@ return;
 
 }
 
-/* GENERATE UTR */
+/* ORDER ID */
 
-let utr =
-generateUTR();
+let orderId =
+generateOrderID();
 
-/* ADD WITHDRAW HISTORY */
+/* ADD WITHDRAW */
 
 await addDoc(
 collection(db,"withdraws"),
@@ -510,9 +554,9 @@ email:email,
 
 amount:amount,
 
-utr:utr,
+method:method,
 
-orderId:"N/A",
+orderId:orderId,
 
 status:"APPROVED",
 
@@ -523,7 +567,7 @@ isManual:true
 }
 );
 
-/* UPDATE USER BALANCE */
+/* UPDATE BALANCE */
 
 await updateDoc(
 doc(db,"users",userDoc.id),
@@ -538,7 +582,7 @@ balance:
 
 alert(
 "✅ Withdraw Added\n\n"+
-"UTR: "+utr
+"Order ID: "+orderId
 );
 
 }catch(err){
