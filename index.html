@@ -733,8 +733,45 @@ font-size:16px;
     font-weight:bold;  
   
     box-shadow:0 0 10px rgba(0,255,100,0.5);  
-}  
-</style>  </head>  <body>  
+} 
+  /* 🔥 PROVIDER BUTTONS */
+.provider-tabs{
+display:flex;
+gap:10px;
+padding:10px 15px;
+overflow-x:auto;
+}
+
+.provider-tabs::-webkit-scrollbar{
+display:none;
+}
+
+.provider-btn{
+min-width:120px;
+padding:12px;
+border:none;
+border-radius:12px;
+background:#1f1f1f;
+color:#fff;
+font-weight:bold;
+font-size:14px;
+}
+
+.provider-btn.active{
+background:linear-gradient(135deg,#00c853,#00e676);
+color:#000;
+}
+
+/* 🔥 PROVIDER SECTIONS */
+.provider-section{
+display:none;
+}
+
+.provider-section.active{
+display:block;
+}
+</style>
+</head>  <body>  
 <audio id="bgMusic" loop>  
   <source src="audio/casino-vip-music-vip-casino-music-7-469284.mp3" type="audio/mpeg">  
 </audio>  
@@ -763,33 +800,35 @@ class="download-icon">
     ₹1,25,000  
   </div>  </div>  
 </div>  
- <div style="  
-margin:10px 15px;  
-display:flex;  
-gap:10px;  
-">  <input type="text" placeholder="Search game..."  
-style="  
-flex:1;  
-padding:12px;  
-border-radius:10px;  
-border:none;  
-outline:none;  
-">
+<!-- 🔥 PROVIDER BUTTONS -->
+<div class="provider-tabs">
 
-<button style="  
-padding:12px;  
-background:#4caf50;  
-border:none;  
-border-radius:10px;  
-color:#fff;  
-">
-Search
+<button class="provider-btn active"
+onclick="showProvider('jili')">
+JILI
 </button>
 
-</div>   
+<button class="provider-btn"
+onclick="showProvider('bgaming')">
+BGAMING
+</button>
+
+<button class="provider-btn"
+onclick="showProvider('turbogames')">
+TURBO GAMES
+</button>
+
+<button class="provider-btn"
+onclick="showProvider('jdb')">
+JDB
+</button>
+
+</div>
 <div class="leaderboard-box">    <img src="images/file_00000000df4c72078f2066a20abea06c.png">    <div class="leaderboard-data" id="withdrawList"></div>  </div>  
 <!-- MENU -->  
-<div class="menu">     <!-- WINGO -->  <div class="game-card wingo-card" onclick="openGame('wingo.html')">  
+<div id="jiliSection" class="provider-section active">
+<div class="menu">
+  <!-- WINGO -->  <div class="game-card wingo-card" onclick="openGame('wingo.html')">  
   <img src="images/27725-removebg-preview.png">  
 </div>  <div class="game-card mines-card" onclick="openJiliGameMines()">  
   <img src="images/27763-removebg-preview.png">  
@@ -934,8 +973,61 @@ Search
 </div>  
     
   <!-- 🔥 AUTO GAMES (ADMIN PANEL SE AAYENGE) -->  
-<div id="autoGames"></div>  
-<div class="spacer"></div>  <!-- GIFT POPUP -->  <div class="gift-popup" id="giftPopup">  
+<div id="autoGames">
+  
+</div>
+</div>
+
+<!-- 🔥 BGAMING -->
+<div id="bgamingSection" class="provider-section">
+
+<div class="menu">
+
+<div class="game-card newgame-card">
+<img src="images/bgaming1.png">
+</div>
+
+<div class="game-card newgame-card">
+<img src="images/bgaming2.png">
+</div>
+
+</div>
+</div>
+
+<!-- 🔥 TURBO GAMES -->
+<div id="turbogamesSection" class="provider-section">
+
+<div class="menu">
+
+<div class="game-card newgame-card">
+<img src="images/turbo1.png">
+</div>
+
+<div class="game-card newgame-card">
+<img src="images/turbo2.png">
+</div>
+
+</div>
+</div>
+
+<!-- 🔥 JDB -->
+<div id="jdbSection" class="provider-section">
+
+<div class="menu">
+
+<div class="game-card newgame-card">
+<img src="images/jdb1.png">
+</div>
+
+<div class="game-card newgame-card">
+<img src="images/jdb2.png">
+</div>
+
+</div>
+</div>
+
+<div class="spacer"></div>
+</div>  <!-- GIFT POPUP -->  <div class="gift-popup" id="giftPopup">  
 <div class="gift-box">  
 <h2>🎁 Redeem Gift Code</h2>  
 <input type="text" id="giftCodeInput">  
@@ -1824,6 +1916,31 @@ return originalOpenGame(url);
 }
 };
 </script>
+<script>
 
+function showProvider(provider){
+
+// 🔥 REMOVE ACTIVE
+document.querySelectorAll(".provider-btn")
+.forEach(btn=>{
+btn.classList.remove("active");
+});
+
+document.querySelectorAll(".provider-section")
+.forEach(sec=>{
+sec.classList.remove("active");
+});
+
+// 🔥 ACTIVE BUTTON
+event.target.classList.add("active");
+
+// 🔥 SHOW SECTION
+document.getElementById(
+provider + "Section"
+).classList.add("active");
+
+}
+
+</script>
 </body>  
 </html>  
