@@ -1114,71 +1114,68 @@ if (currentBet) {
 
   else {
 
-    /* FORCE LOSS */
 
-    if (currentBet.type == "number") {
+/* FORCE LOSS */
 
-      let arr = [
-        0,1,2,3,4,5,6,7,8,9
-      ].filter(x => x != currentBet.value);
+if(currentBet.type=="number"){
 
-      n = arr[
-        Math.floor(Math.random() * arr.length)
-      ];
+  let arr = [0,1,2,3,4,5,6,7,8,9]
+  .filter(x => x != Number(currentBet.value));
 
-    }
+  n = arr[
+    Math.floor(Math.random() * arr.length)
+  ];
 
-    else if (currentBet.type == "color") {
+}
 
-      if (currentBet.value == "GREEN") {
+else if(currentBet.type=="color"){
 
-        n = [2,4,6,8,0,5][
-          Math.floor(Math.random() * 6)
-        ];
+  if(currentBet.value=="GREEN"){
 
-      }
+    n = [2,4,6,8,0,5][
+      Math.floor(Math.random()*6)
+    ];
 
-      else if (currentBet.value == "RED") {
+  }
 
-        n = [1,3,7,9,0,5][
-          Math.floor(Math.random() * 6)
-        ];
+  else if(currentBet.value=="RED"){
 
-      }
+    n = [1,3,7,9,0,5][
+      Math.floor(Math.random()*6)
+    ];
 
-      else {
+  }
 
-        n = [1,2,3,4,6,7,8,9][
-          Math.floor(Math.random() * 8)
-        ];
+  else{
 
-      }
-
-    }
-
-    else if (currentBet.type == "bs") {
-
-      if (currentBet.value == "BIG") {
-
-        n = [0,1,2,3,4][
-          Math.floor(Math.random() * 5)
-        ];
-
-      }
-
-      else {
-
-        n = [5,6,7,8,9][
-          Math.floor(Math.random() * 5)
-        ];
-
-      }
-
-    }
+    n = [1,2,3,4,6,7,8,9][
+      Math.floor(Math.random()*8)
+    ];
 
   }
 
 }
+
+else if(currentBet.type=="bs"){
+
+  if(currentBet.value=="BIG"){
+
+    n = [0,1,2,3,4][
+      Math.floor(Math.random()*5)
+    ];
+
+  }
+
+  else{
+
+    n = [5,6,7,8,9][
+      Math.floor(Math.random()*5)
+    ];
+
+  }
+
+}
+
 
 else {
 
