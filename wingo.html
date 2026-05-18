@@ -1022,9 +1022,26 @@ try {
 20%  = 2/10 win
 */
 
-let shouldWin =
+/* 🔥 HOUSE EDGE */
+
+let shouldWin = false;
+
+if(edge >= 100){
+
+  shouldWin = true;
+
+}
+else if(edge <= 0){
+
+  shouldWin = false;
+
+}
+else{
+
+  shouldWin =
   Math.random() < (edge / 100);
 
+}
 /* USER BET FIND */
 
 let currentBet = pendingBets.find(
@@ -1201,15 +1218,22 @@ if(bet.game != g) return;
 
 let win = false;
 
-if(bet.type=="number" && bet.value==n)
-win = true;
+if(shouldWin){
 
-if(bet.type=="color" && bet.value==c)
-win = true;
+  if(bet.type=="number" && bet.value==n)
+  win = true;
 
-if(bet.type=="bs" && bet.value==bs)
-win = true;
+  if(bet.type=="color" && bet.value==c)
+  win = true;
 
+  if(bet.type=="bs" && bet.value==bs)
+  win = true;
+
+}else{
+
+  win = false;
+
+}
 let reward = 0;
 
 if(win){
