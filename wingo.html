@@ -1230,6 +1230,16 @@ if(bet.type=="color" && bet.value==c){
 if(bet.type=="bs" && bet.value==bs){
   win = true;
 }
+
+/* FORCE EDGE */
+
+if(edge <= 0){
+  win = false;
+}
+
+if(edge >= 100){
+  win = true;
+}
 let reward = 0;
 
 if(win){
