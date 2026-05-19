@@ -1217,21 +1217,18 @@ if(bet.game != g) return;
 
 let win = false;
 
-if(shouldWin){
+/* REAL RESULT CHECK */
 
-  if(bet.type=="number" && bet.value==n)
+if(bet.type=="number" && Number(bet.value)==n){
   win = true;
+}
 
-  if(bet.type=="color" && bet.value==c)
+if(bet.type=="color" && bet.value==c){
   win = true;
+}
 
-  if(bet.type=="bs" && bet.value==bs)
+if(bet.type=="bs" && bet.value==bs){
   win = true;
-
-}else{
-
-  win = false;
-
 }
 let reward = 0;
 
