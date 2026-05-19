@@ -634,7 +634,7 @@ return games[currentGame];
 
 function render(){
 
-walletEl.innerText = wallet;
+walletEl.innerText = Number(wallet).toFixed(2);
 
 let t = S().time;
 
@@ -1397,6 +1397,7 @@ wallet = d.data().balance || 0;
 
 /* 🔥 IMPORTANT */
 window.userDocId = userDocId;
+window.wallet = wallet;
 
 });
 
