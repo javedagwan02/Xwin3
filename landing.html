@@ -1,0 +1,389 @@
+<!DOCTYPE html>  <html lang="en">    <head>    
+<meta charset="UTF-8">    
+<meta name="viewport" content="width=device-width, initial-scale=1.0">    
+<title>9011 S-B - 9011 Sports Book </title>  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">  <style>    
+*{    
+margin:0;    
+padding:0;    
+box-sizing:border-box;    
+font-family:'Poppins',sans-serif;    
+}    body{
+background:#000;
+color:white;
+scroll-behavior:smooth;
+}
+
+/* SECTION */
+.section{
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+text-align:center;
+padding:80px 20px;
+}
+
+.small-section{
+padding:80px 20px;
+text-align:center;
+background:#000;
+}
+
+.gold{
+background:linear-gradient(90deg,#d4af37,#f5d76e);
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
+}
+
+/* GOLD BUTTON */
+.btn-gold{
+background:linear-gradient(90deg,#d4af37,#f5d76e);
+color:black;
+padding:18px 40px;
+border-radius:40px;
+font-weight:600;
+border:none;
+cursor:pointer;
+font-size:18px;
+margin-top:20px;
+}
+
+/* BIG CTA BUTTONS */
+.cta-buttons{
+margin-top:40px;
+display:flex;
+flex-direction:column;
+gap:15px;
+width:100%;
+max-width:500px;
+margin-left:auto;
+margin-right:auto;
+}
+
+.cta-btn{
+display:flex;
+align-items:center;
+justify-content:center;
+gap:10px;
+padding:18px;
+border-radius:40px;
+font-weight:600;
+font-size:16px;
+text-decoration:none;
+}
+
+.play-big{
+background:linear-gradient(90deg,#d4af37,#f5d76e,#d4af37);
+background-size:200% auto;
+color:black;
+animation:shine 3s linear infinite;
+}
+
+.telegram-big{
+background:#2AABEE;
+color:white;
+}
+
+.whatsapp-big{
+background:#25D366;
+color:white;
+}
+
+@keyframes shine{
+0%{background-position:0%;}
+100%{background-position:200%;}
+}
+
+/* CARDS */
+.card{
+background:#111;
+border-radius:20px;
+padding:20px;
+margin:20px 0;
+width:100%;
+max-width:500px;
+}
+.why-box{
+display:flex;
+align-items:center;
+gap:15px;
+background:#111;
+padding:18px 20px;
+border-radius:18px;
+margin-bottom:20px;
+max-width:500px;
+margin-left:auto;
+margin-right:auto;
+font-size:15px;
+}
+
+.why-icon{
+width:38px;
+height:38px;
+background:#d4af37;
+color:black;
+display:flex;
+align-items:center;
+justify-content:center;
+border-radius:10px;
+font-size:18px;
+}
+.royal-btn{
+display:inline-block;
+margin-top:30px;
+padding:18px 40px;
+border-radius:50px;
+font-weight:700;
+text-decoration:none;
+color:black;
+background:linear-gradient(90deg,#d4af37,#f5d76e,#d4af37);
+background-size:200% auto;
+animation:shine 3s linear infinite;
+transition:0.2s;
+}
+
+.royal-btn:active{
+transform:scale(0.95);
+box-shadow:0 0 20px rgba(212,175,55,0.7);
+}
+
+@keyframes shine{
+0%{background-position:0%;}
+100%{background-position:200%;}
+}
+.game-card{
+position:relative;
+height:200px;
+border-radius:20px;
+overflow:hidden;
+background-size:cover;
+background-position:center;
+margin:20px 0;
+display:flex;
+align-items:flex-end;
+}
+
+.overlay{
+position:absolute;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:linear-gradient(to top, rgba(0,0,0,0.85), rgba(0,0,0,0.3));
+}
+
+.game-content{
+position:relative;
+display:flex;
+align-items:center;
+gap:15px;
+padding:20px;
+z-index:2;
+}
+
+.icon-box{
+width:45px;
+height:45px;
+background:#d4af37;
+color:black;
+display:flex;
+align-items:center;
+justify-content:center;
+border-radius:12px;
+font-size:22px;
+font-weight:bold;
+}
+
+.game-content h3{
+margin:0;
+font-size:22px;
+}
+
+.game-content p{
+margin:5px 0 0 0;
+font-size:14px;
+color:#ddd;
+}
+  /* PREMIUM HERO BUTTONS */
+
+
+/* FIXED BOTTOM BUTTONS */
+.fixed-buttons{
+position:fixed;
+bottom:18px;
+left:50%;
+transform:translateX(-50%);
+width:94%;
+max-width:520px;
+background:#0f0f0f;
+border-radius:22px;
+padding:8px;
+display:flex;
+gap:8px;
+box-shadow:0 10px 40px rgba(0,0,0,0.6);
+z-index:999;
+}
+
+.fixed-buttons a{
+flex:1;
+height:50px;
+border-radius:16px;
+display:flex;
+align-items:center;
+justify-content:center;
+gap:8px;
+font-weight:600;
+font-size:14px;
+text-decoration:none;
+transition:all 0.15s ease;
+}
+
+/* PLAY NOW GOLD */
+.play{
+background:linear-gradient(90deg,#d4af37,#f5d76e,#d4af37);
+background-size:200% auto;
+color:black;
+animation:shine 3s linear infinite;
+}
+
+/* TELEGRAM */
+.telegram{
+background:#229ED9;
+color:white;
+}
+
+/* WHATSAPP */
+.whatsapp{
+background:#25D366;
+color:white;
+}
+
+/* CLICK EFFECT */
+.fixed-buttons a:active{
+transform:scale(0.95);
+opacity:0.95;
+}
+
+@keyframes shine{
+0%{background-position:0%;}
+100%{background-position:200%;}
+}
+</style>  </head>  <body>  <!-- HERO SECTION -->  <section class="section">
+
+<h1 class="gold" style="font-size:40px;">2xwin</h1>    
+<h2>2Xwin </h2>    
+<p style="margin-top:20px;">500+ slots & casino Games Available | 24x7 Online</p>    
+<button class="btn-gold" onclick="scrollToNext()">Visit Now This Website</button>    
+</section>  <!-- SECOND PREMIUM SECTION -->  <section class="small-section">  <h1 class="gold" style="font-size:50px;letter-spacing:3px;">    
+2xwin    
+</h1>  <h2 style="font-size:28px;margin-top:10px;font-weight:500;">    
+2Xwin  
+</h2>  <div style="width:90px;height:4px;    
+background:linear-gradient(90deg,#d4af37,#f5d76e);    
+margin:25px auto;border-radius:10px;">    
+</div>  <p style="margin-top:25px;    
+font-size:18px;    
+font-weight:600;    
+color:#d4af37;">    
+500+ SLOTS & CASINO GAMES AVAILABLE | 24x7 ONLINE <br>    
+| FASTEST DEPOSIT & WITHDRAWAL    
+</p>  <p style="    
+margin-top:20px;    
+font-size:14px;    
+color:#ccc;    
+max-width:520px;    
+margin-left:auto;    
+margin-right:auto;    
+line-height:1.6;    
+">    
+Play Teen Patti, Cricket, Batting, and Casino games on India's most trusted gaming platform. Enjoy     
+<span style="color:#d4af37;font-weight:600;">    
+easy deposits, instant withdrawals    
+</span>,     
+and 24x7 dedicated support.    
+</p>  
+<div class="cta-buttons" style="margin:60px auto;">
+
+<a href="https://2xwin.online/register?ref=6992638" class="cta-btn play-big">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="black">
+<path d="M8 5v14l11-7z"/>
+</svg>
+PLAY NOW
+</a>
+
+<a href="https://t.me/x2xwinofficieal6" class="cta-btn telegram-big">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+<path d="M22 2L2 10l6 2 2 6 4-5 6 4z"/>
+</svg>
+JOIN TELEGRAM
+</a>
+
+<a href="https://wa.me/7412867014?text=HELLO%20I%20WANT%20ID" class="cta-btn whatsapp-big">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+<path d="M12 2a10 10 0 00-8.94 14.5L2 22l5.7-1.5A10 10 0 1012 2z"/>
+</svg>
+WHATSAPP SUPPORT
+</a>
+
+</div>
+
+</div>
+</a>  </div>  </section>  <!-- GAMES SECTION -->  <section class="section">    
+<h2 class="gold">500+ slots & casino Games Available</h2>  <div class="game-card" style="background-image:url('file_000000007b0c72079076f1bcf23ba7c5.png');">  <div class="overlay"></div>  <div class="game-content">  <div class="icon-box">♠</div>  <div>    
+<h3>Teen Patti</h3>    
+<p>Play with the best odds and instant payout.</p>    
+</div>  </div>    
+</div>  <div class="game-card" style="background-image:url('file_0000000014947207a50ff5c85366dfe2.png');">  <div class="overlay"></div>  <div class="game-content">  <div class="icon-box">🏆</div>  <div>    
+<h3>Cricket</h3>    
+<p>Play with the best odds and instant payout.</p>    
+</div>  </div>    
+</div>    
+<div class="game-card" style="background-image:url('file_00000000c2ec7207b06e0b3cee834ce7.png');">  <div class="overlay"></div>  <div class="game-content">  <div class="icon-box">🎯</div>  <div>    
+<h3>Betting Games</h3>    
+<p>Play with the best odds and instant payout.</p>    
+</div>  </div>    
+</div>  <div class="game-card" style="background-image:url('file_0000000079f471fa95dbe7e81d7ab5e6.png');">  <div class="overlay"></div>  <div class="game-content">  <div class="icon-box">🎰</div>  <div>    
+<h3>Casino Games</h3>    
+<p>Play with the best odds and instant payout.</p>    
+</div>  </div>    
+</div>    
+</section>  <!-- WHY CHOOSE -->  <section class="small-section">  <h2 class="gold" style="margin-bottom:40px;">    
+Why Choose 2Xwin ?    
+</h2>  <div class="why-box">    
+<div class="why-icon">🕒</div>    
+<div>24x7 Gaming Available</div>    
+</div>  <div class="why-box">    
+<div class="why-icon">⚡</div>    
+<div>Fastest Deposit & Withdrawal</div>    
+</div>  <div class="why-box">    
+<div class="why-icon">💳</div>    
+<div>Easy & Secure Payment Methods</div>    
+</div>  <div class="why-box">    
+<div class="why-icon">🛡️</div>    
+<div>Trusted & Reliable Platform</div>    
+</div>  <div class="why-box">    
+<div class="why-icon">🎧</div>    
+<div>Instant Telegram support </div>    
+</div>  </section>  <!-- FINAL CTA -->  <section class="small-section" style="padding-top:100px;padding-bottom:120px;">  <div style="max-width:520px;margin:auto;background:#0c0c0c;    
+padding:40px 25px;border-radius:25px;    
+box-shadow:0 0 40px rgba(212,175,55,0.1);">  <div style="font-size:40px;margin-bottom:20px;color:#d4af37;">👑</div>  <h2 style="font-size:28px;line-height:1.3;font-weight:700;">    
+JOIN 9011 Sports Book TODAY & <br>    
+<span style="color:#d4af37;">PLAY LIKE A KING 👑</span>    
+</h2>  <p style="margin-top:20px;color:#ccc;font-size:15px;line-height:1.6;">    
+Experience the royal treatment with instant payouts and the largest collection of games in the industry.    
+</p>  <a href="https://example.com" class="royal-btn">    
+START PLAYING NOW    
+</a>  </div>  </section>  <!-- FIXED BUTTONS -->  <div class="fixed-buttons">    
+<a href="https://2xwin.online/register?ref=6992638" class="play">Play Now</a>    
+<a href="https://t.me/x2xwinofficieal6" class="telegram">Telegram</a>    
+<a href="https://wa.me/7412867014?text=HELLO%20I%20WANT%20ID" class="whatsapp">WhatsApp</a>    
+</div>  <script>    
+function scrollToNext(){    
+window.scrollBy({    
+top: window.innerHeight,    
+behavior: 'smooth'    
+});    
+}    
+</script> 
+</body>    
+</html> 
