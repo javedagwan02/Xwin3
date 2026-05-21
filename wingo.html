@@ -1217,28 +1217,32 @@ if(bet.game != g) return;
 
 let win = false;
 
-/* REAL RESULT CHECK */
-
-if(bet.type=="number" && Number(bet.value)==n){
-  win = true;
-}
-
-if(bet.type=="color" && bet.value==c){
-  win = true;
-}
-
-if(bet.type=="bs" && bet.value==bs){
-  win = true;
-}
-
-/* FORCE EDGE */
+/* FINAL WIN CHECK */
 
 if(edge <= 0){
-  win = false;
-}
 
-if(edge >= 100){
+  win = false;
+
+}
+else if(edge >= 100){
+
   win = true;
+
+}
+else{
+
+  if(bet.type=="number" && Number(bet.value)==n){
+    win = true;
+  }
+
+  if(bet.type=="color" && bet.value==c){
+    win = true;
+  }
+
+  if(bet.type=="bs" && bet.value==bs){
+    win = true;
+  }
+
 }
 let reward = 0;
 
