@@ -222,6 +222,7 @@ window.login = async () => {
     showPopup("Login Successful ✅");
 
     setTimeout(()=>{
+      localStorage.setItem("loggedIn","true");
       window.location.href = "index.html";
     },1000);
 
