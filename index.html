@@ -6,8 +6,8 @@
 
 <script>
 
-if (!document.referrer.includes("2xwin.online")) {
-    window.location.replace("landing.html");
+if(localStorage.getItem("loggedIn") !== "true"){
+   window.location.replace("landing.html");
 }
 
 </script>
