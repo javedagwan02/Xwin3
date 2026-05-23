@@ -1210,6 +1210,8 @@ c:c
 });
 
 
+
+
 /* CHECK PENDING BETS */
 pendingBets.forEach((bet,index)=>{
 
@@ -1217,14 +1219,14 @@ if(bet.game != g) return;
 
 let win = false;
 
-/* 🔥 0 EDGE = ALWAYS LOSS */
+/* 🔥 FORCE LOSS */
 if(edge <= 0){
 
     win = false;
 
 }
 
-/* 🔥 100 EDGE = ALWAYS WIN */
+/* 🔥 FORCE WIN */
 else if(edge >= 100){
 
     win = true;
@@ -1234,21 +1236,30 @@ else if(edge >= 100){
 /* NORMAL MODE */
 else{
 
-    if(bet.type=="number" && Number(bet.value)==n){
+    if(
+        bet.type=="number" &&
+        Number(bet.value)===n
+    ){
         win = true;
     }
 
-    if(bet.type=="color" && bet.value==c){
+    if(
+        bet.type=="color" &&
+        bet.value===c
+    ){
         win = true;
     }
 
-    if(bet.type=="bs" && bet.value==bs){
+    if(
+        bet.type=="bs" &&
+        bet.value===bs
+    ){
         win = true;
     }
 
 }
 
-/* 🔥 EXTRA SECURITY */
+/* 🔥 FINAL SECURITY */
 if(edge <= 0){
     win = false;
 }
@@ -1268,7 +1279,8 @@ if(win){
 
         if(bet.value=="VIOLET"){
             reward = bet.amount * 4.9;
-        }else{
+        }
+        else{
             reward = bet.amount * 1.98;
         }
 
@@ -1309,14 +1321,13 @@ game.mybets.unshift({
 
 /* POPUP */
 showPopup(
-win ? "win":"loss",
-win
-? "YOU WIN ₹"+reward
-: "YOU LOST ₹"+bet.amount
+    win ? "win":"loss",
+    win
+    ? "YOU WIN ₹"+reward
+    : "YOU LOST ₹"+bet.amount
 );
 
 });
-
 
 /* CLEAR BETS */
 pendingBets = pendingBets.filter(
