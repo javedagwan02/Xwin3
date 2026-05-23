@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>2XWIN ADMIN</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<style>
+
+body{
+margin:0;
+font-family:Arial;
+background:#0f172a;
+color:#fff;
+padding:15px;
+}
+
+.title{
+font-size:28px;
+font-weight:bold;
+text-align:center;
+margin-bottom:20px;
+}
+
+.card{
+background:#1e293b;
+border-radius:18px;
+padding:15px;
+margin-bottom:20px;
+}
+
+.card h2{
+margin:0 0 15px;
+font-size:22px;
+}
+
+.modeBtns{
+display:flex;
+gap:10px;
+margin-bottom:15px;
+}
+
+.modeBtns button{
+flex:1;
+padding:14px;
+border:none;
+border-radius:12px;
+font-size:18px;
+font-weight:bold;
+color:#fff;
+}
+
+.auto{
+background:#22c55e;
+}
+
+.manual{
+background:#ef4444;
+}
+
+.numbers{
+display:grid;
+grid-template-columns:repeat(5,1fr);
+gap:10px;
+}
+
+.numbers button{
+height:60px;
+border:none;
+border-radius:50%;
+font-size:24px;
+font-weight:bold;
+color:#fff;
+background:#334155;
+}
+
+.liveBet{
+background:#334155;
+padding:14px;
+border-radius:14px;
+margin-bottom:12px;
+}
+
+.row{
+display:flex;
+justify-content:space-between;
+margin-top:8px;
+}
+
+.win{
+color:#22c55e;
+font-weight:bold;
+}
+
+.loss{
+color:#ef4444;
+font-weight:bold;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="title">
+2XWIN ADMIN PANEL
+</div>
+
+<div class="card">
+
+<h2>Result Control</h2>
+
+<div class="modeBtns">
+
+<button class="auto"
+onclick="setAuto()">
+AUTO MODE
+</button>
+
+<button class="manual"
+onclick="setManual()">
+MANUAL MODE
+</button>
+
+</div>
+
+<div class="numbers">
+
+<button onclick="setResult(0)">0</button>
+<button onclick="setResult(1)">1</button>
+<button onclick="setResult(2)">2</button>
+<button onclick="setResult(3)">3</button>
+<button onclick="setResult(4)">4</button>
+
+<button onclick="setResult(5)">5</button>
+<button onclick="setResult(6)">6</button>
+<button onclick="setResult(7)">7</button>
+<button onclick="setResult(8)">8</button>
+<button onclick="setResult(9)">9</button>
+
+</div>
+
+</div>
+
+<div class="card">
+
+<h2>Live Bets</h2>
+
+<div id="liveBets"></div>
+
+</div>
+
+<script type="module">
+
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+import {
+getFirestore,
+collection,
+query,
+where,
+onSnapshot,
+doc,
+setDoc,
+updateDoc
+}
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+/* FIREBASE */
+
+const firebaseConfig = {
+
+apiKey: "AIzaSyBx3J9aGn_98rTPgurMMKw_GR3puIMj4Ms",
+
+authDomain: "colourcash-ea60e.firebaseapp.com",
+
+projectId: "colourcash-ea60e",
+
+storageBucket: "colourcash-ea60e.firebasestorage.app",
+
+messagingSenderId: "403688058646",
+
+appId: "1:403688058646:web:f1753360471528f275ea37"
+
+};
+
+const app = initializeApp(firebaseConfig);
+
+const db = getFirestore(app);
+
+/* ADMIN DEFAULT */
+
+await setDoc(
+doc(db,"admin","control"),
+{
+mode:"auto",
+result:0
+},
+{merge:true}
+);
+
+/* AUTO MODE */
+
+window.setAuto = async ()=>{
+
+await updateDoc(
+doc(db,"admin","control"),
+{
+mode:"auto"
+}
+);
+
+alert("AUTO MODE ENABLED");
+
+};
+
+/* MANUAL MODE */
+
+window.setManual = async ()=>{
+
+await updateDoc(
+doc(db,"admin","control"),
+{
+mode:"manual"
+}
+);
+
+alert("MANUAL MODE ENABLED");
+
+};
+
+/* SET RESULT */
+
+window.setResult = async (num)=>{
+
+await updateDoc(
+doc(db,"admin","control"),
+{
+mode:"manual",
+result:num
+}
+);
+
+alert("NEXT RESULT = "+num);
+
+};
+
+/* LIVE BETS */
+
+const q = query(
+collection(db,"liveBets"),
+where("game","==","wingo"),
+where("status","==","pending")
+);
+
+onSnapshot(q,(snap)=>{
+
+let html = "";
+
+snap.forEach(docu=>{
+
+const b = docu.data();
+
+html += `
+
+<div class="liveBet">
+
+<div class="row">
+<div>User</div>
+<div>${b.email}</div>
+</div>
+
+<div class="row">
+<div>Game</div>
+<div>${b.wingoGame}</div>
+</div>
+
+<div class="row">
+<div>Type</div>
+<div>${b.type}</div>
+</div>
+
+<div class="row">
+<div>Value</div>
+<div>${b.value}</div>
+</div>
+
+<div class="row">
+<div>Amount</div>
+<div class="loss">₹${b.amount}</div>
+</div>
+
+<div class="row">
+<div>Period</div>
+<div>${b.period}</div>
+</div>
+
+</div>
+
+`;
+
+});
+
+document.getElementById("liveBets").innerHTML =
+html || "NO LIVE BETS";
+
+});
+
+</script>
+
+</body>
+</html>
