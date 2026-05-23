@@ -1005,7 +1005,9 @@ for (const g of Object.keys(games)) {
 
 let game = games[g];
 game.time--;
-
+if(game.time < 0){
+game.time = 0;
+}
 if(game.time <= 0){
 
 /* RESULT GENERATE */
@@ -1148,7 +1150,7 @@ for(const betDoc of betSnap.docs){
 
 const bet = betDoc.data();
 
-if(bet.game != g) return;
+if(bet.wingoGame != g) continue;
 
 let win = false;
 
