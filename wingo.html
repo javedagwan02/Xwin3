@@ -1202,11 +1202,13 @@ let bs =
   ? "BIG"
   : "SMALL";
 /* HISTORY */
+const resultPeriod = game.period;
+
 game.history.unshift({
-p:game.period,
-n:n,
-bs:bs,
-c:c
+p: resultPeriod,
+n: n,
+bs: bs,
+c: c
 });
 
 
@@ -1327,6 +1329,9 @@ showPopup(
     : "YOU LOST ₹"+bet.amount
 );
 
+});
+  pendingBets.forEach((bet)=>{
+    bet.period = resultPeriod;
 });
 
 /* CLEAR BETS */
