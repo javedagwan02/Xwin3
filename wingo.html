@@ -765,7 +765,7 @@ return;
 /* WALLET CUT */
 
 wallet -= total;
-
+window.wallet = wallet;
 /* FIREBASE UPDATE */
 
 if(userDocId){
@@ -1230,7 +1230,8 @@ if(win){
     reward = Number(reward.toFixed(2));
 
     wallet += reward;
-
+  
+window.wallet = wallet;
     if(userDocId){
 
         updateDoc(
