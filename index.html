@@ -823,22 +823,22 @@ class="download-icon">
 <div class="provider-tabs">
 
 <button class="provider-btn active"
-onclick="showProvider('jili')">
+onclick="showProvider(event,'jili')"
 JILI
 </button>
 
 <button class="provider-btn"
-onclick="showProvider('bgaming')">
+onclick="showProvider(event,'bgaming')"
 BGAMING
 </button>
 
 <button class="provider-btn"
-onclick="showProvider('turbogames')">
+onclick="showProvider(event,'turbogames')"
 TURBO GAMES
 </button>
 
 <button class="provider-btn"
-onclick="showProvider('jdb')">
+onclick="showProvider(event,'jdb')"
 JDB
 </button>
 
@@ -998,6 +998,8 @@ JDB
   <!-- 🔥 AUTO GAMES (ADMIN PANEL SE AAYENGE) -->  
 <div id="autoGames">
   
+</div>
+   
 </div>
 </div>
 <!-- 🔥 BGAMING -->
@@ -2135,9 +2137,8 @@ return originalOpenGame(url);
 </script>
 <script>
 
-function showProvider(provider){
+function showProvider(event, provider){
 
-// 🔥 REMOVE ACTIVE
 document.querySelectorAll(".provider-btn")
 .forEach(btn=>{
 btn.classList.remove("active");
@@ -2148,10 +2149,8 @@ document.querySelectorAll(".provider-section")
 sec.classList.remove("active");
 });
 
-// 🔥 ACTIVE BUTTON
 event.target.classList.add("active");
 
-// 🔥 SHOW SECTION
 document.getElementById(
 provider + "Section"
 ).classList.add("active");
