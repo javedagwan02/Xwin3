@@ -589,7 +589,7 @@ let currentValue = "";
 let amount = 1;
 let multi = 1;
   let tab = "game";
-  
+  let pendingBets = [];
   /* SAVE LOAD SYSTEM */
 
 function saveGame(){
@@ -600,7 +600,7 @@ JSON.stringify({
 
 wallet,
 games,
-
+pendingBets,
 currentGame
 
 })
@@ -620,7 +620,7 @@ wallet = parsed.wallet || 0;
 
 games = parsed.games || games;
 
-
+pendingBets = parsed.pendingBets || [];
 
 currentGame = parsed.currentGame || "w30";
 
@@ -765,7 +765,7 @@ return;
 /* WALLET CUT */
 
 wallet -= total;
-window.wallet = wallet;
+
 /* FIREBASE UPDATE */
 
 if(userDocId){
@@ -789,34 +789,17 @@ showPopup(
 "Bet Placed Successfully"
 );
 
-/* SAVE LIVE BET */
+/* SAVE BET */
 
-const betData = {
+pendingBets.push({
 
-email: userEmail,
-uid: userDocId,
+game:currentGame,
+type:currentType,
+value:currentValue,
+amount:total,
+period:S().period
 
-game: "wingo",
-
-wingoGame: currentGame,
-
-type: currentType,
-value: currentValue,
-
-amount: total,
-
-period: S().period,
-
-status: "pending",
-
-time: Date.now()
-
-};
-
-await addDoc(
-collection(db,"liveBets"),
-betData
-);
+});
 saveGame();
 render();
 draw();
@@ -1005,9 +988,7 @@ for (const g of Object.keys(games)) {
 
 let game = games[g];
 game.time--;
-if(game.time < 0){
-game.time = 0;
-}
+
 if(game.time <= 0){
 
 /* RESULT GENERATE */
@@ -1061,51 +1042,150 @@ else{
   Math.random() < (edge / 100);
 
 }
+/* USER BET FIND */
 
-
-/* ADMIN CONTROL RESULT */
-
-let n = Math.floor(Math.random()*10);
-
-try{
-
-const liveQuery = query(
-collection(db,"liveBets"),
-where("game","==","wingo"),
-where("wingoGame","==",g),
-where("period","==",game.period),
-where("status","==","pending")
+let currentBet = pendingBets.find(
+  b => b.game == g
 );
+let n;
 
-const liveSnap = await getDocs(liveQuery);
+if(currentBet){
 
-const controlSnap = await getDoc(
-doc(db,"admin","control")
-);
+  if(shouldWin){
 
-let mode = "auto";
-let result = null;
+    /* FORCE WIN */
 
-if(controlSnap.exists()){
+    if(currentBet.type=="number"){
 
-mode = controlSnap.data().mode || "auto";
-result = controlSnap.data().result;
+      n = Number(currentBet.value);
+
+    }
+
+    else if(currentBet.type=="color"){
+
+      if(currentBet.value=="GREEN"){
+
+        n = [1,3,7,9][
+          Math.floor(Math.random()*4)
+        ];
+
+      }
+
+      else if(currentBet.value=="RED"){
+
+        n = [2,4,6,8][
+          Math.floor(Math.random()*4)
+        ];
+
+      }
+
+      else{
+
+        n = [0,5][
+          Math.floor(Math.random()*2)
+        ];
+
+      }
+
+    }
+
+    else if(currentBet.type=="bs"){
+
+      if(currentBet.value=="BIG"){
+
+        n = [5,6,7,8,9][
+          Math.floor(Math.random()*5)
+        ];
+
+      }
+
+      else{
+
+        n = [0,1,2,3,4][
+          Math.floor(Math.random()*5)
+        ];
+
+      }
+
+    }
+
+  }
+
+  else{
+
+    /* FORCE LOSS */
+
+    if(currentBet.type=="number"){
+
+      let arr = [0,1,2,3,4,5,6,7,8,9]
+      .filter(x => x != Number(currentBet.value));
+
+      n = arr[
+        Math.floor(Math.random()*arr.length)
+      ];
+
+    }
+
+    else if(currentBet.type=="color"){
+
+      if(currentBet.value=="GREEN"){
+
+        n = [2,4,6,8,0,5][
+          Math.floor(Math.random()*6)
+        ];
+
+      }
+
+      else if(currentBet.value=="RED"){
+
+        n = [1,3,7,9,0,5][
+          Math.floor(Math.random()*6)
+        ];
+
+      }
+
+      else{
+
+        n = [1,2,3,4,6,7,8,9][
+          Math.floor(Math.random()*8)
+        ];
+
+      }
+
+    }
+
+    else if(currentBet.type=="bs"){
+
+      if(currentBet.value=="BIG"){
+
+        n = [0,1,2,3,4][
+          Math.floor(Math.random()*5)
+        ];
+
+      }
+
+      else{
+
+        n = [5,6,7,8,9][
+          Math.floor(Math.random()*5)
+        ];
+
+      }
+
+    }
+
+  }
 
 }
 
-/* ADMIN FORCE RESULT */
+else{
 
-if(mode=="manual" && result!==null){
+  /* NO BET RANDOM */
 
-n = Number(result);
-
-}
-
-}catch(e){
-
-console.log(e);
+  n = Math.floor(Math.random()*10);
 
 }
+
 /* COLOR */
 
 let c =
@@ -1134,23 +1214,10 @@ c: c
 
 
 
-/* CHECK FIREBASE LIVE BETS */
+/* CHECK PENDING BETS */
+pendingBets.forEach((bet,index)=>{
 
-const betQuery = query(
-collection(db,"liveBets"),
-where("game","==","wingo"),
-where("wingoGame","==",g),
-where("period","==",resultPeriod),
-where("status","==","pending")
-);
-
-const betSnap = await getDocs(betQuery);
-
-for(const betDoc of betSnap.docs){
-
-const bet = betDoc.data();
-
-if(bet.wingoGame != g) continue;
+if(bet.game != g) return;
 
 let win = false;
 
@@ -1230,8 +1297,7 @@ if(win){
     reward = Number(reward.toFixed(2));
 
     wallet += reward;
-  
-window.wallet = wallet;
+
     if(userDocId){
 
         updateDoc(
@@ -1263,18 +1329,15 @@ showPopup(
     : "YOU LOST ₹"+bet.amount
 );
 
-  
-await updateDoc(
-doc(db,"liveBets",betDoc.id),
-{
-status:"done",
-result:n,
-win:win
-}
+});
+  pendingBets.forEach((bet)=>{
+    bet.period = resultPeriod;
+});
+
+/* CLEAR BETS */
+pendingBets = pendingBets.filter(
+b=>b.game != g
 );
-
-}
-
 
 game.time = GAME_TIMES[g];
 
@@ -1320,12 +1383,10 @@ getDocs,
 getDoc,
 doc,
 updateDoc,
-increment,
-addDoc,
-deleteDoc,
-setDoc
+increment
 }
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
 /* FIREBASE CONFIG */
 
 const firebaseConfig = {
@@ -1385,5 +1446,6 @@ window.increment = increment;
 window.getDoc = getDoc;
 
 </script>
+  
 </body>
 </html>
