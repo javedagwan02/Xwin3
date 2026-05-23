@@ -1044,7 +1044,7 @@ else{
 }
 /* USER BET FIND */
 
-let currentBet = pendingBets.filter(
+let currentBet = pendingBets.find(
   b => b.game == g
 );
 let n;
@@ -1217,14 +1217,14 @@ if(bet.game != g) return;
 
 let win = false;
 
-/* 🔥 FORCE LOSS MODE */
+/* 🔥 0 EDGE = ALWAYS LOSS */
 if(edge <= 0){
 
     win = false;
 
 }
 
-/* 🔥 FORCE WIN MODE */
+/* 🔥 100 EDGE = ALWAYS WIN */
 else if(edge >= 100){
 
     win = true;
@@ -1248,28 +1248,36 @@ else{
 
 }
 
+/* 🔥 EXTRA SECURITY */
+if(edge <= 0){
+    win = false;
+}
+
 /* REWARD */
 let reward = 0;
 
 if(win){
 
     if(bet.type=="number"){
+
         reward = bet.amount * 9.8;
+
     }
 
     else if(bet.type=="color"){
 
         if(bet.value=="VIOLET"){
             reward = bet.amount * 4.9;
-        }
-        else{
+        }else{
             reward = bet.amount * 1.98;
         }
 
     }
 
     else if(bet.type=="bs"){
+
         reward = bet.amount * 1.98;
+
     }
 
     reward = Number(reward.toFixed(2));
