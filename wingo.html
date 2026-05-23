@@ -1044,10 +1044,9 @@ else{
 }
 /* USER BET FIND */
 
-let currentBet = pendingBets.find(
+let currentBet = pendingBets.filter(
   b => b.game == g
 );
-
 let n;
 
 if(currentBet){
@@ -1210,6 +1209,7 @@ bs:bs,
 c:c
 });
 
+
 /* CHECK PENDING BETS */
 pendingBets.forEach((bet,index)=>{
 
@@ -1217,99 +1217,89 @@ if(bet.game != g) return;
 
 let win = false;
 
-/* FINAL WIN CHECK */
-
+/* 🔥 FORCE LOSS MODE */
 if(edge <= 0){
 
-  win = false;
+    win = false;
 
 }
+
+/* 🔥 FORCE WIN MODE */
 else if(edge >= 100){
 
-  win = true;
+    win = true;
 
 }
+
+/* NORMAL MODE */
 else{
 
-  if(bet.type=="number" && Number(bet.value)==n){
-    win = true;
-  }
+    if(bet.type=="number" && Number(bet.value)==n){
+        win = true;
+    }
 
-  if(bet.type=="color" && bet.value==c){
-    win = true;
-  }
+    if(bet.type=="color" && bet.value==c){
+        win = true;
+    }
 
-  if(bet.type=="bs" && bet.value==bs){
-    win = true;
-  }
+    if(bet.type=="bs" && bet.value==bs){
+        win = true;
+    }
 
 }
+
+/* REWARD */
 let reward = 0;
 
 if(win){
 
-/* NUMBER = 9.8X */
-if(bet.type=="number"){
+    if(bet.type=="number"){
+        reward = bet.amount * 9.8;
+    }
 
-reward = bet.amount * 9.8;
+    else if(bet.type=="color"){
 
-}
+        if(bet.value=="VIOLET"){
+            reward = bet.amount * 4.9;
+        }
+        else{
+            reward = bet.amount * 1.98;
+        }
 
-/* COLOR */
-else if(bet.type=="color"){
+    }
 
-/* VIOLET = 4.9X */
-if(bet.value=="VIOLET"){
+    else if(bet.type=="bs"){
+        reward = bet.amount * 1.98;
+    }
 
-reward = bet.amount * 4.9;
+    reward = Number(reward.toFixed(2));
 
-}
+    wallet += reward;
 
-/* GREEN / RED = 1.98X */
-else{
+    if(userDocId){
 
-reward = bet.amount * 1.98;
+        updateDoc(
+        doc(db,"users",userDocId),
+        {
+            balance: wallet
+        });
 
-}
-
-}
-
-/* BIG SMALL = 1.98X */
-else if(bet.type=="bs"){
-
-reward = bet.amount * 1.98;
-
-}
-
-/* FINAL ROUND */
-reward = Number(reward.toFixed(2));
-
-wallet += reward;
-
-if(userDocId){
-
-updateDoc(
-doc(db,"users",userDocId),
-{
-balance: wallet
-}
-);
+    }
 
 }
 
-}
-
+/* SAVE HISTORY */
 game.mybets.unshift({
 
-p:bet.period,
-b:bet.type+" : "+bet.value,
-a:bet.amount,
-r:win ? "+₹"+reward : "-₹"+bet.amount,
-w:win
+    p:bet.period,
+    b:bet.type+" : "+bet.value,
+    a:bet.amount,
+    r:win ? "+₹"+reward : "-₹"+bet.amount,
+    w:win
 
 });
 
-/* WIN LOSS POPUP */
+/* POPUP */
 showPopup(
 win ? "win":"loss",
 win
@@ -1318,6 +1308,7 @@ win
 );
 
 });
+
 
 /* CLEAR BETS */
 pendingBets = pendingBets.filter(
