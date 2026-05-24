@@ -543,754 +543,273 @@ Total Amount ₹
 let wallet = 0;
 
 const GAME_TIMES = {
-w30:30,
-w1:60,
-w3:180,
-w5:300
+  w30: 30,
+  w1: 60,
+  w3: 180,
+  w5: 300
 };
 
 let currentGame = "w30";
 
 let games = {
-
-w30:{
-time:30,
-period:20260120100001,
-history:[],
-mybets:[]
-},
-
-w1:{
-time:60,
-period:20260120110001,
-history:[],
-mybets:[]
-},
-
-w3:{
-time:180,
-period:20260120130001,
-history:[],
-mybets:[]
-},
-
-w5:{
-time:300,
-period:20260120150001,
-history:[],
-mybets:[]
-}
-
+  w30: { time: 30, period: 20260120100001, history: [], mybets: [] },
+  w1:  { time: 60, period: 20260120110001, history: [], mybets: [] },
+  w3:  { time: 180, period: 20260120130001, history: [], mybets: [] },
+  w5:  { time: 300, period: 20260120150001, history: [], mybets: [] }
 };
 
 let currentType = "";
 let currentValue = "";
-
 let amount = 1;
 let multi = 1;
-  let tab = "game";
-  let pendingBets = [];
-  /* SAVE LOAD SYSTEM */
+let tab = "game";
+let pendingBets = [];
 
-function saveGame(){
-
-localStorage.setItem(
-"wingoData",
-JSON.stringify({
-
-wallet,
-games,
-pendingBets,
-currentGame
-
-})
-);
-
+function S() {
+  return games[currentGame];
 }
 
-function loadGame(){
+/* 🔥 SAFE HOUSE EDGE CACHE */
+let houseEdge = 50;
 
-const data = localStorage.getItem("wingoData");
+async function loadEdge() {
+  try {
+    const snap = await window.getDoc(
+      window.doc(window.db, "settings", "houseEdge")
+    );
 
-if(data){
-
-const parsed = JSON.parse(data);
-
-wallet = parsed.wallet || 0;
-
-games = parsed.games || games;
-
-pendingBets = parsed.pendingBets || [];
-
-currentGame = parsed.currentGame || "w30";
-
-}
-
+    if (snap.exists()) {
+      const data = snap.data();
+      houseEdge = data.wingo ?? 50;
+    }
+  } catch (e) {
+    console.log("EDGE LOAD ERROR", e);
   }
-
-function S(){
-return games[currentGame];
 }
 
-function render(){
-
-walletEl.innerText = Number(wallet).toFixed(2);
-
-let t = S().time;
-
-let min = Math.floor(t / 60);
-let sec = t % 60;
-
-if(sec < 10){
-sec = "0" + sec;
-}
-
-time.innerText = "⏳ " + min + ":" + sec;
-period.innerText = S().period;
-
-draw();
-
-if(S().time <= 5){
-betArea.classList.add("lock");
-}else{
-betArea.classList.remove("lock");
-}
-
-}
-
-const walletEl = document.getElementById("wallet");
-
-function switchGame(g){
-
-currentGame = g;
-
-document.querySelectorAll(".game-tabs button")
-.forEach(b=>b.classList.remove("active-game"));
-
-document.getElementById("btn"+g)
-.classList.add("active-game");
-saveGame();
-render();
-
-}
-  function showTab(t,e){
-
-tab=t;
-
-document.querySelectorAll(".history-btn")
-.forEach(btn=>{
-
-btn.classList.remove("activeTab");
-btn.classList.add("inactiveTab");
-
-});
-
-e.classList.remove("inactiveTab");
-e.classList.add("activeTab");
-
-draw();
-
-}
-
-function openBetModal(type,val){
-
-if(S().time <= 5){
-alert("Bet Locked");
-return;
-}
-
-currentType = type;
-currentValue = val;
-
-selectedBet.innerText =
-type + " : " + val;
-
-betModal.style.display = "flex";
-
-}
-
-function setAmount(x){
-
-amount = x;
-
-updateTotal();
-
-}
-
-function setMulti(x){
-
-multi = x;
-
-updateTotal();
-
-}
-
-function updateTotal(){
-
-let custom =
-document.getElementById("customAmount");
-
-if(custom && custom.value > 0){
-
-totalAmount.innerText =
-Number(custom.value) * multi;
-
-}else{
-
-totalAmount.innerText =
-amount * multi;
-
-}
-
-}
-
-
-async function confirmBet(){
-
-let custom =
-document.getElementById("customAmount");
-
-let finalAmount =
-(custom && custom.value > 0)
-? Number(custom.value)
-: amount;
-
-let total = finalAmount * multi;
-
-if(total > wallet){
-alert("Low Balance");
-return;
-}
-
-/* WALLET CUT */
-
-wallet -= total;
-
-/* FIREBASE UPDATE */
-
-if(userDocId){
-
-await updateDoc(
-doc(db,"users",userDocId),
-{
-balance: wallet,
-wagerDone: increment(total)
-}
-);
-
-}
-
-betModal.style.display = "none";
-
-/* BET SUCCESS POPUP */
-
-showPopup(
-"success",
-"Bet Placed Successfully"
-);
-
-/* SAVE BET */
-
-pendingBets.push({
-
-game:currentGame,
-type:currentType,
-value:currentValue,
-amount:total,
-period:S().period
-
-});
-saveGame();
-render();
-draw();
-
-}
-function showPopup(type,msg){
-
-popupOverlay.style.display="flex";
-
-if(type=="win"){
-
-popupBox.innerHTML=`
-<div style="
-background:linear-gradient(180deg,#ff7a59,#ff4d4d);
-padding:25px;
-border-radius:25px;
-text-align:center;
-color:#fff">
-
-<h1>Congratulations</h1>
-
-<div style="font-size:22px">
-${msg}
-</div>
-
-</div>
-`;
-
-}else if(type=="loss"){
-
-popupBox.innerHTML=`
-<div style="
-background:linear-gradient(180deg,#dbeafe,#bfdbfe);
-padding:25px;
-border-radius:25px;
-text-align:center;
-color:#334155">
-
-<h1>Sorry</h1>
-
-<div style="font-size:22px">
-${msg}
-</div>
-
-</div>
-`;
-
-}else{
-
-popupBox.innerHTML=`
-<div style="
-background:#fff;
-padding:25px;
-border-radius:25px;
-text-align:center;
-color:#000">
-
-${msg}
-
-</div>
-`;
-
-}
-
-setTimeout(()=>{
-popupOverlay.style.display="none";
-},3000);
-
-}
-function draw(){
-
-let area = document.getElementById("historyArea");
-
-if(tab=="game"){
-
-  let html = `
-  <table>
-    <thead>
-      <tr>
-        <th>Period</th>
-        <th>Number</th>
-        <th>Big Small</th>
-        <th>Color</th>
-      </tr>
-    </thead>
-    <tbody>
-  `;
-
-S().history.slice(0,10).forEach(r=>{
-
-    let clr =
-      r.c=="GREEN" ? "#22c55e" :
-      r.c=="RED" ? "#ef4444" :
-      "#a855f7";
-
-    html += `
-    <tr>
-      <td>${r.p}</td>
-
-      <td style="
-        color:${clr};
-        font-size:28px;
-        font-weight:bold">
-        ${r.n}
-      </td>
-
-      <td>${r.bs}</td>
-
-      <td>
-        <div style="
-          width:14px;
-          height:14px;
-          border-radius:50%;
-          background:${clr};
-          margin:auto">
-        </div>
-      </td>
-
-    </tr>`;
-  });
-
-  html += "</tbody></table>";
-
-  area.innerHTML = html;
-
-}else{
-
-  let html = "";
-
-S().mybets.slice(0,10).forEach(b=>{
-
-    html += `
-
-    <div class="bet-card">
-
-      <div class="bet-top">
-
-        <div class="bet-type"
-        style="
-        background:
-        ${b.b.includes('Big') ? '#f59e0b' :
-          b.b.includes('Small') ? '#60a5fa' :
-          '#ff6b6b'}">
-
-          ${b.b}
-
-        </div>
-
-        <div class="${
-          b.w ? 'bet-win':'bet-loss'
-        }">
-
-          ${b.w ? 'Succeed':'Failed'}
-
-        </div>
-
-      </div>
-
-      <div style="margin-top:10px;color:#777">
-        ${b.p}
-      </div>
-
-      <div style="
-      margin-top:8px;
-      font-size:22px;
-      font-weight:bold;
-      color:${b.w ? '#22c55e':'#ef4444'}">
-
-        ${b.r}
-
-      </div>
-
-    </div>
-    `;
-  });
-
-  area.innerHTML = html;
-}
-}
-if(window.gameLoop){
-clearInterval(window.gameLoop);
-}
-window.gameLoop = setInterval(async ()=>{
-
-for (const g of Object.keys(games)) {
-
-let game = games[g];
-game.time--;
-
-if(game.time <= 0){
-
-/* RESULT GENERATE */
-
-/* 🔥 HOUSE EDGE SYSTEM */
-
-let edge = 50;
-
-try {
-
-  const snap = await window.getDoc(
-    window.doc(window.db, "settings", "houseEdge")
+/* SAVE */
+function saveGame() {
+  localStorage.setItem(
+    "wingoData",
+    JSON.stringify({ wallet, games, pendingBets, currentGame })
   );
-
-  if (snap.exists()) {
-    edge = snap.data().wingo || 50;
-  }
-
-  console.log("EDGE =", edge);
-
-} catch (e) {
-
-  console.log(e);
-
 }
 
-/*
-0%   = all lose
-100% = all win
-10%  = 1/10 win
-20%  = 2/10 win
-*/
+/* LOAD */
+function loadGame() {
+  const data = localStorage.getItem("wingoData");
+  if (!data) return;
 
-/* 🔥 HOUSE EDGE */
-
-let shouldWin = false;
-
-if(edge >= 100){
-
-  shouldWin = true;
-
-}
-else if(edge <= 0){
-
-  shouldWin = false;
-
-}
-else{
-
-  shouldWin =
-  Math.random() < (edge / 100);
-
-}
-/* USER BET FIND */
-let currentBet = pendingBets.find(
-  b => b.game == g
-);
-
-let n;
-
-/* 🔥 EDGE 0 = HARD LOCK LOSS */
-if(edge <= 0 && currentBet){
-
-    // force wrong number always
-    if(currentBet.type=="number"){
-
-        let arr = [0,1,2,3,4,5,6,7,8,9]
-        .filter(x => x != Number(currentBet.value));
-
-        n = arr[Math.floor(Math.random()*arr.length)];
-    }
-
-    else if(currentBet.type=="color"){
-        n = [0,1,2,3,4,5,6,7,8,9][Math.floor(Math.random()*10)];
-        // random but will never match reliably due to logic below
-    }
-
-    else if(currentBet.type=="bs"){
-        n = [0,1,2,3,4,5,6,7,8,9][Math.floor(Math.random()*10)];
-    }
+  const parsed = JSON.parse(data);
+  wallet = parsed.wallet || 0;
+  games = parsed.games || games;
+  pendingBets = parsed.pendingBets || [];
+  currentGame = parsed.currentGame || "w30";
 }
 
-/* NORMAL ONLY IF EDGE > 0 */
-else if(edge > 0 && currentBet){
+/* RENDER */
+function render() {
+  walletEl.innerText = Number(wallet).toFixed(2);
 
-    if(shouldWin){
+  let t = S().time;
+  let min = Math.floor(t / 60);
+  let sec = t % 60;
+  if (sec < 10) sec = "0" + sec;
 
-        if(currentBet.type=="number") n = Number(currentBet.value);
+  time.innerText = "⏳ " + min + ":" + sec;
+  period.innerText = S().period;
 
-        else if(currentBet.type=="color"){
-            if(currentBet.value=="GREEN") n=[1,3,7,9][Math.floor(Math.random()*4)];
-            else if(currentBet.value=="RED") n=[2,4,6,8][Math.floor(Math.random()*4)];
-            else n=[0,5][Math.floor(Math.random()*2)];
-        }
+  draw();
 
-        else if(currentBet.type=="bs"){
-            if(currentBet.value=="BIG") n=[5,6,7,8,9][Math.floor(Math.random()*5)];
-            else n=[0,1,2,3,4][Math.floor(Math.random()*5)];
-        }
-
-    } else {
-
-        if(currentBet.type=="number"){
-            let arr=[0,1,2,3,4,5,6,7,8,9].filter(x=>x!=Number(currentBet.value));
-            n=arr[Math.floor(Math.random()*arr.length)];
-        }
-
-        else if(currentBet.type=="color"){
-            if(currentBet.value=="GREEN") n=[2,4,6,8,0,5][Math.floor(Math.random()*6)];
-            else if(currentBet.value=="RED") n=[1,3,7,9,0,5][Math.floor(Math.random()*6)];
-            else n=[1,2,3,4,6,7,8,9][Math.floor(Math.random()*8)];
-        }
-
-        else if(currentBet.type=="bs"){
-            if(currentBet.value=="BIG") n=[0,1,2,3,4][Math.floor(Math.random()*5)];
-            else n=[5,6,7,8,9][Math.floor(Math.random()*5)];
-        }
-    }
+  if (S().time <= 5) betArea.classList.add("lock");
+  else betArea.classList.remove("lock");
 }
 
-/* NO BET */
-else{
-    n = Math.floor(Math.random()*10);
-}
-/* COLOR */
+/* SWITCH GAME */
+function switchGame(g) {
+  currentGame = g;
 
-let c =
-  [1,3,7,9].includes(n)
-  ? "GREEN"
-  : [2,4,6,8].includes(n)
-  ? "RED"
-  : "VIOLET";
+  document.querySelectorAll(".game-tabs button")
+    .forEach(b => b.classList.remove("active-game"));
 
-/* BIG SMALL */
+  document.getElementById("btn" + g).classList.add("active-game");
 
-let bs =
-  n >= 5
-  ? "BIG"
-  : "SMALL";
-/* HISTORY */
-const resultPeriod = game.period;
-
-game.history.unshift({
-p: resultPeriod,
-n: n,
-bs: bs,
-c: c
-});
-
-
-
-
-/* CHECK PENDING BETS */
-pendingBets.forEach((bet,index)=>{
-
-if(bet.game != g) return;
-
-let win = false;
-
-/* 🔥 FINAL FORCE LOSS SECURITY */
-
-if(edge <= 0){
-
-    if(
-        (bet.type=="number" && Number(bet.value)===n)
-        ||
-        (bet.type=="color" && bet.value===c)
-        ||
-        (bet.type=="bs" && bet.value===bs)
-    ){
-
-        win = false;
-
-    }
-
-}
-/* 🔥 FORCE WIN */
-else if(edge >= 100){
-
-    win = true;
-
+  saveGame();
+  render();
 }
 
-/* NORMAL MODE */
-else{
+/* BET */
+function openBetModal(type, val) {
+  if (S().time <= 5) return alert("Bet Locked");
 
-    if(
-        bet.type=="number" &&
-        Number(bet.value)===n
-    ){
-        win = true;
-    }
+  currentType = type;
+  currentValue = val;
 
-    if(
-        bet.type=="color" &&
-        bet.value===c
-    ){
-        win = true;
-    }
-
-    if(
-        bet.type=="bs" &&
-        bet.value===bs
-    ){
-        win = true;
-    }
-
+  selectedBet.innerText = type + " : " + val;
+  betModal.style.display = "flex";
 }
 
-/* 🔥 FINAL SECURITY */
-if(edge <= 0){
-    win = false;
+/* AMOUNT */
+function setAmount(x) {
+  amount = x;
+  updateTotal();
 }
 
-/* REWARD */
-let reward = 0;
-
-if(win){
-
-    if(bet.type=="number"){
-
-        reward = bet.amount * 9.8;
-
-    }
-
-    else if(bet.type=="color"){
-
-        if(bet.value=="VIOLET"){
-            reward = bet.amount * 4.9;
-        }
-        else{
-            reward = bet.amount * 1.98;
-        }
-
-    }
-
-    else if(bet.type=="bs"){
-
-        reward = bet.amount * 1.98;
-
-    }
-
-    reward = Number(reward.toFixed(2));
-
-    wallet += reward;
-
-    if(userDocId){
-
-        updateDoc(
-        doc(db,"users",userDocId),
-        {
-            balance: wallet
-        });
-
-    }
-
+function setMulti(x) {
+  multi = x;
+  updateTotal();
 }
 
-/* SAVE HISTORY */
-game.mybets.unshift({
+function updateTotal() {
+  let custom = document.getElementById("customAmount");
 
-    p:bet.period,
-    b:bet.type+" : "+bet.value,
-    a:bet.amount,
-    r:win ? "+₹"+reward : "-₹"+bet.amount,
-    w:win
+  let base = (custom && custom.value > 0)
+    ? Number(custom.value)
+    : amount;
 
-});
+  totalAmount.innerText = base * multi;
+}
+
+/* CONFIRM BET */
+async function confirmBet() {
+  let custom = document.getElementById("customAmount");
+
+  let base = (custom && custom.value > 0)
+    ? Number(custom.value)
+    : amount;
+
+  let total = base * multi;
+
+  if (total > wallet) return alert("Low Balance");
+
+  wallet -= total;
+
+  pendingBets.push({
+    game: currentGame,
+    type: currentType,
+    value: currentValue,
+    amount: total,
+    period: S().period
+  });
+
+  betModal.style.display = "none";
+
+  showPopup("success", "Bet Placed");
+
+  saveGame();
+  render();
+}
 
 /* POPUP */
-showPopup(
-    win ? "win":"loss",
-    win
-    ? "YOU WIN ₹"+reward
-    : "YOU LOST ₹"+bet.amount
-);
+function showPopup(type, msg) {
+  popupOverlay.style.display = "flex";
 
-});
-  pendingBets.forEach((bet)=>{
-    bet.period = resultPeriod;
-});
+  popupBox.innerHTML = `
+    <div style="padding:20px;text-align:center">
+      <h2>${msg}</h2>
+    </div>
+  `;
 
-/* CLEAR BETS */
-pendingBets = pendingBets.filter(
-b=>b.game != g
-);
-
-game.time = GAME_TIMES[g];
-
-game.period++;
-  saveGame();
-
+  setTimeout(() => {
+    popupOverlay.style.display = "none";
+  }, 2000);
 }
 
-}
+/* GAME LOOP */
+window.gameLoop = setInterval(async () => {
 
-render();
-saveGame();
+  for (const g of Object.keys(games)) {
 
-},1000);
+    let game = games[g];
+    game.time--;
+
+    if (game.time <= 0) {
+
+      await loadEdge();
+
+      /* 🔥 RESULT GENERATION */
+      let n = Math.floor(Math.random() * 10);
+
+      /* COLOR */
+      let c = [1,3,7,9].includes(n)
+        ? "GREEN"
+        : [2,4,6,8].includes(n)
+        ? "RED"
+        : "VIOLET";
+
+      /* BIG SMALL */
+      let bs = n >= 5 ? "BIG" : "SMALL";
+
+      game.history.unshift({
+        p: game.period,
+        n,
+        bs,
+        c
+      });
+
+      /* CHECK BETS */
+      pendingBets.forEach(bet => {
+
+        if (bet.game !== g) return;
+
+        let win = false;
+
+        /* 🔥 HARD EDGE RULE */
+        if (houseEdge <= 0) {
+          win = false;
+        }
+
+        else if (houseEdge >= 100) {
+          win = true;
+        }
+
+        else {
+
+          let chance = houseEdge / 100;
+
+          let roll = Math.random() < chance;
+
+          if (bet.type === "number" && Number(bet.value) === n) win = roll;
+          if (bet.type === "color" && bet.value === c) win = roll;
+          if (bet.type === "bs" && bet.value === bs) win = roll;
+
+        }
+
+        let reward = 0;
+
+        if (win) {
+          reward = bet.amount * 1.98;
+          wallet += reward;
+        }
+
+        game.mybets.unshift({
+          p: bet.period,
+          b: bet.type + ":" + bet.value,
+          r: win ? "+₹" + reward : "-₹" + bet.amount,
+          w: win
+        });
+
+        showPopup(win ? "win" : "loss", win ? "WIN ₹" + reward : "LOSS");
+
+      });
+
+      pendingBets = pendingBets.filter(b => b.game !== g);
+
+      game.time = GAME_TIMES[g];
+      game.period++;
+
+      saveGame();
+    }
+  }
+
+  render();
+
+}, 1000);
+
+/* INIT */
 loadGame();
 render();
+
   document.addEventListener("input",(e)=>{
 
 if(e.target.id=="customAmount"){
