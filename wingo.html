@@ -1023,25 +1023,21 @@ try {
 */
 
 /* 🔥 HOUSE EDGE */
+let shouldForceLoss = edge <= 0;
+let shouldForceWin = edge >= 100;
 
 let shouldWin = false;
 
-if(edge >= 100){
-
-  shouldWin = true;
-
+if(shouldForceWin){
+    shouldWin = true;
 }
-else if(edge <= 0){
-
-  shouldWin = false;
-
+else if(shouldForceLoss){
+    shouldWin = false;
 }
 else{
-
-  shouldWin =
-  Math.random() < (edge / 100);
-
+    shouldWin = Math.random() < (edge / 100);
 }
+
 /* USER BET FIND */
 
 let currentBet = pendingBets.find(
@@ -1218,49 +1214,20 @@ c: c
 pendingBets.forEach((bet,index)=>{
 
 if(bet.game != g) return;
-
 let win = false;
 
-/* 🔥 FORCE LOSS */
 if(edge <= 0){
-
     win = false;
-
 }
-
-/* 🔥 FORCE WIN */
 else if(edge >= 100){
-
     win = true;
-
 }
-
-/* NORMAL MODE */
 else{
-
-    if(
-        bet.type=="number" &&
-        Number(bet.value)===n
-    ){
-        win = true;
-    }
-
-    if(
-        bet.type=="color" &&
-        bet.value===c
-    ){
-        win = true;
-    }
-
-    if(
-        bet.type=="bs" &&
-        bet.value===bs
-    ){
-        win = true;
-    }
-
+    win =
+        (bet.type=="number" && Number(bet.value)===n) ||
+        (bet.type=="color" && bet.value===c) ||
+        (bet.type=="bs" && bet.value===bs);
 }
-
 /* 🔥 FINAL SECURITY */
 if(edge <= 0){
     win = false;
