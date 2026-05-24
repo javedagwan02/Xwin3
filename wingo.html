@@ -1044,13 +1044,11 @@ else{
 }
 /* USER BET FIND */
 
-let currentBet = pendingBets.filter(
+let currentBet = pendingBets.find(
   b => b.game == g
 );
 
 let n;
-
-if(currentBet.length > 0){
 
 /* 🔥 0% EDGE = ALWAYS LOSS */
 
@@ -1121,8 +1119,6 @@ else if(currentBet){
 
     if(shouldWin){
 
-        /* FORCE WIN */
-
         if(currentBet.type=="number"){
 
             n = Number(currentBet.value);
@@ -1181,16 +1177,12 @@ else if(currentBet){
 
     else{
 
-        /* FORCE LOSS */
-
         if(currentBet.type=="number"){
 
-            let arr = [0,1,2,3,4,5,6,7,8,9]
-            .filter(x => x != Number(currentBet.value));
+            let arr=[0,1,2,3,4,5,6,7,8,9]
+            .filter(x=>x!=Number(currentBet.value));
 
-            n = arr[
-            Math.floor(Math.random()*arr.length)
-            ];
+            n=arr[Math.floor(Math.random()*arr.length)];
 
         }
 
@@ -1198,7 +1190,7 @@ else if(currentBet){
 
             if(currentBet.value=="GREEN"){
 
-                n = [2,4,6,8,0,5][
+                n=[2,4,6,8,0,5][
                 Math.floor(Math.random()*6)
                 ];
 
@@ -1206,7 +1198,7 @@ else if(currentBet){
 
             else if(currentBet.value=="RED"){
 
-                n = [1,3,7,9,0,5][
+                n=[1,3,7,9,0,5][
                 Math.floor(Math.random()*6)
                 ];
 
@@ -1214,7 +1206,7 @@ else if(currentBet){
 
             else{
 
-                n = [1,2,3,4,6,7,8,9][
+                n=[1,2,3,4,6,7,8,9][
                 Math.floor(Math.random()*8)
                 ];
 
@@ -1226,7 +1218,7 @@ else if(currentBet){
 
             if(currentBet.value=="BIG"){
 
-                n = [0,1,2,3,4][
+                n=[0,1,2,3,4][
                 Math.floor(Math.random()*5)
                 ];
 
@@ -1234,7 +1226,7 @@ else if(currentBet){
 
             else{
 
-                n = [5,6,7,8,9][
+                n=[5,6,7,8,9][
                 Math.floor(Math.random()*5)
                 ];
 
@@ -1248,10 +1240,9 @@ else if(currentBet){
 
 else{
 
-    n = Math.floor(Math.random()*10);
+    n=Math.floor(Math.random()*10);
 
 }
-
 /* COLOR */
 
 let c =
