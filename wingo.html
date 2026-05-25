@@ -1016,8 +1016,62 @@ let gameBets = pendingBets.filter(
 
 let n;
 
+  /* TOTAL AMOUNT COUNT */
 
-/* BIG AMOUNT LOSS MODE */
+  let bigAmt = 0;
+  let smallAmt = 0;
+
+  let greenAmt = 0;
+  let redAmt = 0;
+  let violetAmt = 0;
+
+  let numAmt = {
+    0:0,1:0,2:0,3:0,4:0,
+    5:0,6:0,7:0,8:0,9:0
+  };
+
+  gameBets.forEach(b=>{
+
+    /* NUMBER */
+
+    if(b.type=="number"){
+      numAmt[b.value] += b.amount;
+    }
+
+    /* COLOR */
+
+    if(b.type=="color"){
+
+      if(b.value=="GREEN"){
+        greenAmt += b.amount;
+      }
+
+      if(b.value=="RED"){
+        redAmt += b.amount;
+      }
+
+      if(b.value=="VIOLET"){
+        violetAmt += b.amount;
+      }
+
+    }
+
+    /* BIG SMALL */
+
+    if(b.type=="bs"){
+
+      if(b.value=="BIG"){
+        bigAmt += b.amount;
+      }
+
+      if(b.value=="SMALL"){
+        smallAmt += b.amount;
+      }
+
+    }
+
+  });
+  /* BIG AMOUNT LOSS MODE */
 
 if(bigAmountLoss){
 
@@ -1074,63 +1128,6 @@ Math.floor(Math.random()*safe.length)
 }
 
 }
-
-
-  /* TOTAL AMOUNT COUNT */
-
-  let bigAmt = 0;
-  let smallAmt = 0;
-
-  let greenAmt = 0;
-  let redAmt = 0;
-  let violetAmt = 0;
-
-  let numAmt = {
-    0:0,1:0,2:0,3:0,4:0,
-    5:0,6:0,7:0,8:0,9:0
-  };
-
-  gameBets.forEach(b=>{
-
-    /* NUMBER */
-
-    if(b.type=="number"){
-      numAmt[b.value] += b.amount;
-    }
-
-    /* COLOR */
-
-    if(b.type=="color"){
-
-      if(b.value=="GREEN"){
-        greenAmt += b.amount;
-      }
-
-      if(b.value=="RED"){
-        redAmt += b.amount;
-      }
-
-      if(b.value=="VIOLET"){
-        violetAmt += b.amount;
-      }
-
-    }
-
-    /* BIG SMALL */
-
-    if(b.type=="bs"){
-
-      if(b.value=="BIG"){
-        bigAmt += b.amount;
-      }
-
-      if(b.value=="SMALL"){
-        smallAmt += b.amount;
-      }
-
-    }
-
-  });
 
   /* 🔥 HIGHEST SIDE LOSE */
 
