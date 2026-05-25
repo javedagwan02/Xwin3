@@ -925,13 +925,20 @@ let edge = 50;
   
 try {  
   
-  const snap = await window.getDoc(  
-    window.doc(window.db, "settings", "houseEdge")  
-  );  
-  
-  if (snap.exists()) {  
-    edge = snap.data().wingo || 50;  
-  }  
+   const snap = await window.getDoc(
+window.doc(window.db,"settings","houseEdge")
+);
+
+let bigAmountLoss = false;
+
+if (snap.exists()) {
+
+  edge = snap.data().wingo || 50;
+
+  let bigAmountLoss =
+  snap.data().wingo_bigAmountLoss || false;
+
+}
   
   console.log("EDGE =", edge);  
   
@@ -974,6 +981,68 @@ let gameBets = pendingBets.filter(
 let n;
 
 if(gameBets.length > 0){
+  if(bigAmountLoss){
+
+/* BIG AMOUNT LOSS MODE */
+
+let totalBet = 0;
+
+gameBets.forEach(b=>{
+totalBet += b.amount;
+});
+
+/* ONLY APPLY ON BIG BET */
+
+if(totalBet >= 5000){
+
+let loseNumbers = [];
+
+/* BIG SMALL */
+
+if(bigAmt > smallAmt){
+loseNumbers.push(5,6,7,8,9);
+}
+else if(smallAmt > bigAmt){
+loseNumbers.push(0,1,2,3,4);
+}
+
+/* COLORS */
+
+if(greenAmt > redAmt){
+loseNumbers.push(1,3,7,9);
+}
+else if(redAmt > greenAmt){
+loseNumbers.push(2,4,6,8);
+}
+
+if(violetAmt > greenAmt &&
+violetAmt > redAmt){
+loseNumbers.push(0,5);
+}
+
+/* SAFE */
+
+loseNumbers =
+[...new Set(loseNumbers)];
+
+let safe =
+[0,1,2,3,4,5,6,7,8,9]
+.filter(x=>!loseNumbers.includes(x));
+
+if(safe.length > 0){
+
+n =
+safe[
+Math.floor(
+Math.random()*safe.length
+)
+];
+
+}
+
+}
+
+  }
 
   /* TOTAL AMOUNT COUNT */
 
