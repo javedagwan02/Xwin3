@@ -1016,6 +1016,8 @@ let gameBets = pendingBets.filter(
 
 let n;
 
+if(gameBets.length > 0){
+
   /* TOTAL AMOUNT COUNT */
 
   let bigAmt = 0;
@@ -1071,146 +1073,147 @@ let n;
     }
 
   });
+
   /* BIG AMOUNT LOSS MODE */
 
-if(bigAmountLoss){
+  if(bigAmountLoss){
 
-let totalBet = 0;
+    let totalBet = 0;
 
-gameBets.forEach(b=>{
-totalBet += b.amount;
-});
+    gameBets.forEach(b=>{
+      totalBet += b.amount;
+    });
 
-if(totalBet >= 5000){
+    if(totalBet >= 5000){
 
-let loseNumbers = [];
+      let loseNumbers = [];
 
-/* BIG SMALL */
+      /* BIG SMALL */
 
-if(bigAmt > smallAmt){
-loseNumbers.push(5,6,7,8,9);
-}
-else if(smallAmt > bigAmt){
-loseNumbers.push(0,1,2,3,4);
-}
+      if(bigAmt > smallAmt){
+        loseNumbers.push(5,6,7,8,9);
+      }
+      else if(smallAmt > bigAmt){
+        loseNumbers.push(0,1,2,3,4);
+      }
 
-/* COLORS */
+      /* COLORS */
 
-if(greenAmt > redAmt){
-loseNumbers.push(1,3,7,9);
-}
-else if(redAmt > greenAmt){
-loseNumbers.push(2,4,6,8);
-}
+      if(greenAmt > redAmt){
+        loseNumbers.push(1,3,7,9);
+      }
+      else if(redAmt > greenAmt){
+        loseNumbers.push(2,4,6,8);
+      }
 
-if(violetAmt > greenAmt &&
-violetAmt > redAmt){
-loseNumbers.push(0,5);
-}
+      if(violetAmt > greenAmt &&
+      violetAmt > redAmt){
+        loseNumbers.push(0,5);
+      }
 
-/* UNIQUE */
+      /* UNIQUE */
 
-loseNumbers = [...new Set(loseNumbers)];
+      loseNumbers = [...new Set(loseNumbers)];
 
-let safe =
-[0,1,2,3,4,5,6,7,8,9]
-.filter(x=>!loseNumbers.includes(x));
+      let safe =
+      [0,1,2,3,4,5,6,7,8,9]
+      .filter(x=>!loseNumbers.includes(x));
 
-if(safe.length > 0){
+      if(safe.length > 0){
 
-n =
-safe[
-Math.floor(Math.random()*safe.length)
-];
+        n =
+        safe[
+          Math.floor(Math.random()*safe.length)
+        ];
 
-}
-
-}
-
-}
-
-  /* 🔥 HIGHEST SIDE LOSE */
-
-  let loseNumbers = [];
-
-  /* BIG SMALL */
-
-  if(bigAmt > smallAmt){
-
-    loseNumbers.push(5,6,7,8,9);
-
-  }else if(smallAmt > bigAmt){
-
-    loseNumbers.push(0,1,2,3,4);
-
-  }
-
-  /* COLORS */
-
-  if(greenAmt > redAmt){
-
-    loseNumbers.push(1,3,7,9);
-
-  }else if(redAmt > greenAmt){
-
-    loseNumbers.push(2,4,6,8);
-
-  }
-
-  if(violetAmt > 0 &&
-     violetAmt > greenAmt &&
-     violetAmt > redAmt){
-
-    loseNumbers.push(0,5);
-
-  }
-
-  /* NUMBERS */
-
-  let maxNum = 0;
-  let maxAmt = 0;
-
-  Object.keys(numAmt).forEach(x=>{
-
-    if(numAmt[x] > maxAmt){
-
-      maxAmt = numAmt[x];
-      maxNum = Number(x);
+      }
 
     }
 
-  });
-
-  if(maxAmt > 0){
-    loseNumbers.push(maxNum);
   }
 
-  /* UNIQUE */
+  /* NORMAL SMART LOSS */
 
-  loseNumbers = [...new Set(loseNumbers)];
+  if(n === undefined){
 
-  /* SAFE NUMBERS */
+    let loseNumbers = [];
 
-  let safe = [0,1,2,3,4,5,6,7,8,9]
-  .filter(x => !loseNumbers.includes(x));
+    /* BIG SMALL */
 
-  /* FINAL RESULT */
+    if(bigAmt > smallAmt){
 
-  if(safe.length > 0){
+      loseNumbers.push(5,6,7,8,9);
 
-    n = safe[
-      Math.floor(Math.random()*safe.length)
-    ];
+    }else if(smallAmt > bigAmt){
 
-  }else{
+      loseNumbers.push(0,1,2,3,4);
 
-    n = Math.floor(Math.random()*10);
+    }
+
+    /* COLORS */
+
+    if(greenAmt > redAmt){
+
+      loseNumbers.push(1,3,7,9);
+
+    }else if(redAmt > greenAmt){
+
+      loseNumbers.push(2,4,6,8);
+
+    }
+
+    if(violetAmt > 0 &&
+       violetAmt > greenAmt &&
+       violetAmt > redAmt){
+
+      loseNumbers.push(0,5);
+
+    }
+
+    /* NUMBERS */
+
+    let maxNum = 0;
+    let maxAmt = 0;
+
+    Object.keys(numAmt).forEach(x=>{
+
+      if(numAmt[x] > maxAmt){
+
+        maxAmt = numAmt[x];
+        maxNum = Number(x);
+
+      }
+
+    });
+
+    if(maxAmt > 0){
+      loseNumbers.push(maxNum);
+    }
+
+    /* UNIQUE */
+
+    loseNumbers = [...new Set(loseNumbers)];
+
+    /* SAFE NUMBERS */
+
+    let safe = [0,1,2,3,4,5,6,7,8,9]
+    .filter(x => !loseNumbers.includes(x));
+
+    if(safe.length > 0){
+
+      n = safe[
+        Math.floor(Math.random()*safe.length)
+      ];
+
+    }else{
+
+      n = Math.floor(Math.random()*10);
+
+    }
 
   }
 
-}
-
-else{
+}else{
 
   /* NO BET */
 
