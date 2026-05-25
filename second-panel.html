@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>WIN GO ADMIN PANEL</title>
+
+<meta
+name="viewport"
+content="width=device-width,initial-scale=1">
+
+<style>
+
+body{
+margin:0;
+padding:0;
+font-family:Arial;
+background:#f5f5f5;
+}
+
+#adminPanel{
+background:#fff;
+margin:15px;
+padding:20px;
+border-radius:18px;
+box-shadow:0 2px 10px rgba(0,0,0,.08);
+}
+
+.title{
+text-align:center;
+font-size:28px;
+font-weight:bold;
+color:#ff6b6b;
+margin-bottom:25px;
+}
+
+.section{
+margin-bottom:25px;
+}
+
+.labelRow{
+display:flex;
+justify-content:space-between;
+margin-bottom:10px;
+font-weight:bold;
+font-size:18px;
+}
+
+.slider{
+width:100%;
+accent-color:#ff6b6b;
+}
+
+.switchBox{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:15px;
+background:#f5f5f5;
+border-radius:14px;
+font-size:18px;
+font-weight:bold;
+}
+
+.switchBox input{
+width:24px;
+height:24px;
+}
+
+.selectBox{
+width:100%;
+padding:15px;
+border:none;
+border-radius:14px;
+background:#f5f5f5;
+font-size:17px;
+outline:none;
+}
+
+.saveBtn{
+width:100%;
+padding:16px;
+border:none;
+border-radius:14px;
+background:#ff6b6b;
+color:#fff;
+font-size:22px;
+font-weight:bold;
+margin-top:10px;
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- ================= ADMIN PANEL ================= -->
+
+<div id="adminPanel">
+
+<div class="title">
+WIN GO ADMIN PANEL
+</div>
+
+<!-- RTP -->
+
+<div class="section">
+
+<div class="labelRow">
+
+<span>
+WIN GO RTP
+</span>
+
+<span id="edgeText">
+50%
+</span>
+
+</div>
+
+<input
+type="range"
+min="0"
+max="100"
+value="50"
+id="edgeSlider"
+class="slider">
+
+</div>
+
+<!-- BIG AMOUNT LOSS -->
+
+<div class="section">
+
+<div class="switchBox">
+
+<span>
+BIG AMOUNT LOSS
+</span>
+
+<input
+type="checkbox"
+id="bigLoss">
+
+</div>
+
+</div>
+
+<!-- MODE -->
+
+<div class="section">
+
+<div style="
+font-size:18px;
+font-weight:bold;
+margin-bottom:10px;">
+
+WIN GO MODE
+
+</div>
+
+<select
+id="wingoMode"
+class="selectBox">
+
+<option value="random">
+RANDOM
+</option>
+
+<option value="smart">
+SMART
+</option>
+
+<option value="forceWin">
+FORCE WIN
+</option>
+
+<option value="forceLose">
+FORCE LOSE
+</option>
+
+</select>
+
+</div>
+
+<!-- SAVE BUTTON -->
+
+<button
+class="saveBtn"
+onclick="saveSettings()">
+
+SAVE SETTINGS
+
+</button>
+
+</div>
+
+<!-- ================= FIREBASE ================= -->
+
+<script type="module">
+
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+import {
+
+getFirestore,
+doc,
+getDoc,
+updateDoc
+
+}
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+/* FIREBASE CONFIG */
+
+const firebaseConfig = {
+
+apiKey: "YOUR_API_KEY",
+
+authDomain:
+"YOUR_PROJECT.firebaseapp.com",
+
+projectId:
+"YOUR_PROJECT_ID",
+
+storageBucket:
+"YOUR_PROJECT.appspot.com",
+
+messagingSenderId:
+"YOUR_SENDER_ID",
+
+appId:
+"YOUR_APP_ID"
+
+};
+
+/* INIT */
+
+const app =
+initializeApp(firebaseConfig);
+
+const db =
+getFirestore(app);
+
+/* ELEMENTS */
+
+const edgeSlider =
+document.getElementById(
+"edgeSlider"
+);
+
+const edgeText =
+document.getElementById(
+"edgeText"
+);
+
+const bigLoss =
+document.getElementById(
+"bigLoss"
+);
+
+const wingoMode =
+document.getElementById(
+"wingoMode"
+);
+
+/* SLIDER */
+
+edgeSlider.oninput = ()=>{
+
+edgeText.innerText =
+edgeSlider.value + "%";
+
+};
+
+/* LOAD SETTINGS */
+
+async function loadSettings(){
+
+try{
+
+const snap = await getDoc(
+
+doc(
+db,
+"settings",
+"houseEdge"
+)
+
+);
+
+if(snap.exists()){
+
+const data =
+snap.data();
+
+/* RTP */
+
+edgeSlider.value =
+data.wingo || 50;
+
+edgeText.innerText =
+(data.wingo || 50)
++ "%";
+
+/* BIG LOSS */
+
+bigLoss.checked =
+data.wingo_bigAmountLoss
+|| false;
+
+/* MODE */
+
+wingoMode.value =
+data.wingo_mode
+|| "random";
+
+}
+
+}catch(e){
+
+console.log(e);
+
+alert("Load Error");
+
+}
+
+}
+
+/* SAVE SETTINGS */
+
+async function saveSettings(){
+
+try{
+
+await updateDoc(
+
+doc(
+db,
+"settings",
+"houseEdge"
+),
+
+{
+
+wingo:
+Number(edgeSlider.value),
+
+wingo_bigAmountLoss:
+bigLoss.checked,
+
+wingo_mode:
+wingoMode.value
+
+}
+
+);
+
+alert(
+"Settings Saved"
+);
+
+}catch(e){
+
+console.log(e);
+
+alert(
+"Save Error"
+);
+
+}
+
+}
+
+/* GLOBAL */
+
+window.saveSettings =
+saveSettings;
+
+/* AUTO LOAD */
+
+loadSettings();
+
+</script>
+
+</body>
+</html>
