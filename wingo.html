@@ -1016,18 +1016,16 @@ let gameBets = pendingBets.filter(
 
 let n;
 
-if(gameBets.length > 0){
-  if(bigAmountLoss){
 
 /* BIG AMOUNT LOSS MODE */
+
+if(bigAmountLoss){
 
 let totalBet = 0;
 
 gameBets.forEach(b=>{
 totalBet += b.amount;
 });
-
-/* ONLY APPLY ON BIG BET */
 
 if(totalBet >= 5000){
 
@@ -1056,10 +1054,9 @@ violetAmt > redAmt){
 loseNumbers.push(0,5);
 }
 
-/* SAFE */
+/* UNIQUE */
 
-loseNumbers =
-[...new Set(loseNumbers)];
+loseNumbers = [...new Set(loseNumbers)];
 
 let safe =
 [0,1,2,3,4,5,6,7,8,9]
@@ -1069,16 +1066,15 @@ if(safe.length > 0){
 
 n =
 safe[
-Math.floor(
-Math.random()*safe.length
-)
+Math.floor(Math.random()*safe.length)
 ];
 
 }
 
 }
 
-  }
+}
+
 
   /* TOTAL AMOUNT COUNT */
 
