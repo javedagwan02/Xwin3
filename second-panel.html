@@ -93,8 +93,6 @@ margin-top:10px;
 
 <body>
 
-<!-- ================= ADMIN PANEL ================= -->
-
 <div id="adminPanel">
 
 <div class="title">
@@ -182,7 +180,7 @@ FORCE LOSE
 
 </div>
 
-<!-- SAVE BUTTON -->
+<!-- SAVE -->
 
 <button
 class="saveBtn"
@@ -194,8 +192,6 @@ SAVE SETTINGS
 
 </div>
 
-<!-- ================= FIREBASE ================= -->
-
 <script type="module">
 
 import { initializeApp }
@@ -206,7 +202,7 @@ import {
 getFirestore,
 doc,
 getDoc,
-updateDoc
+setDoc
 
 }
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
@@ -215,22 +211,22 @@ from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
 
-apiKey: "YOUR_API_KEY",
+apiKey: "AIzaSyBx3J9aGn_98rTPgurMMKw_GR3puIMj4Ms",
 
 authDomain:
-"YOUR_PROJECT.firebaseapp.com",
+"colourcash-ea60e.firebaseapp.com",
 
 projectId:
-"YOUR_PROJECT_ID",
+"colourcash-ea60e",
 
 storageBucket:
-"YOUR_PROJECT.appspot.com",
+"colourcash-ea60e.firebasestorage.app",
 
 messagingSenderId:
-"YOUR_SENDER_ID",
+"403688058646",
 
 appId:
-"YOUR_APP_ID"
+"1:403688058646:web:f1753360471528f275ea37"
 
 };
 
@@ -333,7 +329,7 @@ async function saveSettings(){
 
 try{
 
-await updateDoc(
+await setDoc(
 
 doc(
 db,
@@ -357,7 +353,7 @@ wingoMode.value
 );
 
 alert(
-"Settings Saved"
+"Settings Saved Successfully"
 );
 
 }catch(e){
