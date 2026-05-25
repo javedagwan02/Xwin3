@@ -920,46 +920,60 @@ S().mybets.slice(0,10).forEach(b=>{
 if(window.gameLoop){  
 clearInterval(window.gameLoop);  
 }  
-window.gameLoop = setInterval(async ()=>{  
-  
-for (const g of Object.keys(games)) {  
-  
-let game = games[g];  
-game.time--;  
-  
-if(game.time <= 0){  
-  
-/* RESULT GENERATE */  
-  
-/* 🔥 HOUSE EDGE SYSTEM */  
-  
-let edge = 50;  
-  
-try {  
-  
-   const snap = await window.getDoc(
-window.doc(window.db,"settings","houseEdge")
-);
 
-let bigAmountLoss = false;
+ window.gameLoop = setInterval(async ()=>{
 
-if (snap.exists()) {
+for (const g of Object.keys(games)) {
 
-  edge = snap.data().wingo || 50;
+let game = games[g];
 
-  bigAmountLoss =
-  snap.data().wingo_bigAmountLoss || false;
+/* TIMER SAFE */
+
+if(game.time > 0){
+
+    game.time--;
 
 }
-  
-  console.log("EDGE =", edge);  
-  
-} catch (e) {  
-  
-  console.log(e);  
-  
-}  
-  
+
+/* RESULT TIME */
+
+if(game.time === 0){
+
+/* STOP NEGATIVE */
+
+game.time = -1;
+
+/* RESULT GENERATE */
+
+
+/* 🔥 HOUSE EDGE SYSTEM */
+
+let edge = 50;
+let bigAmountLoss = false;
+
+try {
+
+   const snap = await window.getDoc(
+      window.doc(window.db,"settings","houseEdge")
+   );
+
+   if (snap.exists()) {
+
+      edge =
+      snap.data().wingo || 50;
+
+      bigAmountLoss =
+      snap.data().wingo_bigAmountLoss || false;
+
+   }
+
+   console.log("EDGE =", edge);
+
+} catch (e) {
+
+   console.log(e);
+
+} 
 /*  
 0%   = all lose  
 100% = all win  
@@ -1324,7 +1338,7 @@ showPopup(
 pendingBets = pendingBets.filter(  
 b=>b.game != g  
 );  
-  
+  await new Promise(r=>setTimeout(r,1000));
 game.time = GAME_TIMES[g];  
   
 game.period++;  
