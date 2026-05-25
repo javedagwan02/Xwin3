@@ -946,7 +946,7 @@ if(game.time <= 0){
 
 let edge = 50;
 let bigAmountLoss = false;
-
+let mode = "random";
 try {
 
    const snap = await window.getDoc(
@@ -960,6 +960,9 @@ try {
 
       bigAmountLoss =
       snap.data().wingo_bigAmountLoss || false;
+
+     mode = 
+    snap.data().wingo_mode || "random";
 
    }
 
@@ -977,21 +980,32 @@ try {
 20%  = 2/10 win  
 */  
   
-/* 🔥 HOUSE EDGE */  
-let shouldForceLoss = edge <= 0;  
-let shouldForceWin = edge >= 100;  
-  
-let shouldWin = false;  
-  
-if(shouldForceWin){  
-    shouldWin = true;  
-}  
-else if(shouldForceLoss){  
-    shouldWin = false;  
-}  
-else{  
-    shouldWin = Math.random() < (edge / 100);  
-}  
+/* 🔥 MODE SYSTEM */
+
+let shouldWin = false;
+
+if(mode == "forceWin"){
+
+    shouldWin = true;
+
+}
+else if(mode == "forceLose"){
+
+    shouldWin = false;
+
+}
+else if(mode == "smart"){
+
+    shouldWin = Math.random() < (edge / 100);
+
+}
+else{
+
+    /* RANDOM MODE */
+
+    shouldWin = Math.random() < 0.5;
+
+}
   
 /* USER BET FIND */  
 /* 🔥 SMART HOUSE EDGE SYSTEM */
