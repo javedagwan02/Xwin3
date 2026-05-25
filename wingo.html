@@ -562,14 +562,26 @@ function render(){
   
 walletEl.innerText = Number(wallet).toFixed(2);  
   
-let t = S().time;  
-  
-let min = Math.floor(t / 60);  
-let sec = t % 60;  
-  
-if(sec < 10){  
-sec = "0" + sec;  
-}  
+let t = S().time;
+
+/* STOP NEGATIVE TIMER */
+
+if(t < 0){
+  t = 0;
+}
+
+let min = Math.floor(t / 60);
+let sec = t % 60;
+
+/* FORMAT */
+
+if(min < 10){
+  min = "0" + min;
+}
+
+if(sec < 10){
+  sec = "0" + sec;
+}
   
 time.innerText = "⏳ " + min + ":" + sec;  
 period.innerText = S().period;  
@@ -935,7 +947,7 @@ if (snap.exists()) {
 
   edge = snap.data().wingo || 50;
 
-  let bigAmountLoss =
+  bigAmountLoss =
   snap.data().wingo_bigAmountLoss || false;
 
 }
