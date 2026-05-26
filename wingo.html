@@ -1232,19 +1232,24 @@ let c =
   
 /* BIG SMALL */  
   
-let bs =  
-  n >= 5  
-  ? "BIG"  
-  : "SMALL";  
+let num = Number(n);
+
+let bs = (num >= 5) ? "BIG" : "SMALL";
+
+  console.log("RESULT DEBUG:", { n, bs });
 /* HISTORY */  
 const resultPeriod = game.period;  
   
 game.history.unshift({  
-p: resultPeriod,  
-n: n,  
-bs: bs,  
-c: c  
-});  
+  p: resultPeriod,  
+  n: n,  
+  bs: bs,  
+  c: c  
+});
+
+setTimeout(() => {
+  draw();
+}, 50);
   
   
   
