@@ -875,12 +875,12 @@ S().mybets.slice(0,10).forEach(b=>{
   
       <div class="bet-top">  
   
-        <div class="bet-type"  
-        style="  
-        background:  
-        ${b.b.includes('Big') ? '#f59e0b' :  
-          b.b.includes('Small') ? '#60a5fa' :  
-          '#ff6b6b'}">  
+        <div class="bet-type"
+style="
+background:
+${b.value === 'BIG' ? '#f59e0b' :
+  b.value === 'SMALL' ? '#60a5fa' :
+  '#ff6b6b'}">
   
           ${b.b}  
   
