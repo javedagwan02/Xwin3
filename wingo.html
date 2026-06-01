@@ -483,28 +483,33 @@ w30:{
 time:30,  
 period:20260120100001,  
 history:[],  
-mybets:[]  
+mybets:[],
+processing:false
 },  
   
 w1:{  
 time:60,  
 period:20260120110001,  
 history:[],  
-mybets:[]  
+mybets:[],
+processing:false
+  
 },  
   
 w3:{  
 time:180,  
 period:20260120130001,  
 history:[],  
-mybets:[]  
+mybets:[],
+processing:false
 },  
   
 w5:{  
 time:300,  
 period:20260120150001,  
 history:[],  
-mybets:[]  
+mybets:[],
+processing:false
 }  
   
 };  
@@ -937,7 +942,9 @@ if(game.time > 0){
 
 /* RESULT TIME */
 
-if(game.time <= 0){
+if(game.time <= 0 && !game.processing){
+
+    game.processing = true;
 
 /* RESULT GENERATE */
 
@@ -1240,11 +1247,11 @@ let bs = (num >= 5) ? "BIG" : "SMALL";
 /* HISTORY */  
 const resultPeriod = game.period;  
   
-game.history.unshift({  
-  p: resultPeriod,  
-  n: n,  
-  bs: bs,  
-  c: c  
+game.history.unshift({
+  p: resultPeriod,
+  n: Number(n),
+  bs: Number(n) >= 5 ? "BIG" : "SMALL",
+  c: c
 });
 
 setTimeout(() => {
@@ -1352,7 +1359,8 @@ b=>b.game != g
   
 game.time = GAME_TIMES[g];  
   
-game.period++;  
+game.period++; 
+  game.processing = false;
   saveGame();  
   
 }  
