@@ -257,7 +257,8 @@ getFirestore,
 collection,
 getDocs,
 query,
-where
+where,
+onSnapshot
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 const app = initializeApp({
@@ -273,53 +274,45 @@ async function loadReferrals(){
 
   const myCode = localStorage.getItem("refCode");
   let html = "";
-let grandTotal = 0;
-  const usersSnap = await getDocs(collection(db,"users"));
+  let grandTotal = 0;
+
+  const usersSnap = await getDocs(
+    query(collection(db,"users"), where("referredBy","==",myCode))
+  );
 
   for(const u of usersSnap.docs){
 
     const user = u.data();
+    let total = 0;
 
-    if(user.referredBy == myCode){
+    const depSnap = await getDocs(
+      query(collection(db,"deposits"),
+      where("email","==",user.email),
+      where("status","==","APPROVED"))
+    );
 
-      let total = 0;
+    depSnap.forEach(d=>{
+      total += Number(d.data().amount || 0);
+    });
 
-      const depSnap = await getDocs(
-        query(collection(db,"deposits"),
-        where("email","==",user.email))
-      );
+    grandTotal += total;
 
-      depSnap.forEach(d=>{
-        if(d.data().status === "APPROVED"){
-          total += Number(d.data().amount);
-          grandTotal += Number(d.data().amount);
-        }
-      });
-
-      // 🔥 EMAIL HIDE
-      let email = user.email;
-      let hidden = email.slice(0,2) + "****@" + email.split("@")[1];
-
-      html += `
-<div style="
-  background:#fff;
-  padding:12px;
-  margin-top:10px;
-  border-radius:12px;
-  color:#000;
-  box-shadow:0 5px 10px rgba(0,0,0,0.1);
-">
-  📧 ${user.email}<br>
-  💰 Deposit: ₹${total}
-</div>
-`;
-    }
+    html += `
+      <div style="
+        background:#fff;
+        padding:12px;
+        margin-top:10px;
+        border-radius:12px;
+        color:#000;
+      ">
+        📧 ${user.email}<br>
+        💰 Deposit: ₹${total}
+      </div>
+    `;
   }
 
-  document.getElementById("refList").innerHTML =
-    html || "No referrals yet";
-  document.getElementById("totalAmount").innerText =
-"₹" + grandTotal;
+  document.getElementById("refList").innerHTML = html || "No referrals yet";
+  document.getElementById("totalAmount").innerText = "₹" + grandTotal;
 }
 
 loadReferrals();
