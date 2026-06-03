@@ -364,15 +364,14 @@ else if(data.timeStamp){
   }
 }
 
-        if(data.status === "APPROVED" && (now - t <= threeMonth)){
+       if(data.status === "APPROVED"){
 
-          totalDeposit += Number(data.amount || 0);
+  totalDeposit += Number(data.amount || 0);
 
-          // latest time save
-          if(!lastTime || t > lastTime){
-            lastTime = t;
-          }
-        }
+  if(!lastTime || t > lastTime){
+    lastTime = t;
+  }
+} 
       });
 
       // 🔥 agar kuch deposit mila
@@ -391,7 +390,7 @@ else if(data.timeStamp){
   }
 
   if(html === ""){
-    html = "No data in last 3 months";
+    html = "No referral deposit yet";
   }
 
   document.getElementById("refDetails").innerHTML = html;
