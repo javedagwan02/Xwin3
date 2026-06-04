@@ -397,26 +397,24 @@ else if(data.timeStamp){
 }
 </script>
 
-  <script>
+<script>
 
-/* 🔥 REF CODE GENERATE */
+/* REF CODE */
 let ref = localStorage.getItem("refCode");
-
-if(!ref){
-  ref = Math.floor(1000000 + Math.random()*9000000);
-  localStorage.setItem("refCode", ref);
-}
 
 /* SHOW CODE */
 window.onload = function(){
-  document.getElementById("refCode").innerText = ref;
+  document.getElementById("refCode").innerText = ref || "----";
 };
 
 /* LINK */
-const refLink = `${window.location.origin}/register?ref=${ref}`;
-/* COPY */
 window.copyLink = function(){
+
+  const refLink =
+    `${window.location.origin}/register?ref=${ref}`;
+
   navigator.clipboard.writeText(refLink);
+
   alert("Referral link copied ✅");
 };
 
