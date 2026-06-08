@@ -34,18 +34,18 @@ body{
   background:#bcd6ff;
   border:6px solid #3478d6;
   border-radius:18px;
-  padding:12px;
+  padding:14px;
   color:#174d91;
   box-shadow:0 5px 0 #1556ad;
 }
 
 .balance{
   text-align:center;
-  font-size:24px;
-  font-weight:bold;
-  color:#ffde39;
+  font-size:28px;
+  font-weight:900;
+  color:#ffd632;
+  margin-bottom:15px;
   text-shadow:2px 2px #1556ad;
-  margin-bottom:10px;
 }
 
 .amount-input{
@@ -53,30 +53,30 @@ body{
   padding:14px;
   border-radius:12px;
   border:none;
-  font-size:24px;
+  font-size:26px;
   font-weight:bold;
   box-sizing:border-box;
   color:#275aa0;
   background:#dce8ff;
-  margin-bottom:12px;
+  margin-bottom:18px;
 }
 
 .amount-grid{
   display:grid;
   grid-template-columns:repeat(3,1fr);
-  gap:12px;
+  gap:14px;
 }
 
 .amount-btn{
   position:relative;
-  padding:16px 0;
+  padding:18px 0;
   border:none;
-  border-radius:28px;
+  border-radius:30px;
   background:linear-gradient(#ffe76a,#ffae16);
   color:#7b3500;
-  font-size:22px;
+  font-size:24px;
   font-weight:900;
-  box-shadow:0 6px 0 #c46b00;
+  box-shadow:0 7px 0 #c46b00;
 }
 
 .amount-btn.active{
@@ -86,46 +86,46 @@ body{
 
 .bonus-tag{
   position:absolute;
-  top:-12px;
-  right:10px;
+  top:-13px;
+  right:8px;
   background:#ffb31b;
   color:#fff;
   font-size:13px;
-  padding:2px 9px;
+  padding:3px 10px;
   border-radius:12px;
   text-shadow:1px 1px #804000;
 }
 
 .offer{
-  margin-top:18px;
+  margin-top:22px;
   background:#20a8ff;
-  border-radius:12px;
-  padding:14px;
+  border-radius:13px;
+  padding:16px;
   color:#fff;
-  font-size:18px;
+  font-size:19px;
   font-weight:900;
   text-align:center;
-  text-shadow:1px 1px #003d7a;
+  text-shadow:1px 2px #003d7a;
 }
 
 .offer span{
   color:#ffd632;
-  font-size:32px;
+  font-size:34px;
 }
 
 .payment-box{
-  margin-top:15px;
+  margin-top:18px;
   background:#42aefb;
-  border-radius:14px;
-  padding:14px;
+  border-radius:15px;
+  padding:16px;
   min-height:120px;
 }
 
 .label{
-  font-size:24px;
+  font-size:26px;
   font-weight:bold;
   color:#fff;
-  margin-bottom:14px;
+  margin-bottom:18px;
   text-shadow:1px 2px #14589d;
 }
 
@@ -141,7 +141,7 @@ body{
   border-radius:14px;
   padding:18px 5px;
   color:#fff;
-  font-size:22px;
+  font-size:23px;
   font-weight:900;
   text-align:center;
   position:relative;
@@ -234,6 +234,7 @@ body{
   padding:22px;
   border-radius:14px;
   text-align:center;
+  color:#fff;
 }
 
 .popup-box button{
@@ -256,7 +257,9 @@ body{
 
   <div class="panel">
 
-    <div class="balance">Balance ₹<span id="balance">0</span></div>
+    <div class="balance">
+      Wallet ₹<span id="balance">0.00</span>
+    </div>
 
     <input class="amount-input" type="number" id="amount" placeholder="₹ Select or enter amount">
 
@@ -304,7 +307,27 @@ body{
   </div>
 </div>
 
-<script>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import {
+  getFirestore,
+  collection,
+  getDocs,
+  query,
+  where
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey:"AIzaSyBx3J9aGn_98rTPgurMMKw_GR3puIMj4Ms",
+  authDomain:"colourcash-ea60e.firebaseapp.com",
+  projectId:"colourcash-ea60e"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+const userEmail = localStorage.getItem("userEmail");
+
 const upiMethods = [
   { name:"UPI-11", upi:"rajjabali72@upi" },
   { name:"UPI-12", upi:"rajjabali72@upi" },
@@ -314,8 +337,26 @@ const upiMethods = [
 
 const amounts = [100,200,300,500,1000,2000,3000,5000,10000,20000];
 
-let selectedAmount = 0;
 let selectedMethod = -1;
+
+async function loadBalance(){
+  if(!userEmail){
+    document.getElementById("balance").innerText = "0.00";
+    return;
+  }
+
+  const userSnap = await getDocs(
+    query(collection(db,"users"), where("email","==",userEmail))
+  );
+
+  userSnap.forEach(d=>{
+    let bal = d.data().balance || 0;
+    document.getElementById("balance").innerText = Number(bal).toFixed(2);
+    localStorage.setItem("wallet", bal);
+  });
+}
+
+loadBalance();
 
 const amountGrid = document.getElementById("amountGrid");
 
@@ -328,7 +369,6 @@ amounts.forEach(a=>{
 });
 
 window.selectAmount = function(a, btn){
-  selectedAmount = a;
   document.getElementById("amount").value = a;
 
   document.querySelectorAll(".amount-btn").forEach(b=>b.classList.remove("active"));
@@ -338,7 +378,6 @@ window.selectAmount = function(a, btn){
 }
 
 document.getElementById("amount").addEventListener("input",()=>{
-  selectedAmount = Number(document.getElementById("amount").value);
   document.querySelectorAll(".amount-btn").forEach(b=>b.classList.remove("active"));
   updateAmount();
 });
