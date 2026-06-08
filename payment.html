@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Payment</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+body{
+  margin:0;
+  font-family:Arial;
+  background:radial-gradient(circle at top,#24004a,#080014);
+  color:#fff;
+}
+
+.box{
+  margin:20px;
+  padding:18px;
+  border-radius:22px;
+  background:rgba(255,255,255,.06);
+  box-shadow:0 0 25px rgba(255,0,255,.3);
+  text-align:center;
+}
+
+h1{
+  color:#ffd633;
+}
+
+.qr{
+  background:#fff;
+  padding:8px;
+  border-radius:14px;
+  width:260px;
+  max-width:90%;
+}
+
+.upi{
+  background:#07000d;
+  padding:14px;
+  border-radius:12px;
+  margin-top:14px;
+  font-size:20px;
+  font-weight:bold;
+}
+
+input{
+  width:100%;
+  padding:15px;
+  margin-top:14px;
+  border:none;
+  border-radius:12px;
+  box-sizing:border-box;
+  font-size:16px;
+}
+
+button{
+  width:100%;
+  padding:15px;
+  margin-top:12px;
+  border:none;
+  border-radius:12px;
+  font-size:18px;
+  font-weight:bold;
+}
+
+.copy{
+  background:linear-gradient(45deg,#ff00cc,#7b00ff);
+  color:#fff;
+}
+
+.submit{
+  background:#22c55e;
+  color:#fff;
+}
+
+.payapp{
+  background:#ffd21f;
+  color:#8a3200;
+}
+
+.info{
+  margin-top:12px;
+  color:#ddd;
+}
+
+.popup{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.75);
+  display:none;
+  justify-content:center;
+  align-items:center;
+}
+
+.popup div{
+  background:#1a0033;
+  padding:22px;
+  border-radius:14px;
+  width:80%;
+  text-align:center;
+}
+</style>
+</head>
+
+<body>
+
+<div class="box">
+  <h1>Complete Payment</h1>
+
+  <div class="info">
+    Amount: ₹<span id="amountText"></span><br>
+    Method: <span id="methodText"></span>
+  </div>
+
+  <br>
+
+  <img id="qrImg" class="qr">
+
+  <div class="upi" id="upiText"></div>
+
+  <button class="copy" onclick="copyUPI()">Copy UPI</button>
+  <button class="payapp" onclick="openUPIApp()">Open Payment App</button>
+
+  <input type="text" id="utr" placeholder="Enter UTR Number">
+
+  <button class="submit" onclick="submitUTR()">Submit UTR</button>
+</div>
+
+<div class="popup" id="popup">
+  <div>
+    <h3 id="popupText"></h3>
+    <button onclick="closePopup()">OK</button>
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getFirestore, collection, addDoc, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+const app = initializeApp({
+  apiKey:"AIzaSyBx3J9aGn_98rTPgurMMKw_GR3puIMj4Ms",
+  authDomain:"colourcash-ea60e.firebaseapp.com",
+  projectId:"colourcash-ea60e"
+});
+
+const db = getFirestore(app);
+
+const params = new URLSearchParams(window.location.search);
+
+const amount = Number(params.get("amount"));
+const method = params.get("method");
+const upi = params.get("upi");
+
+document.getElementById("amountText").innerText = amount;
+document.getElementById("methodText").innerText = method;
+document.getElementById("upiText").innerText = upi;
+
+const upiUrl = `upi://pay?pa=${upi}&pn=ColourCash&am=${amount}&cu=INR`;
+const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(upiUrl)}`;
+
+document.getElementById("qrImg").src = qrUrl;
+
+window.copyUPI = function(){
+  navigator.clipboard.writeText(upi);
+  showPopup("UPI copied");
+}
+
+window.openUPIApp = function(){
+  window.location.href = upiUrl;
+}
+
+window.submitUTR = async function(){
+  let utr = document.getElementById("utr").value.trim();
+
+  if(!amount || amount < 100){
+    showPopup("Invalid amount");
+    return;
+  }
+
+  if(utr.length < 10){
+    showPopup("Enter valid UTR number");
+    return;
+  }
+
+  const userEmail = localStorage.getItem("userEmail");
+
+  if(!userEmail){
+    showPopup("Login required");
+    return;
+  }
+
+  let referredBy = null;
+
+  const userSnap = await getDocs(
+    query(collection(db,"users"), where("email","==",userEmail))
+  );
+
+  userSnap.forEach(d=>{
+    referredBy = d.data().referredBy || null;
+  });
+
+  let wheelType = 0;
+
+  if(amount >= 1000){
+    wheelType = 1000;
+  }else if(amount >= 500){
+    wheelType = 500;
+  }else if(amount >= 100){
+    wheelType = 100;
+  }
+
+  showPopup("Submitting...");
+
+  addDoc(collection(db,"deposits"),{
+    email:userEmail,
+    amount:amount,
+    bonus:Math.floor(amount * 0.20),
+    utr:utr,
+    method:method,
+    upi:upi,
+    status:"PENDING",
+    time:Date.now(),
+    referredBy:referredBy,
+    wheel:wheelType
+  })
+  .then(()=>{
+    showPopup("Deposit Submitted ✅");
+    document.getElementById("utr").value="";
+  })
+  .catch(e=>{
+    showPopup("Error: " + e.message);
+  });
+}
+
+window.showPopup = function(msg){
+  document.getElementById("popupText").innerText = msg;
+  document.getElementById("popup").style.display = "flex";
+}
+
+window.closePopup = function(){
+  document.getElementById("popup").style.display = "none";
+}
+</script>
+
+</body>
+</html>
