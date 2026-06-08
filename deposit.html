@@ -6,267 +6,373 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <style>
-
 body{
   margin:0;
-  font-family:Arial;
-  background: radial-gradient(circle at top,#1a0033,#0a001a);
+  font-family:Arial, sans-serif;
+  background:linear-gradient(#06296d,#4bbcff);
   color:#fff;
 }
 
-/* HEADER */
-.header{
-  padding:18px;
+.deposit-wrap{
+  max-width:430px;
+  margin:auto;
+  min-height:100vh;
+  padding:10px;
+  box-sizing:border-box;
+}
+
+.top-title{
+  text-align:center;
+  font-size:34px;
+  font-weight:900;
+  color:#ffd84d;
+  text-shadow:2px 3px #4d1aa8;
+  padding:18px 0;
+}
+
+.panel{
+  background:#bcd6ff;
+  border:6px solid #3478d6;
+  border-radius:18px;
+  padding:12px;
+  color:#174d91;
+  box-shadow:0 5px 0 #1556ad;
+}
+
+.balance{
+  text-align:center;
   font-size:24px;
   font-weight:bold;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
+  color:#ffde39;
+  text-shadow:2px 2px #1556ad;
+  margin-bottom:10px;
 }
 
-.header::after{
-  content:"100% Secure";
-  font-size:12px;
-  color:#c77dff;
-}
-
-/* MAIN CARD */
-.card{
-  margin:15px;
-  border-radius:20px;
-  padding:18px;
-
-  background: rgba(255,255,255,0.05);
-  backdrop-filter: blur(12px);
-
-  border:1px solid rgba(255,255,255,0.1);
-
-  box-shadow:
-    0 0 25px rgba(255,0,255,0.2),
-    inset 0 0 15px rgba(255,255,255,0.05);
-}
-
-/* CHANNEL TABS */
-.channels{
-  display:flex;
-  gap:8px;
-  overflow:auto;
-}
-
-.channel{
-  flex:1;
-  min-width:80px;
-  padding:10px;
-  border-radius:12px;
-  text-align:center;
-  font-size:12px;
-
-  background: rgba(255,255,255,0.08);
-  color:#ccc;
-  cursor:pointer;
-}
-
-.channel.active{
-  background: linear-gradient(45deg,#ff00cc,#7b00ff);
-  color:#fff;
-  box-shadow:0 0 10px #ff00cc;
-}
-
-/* QR BOX */
-.qr-box{
-  background: linear-gradient(135deg,#2b003f,#1a002e);
-  padding:15px;
-  border-radius:16px;
-  text-align:center;
-  margin-top:15px;
-
-  border:1px solid rgba(255,255,255,0.1);
-}
-
-.qr-box img{
-  width:200px;
-  border-radius:12px;
-  background:#fff;
-  padding:6px;
-}
-
-/* UPI BOX */
-.upi{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-
-  background: rgba(0,0,0,0.6);
-  padding:12px;
-  border-radius:12px;
-  margin-top:12px;
-}
-
-/* COPY BUTTON */
-.copy{
-  background: linear-gradient(45deg,#ff00cc,#7b00ff);
-  border:none;
-  padding:10px 14px;
-  border-radius:10px;
-  color:#fff;
-  margin-top:10px;
-  width:100%;
-}
-
-/* AMOUNT GRID */
-.amounts{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:10px;
-  margin-top:15px;
-}
-
-.amounts button{
-  padding:12px;
-  border-radius:12px;
-  border:1px solid rgba(255,255,255,0.2);
-
-  background: transparent;
-  color:#fff;
-
-  transition:0.2s;
-}
-
-.amounts button:hover{
-  background:#ff00cc;
-  box-shadow:0 0 10px #ff00cc;
-}
-
-/* INPUT FIELDS */
-input{
+.amount-input{
   width:100%;
   padding:14px;
   border-radius:12px;
-  margin-top:12px;
-
-  background: rgba(255,255,255,0.08);
-  border:1px solid rgba(255,255,255,0.15);
-  color:#fff;
-
-  box-sizing: border-box; /* 🔥 important */
+  border:none;
+  font-size:24px;
+  font-weight:bold;
+  box-sizing:border-box;
+  color:#275aa0;
+  background:#dce8ff;
+  margin-bottom:12px;
 }
 
-/* PAY BUTTON */
-.pay{
-  width:100%;
-  padding:16px;
-  margin-top:18px;
+.amount-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+}
 
-  background: linear-gradient(45deg,#ff00cc,#7b00ff);
+.amount-btn{
+  position:relative;
+  padding:14px 0;
   border:none;
-  border-radius:14px;
+  border-radius:25px;
+  background:linear-gradient(#ffe76a,#ffae16);
+  color:#7b3500;
+  font-size:20px;
+  font-weight:900;
+  box-shadow:0 5px 0 #c46b00;
+}
 
+.amount-btn.active{
+  background:linear-gradient(#6dff5c,#11b51b);
+  color:#fff;
+}
+
+.bonus{
+  position:absolute;
+  top:-12px;
+  right:6px;
+  background:#ffb31b;
+  color:#fff;
+  font-size:12px;
+  padding:2px 8px;
+  border-radius:10px;
+  text-shadow:1px 1px #804000;
+}
+
+.offer{
+  margin-top:18px;
+  background:#20a8ff;
+  border-radius:10px;
+  padding:12px;
+  color:#fff;
+  font-size:18px;
+  font-weight:900;
+  text-align:center;
+  text-shadow:1px 1px #003d7a;
+}
+
+.offer span{
+  color:#ffd632;
+  font-size:28px;
+}
+
+.payment-box{
+  margin-top:15px;
+  background:#42aefb;
+  border-radius:12px;
+  padding:12px;
+  min-height:120px;
+}
+
+.label{
+  font-size:20px;
+  font-weight:bold;
+  color:#fff;
+  margin-bottom:12px;
+  text-shadow:1px 1px #14589d;
+}
+
+.method-grid{
+  display:none;
+  grid-template-columns:repeat(2,1fr);
+  gap:12px;
+}
+
+.method{
+  background:linear-gradient(135deg,#ff89d8,#c252ff);
+  border:3px solid #fff;
+  border-radius:12px;
+  padding:12px;
+  color:#fff;
   font-size:18px;
   font-weight:bold;
-
-  box-shadow:0 0 15px #ff00cc;
+  text-align:center;
+  position:relative;
 }
 
-/* SUBMIT BUTTON */
-.submit{
+.method.active::after{
+  content:"✓";
+  position:absolute;
+  right:-8px;
+  top:-12px;
+  background:#944cff;
+  border:3px solid #fff;
+  color:white;
+  width:28px;
+  height:28px;
+  border-radius:50%;
+  line-height:28px;
+}
+
+.select-msg{
+  text-align:center;
+  padding:35px 0;
+  color:#1561a9;
+  font-size:18px;
+  font-weight:bold;
+}
+
+.summary{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+  margin-top:12px;
+}
+
+.summary div{
+  background:#d5e6ff;
+  border:3px solid #3478d6;
+  border-radius:10px;
+  text-align:center;
+  padding:10px;
+  color:#174d91;
+  font-weight:bold;
+}
+
+.note{
+  background:#dcecff;
+  color:#195aa2;
+  padding:12px;
+  border-radius:10px;
+  margin-top:14px;
+  font-size:14px;
+  font-weight:bold;
+}
+
+.deposit-btn{
+  width:90%;
+  display:block;
+  margin:18px auto 0;
+  padding:18px;
+  border:none;
+  border-radius:18px;
+  background:linear-gradient(#ddd,#999);
+  color:#fff;
+  font-size:30px;
+  font-weight:900;
+  box-shadow:0 5px 0 #777;
+}
+
+.deposit-btn.active{
+  background:linear-gradient(#fff06a,#ff9f13);
+  color:#a93400;
+  box-shadow:0 5px 0 #b86400;
+}
+
+.qr-section{
+  display:none;
+  margin-top:18px;
+  background:#25003e;
+  border-radius:16px;
+  padding:15px;
+  text-align:center;
+}
+
+.qr-section img{
+  width:230px;
+  background:#fff;
+  padding:8px;
+  border-radius:12px;
+}
+
+.upi-box{
+  background:#07000d;
+  color:#fff;
+  padding:12px;
+  border-radius:10px;
+  margin-top:12px;
+  font-size:18px;
+  font-weight:bold;
+}
+
+.copy-btn,.submit-btn{
   width:100%;
   padding:14px;
-  margin-top:10px;
-
-  background: rgba(255,255,255,0.1);
+  border:none;
   border-radius:12px;
-  border:1px solid rgba(255,255,255,0.2);
+  margin-top:10px;
+  font-size:17px;
+  font-weight:bold;
+}
 
+.copy-btn{
+  background:linear-gradient(45deg,#ff00cc,#7b00ff);
   color:#fff;
 }
 
-/* POPUP */
-#popup div{
-  background: linear-gradient(135deg,#1a002e,#2b003f);
-  border:1px solid rgba(255,255,255,0.1);
-  box-shadow:0 0 20px rgba(255,0,255,0.2);
+.submit-btn{
+  background:#20c75a;
+  color:#fff;
 }
 
-/* SCROLL BAR HIDE */
-.channels::-webkit-scrollbar{
-  display:none;
+.utr-input{
+  width:100%;
+  padding:14px;
+  margin-top:12px;
+  border-radius:10px;
+  border:none;
+  box-sizing:border-box;
+  font-size:16px;
 }
-  
+
+.popup{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.7);
+  display:none;
+  justify-content:center;
+  align-items:center;
+  z-index:999;
+}
+
+.popup-box{
+  width:80%;
+  background:#1a0033;
+  padding:22px;
+  border-radius:14px;
+  text-align:center;
+}
+
+.popup-box button{
+  width:100%;
+  padding:12px;
+  border:none;
+  border-radius:10px;
+  background:#4caf50;
+  color:#fff;
+  font-weight:bold;
+}
 </style>
 </head>
 
 <body>
 
-<div class="header">💰 Deposit</div>
+<div class="deposit-wrap">
 
-<div class="card">
+  <div class="top-title">DEPOSIT</div>
 
-<!-- CHANNEL SELECT -->
-<div class="channels">
-  <div class="channel active" onclick="selectChannel(0)">UPI QR</div>
-  <div class="channel" onclick="selectChannel(1)">Innote QR</div>
-  <div class="channel" onclick="selectChannel(2)">Paytm QR</div>
-  <div class="channel" onclick="selectChannel(3)">PhonePe QR</div>
-</div>
+  <div class="panel">
 
-<!-- QR -->
-<div class="qr-box">
-  <img id="qrImg">
-</div>
+    <div class="balance">Balance ₹<span id="balance">0</span></div>
 
-<!-- UPI -->
-<div class="upi" id="upiBox"></div>
-<button class="copy" onclick="copyUPI()">Copy UPI</button>
+    <input class="amount-input" type="number" id="amount" placeholder="₹ Select or enter amount">
 
-<!-- AMOUNT -->
-<div class="amounts">
-  <button onclick="setAmount(100)">100</button>
-  <button onclick="setAmount(200)">200</button>
-  <button onclick="setAmount(300)">300</button>
-  <button onclick="setAmount(500)">500</button>
-  <button onclick="setAmount(1000)">1000</button>
-  <button onclick="setAmount(5000)">5000</button>
-</div>
+    <div class="amount-grid" id="amountGrid"></div>
 
-<input type="number" id="amount" placeholder="Enter Amount (Min ₹100)">
- 
-  <input type="text" id="utr" placeholder="Enter UTR Number (12 digit)">
-  
+    <div class="offer">
+      DEPOSIT PLUS ₹100~50000<br>
+      Extra <span>20%</span>
+    </div>
 
-<button class="pay" onclick="payNow()">PAY NOW</button>
+    <div class="payment-box">
+      <div class="label">Payment Method</div>
 
-  <button class="submit" onclick="submitUTR()">Submit UTR</button>
-  <button class="submit" onclick="openInsta()">📺 How To Deposit</button>
-  <div style="margin-top:15px;font-size:12px;text-align:center;color:#aaa;">
-  🔒 Secure Payment &nbsp;&nbsp; ⚡ Instant Approval &nbsp;&nbsp; 🎧 24/7 Support
+      <div id="selectMsg" class="select-msg">
+        Please select recharge amount first.
+      </div>
+
+      <div class="method-grid" id="methodGrid">
+        <div class="method" onclick="selectMethod(0)">UPI-11</div>
+        <div class="method" onclick="selectMethod(1)">UPI-12</div>
+        <div class="method" onclick="selectMethod(2)">UPI-13</div>
+        <div class="method" onclick="selectMethod(3)">UPI-14</div>
+      </div>
+    </div>
+
+    <div class="summary">
+      <div>Cash<br>₹<span id="cash">0</span></div>
+      <div>Bonus<br>₹<span id="bonus">0</span></div>
+    </div>
+
+    <div class="note">
+      Typically, the funds you deposit will be credited within 1 minute.
+      If recharge fails, try again or contact customer service.
+    </div>
+
+    <button class="deposit-btn" id="depositBtn" onclick="showQR()">Deposit</button>
+
+    <div class="qr-section" id="qrSection">
+      <img id="qrImg">
+      <div class="upi-box" id="upiText"></div>
+
+      <button class="copy-btn" onclick="copyUPI()">Copy UPI</button>
+
+      <input class="utr-input" type="text" id="utr" placeholder="Enter UTR Number">
+
+      <button class="submit-btn" onclick="submitUTR()">Submit UTR</button>
+    </div>
+
   </div>
 </div>
 
-<!-- 🔥 START POPUP -->
-<div id="startPopup" style="position:fixed;inset:0;display:none;justify-content:center;align-items:center;background:rgba(0,0,0,0.85);z-index:9999;">
-  
-  <div style="text-align:center;">
-    <img src="images/35106-removebg-preview.png" 
-         style="width:260px;max-width:90%;border-radius:20px;box-shadow:0 0 25px #00ffcc;">
-  </div>
-
-</div>
-
-
-<!-- 🔥 SUCCESS POPUP -->
-<div id="popup" style="position:fixed;inset:0;display:none;justify-content:center;align-items:center;background:rgba(0,0,0,0.7);z-index:9998;">
-  <div style="background:#1c1c1c;padding:20px;border-radius:12px;text-align:center;width:80%;">
+<div class="popup" id="popup">
+  <div class="popup-box">
     <h3 id="popupText">Success</h3>
-    <button onclick="closePopup()" style="margin-top:10px;padding:10px;width:100%;background:#4caf50;border:none;border-radius:10px;color:#fff;">OK</button>
+    <button onclick="closePopup()">OK</button>
   </div>
 </div>
 
-  <script type="module">
-
+<script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getFirestore, collection, addDoc, getDocs, query, where, updateDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getFirestore, collection, addDoc, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-/* 🔥 FIREBASE */
 const app = initializeApp({
   apiKey:"AIzaSyBx3J9aGn_98rTPgurMMKw_GR3puIMj4Ms",
   authDomain:"colourcash-ea60e.firebaseapp.com",
@@ -275,95 +381,127 @@ const app = initializeApp({
 
 const db = getFirestore(app);
 
-/* 🔥 CHANNEL DATA */
-const channels = [
-  { upi:"rajjabali72@upi" },
-  { upi:"rajjabali72@upi" },
-  { upi:"rajjabali72@upi" },
-  { upi:"rajjabali72@upi" }
+const upiMethods = [
+  { name:"UPI-11", upi:"rajjabali72@upi" },
+  { name:"UPI-12", upi:"rajjabali72@upi" },
+  { name:"UPI-13", upi:"rajjabali72@upi" },
+  { name:"UPI-14", upi:"rajjabali72@upi" }
 ];
 
-let current = 0;
+const amounts = [50,100,200,300,500,1000,2000,3000,5000,10000,20000];
 
-/* 🔥 SELECT CHANNEL */
-window.selectChannel = function(i){
-  current = i;
+let selectedAmount = 0;
+let selectedMethod = -1;
 
-  document.querySelectorAll(".channel").forEach(c=>c.classList.remove("active"));
-  document.querySelectorAll(".channel")[i].classList.add("active");
+const amountGrid = document.getElementById("amountGrid");
 
-  let upi = channels[i].upi;
-  document.getElementById("upiBox").innerText = upi;
+amounts.forEach(a=>{
+  let btn = document.createElement("button");
+  btn.className = "amount-btn";
+  btn.innerHTML = `${a.toLocaleString("en-IN")} <span class="bonus">+20%</span>`;
+  btn.onclick = () => selectAmount(a, btn);
+  amountGrid.appendChild(btn);
+});
 
-  generateQR(upi);
-}
-
-/* 🔥 QR */
-function generateQR(upi){
-  let url = `upi://pay?pa=${upi}&pn=ColourCash`;
-  let qr = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(url)}`;
-  document.getElementById("qrImg").src = qr;
-}
-
-/* 🔥 COPY */
-window.copyUPI = function(){
-  let upi = channels[current].upi;
-  navigator.clipboard.writeText(upi);
-  alert("UPI Copied");
-}
-
-/* 🔥 SET AMOUNT */
-window.setAmount = function(a){
+window.selectAmount = function(a, btn){
+  selectedAmount = a;
   document.getElementById("amount").value = a;
+
+  document.querySelectorAll(".amount-btn").forEach(b=>b.classList.remove("active"));
+  btn.classList.add("active");
+
+  updateAmount();
 }
 
-/* 🔥 PAY */
-window.payNow = function(){
+document.getElementById("amount").addEventListener("input",()=>{
+  selectedAmount = Number(document.getElementById("amount").value);
+  document.querySelectorAll(".amount-btn").forEach(b=>b.classList.remove("active"));
+  updateAmount();
+});
 
-  let amt = document.getElementById("amount").value;
+function updateAmount(){
+  let amt = Number(document.getElementById("amount").value);
+
+  document.getElementById("cash").innerText = amt || 0;
+  document.getElementById("bonus").innerText = amt >= 100 ? Math.floor(amt * 0.20) : 0;
+
+  if(amt >= 100){
+    document.getElementById("selectMsg").style.display = "none";
+    document.getElementById("methodGrid").style.display = "grid";
+  }else{
+    document.getElementById("selectMsg").style.display = "block";
+    document.getElementById("methodGrid").style.display = "none";
+  }
+
+  checkReady();
+}
+
+window.selectMethod = function(i){
+  selectedMethod = i;
+
+  document.querySelectorAll(".method").forEach(m=>m.classList.remove("active"));
+  document.querySelectorAll(".method")[i].classList.add("active");
+
+  checkReady();
+}
+
+function checkReady(){
+  let amt = Number(document.getElementById("amount").value);
+  let btn = document.getElementById("depositBtn");
+
+  if(amt >= 100 && selectedMethod !== -1){
+    btn.classList.add("active");
+  }else{
+    btn.classList.remove("active");
+  }
+}
+
+window.showQR = function(){
+  let amt = Number(document.getElementById("amount").value);
 
   if(amt < 100){
-    showPopup("Minimum ₹100");
+    showPopup("Minimum ₹100 deposit required");
     return;
   }
 
-  let upi = channels[current].upi;
+  if(selectedMethod === -1){
+    showPopup("Please select payment method");
+    return;
+  }
 
-  let url = `upi://pay?pa=${upi}&pn=ColourCash&am=${amt}&cu=INR`;
+  let upi = upiMethods[selectedMethod].upi;
+  let upiUrl = `upi://pay?pa=${upi}&pn=ColourCash&am=${amt}&cu=INR`;
+  let qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(upiUrl)}`;
 
-  // 🔥 ANDROID FIX (force open app)
-  window.location.href = url;
+  document.getElementById("qrImg").src = qrUrl;
+  document.getElementById("upiText").innerText = upi;
+  document.getElementById("qrSection").style.display = "block";
 
-  // 🔥 fallback (agar app nahi open hua)
-  setTimeout(()=>{
-    window.open(url,"_blank");
-  },500);
+  document.getElementById("qrSection").scrollIntoView({behavior:"smooth"});
 }
 
-/* 🔥 SUBMIT UTR */
+window.copyUPI = function(){
+  let upi = upiMethods[selectedMethod].upi;
+  navigator.clipboard.writeText(upi);
+  showPopup("UPI copied");
+}
+
 window.submitUTR = async function(){
-
-  let amt = document.getElementById("amount").value;
+  let amt = Number(document.getElementById("amount").value);
   let utr = document.getElementById("utr").value.trim();
-  let wheelType = 0;
-
-if(amt >= 1000){
-  wheelType = 1000;
-}
-else if(amt >= 500){
-  wheelType = 500;
-}
-else if(amt >= 100){
-  wheelType = 100;
-}
 
   if(amt < 100){
-    showPopup("Minimum ₹100");
+    showPopup("Minimum ₹100 deposit required");
+    return;
+  }
+
+  if(selectedMethod === -1){
+    showPopup("Please select payment method");
     return;
   }
 
   if(utr.length < 10){
-    showPopup("Enter valid UTR");
+    showPopup("Enter valid UTR number");
     return;
   }
 
@@ -374,42 +512,53 @@ else if(amt >= 100){
     return;
   }
 
-  // 🔥 USER DATA GET
+  let referredBy = null;
+
   const userSnap = await getDocs(
     query(collection(db,"users"), where("email","==",userEmail))
   );
-
-  let referredBy = null;
 
   userSnap.forEach(d=>{
     referredBy = d.data().referredBy || null;
   });
 
-  // 🔥 TURANT POPUP
-  showPopup("Submitting... ⏳");
+  showPopup("Submitting...");
 
-  // 🔥 BACKGROUND SAVE
+  let wheelType = 0;
+
+  if(amt >= 1000){
+    wheelType = 1000;
+  }else if(amt >= 500){
+    wheelType = 500;
+  }else if(amt >= 100){
+    wheelType = 100;
+  }
+
   addDoc(collection(db,"deposits"),{
-  email: userEmail,
-  amount: Number(amt),
-  utr: utr,
-  status: "PENDING",
-  time: Date.now(),
-  referredBy: referredBy,
-  wheel: wheelType
-})
-.then(()=>{
-  showPopup("Deposit Submitted ✅");
+    email:userEmail,
+    amount:amt,
+    bonus:Math.floor(amt * 0.20),
+    utr:utr,
+    method:upiMethods[selectedMethod].name,
+    upi:upiMethods[selectedMethod].upi,
+    status:"PENDING",
+    time:Date.now(),
+    referredBy:referredBy,
+    wheel:wheelType
+  })
+  .then(()=>{
+    showPopup("Deposit Submitted ✅");
+    document.getElementById("amount").value="";
+    document.getElementById("utr").value="";
+    document.getElementById("cash").innerText="0";
+    document.getElementById("bonus").innerText="0";
+    document.getElementById("qrSection").style.display="none";
+  })
+  .catch(e=>{
+    showPopup("Error: " + e.message);
+  });
+}
 
-  document.getElementById("amount").value="";
-  document.getElementById("utr").value="";
-})
-.catch(e=>{
-  showPopup("Error: " + e.message);
-});
-
-};
-/* 🔥 POPUP */
 window.showPopup = function(msg){
   document.getElementById("popupText").innerText = msg;
   document.getElementById("popup").style.display = "flex";
@@ -418,31 +567,7 @@ window.showPopup = function(msg){
 window.closePopup = function(){
   document.getElementById("popup").style.display = "none";
 }
+</script>
 
-  window.openInsta = function(){
-  window.location.href = "https://www.instagram.com/reel/DXRj_7cj7JE/?igsh=MWtqcHVkZTJ4bXpzYg==";
-  }
-/* INIT */
-selectChannel(0);
-
-/* 🔥 ONLY ONCE POPUP */
-window.onload = function(){
-
-  let seen = sessionStorage.getItem("depositPopup");
-
-  if(!seen){
-    let popup = document.getElementById("startPopup");
-
-    popup.style.display = "flex";
-
-    setTimeout(()=>{
-      popup.style.display = "none";
-      sessionStorage.setItem("depositPopup","done");
-    },3000);
-  }
-
-}
-
-  </script>
 </body>
 </html>
