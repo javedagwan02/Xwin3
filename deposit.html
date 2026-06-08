@@ -63,20 +63,20 @@ body{
 
 .amount-grid{
   display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:10px;
+  grid-template-columns:repeat(3,1fr);
+  gap:12px;
 }
 
 .amount-btn{
   position:relative;
-  padding:14px 0;
+  padding:16px 0;
   border:none;
-  border-radius:25px;
+  border-radius:28px;
   background:linear-gradient(#ffe76a,#ffae16);
   color:#7b3500;
-  font-size:20px;
+  font-size:22px;
   font-weight:900;
-  box-shadow:0 5px 0 #c46b00;
+  box-shadow:0 6px 0 #c46b00;
 }
 
 .amount-btn.active{
@@ -84,23 +84,23 @@ body{
   color:#fff;
 }
 
-.bonus{
+.bonus-tag{
   position:absolute;
   top:-12px;
-  right:6px;
+  right:10px;
   background:#ffb31b;
   color:#fff;
-  font-size:12px;
-  padding:2px 8px;
-  border-radius:10px;
+  font-size:13px;
+  padding:2px 9px;
+  border-radius:12px;
   text-shadow:1px 1px #804000;
 }
 
 .offer{
   margin-top:18px;
   background:#20a8ff;
-  border-radius:10px;
-  padding:12px;
+  border-radius:12px;
+  padding:14px;
   color:#fff;
   font-size:18px;
   font-weight:900;
@@ -110,39 +110,39 @@ body{
 
 .offer span{
   color:#ffd632;
-  font-size:28px;
+  font-size:32px;
 }
 
 .payment-box{
   margin-top:15px;
   background:#42aefb;
-  border-radius:12px;
-  padding:12px;
+  border-radius:14px;
+  padding:14px;
   min-height:120px;
 }
 
 .label{
-  font-size:20px;
+  font-size:24px;
   font-weight:bold;
   color:#fff;
-  margin-bottom:12px;
-  text-shadow:1px 1px #14589d;
+  margin-bottom:14px;
+  text-shadow:1px 2px #14589d;
 }
 
 .method-grid{
   display:none;
   grid-template-columns:repeat(2,1fr);
-  gap:12px;
+  gap:14px;
 }
 
 .method{
   background:linear-gradient(135deg,#ff89d8,#c252ff);
-  border:3px solid #fff;
-  border-radius:12px;
-  padding:12px;
+  border:4px solid #fff;
+  border-radius:14px;
+  padding:18px 5px;
   color:#fff;
-  font-size:18px;
-  font-weight:bold;
+  font-size:22px;
+  font-weight:900;
   text-align:center;
   position:relative;
 }
@@ -150,15 +150,16 @@ body{
 .method.active::after{
   content:"✓";
   position:absolute;
-  right:-8px;
-  top:-12px;
+  right:-12px;
+  top:-18px;
   background:#944cff;
-  border:3px solid #fff;
+  border:4px solid #fff;
   color:white;
-  width:28px;
-  height:28px;
+  width:36px;
+  height:36px;
   border-radius:50%;
-  line-height:28px;
+  line-height:36px;
+  font-size:24px;
 }
 
 .select-msg{
@@ -173,16 +174,17 @@ body{
   display:grid;
   grid-template-columns:1fr 1fr;
   gap:12px;
-  margin-top:12px;
+  margin-top:14px;
 }
 
 .summary div{
   background:#d5e6ff;
-  border:3px solid #3478d6;
-  border-radius:10px;
+  border:4px solid #3478d6;
+  border-radius:12px;
   text-align:center;
-  padding:10px;
+  padding:12px;
   color:#174d91;
+  font-size:18px;
   font-weight:bold;
 }
 
@@ -214,62 +216,6 @@ body{
   background:linear-gradient(#fff06a,#ff9f13);
   color:#a93400;
   box-shadow:0 5px 0 #b86400;
-}
-
-.qr-section{
-  display:none;
-  margin-top:18px;
-  background:#25003e;
-  border-radius:16px;
-  padding:15px;
-  text-align:center;
-}
-
-.qr-section img{
-  width:230px;
-  background:#fff;
-  padding:8px;
-  border-radius:12px;
-}
-
-.upi-box{
-  background:#07000d;
-  color:#fff;
-  padding:12px;
-  border-radius:10px;
-  margin-top:12px;
-  font-size:18px;
-  font-weight:bold;
-}
-
-.copy-btn,.submit-btn{
-  width:100%;
-  padding:14px;
-  border:none;
-  border-radius:12px;
-  margin-top:10px;
-  font-size:17px;
-  font-weight:bold;
-}
-
-.copy-btn{
-  background:linear-gradient(45deg,#ff00cc,#7b00ff);
-  color:#fff;
-}
-
-.submit-btn{
-  background:#20c75a;
-  color:#fff;
-}
-
-.utr-input{
-  width:100%;
-  padding:14px;
-  margin-top:12px;
-  border-radius:10px;
-  border:none;
-  box-sizing:border-box;
-  font-size:16px;
 }
 
 .popup{
@@ -346,18 +292,7 @@ body{
       If recharge fails, try again or contact customer service.
     </div>
 
-    <button class="deposit-btn" id="depositBtn" onclick="showQR()">Deposit</button>
-
-    <div class="qr-section" id="qrSection">
-      <img id="qrImg">
-      <div class="upi-box" id="upiText"></div>
-
-      <button class="copy-btn" onclick="copyUPI()">Copy UPI</button>
-
-      <input class="utr-input" type="text" id="utr" placeholder="Enter UTR Number">
-
-      <button class="submit-btn" onclick="submitUTR()">Submit UTR</button>
-    </div>
+    <button class="deposit-btn" id="depositBtn" onclick="goPayment()">Deposit</button>
 
   </div>
 </div>
@@ -369,18 +304,7 @@ body{
   </div>
 </div>
 
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getFirestore, collection, addDoc, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-
-const app = initializeApp({
-  apiKey:"AIzaSyBx3J9aGn_98rTPgurMMKw_GR3puIMj4Ms",
-  authDomain:"colourcash-ea60e.firebaseapp.com",
-  projectId:"colourcash-ea60e"
-});
-
-const db = getFirestore(app);
-
+<script>
 const upiMethods = [
   { name:"UPI-11", upi:"rajjabali72@upi" },
   { name:"UPI-12", upi:"rajjabali72@upi" },
@@ -388,7 +312,7 @@ const upiMethods = [
   { name:"UPI-14", upi:"rajjabali72@upi" }
 ];
 
-const amounts = [50,100,200,300,500,1000,2000,3000,5000,10000,20000];
+const amounts = [100,200,300,500,1000,2000,3000,5000,10000,20000];
 
 let selectedAmount = 0;
 let selectedMethod = -1;
@@ -398,7 +322,7 @@ const amountGrid = document.getElementById("amountGrid");
 amounts.forEach(a=>{
   let btn = document.createElement("button");
   btn.className = "amount-btn";
-  btn.innerHTML = `${a.toLocaleString("en-IN")} <span class="bonus">+20%</span>`;
+  btn.innerHTML = `${a.toLocaleString("en-IN")} <span class="bonus-tag">+20%</span>`;
   btn.onclick = () => selectAmount(a, btn);
   amountGrid.appendChild(btn);
 });
@@ -431,6 +355,8 @@ function updateAmount(){
   }else{
     document.getElementById("selectMsg").style.display = "block";
     document.getElementById("methodGrid").style.display = "none";
+    selectedMethod = -1;
+    document.querySelectorAll(".method").forEach(m=>m.classList.remove("active"));
   }
 
   checkReady();
@@ -456,7 +382,7 @@ function checkReady(){
   }
 }
 
-window.showQR = function(){
+window.goPayment = function(){
   let amt = Number(document.getElementById("amount").value);
 
   if(amt < 100){
@@ -469,94 +395,11 @@ window.showQR = function(){
     return;
   }
 
+  let method = upiMethods[selectedMethod].name;
   let upi = upiMethods[selectedMethod].upi;
-  let upiUrl = `upi://pay?pa=${upi}&pn=ColourCash&am=${amt}&cu=INR`;
-  let qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(upiUrl)}`;
 
-  document.getElementById("qrImg").src = qrUrl;
-  document.getElementById("upiText").innerText = upi;
-  document.getElementById("qrSection").style.display = "block";
-
-  document.getElementById("qrSection").scrollIntoView({behavior:"smooth"});
-}
-
-window.copyUPI = function(){
-  let upi = upiMethods[selectedMethod].upi;
-  navigator.clipboard.writeText(upi);
-  showPopup("UPI copied");
-}
-
-window.submitUTR = async function(){
-  let amt = Number(document.getElementById("amount").value);
-  let utr = document.getElementById("utr").value.trim();
-
-  if(amt < 100){
-    showPopup("Minimum ₹100 deposit required");
-    return;
-  }
-
-  if(selectedMethod === -1){
-    showPopup("Please select payment method");
-    return;
-  }
-
-  if(utr.length < 10){
-    showPopup("Enter valid UTR number");
-    return;
-  }
-
-  const userEmail = localStorage.getItem("userEmail");
-
-  if(!userEmail){
-    showPopup("Login required");
-    return;
-  }
-
-  let referredBy = null;
-
-  const userSnap = await getDocs(
-    query(collection(db,"users"), where("email","==",userEmail))
-  );
-
-  userSnap.forEach(d=>{
-    referredBy = d.data().referredBy || null;
-  });
-
-  showPopup("Submitting...");
-
-  let wheelType = 0;
-
-  if(amt >= 1000){
-    wheelType = 1000;
-  }else if(amt >= 500){
-    wheelType = 500;
-  }else if(amt >= 100){
-    wheelType = 100;
-  }
-
-  addDoc(collection(db,"deposits"),{
-    email:userEmail,
-    amount:amt,
-    bonus:Math.floor(amt * 0.20),
-    utr:utr,
-    method:upiMethods[selectedMethod].name,
-    upi:upiMethods[selectedMethod].upi,
-    status:"PENDING",
-    time:Date.now(),
-    referredBy:referredBy,
-    wheel:wheelType
-  })
-  .then(()=>{
-    showPopup("Deposit Submitted ✅");
-    document.getElementById("amount").value="";
-    document.getElementById("utr").value="";
-    document.getElementById("cash").innerText="0";
-    document.getElementById("bonus").innerText="0";
-    document.getElementById("qrSection").style.display="none";
-  })
-  .catch(e=>{
-    showPopup("Error: " + e.message);
-  });
+  window.location.href =
+    `payment.html?amount=${amt}&method=${encodeURIComponent(method)}&upi=${encodeURIComponent(upi)}`;
 }
 
 window.showPopup = function(msg){
