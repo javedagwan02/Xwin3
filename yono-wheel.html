@@ -12,26 +12,22 @@ html, body{
 
 body{
   height:100vh;
-  overflow-y:auto;   /* ✅ allow scroll */
+  overflow-y:auto;
   overscroll-behavior: none;
-
   background-image: url("images/file_000000004dd8720b92d40a8b6daf265e.png");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-
   color:#fff;
   text-align:center;
 }
 
-/* TITLE */
 .title{
   margin-top:15px;
   font-size:22px;
   font-weight:bold;
 }
 
-/* SELECT BOX */
 .box-wrapper{
   position:relative;
   width:90%;
@@ -41,8 +37,9 @@ body{
 .box-img{
   width:100%;
   display:block;
-  pointer-events:none;  /* 🔥 THIS IS THE REAL FIX */
+  pointer-events:none;
 }
+
 .box{
   position:absolute;
   top:0;
@@ -68,12 +65,10 @@ body{
   z-index:5;
 }
 
-/* POINTER */
 .pointer{
   font-size:30px;
 }
 
-/* WHEEL */
 .wheel-box{
   position:relative;
   width:280px;
@@ -91,7 +86,6 @@ body{
   transition:4s ease-out;
 }
 
-/* TEXT */
 .info{margin-top:10px;}
 
 #spinLeft{
@@ -99,7 +93,6 @@ body{
   color:#00ffcc;
 }
 
-/* BUTTONS */
 .btn-container{
   display:flex;
   flex-direction:column;
@@ -115,7 +108,6 @@ body{
   font-weight:bold;
 }
 
-/* POPUP */
 .popup{
   position:fixed;
   inset:0;
@@ -123,6 +115,7 @@ body{
   display:none;
   justify-content:center;
   align-items:center;
+  z-index:9999;
 }
 
 .popup-box{
@@ -172,39 +165,41 @@ body{
 <div class="btn-container">
   <div class="btn" onclick="spin()">SPIN</div>
 
-  <div class="btn" style="background:#ff00cc;color:#fff;"
-  onclick="goDeposit()">💰 Deposit</div>
+  <div class="btn" style="background:#ff00cc;color:#fff;" onclick="goDeposit()">💰 Deposit</div>
 </div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getFirestore, collection, getDocs, query, where, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-/* FIREBASE */
 const app = initializeApp({
   apiKey:"AIzaSyBx3J9aGn_98rTPgurMMKw_GR3puIMj4Ms",
   authDomain:"colourcash-ea60e.firebaseapp.com",
   projectId:"colourcash-ea60e"
 });
+
 const db = getFirestore(app);
 
-/* POPUP */
 window.showPopup = function(title, message){
   document.getElementById("popupTitle").innerText = title;
   document.getElementById("popupMessage").innerText = message;
   document.getElementById("popup").style.display = "flex";
 }
+
 window.closePopup = function(){
   document.getElementById("popup").style.display = "none";
 }
 
-/* VARIABLES */
 let rotation = 0;
 let current = 100;
+let isSpinning = false;
 
-let spins = {100:0,500:0,1000:0};
+let spins = {
+  100:0,
+  500:0,
+  1000:0
+};
 
-/* LOAD USER */
 async function loadUser(){
   const email = localStorage.getItem("userEmail");
 
@@ -221,48 +216,43 @@ async function loadUser(){
 
   updateUI();
 }
+
 loadUser();
 
-/* UI */
 function updateUI(){
   document.getElementById("spinLeft").innerText =
     "Spins Left: " + (spins[current] || 0);
 }
 
-/* SELECT */
 window.selectWheel = function(n){
+
+  if(isSpinning) return;
 
   let glow = document.getElementById("glow");
   let infoText = document.getElementById("infoText");
   let wheel = document.getElementById("wheel");
   let border = document.getElementById("border");
 
-  if(n==1){
+  if(n == 1){
     current = 100;
     glow.style.left = "2%";
     infoText.innerText = "Deposit ₹100 to get 1 spin";
-
-    // 🔥 IMAGE CHANGE
     wheel.src = "images/41422-removebg-preview.png";
     border.src = "images/41383-removebg-preview.png";
   }
 
-  if(n==2){
+  if(n == 2){
     current = 500;
     glow.style.left = "35%";
     infoText.innerText = "Deposit ₹500 to get 1 spin";
-
-    // 🔥 IMAGE CHANGE
     wheel.src = "images/41433-removebg-preview.png";
     border.src = "images/41384-removebg-preview.png";
   }
 
-  if(n==3){
+  if(n == 3){
     current = 1000;
     glow.style.left = "68%";
     infoText.innerText = "Deposit ₹1000 to get 1 spin";
-
-    // 🔥 IMAGE CHANGE
     wheel.src = "images/41464-removebg-preview.png";
     border.src = "images/41387-removebg-preview.png";
   }
@@ -270,7 +260,6 @@ window.selectWheel = function(n){
   updateUI();
 }
 
-/* WALLET UPDATE */
 async function updateWallet(type, amount){
   const email = localStorage.getItem("userEmail");
 
@@ -278,114 +267,105 @@ async function updateWallet(type, amount){
     query(collection(db,"users"), where("email","==",email))
   );
 
-  snap.forEach(async (docSnap)=>{
+  for(const docSnap of snap.docs){
     let data = docSnap.data();
 
     let bal = data.balance || 0;
     let bonus = data.bonusBalance || 0;
 
-    if(type=="cash") bal += amount;
-    else bonus += amount;
+    if(type == "cash"){
+      bal += amount;
+    }else{
+      bonus += amount;
+    }
 
     await updateDoc(doc(db,"users",docSnap.id),{
-      balance:bal,
-      bonusBalance:bonus
+      balance: bal,
+      bonusBalance: bonus
     });
-  });
+  }
 }
 
-/* SPIN */
+async function updateSpinCount(){
+  const email = localStorage.getItem("userEmail");
+
+  const snap = await getDocs(
+    query(collection(db,"users"), where("email","==",email))
+  );
+
+  for(const docSnap of snap.docs){
+    await updateDoc(doc(db,"users",docSnap.id),{
+      ["spin" + current]: spins[current]
+    });
+  }
+}
+
 window.spin = function(){
+
+  if(isSpinning) return;
 
   if((spins[current] || 0) <= 0){
     showPopup("❌ No Spins","Deposit required");
     return;
   }
 
+  isSpinning = true;
+
   let wheel = document.getElementById("wheel");
 
-  let rand = Math.floor(Math.random()*8);
-  let deg = 360*5 + rand*45;
+  let fixedRewards = {
+    100: {
+      type: "cash",
+      amount: 15,
+      angle: 135
+    },
+    500: {
+      type: "cash",
+      amount: 70,
+      angle: 225
+    },
+    1000: {
+      type: "bonus",
+      amount: 400,
+      angle: 270
+    }
+  };
 
-  rotation += deg;
+  let reward = fixedRewards[current];
+
+  let currentAngle = rotation % 360;
+  let extraAngle = (reward.angle - currentAngle + 360) % 360;
+
+  rotation += (360 * 5) + extraAngle;
+
   wheel.style.transform = `translate(-50%,-50%) rotate(${rotation}deg)`;
 
-  let rewards = {
-    100:["cash_30","cash_60","cash_15","cash_75","bonus_100","bonus_300","cash_100","cash_50"],
-    500:["cash_200","cash_300","cash_150","bonus_500","cash_70","cash_300","cash_200","cash_100"],
-    1000:["cash_500","cash_170","bonus_400","cash_100","bonus_700","cash_300","cash_200","cash_100"]
-  };
+  setTimeout(async ()=>{
 
-  
-setTimeout(async ()=>{
+    await updateWallet(reward.type, reward.amount);
 
-  let rewards = {
-    100:["cash_30","cash_60","cash_15","cash_75","bonus_100","bonus_300","cash_100","cash_50"],
-    500:["cash_200","cash_300","cash_150","bonus_500","cash_70","cash_300","cash_200","cash_100"],
-    1000:["cash_500","cash_170","bonus_400","cash_100","bonus_700","cash_300","cash_200","cash_100"]
-  };
+    spins[current]--;
 
-  let list = rewards[current];
+    await updateSpinCount();
 
-  let cashList = list.filter(x => x.includes("cash"));
-  let bonusList = list.filter(x => x.includes("bonus"));
+    updateUI();
 
-  // 🔥 LOW CASH ONLY (₹15, ₹30, ₹60 etc)
-  let lowCash = cashList.filter(x => {
-    let amt = Number(x.split("_")[1]);
-    return amt <= 60;  // 👉 low amount control
-  });
+    if(reward.type == "cash"){
+      showPopup("🎉 Cash Win", "₹" + reward.amount + " Added");
+    }else{
+      showPopup("🎁 Bonus Win", "₹" + reward.amount + " Added");
+    }
 
-  let rand = Math.random();
-  let finalResult;
+    isSpinning = false;
 
-  // 🔴 2% CASH (LOW ONLY)
-  if(rand < 0.02){
-    finalResult = lowCash[Math.floor(Math.random()*lowCash.length)];
-  }
-
-  // 🟢 85% BONUS
-  else if(rand < 0.87){
-    finalResult = bonusList[Math.floor(Math.random()*bonusList.length)];
-  }
-
-  // 🟡 बाकी 13% RANDOM (mix feel)
-  else{
-    finalResult = list[Math.floor(Math.random()*list.length)];
-  }
-
-  let type = finalResult.split("_")[0];
-  let amount = Number(finalResult.split("_")[1]);
-
-  await updateWallet(type, amount);
-
-  spins[current]--;
-
-  const snap = await getDocs(
-    query(collection(db,"users"), where("email","==",localStorage.getItem("userEmail")))
-  );
-
-  snap.forEach(async (docSnap)=>{
-    await updateDoc(doc(db,"users",docSnap.id),{
-      ["spin"+current]: spins[current]
-    });
-  });
-
-  updateUI();
-
-  if(type=="cash"){
-    showPopup("🎉 Cash Win", "₹"+amount+" Added");
-  }else{
-    showPopup("🎁 Bonus Win", "₹"+amount+" Added");
-  }
-
-},4000);
+  },4000);
 }
-/* DEPOSIT */
+
 window.goDeposit = function(){
   window.location.href = "deposit.html";
 }
-  window.addEventListener("focus", loadUser);
+
+window.addEventListener("focus", loadUser);
 </script>
 
 <div id="popup" class="popup">
