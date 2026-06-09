@@ -6,140 +6,162 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <style>
+*{box-sizing:border-box}
+
 body{
   margin:0;
   font-family:Arial,sans-serif;
-  background: radial-gradient(circle at top,#0b001a,#000);
   color:#fff;
+  padding-bottom:20px;
+  background:radial-gradient(circle at top,#0b4ecb,#062f88 45%,#031338);
 }
 
-/* HEADER */
-.header{
-  padding:16px;
-  text-align:center;
-  font-size:22px;
-  font-weight:bold;
-  background:linear-gradient(90deg,#1a0033,#000);
-  box-shadow:0 0 15px #7b00ff;
+.page{
+  max-width:430px;
+  margin:auto;
+  padding:8px;
 }
 
-/* MAIN CARD */
-.card{
-  margin:15px;
-  border-radius:20px;
-  padding:20px;
-
-  background: rgba(255,255,255,0.05);
-  backdrop-filter: blur(15px);
-
-  border:1px solid rgba(255,255,255,0.1);
-
-  box-shadow:
-    0 0 25px rgba(123,0,255,0.4),
-    inset 0 0 20px rgba(255,255,255,0.05);
-}
-
-/* BALANCE BOX */
-.balance{
-  text-align:center;
-  margin-bottom:15px;
-}
-
-.balance span{
-  font-size:28px;
-  font-weight:bold;
-  color:#00ff88;
-  text-shadow:0 0 10px #00ff88;
-}
-
-/* TABS */
-.tabs{
+.top-banner{
+  height:92px;
+  margin:0 -8px 10px;
+  background:linear-gradient(#071c64,#0b63d8);
+  border-bottom:5px solid #4aa8ff;
   display:flex;
-  background:#111;
-  border-radius:12px;
-  overflow:hidden;
-  margin-bottom:15px;
+  align-items:center;
+  justify-content:center;
+}
+
+.banner-title{
+  width:78%;
+  padding:12px;
+  text-align:center;
+  border-radius:18px;
+  background:linear-gradient(135deg,#7d5cff,#d58cff);
+  border:4px solid #9be1ff;
+  color:#fff141;
+  font-size:28px;
+  font-weight:900;
+  text-shadow:2px 3px #6d1bb5;
+  box-shadow:0 4px 0 #3157b8,0 0 18px #7ee6ff;
+}
+
+.card{
+  border-radius:18px;
+  background:linear-gradient(#1c74e7,#073b9a);
+  border:5px solid #4ba6ff;
+  box-shadow:0 5px 0 #072e78,inset 0 0 20px rgba(255,255,255,.15);
+  padding:14px;
+  margin-bottom:14px;
+}
+
+.balance-box{
+  text-align:center;
+}
+
+.balance-title{
+  font-size:20px;
+  font-weight:900;
+  text-shadow:2px 2px #06337d;
+}
+
+.balance-amount{
+  margin-top:8px;
+  font-size:44px;
+  font-weight:900;
+  color:#ffd21f;
+  text-shadow:3px 4px #9b4400;
+}
+
+.tabs{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+  margin:14px 0;
 }
 
 .tab{
-  flex:1;
-  padding:12px;
+  padding:14px;
   text-align:center;
+  border-radius:18px;
+  background:#dcecff;
+  color:#195aa2;
+  border:4px solid #4ba6ff;
+  font-size:20px;
+  font-weight:900;
+  box-shadow:0 5px 0 #0752a6;
   cursor:pointer;
-  color:#aaa;
-  transition:.3s;
 }
 
 .tab.active{
-  background:linear-gradient(45deg,#7b00ff,#ff00cc);
-  color:#fff;
-  font-weight:bold;
-  box-shadow:0 0 12px #ff00cc;
+  background:linear-gradient(#fff06a,#ff9f13);
+  color:#9b3b00;
+  border-color:#fff;
 }
 
-/* FORM */
 .form{display:none}
 .form.active{display:block}
 
 label{
-  font-size:13px;
-  opacity:.8;
+  display:block;
+  margin-top:12px;
+  font-size:15px;
+  font-weight:900;
+  text-shadow:1px 2px #06337d;
 }
 
-/* INPUT BOX */
 input{
   width:100%;
   padding:14px;
-  margin:8px 0 14px;
-  border-radius:12px;
+  margin-top:8px;
   border:none;
-  font-size:15px;
-  background:rgba(255,255,255,0.1);
-  color:#fff;
-  outline:none;
-  box-shadow:inset 0 0 10px rgba(255,255,255,0.1);
-}
-
-/* BUTTON */
-.btn{
-  width:100%;
-  padding:15px;
-  border:none;
-  border-radius:30px;
+  border-radius:14px;
+  background:#dce8ff;
+  color:#174d91;
   font-size:16px;
   font-weight:bold;
-  background:linear-gradient(90deg,#00c853,#00ff88);
-  color:#000;
-  box-shadow:0 0 15px #00ff88;
-  transition:.3s;
+  outline:none;
+  border:3px solid #75cfff;
+}
+
+.btn{
+  width:100%;
+  padding:17px;
+  margin-top:18px;
+  border:none;
+  border-radius:20px;
+  background:linear-gradient(#fff06a,#ff9f13);
+  color:#9b3b00;
+  font-size:21px;
+  font-weight:900;
+  box-shadow:0 6px 0 #b86400;
 }
 
 .btn:active{
-  transform:scale(0.97);
+  transform:translateY(3px);
+  box-shadow:0 3px 0 #b86400;
 }
 
-/* RULES BOX */
 .rules{
   margin-top:15px;
-  font-size:13px;
-  padding:12px;
-  border-radius:14px;
-
-  background:rgba(255,0,0,0.08);
-  border:1px solid rgba(255,0,0,0.3);
-
-  box-shadow:0 0 15px rgba(255,0,0,0.2);
+  padding:14px;
+  border-radius:16px;
+  background:#dcecff;
+  color:#195aa2;
+  font-size:14px;
+  font-weight:bold;
+  line-height:1.7;
+  border:4px solid #4ba6ff;
 }
 
-.rules div{
-  margin-bottom:8px;
+.rules b{
+  color:#ff9f13;
 }
 
-/* POPUP */
 .popup{
   position:fixed;
   inset:0;
-  background:rgba(0,0,0,.8);
+  background:rgba(0,0,0,.75);
   display:none;
   align-items:center;
   justify-content:center;
@@ -147,104 +169,127 @@ input{
 }
 
 .popup-box{
-  background:linear-gradient(135deg,#1a002e,#2b003f);
-  padding:25px;
-  border-radius:16px;
+  width:86%;
+  max-width:340px;
+  padding:22px;
+  border-radius:18px;
   text-align:center;
-  width:85%;
-  box-shadow:0 0 25px rgba(255,0,255,0.5);
+  background:linear-gradient(#1c74e7,#073b9a);
+  border:5px solid #4ba6ff;
+  color:white;
+  box-shadow:0 0 25px rgba(0,150,255,.6);
+}
+
+.popup-box h3{
+  margin-top:0;
+  font-size:24px;
 }
 
 .popup-box.success h3{
-  color:#00ff88;
+  color:#6dff5c;
 }
 
 .popup-box.error h3{
-  color:#ff5252;
+  color:#ff5555;
+}
+
+.popup-box p{
+  font-size:15px;
+  font-weight:bold;
 }
 
 .popup-box button{
-  margin-top:15px;
   width:100%;
-  padding:12px;
+  padding:13px;
+  margin-top:14px;
   border:none;
-  border-radius:12px;
-  background:linear-gradient(45deg,#00c853,#00ff88);
-  color:#000;
-  font-weight:bold;
+  border-radius:14px;
+  background:linear-gradient(#fff06a,#ff9f13);
+  color:#9b3b00;
+  font-size:17px;
+  font-weight:900;
 }
 </style>
 </head>
 
 <body>
 
-<div class="header">🏦 Withdraw</div>
+<div class="page">
 
-<div class="card">
-
-  <div class="balance">
-    Available Balance<br>
-    ₹ <span id="balance">0.00</span>
+  <div class="top-banner">
+    <div class="banner-title">WITHDRAW</div>
   </div>
 
-  <div class="tabs">
-    <div class="tab active" onclick="openTab('upi',this)">UPI</div>
-    <div class="tab" onclick="openTab('bank',this)">Bank</div>
+  <div class="card balance-box">
+    <div class="balance-title">Available Balance</div>
+    <div class="balance-amount">₹<span id="balance">0.00</span></div>
   </div>
 
-  <!-- UPI -->
-  <div class="form active" id="upi">
-    <label>Withdraw Amount (₹)</label>
-    <input type="number" id="upiAmount" placeholder="Minimum ₹100">
+  <div class="card">
 
-    <label>UPI ID</label>
-    <input type="text" id="upiId" placeholder="example@upi">
-
-    <button class="btn" onclick="submitWithdraw()">Submit Withdraw</button>
-
-    <div class="rules">
-      <div>🔴 Withdraw time: <b>00:05 - 23:55</b></div>
-      <div>🔴 Inday Remaining Withdrawal Times: <b>3</b></div>
-      <div>🔴 Withdrawal amount range: <b>₹100 - ₹50,000</b></div>
-      <div>🔴 Please confirm your beneficiary details carefully</div>
-      <div>🔴 Wrong details may cause permanent loss</div>
-      <div>🟡 Bet Required: ₹<b id="wagerText">0</b></div>
+    <div class="tabs">
+      <div class="tab active" onclick="openTab('upi',this)">UPI</div>
+      <div class="tab" onclick="openTab('bank',this)">BANK</div>
     </div>
-  </div>
 
-  <!-- BANK -->
-  <div class="form" id="bank">
-    <label>Withdraw Amount (₹)</label>
-    <input type="number" id="bankAmount" placeholder="Minimum ₹100">
+    <div class="form active" id="upi">
+      <label>Withdraw Amount ₹</label>
+      <input type="number" id="upiAmount" placeholder="Minimum ₹100">
 
-    <label>Account Holder Name</label>
-    <input type="text" id="bankHolder">
+      <label>UPI ID</label>
+      <input type="text" id="upiId" placeholder="example@upi">
 
-    <label>Bank Name</label>
-    <input type="text" id="bankName">
+      <button class="btn" onclick="submitWithdraw()">Submit Withdraw</button>
 
-    <label>Account Number</label>
-    <input type="number" id="bankAccount">
+      <div class="rules">
+        🔴 Withdraw time: <b>00:05 - 23:55</b><br>
+        🔴 Inday Remaining Withdrawal Times: <b>3</b><br>
+        🔴 Withdrawal amount range: <b>₹100 - ₹50,000</b><br>
+        🔴 Please confirm your beneficiary details carefully<br>
+        🔴 Wrong details may cause permanent loss<br>
+        🟡 Bet Required: ₹<b id="wagerText">0</b>
+      </div>
+    </div>
 
-    <label>IFSC Code</label>
-    <input type="text" id="bankIfsc">
+    <div class="form" id="bank">
+      <label>Withdraw Amount ₹</label>
+      <input type="number" id="bankAmount" placeholder="Minimum ₹100">
 
-    <button class="btn" onclick="submitWithdraw()">Submit Withdraw</button>
+      <label>Account Holder Name</label>
+      <input type="text" id="bankHolder">
+
+      <label>Bank Name</label>
+      <input type="text" id="bankName">
+
+      <label>Account Number</label>
+      <input type="number" id="bankAccount">
+
+      <label>IFSC Code</label>
+      <input type="text" id="bankIfsc">
+
+      <button class="btn" onclick="submitWithdraw()">Submit Withdraw</button>
+
+      <div class="rules">
+        🔴 Withdraw time: <b>00:05 - 23:55</b><br>
+        🔴 Daily withdraw limit: <b>3 times</b><br>
+        🔴 Withdrawal amount range: <b>₹100 - ₹50,000</b><br>
+        🔴 Bank details must be correct<br>
+        🟡 Bet Required: ₹<b id="wagerTextBank">0</b>
+      </div>
+    </div>
+
   </div>
 
 </div>
 
-<!-- 🔥 POPUP -->
 <div class="popup" id="popup">
   <div class="popup-box" id="popupBox">
     <h3 id="popupTitle"></h3>
     <p id="popupMsg"></p>
-    <!-- ✅ ONLY CHANGE HERE -->
     <button id="popupOk">OK</button>
   </div>
 </div>
 
-<!-- 🔥 FIRESTORE LOGIC -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import {
@@ -255,7 +300,8 @@ import {
   query,
   where,
   updateDoc,
-  doc
+  doc,
+  onSnapshot
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -272,19 +318,19 @@ const popupBox = document.getElementById("popupBox");
 const popupTitle = document.getElementById("popupTitle");
 const popupMsg = document.getElementById("popupMsg");
 
-/* 🔥 POPUP FIX */
 function showPopup(type,title,msg){
-  popupBox.className="popup-box "+type;
-  popupTitle.innerText=title;
-  popupMsg.innerText=msg;
-  popup.style.display="flex";
+  popupBox.className = "popup-box " + type;
+  popupTitle.innerText = title;
+  popupMsg.innerText = msg;
+  popup.style.display = "flex";
 }
+
 function closePopup(){
-  popup.style.display="none";
+  popup.style.display = "none";
 }
+
 document.getElementById("popupOk").addEventListener("click", closePopup);
 
-/* ===== LOAD BALANCE (FIRESTORE ONLY) ===== */
 const userEmail = localStorage.getItem("userEmail");
 let userDocId = "";
 let balance = 0;
@@ -293,18 +339,18 @@ async function loadBalance(){
   const snap = await getDocs(
     query(collection(db,"users"), where("email","==",userEmail))
   );
+
   snap.forEach(d=>{
     userDocId = d.id;
     balance = d.data().balance || 0;
   });
-  document.getElementById("balance").innerText = balance.toFixed(2);
+
+  document.getElementById("balance").innerText = Number(balance).toFixed(2);
 }
+
 loadBalance();
-  
-import { onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 function loadWager(){
-
   const q = query(collection(db,"users"), where("email","==",userEmail));
 
   onSnapshot(q,(snap)=>{
@@ -318,82 +364,116 @@ function loadWager(){
       if(remaining < 0) remaining = 0;
 
       document.getElementById("wagerText").innerText = remaining;
+      document.getElementById("wagerTextBank").innerText = remaining;
     });
   });
-
 }
 
 loadWager();
-/* ===== DAILY LIMIT RESET ===== */
+
 const today = new Date().toDateString();
+
 if(localStorage.getItem("withdrawDate") !== today){
   localStorage.setItem("withdrawDate", today);
   localStorage.setItem("withdrawCount", "0");
 }
+
 let withdrawCount = Number(localStorage.getItem("withdrawCount")) || 0;
 
-/* ===== UI ===== */
 window.openTab = function(id,el){
-  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-  document.querySelectorAll('.form').forEach(f=>f.classList.remove('active'));
-  el.classList.add('active');
-  document.getElementById(id).classList.add('active');
+  document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
+  document.querySelectorAll(".form").forEach(f=>f.classList.remove("active"));
+  el.classList.add("active");
+  document.getElementById(id).classList.add("active");
 };
 
-/* ===== SUBMIT WITHDRAW ===== */
 window.submitWithdraw = async function(){
+
   const snap = await getDocs(
-  query(collection(db,"users"), where("email","==",userEmail))
-);
+    query(collection(db,"users"), where("email","==",userEmail))
+  );
 
-let wager = 0;
+  let wager = 0;
 
-snap.forEach(d=>{
-  let data = d.data();
-  let required = data.wagerRequired || 0;
-  let done = data.wagerDone || 0;
+  snap.forEach(d=>{
+    let data = d.data();
+    let required = data.wagerRequired || 0;
+    let done = data.wagerDone || 0;
 
-  wager = required - done;
-});
+    wager = required - done;
+  });
 
-if(wager > 0){
-  return showPopup("error","Bet Required","Complete betting ₹"+wager+" first");
-}
+  if(wager > 0){
+    showPopup("error","Bet Required","Complete betting ₹" + wager + " first");
+    return;
+  }
+
   const isUpi = document.getElementById("upi").classList.contains("active");
-  const amt = Number(isUpi ? upiAmount.value : bankAmount.value);
+  const amt = Number(isUpi ? document.getElementById("upiAmount").value : document.getElementById("bankAmount").value);
 
-  if(amt < 100) return showPopup("error","Minimum Withdraw","Minimum ₹100");
-  if(amt > balance) return showPopup("error","Insufficient Balance","Not enough balance");
-  if(withdrawCount >= 3) return showPopup("error","Limit Reached","Daily 3 withdraw limit exceeded");
+  if(amt < 100){
+    showPopup("error","Minimum Withdraw","Minimum ₹100");
+    return;
+  }
 
-await updateDoc(doc(db,"users",userDocId),{
-  balance: balance - amt,
+  if(amt > balance){
+    showPopup("error","Insufficient Balance","Not enough balance");
+    return;
+  }
 
-  // 🔥 RESET WAGER AFTER WITHDRAW
-  wagerRequired: 0,
-  wagerDone: 0
-});
+  if(withdrawCount >= 3){
+    showPopup("error","Limit Reached","Daily 3 withdraw limit exceeded");
+    return;
+  }
+
+  if(isUpi){
+    let upi = document.getElementById("upiId").value.trim();
+    if(!upi){
+      showPopup("error","UPI Required","Please enter UPI ID");
+      return;
+    }
+  }else{
+    if(!bankHolder.value || !bankName.value || !bankAccount.value || !bankIfsc.value){
+      showPopup("error","Bank Details Required","Please fill all bank details");
+      return;
+    }
+  }
+
+  await updateDoc(doc(db,"users",userDocId),{
+    balance: balance - amt,
+    wagerRequired: 0,
+    wagerDone: 0
+  });
 
   await addDoc(collection(db,"withdraws"),{
-  email: userEmail,
-  amount: amt,
-  method: isUpi ? "UPI" : "BANK",
-  upiId: isUpi ? upiId.value.trim() : "",
-  bankDetails: !isUpi ? {
-    holder: bankHolder.value,
-    bank: bankName.value,
-    account: bankAccount.value,
-    ifsc: bankIfsc.value
-  } : null,
-  status: "PENDING",
-  time: Date.now(),   // ✅ comma add
-  timeStamp: Date.now()               // ✅ now ok
-});
+    email: userEmail,
+    amount: amt,
+    method: isUpi ? "UPI" : "BANK",
+    upiId: isUpi ? document.getElementById("upiId").value.trim() : "",
+    bankDetails: !isUpi ? {
+      holder: document.getElementById("bankHolder").value,
+      bank: document.getElementById("bankName").value,
+      account: document.getElementById("bankAccount").value,
+      ifsc: document.getElementById("bankIfsc").value
+    } : null,
+    status: "PENDING",
+    time: Date.now(),
+    timeStamp: Date.now()
+  });
 
   withdrawCount++;
-  localStorage.setItem("withdrawCount",withdrawCount);
+  localStorage.setItem("withdrawCount", withdrawCount);
 
   showPopup("success","Withdraw Submitted","Amount deducted successfully");
+
+  document.getElementById("upiAmount").value = "";
+  document.getElementById("upiId").value = "";
+  document.getElementById("bankAmount").value = "";
+  document.getElementById("bankHolder").value = "";
+  document.getElementById("bankName").value = "";
+  document.getElementById("bankAccount").value = "";
+  document.getElementById("bankIfsc").value = "";
+
   loadBalance();
 };
 </script>
