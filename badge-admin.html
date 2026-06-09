@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Badge Admin</title>
+
+<style>
+body{
+  margin:0;
+  font-family:Arial;
+  background:#101827;
+  color:white;
+  padding:12px;
+}
+h2{text-align:center}
+select{
+  width:100%;
+  padding:12px;
+  border-radius:10px;
+  margin-bottom:15px;
+  font-weight:bold;
+}
+.card{
+  background:#1e293b;
+  padding:12px;
+  border-radius:14px;
+  margin-bottom:10px;
+}
+.btns{
+  display:flex;
+  gap:10px;
+  margin-top:10px;
+}
+button{
+  flex:1;
+  padding:10px;
+  border:none;
+  border-radius:10px;
+  font-weight:bold;
+}
+.hot{background:#ff3b30;color:white}
+.new{background:#00c853;color:white}
+.off{background:#475569;color:white}
+</style>
+</head>
+
+<body>
+
+<h2>🔥 Badge Admin Panel</h2>
+
+<select id="sectionSelect" onchange="loadGames()">
+  <option value="slots">SLOTS</option>
+  <option value="signature">SIGNATURE</option>
+  <option value="casino">CASINO</option>
+  <option value="crash">CRASH</option>
+  <option value="arcade">ARCADE</option>
+  <option value="live">LIVE</option>
+  <option value="cards">CARDS</option>
+</select>
+
+<div id="gameList"></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const app = initializeApp({
+  apiKey:"AIzaSyBx3J9aGn_98rTPgurMMKw_GR3puIMj4Ms",
+  authDomain:"colourcash-ea60e.firebaseapp.com",
+  projectId:"colourcash-ea60e"
+});
+
+const db = getFirestore(app);
+
+const gameCounts = {
+  slots:72,
+  signature:16,
+  casino:14,
+  crash:23,
+  arcade:9,
+  live:22,
+  cards:20
+};
+
+window.loadGames = async function(){
+  const section = document.getElementById("sectionSelect").value;
+  const list = document.getElementById("gameList");
+
+  list.innerHTML = "Loading...";
+
+  let html = "";
+
+  for(let i=1; i<=gameCounts[section]; i++){
+    const id = section + "_" + i;
+    const ref = doc(db,"gameBadges",id);
+    const snap = await getDoc(ref);
+
+    let hot = false;
+    let isNew = false;
+
+    if(snap.exists()){
+      hot = snap.data().hot === true;
+      isNew = snap.data().new === true;
+    }
+
+    html += `
+      <div class="card">
+        <b>${section.toUpperCase()} Game ${i}</b>
+
+        <div class="btns">
+          <button class="${hot ? 'hot' : 'off'}"
+            onclick="toggleBadge('${section}',${i},'hot',${!hot})">
+            ${hot ? 'HOT ON' : 'HOT OFF'}
+          </button>
+
+          <button class="${isNew ? 'new' : 'off'}"
+            onclick="toggleBadge('${section}',${i},'new',${!isNew})">
+            ${isNew ? 'NEW ON' : 'NEW OFF'}
+          </button>
+        </div>
+      </div>
+    `;
+  }
+
+  list.innerHTML = html;
+}
+
+window.toggleBadge = async function(section,index,type,value){
+  const id = section + "_" + index;
+  const ref = doc(db,"gameBadges",id);
+  const snap = await getDoc(ref);
+
+  let data = {hot:false,new:false};
+
+  if(snap.exists()){
+    data = snap.data();
+  }
+
+  data[type] = value;
+
+  await setDoc(ref,data,{merge:true});
+
+  loadGames();
+}
+
+loadGames();
+</script>
+
+</body>
+</html>
