@@ -6,128 +6,290 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <style>
+*{box-sizing:border-box}
+
 body{
   margin:0;
-  font-family:Arial, sans-serif;
-  background: radial-gradient(circle at top,#1a0033,#0a001a);
+  font-family:Arial,sans-serif;
   color:#fff;
   padding-bottom:90px;
+  background:radial-gradient(circle at top,#0b4ecb,#062f88 45%,#031338);
 }
-.card{
-  margin:15px;
-  border-radius:20px;
-  padding:18px;
-  background:rgba(255,255,255,0.05);
-  backdrop-filter:blur(12px);
-  border:1px solid rgba(255,255,255,0.1);
-  box-shadow:0 0 25px rgba(255,0,255,0.2), inset 0 0 15px rgba(255,255,255,0.05);
+
+.page{
+  max-width:430px;
+  margin:auto;
+  padding:8px;
 }
-.card img{
-  width:100%;
+
+.top-banner{
+  height:92px;
+  margin:0 -8px 10px;
+  background:linear-gradient(#071c64,#0b63d8);
+  border-bottom:5px solid #4aa8ff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.banner-title{
+  width:78%;
+  padding:12px;
+  text-align:center;
   border-radius:18px;
-  box-shadow:0 0 20px rgba(255,0,255,0.4);
+  background:linear-gradient(135deg,#7d5cff,#d58cff);
+  border:4px solid #9be1ff;
+  color:#fff141;
+  font-size:28px;
+  font-weight:900;
+  text-shadow:2px 3px #6d1bb5;
+  box-shadow:0 4px 0 #3157b8,0 0 18px #7ee6ff;
 }
-#refCode{color:#ff4dff;}
-button{
-  background:linear-gradient(45deg,#ff00cc,#7b00ff)!important;
-  border:none;
-  border-radius:30px;
+
+.card{
+  border-radius:18px;
+  background:linear-gradient(#1c74e7,#073b9a);
+  border:5px solid #4ba6ff;
+  box-shadow:0 5px 0 #072e78,inset 0 0 20px rgba(255,255,255,.15);
+  padding:14px;
+  margin-bottom:14px;
+}
+
+.hero-img{
+  width:100%;
+  border-radius:16px;
+  background:#bcd6ff;
+  border:4px solid #70c7ff;
+  box-shadow:0 5px 0 #0752a6;
+}
+
+.section-title{
+  font-size:22px;
+  font-weight:900;
   color:#fff;
-  box-shadow:0 0 12px #ff00cc;
+  text-shadow:2px 2px #06337d;
+  margin:15px 0 10px;
 }
-p{color:#bbb!important;}
-#totalAmount{color:#ffd700!important;}
-ul{
-  background:rgba(0,255,150,0.08)!important;
-  border:1px solid rgba(0,255,150,0.3);
-  color:#00ffcc!important;
-  box-shadow:0 0 15px rgba(0,255,150,0.2);
+
+.ref-box{
+  padding:18px;
+  border-radius:16px;
+  text-align:center;
+  font-size:34px;
+  font-weight:900;
+  letter-spacing:6px;
+  color:#ffd21f;
+  background:#dce8ff;
+  border:4px dashed #4ba6ff;
+  text-shadow:2px 3px #9b4400;
 }
-#refList div,#refDetails div{
-  background:rgba(255,255,255,0.08)!important;
-  color:#fff!important;
-  border:1px solid rgba(255,255,255,0.1);
+
+.copy-btn,.details-btn,.close-btn{
+  width:100%;
+  border:none;
+  border-radius:18px;
+  padding:15px;
+  margin-top:14px;
+  font-size:18px;
+  font-weight:900;
+  color:#fff;
+  box-shadow:0 5px 0 rgba(0,0,0,.35);
 }
+
+.copy-btn{
+  background:linear-gradient(#fff06a,#ff9f13);
+  color:#9b3b00;
+}
+
+.details-btn{
+  background:linear-gradient(135deg,#ff41c7,#7b00ff);
+}
+
+.deposit-total{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:16px;
+  border-radius:18px;
+  background:linear-gradient(#25b9ff,#005ed6);
+  border:4px solid #75d7ff;
+  box-shadow:0 5px 0 #074996;
+}
+
+.deposit-total small{
+  font-size:14px;
+  color:#dcecff;
+  font-weight:bold;
+}
+
+.deposit-total h2{
+  margin:6px 0 0;
+  color:#ffd21f;
+  font-size:34px;
+  text-shadow:2px 3px #9b4400;
+}
+
+.rules{
+  margin-top:14px;
+  padding:14px;
+  border-radius:16px;
+  background:#dcecff;
+  color:#195aa2;
+  font-size:14px;
+  font-weight:bold;
+  line-height:1.7;
+  border:4px solid #4ba6ff;
+}
+
+.ref-list div,.ref-details div{
+  margin-top:10px;
+  padding:12px;
+  border-radius:14px;
+  background:linear-gradient(#20a8ff,#0068d7);
+  border:3px solid #75d7ff;
+  font-size:14px;
+  font-weight:bold;
+}
+
+.loading{
+  text-align:center;
+  margin-top:12px;
+  color:#dcecff;
+  font-weight:bold;
+}
+
+.bottom-nav{
+  position:fixed;
+  bottom:0;
+  left:0;
+  right:0;
+  max-width:430px;
+  margin:auto;
+  background:linear-gradient(#0645b5,#06246c);
+  border:4px solid #4ba6ff;
+  border-bottom:none;
+  border-radius:22px 22px 0 0;
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+}
+
+.nav-item{
+  text-align:center;
+  padding:9px 0;
+  color:#cce7ff;
+  font-size:12px;
+  font-weight:bold;
+}
+
+.nav-item div{
+  font-size:24px;
+}
+
+.nav-item.active{
+  color:#ffe620;
+}
+
 .popup{
   display:none;
   position:fixed;
-  top:0;
-  left:0;
-  width:100%;
-  height:100%;
-  background:rgba(0,0,0,0.75);
+  inset:0;
+  background:rgba(0,0,0,.75);
   z-index:9999;
   justify-content:center;
   align-items:center;
 }
-.popup>div{
+
+.popup-box{
   width:90%;
-  max-height:80%;
+  max-width:360px;
+  max-height:80vh;
   overflow:auto;
   border-radius:18px;
   padding:15px;
-  background:linear-gradient(135deg,#1a002e,#2b003f);
-  box-shadow:0 0 20px rgba(255,0,255,0.3);
-  border:1px solid rgba(255,255,255,0.1);
+  background:linear-gradient(#1c74e7,#073b9a);
+  border:5px solid #4ba6ff;
+  box-shadow:0 0 25px rgba(0,150,255,.6);
+}
+
+.popup-box h3{
+  text-align:center;
+  margin-top:0;
+  color:#ffd21f;
+  text-shadow:2px 2px #06337d;
+}
+
+.close-btn{
+  background:linear-gradient(#ff5555,#e60028);
 }
 </style>
 </head>
 
 <body>
 
-<div class="card">
+<div class="page">
 
-  <img src="images/40713-removebg-preview.png">
+  <div class="top-banner">
+    <div class="banner-title">PROMOTION</div>
+  </div>
 
-  <div style="margin-top:20px;">
-    <div style="display:flex;align-items:center;gap:10px;font-weight:bold;font-size:18px;">
-      👥 Your Referral Code
-    </div>
+  <div class="card">
 
-    <div style="margin-top:12px;border:2px dashed #ff00cc;border-radius:16px;padding:18px;font-size:30px;font-weight:bold;text-align:center;letter-spacing:6px;background:rgba(255,0,255,0.08);box-shadow:0 0 15px rgba(255,0,255,0.3) inset;">
+    <img class="hero-img" src="images/40713-removebg-preview.png">
+
+    <div class="section-title">👥 Your Referral Code</div>
+
+    <div class="ref-box">
       <span id="refCode">----</span>
     </div>
 
-    <button onclick="copyLink()" style="margin-top:18px;width:100%;padding:15px;font-size:16px;font-weight:bold;">
-      🔗 Copy Referral Link
-    </button>
+    <button class="copy-btn" onclick="copyLink()">🔗 Copy Referral Link</button>
 
-    <p style="text-align:center;font-size:13px;margin-top:8px;">
-      Share this link with your friends
-    </p>
+    <div class="loading">Share this link with your friends</div>
+
   </div>
 
-  <div style="margin-top:20px;background:linear-gradient(135deg,#000428,#004e92);border-radius:18px;padding:18px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 0 20px rgba(0,150,255,0.3);">
+  <div class="deposit-total">
     <div>
-      <div style="font-size:14px;opacity:0.8;">Total Referral Deposit</div>
-      <div style="font-size:24px;font-weight:bold;color:#ffd700;" id="totalAmount">₹0</div>
+      <small>Total Referral Deposit</small>
+      <h2 id="totalAmount">₹0</h2>
     </div>
-    <div style="font-size:32px;">💰</div>
+    <div style="font-size:46px;">💰</div>
   </div>
 
-  <ul style="margin-top:18px;padding:14px 16px;border-radius:14px;list-style:none;">
-    <li style="margin-bottom:6px;">✔ Your friends must open the register page from your link</li>
-    <li style="margin-bottom:6px;">✔ You get reward instantly in your main wallet</li>
-    <li style="margin-bottom:6px;">✔ Only agents can claim the reward</li>
-    <li>✔ DM for agents work @X2xwinxsupportk</li>
-  </ul>
+  <div class="card">
 
-  <div onclick="openReferralDetails()" style="margin-top:18px;border:2px solid #ff00cc;padding:15px;border-radius:14px;text-align:center;font-weight:bold;color:#ff00cc;cursor:pointer;box-shadow:0 0 12px #ff00cc;">
-    📄 View Full Details →
-  </div>
+    <div class="section-title">🎁 Referral Rules</div>
 
-  <div id="refList" style="text-align:center;margin-top:12px;color:#aaa;font-size:14px;">
-    Loading referrals...
+    <div class="rules">
+      ✔ Your friends must open register page from your link<br>
+      ✔ You get reward instantly in your main wallet<br>
+      ✔ Only agents can claim the reward<br>
+      ✔ DM for agents work @X2xwinxsupportk
+    </div>
+
+    <button class="details-btn" onclick="openReferralDetails()">📄 View Full Details →</button>
+
+    <div id="refList" class="ref-list loading">
+      Loading referrals...
+    </div>
+
   </div>
 
 </div>
 
 <div id="refPopup" class="popup">
-  <div>
-    <h3>My Referral Details</h3>
-    <div id="refDetails">Loading...</div>
-    <button onclick="closeRefPopup()" style="margin-top:10px;width:100%;padding:12px;font-weight:bold;">Close</button>
+  <div class="popup-box">
+    <h3>📄 My Referral Details</h3>
+    <div id="refDetails" class="ref-details">Loading...</div>
+    <button class="close-btn" onclick="closeRefPopup()">Close</button>
   </div>
+</div>
+
+<div class="bottom-nav">
+  <div class="nav-item" onclick="location.href='index.html'"><div>🏠</div>Home</div>
+  <div class="nav-item" onclick="location.href='wallet.html'"><div>🎮</div>Games</div>
+  <div class="nav-item active"><div>🎁</div>Promotion</div>
+  <div class="nav-item" onclick="location.href='account.html'"><div>👤</div>Account</div>
 </div>
 
 <script type="module">
@@ -191,7 +353,6 @@ async function loadMyReferralCode(){
 
   if(!myCode){
     myCode = makeCode();
-
     await updateDoc(doc(db,"users",userDoc.id), {
       refCode: myCode
     });
@@ -265,7 +426,7 @@ async function loadReferrals(){
     grandTotal += dep.total;
 
     html += `
-      <div style="padding:12px;margin-top:10px;border-radius:12px;text-align:center;">
+      <div>
         📧 ${email}<br>
         💰 Deposit: ₹${dep.total}
       </div>
@@ -300,7 +461,7 @@ window.openReferralDetails = async function(){
     const dep = await getDepositTotal(email);
 
     html += `
-      <div style="padding:10px;margin-top:10px;border-radius:10px;">
+      <div>
         📧 ${email}<br>
         💰 Lifetime Deposit: ₹${dep.total}<br>
         🕒 Last Deposit: ${dep.lastTime ? new Date(dep.lastTime).toLocaleString() : "No approved deposit"}
