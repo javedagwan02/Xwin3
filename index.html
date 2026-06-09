@@ -2795,24 +2795,58 @@ provider + "Section"
 
 </script>
 
-<script>
-document.addEventListener("DOMContentLoaded", function(){
 
-  document
-  .querySelectorAll("#slotsSection .game-card")
-  .forEach(card => {
+<script type="module">
+import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-    if(card.querySelector(".hot-badge")) return;
-
-    let badge = document.createElement("div");
-    badge.className = "hot-badge";
-    badge.innerText = "HOT";
-
-    card.appendChild(badge);
-  });
-
+const app = getApps().length ? getApps()[0] : initializeApp({
+  apiKey:"AIzaSyBx3J9aGn_98rTPgurMMKw_GR3puIMj4Ms",
+  authDomain:"colourcash-ea60e.firebaseapp.com",
+  projectId:"colourcash-ea60e"
 });
-</script>
 
+const db = getFirestore(app);
+
+async function applyBadges(){
+
+  const sections = ["slots","signature","casino","crash","arcade","live","cards"];
+
+  for(const section of sections){
+
+    const cards = document.querySelectorAll("#" + section + "Section .game-card");
+
+    for(let i=0; i<cards.length; i++){
+
+      const card = cards[i];
+      const id = section + "_" + (i + 1);
+
+      const snap = await getDoc(doc(db,"gameBadges",id));
+
+      if(!snap.exists()) continue;
+
+      const data = snap.data();
+
+      card.querySelectorAll(".badge-hot,.badge-new").forEach(b=>b.remove());
+
+      if(data.hot === true){
+        let hot = document.createElement("div");
+        hot.className = "badge-hot";
+        hot.innerText = "HOT";
+        card.appendChild(hot);
+      }
+
+      if(data.new === true){
+        let newer = document.createElement("div");
+        newer.className = "badge-new";
+        newer.innerText = "NEW";
+        card.appendChild(newer);
+      }
+    }
+  }
+}
+
+applyBadges();
+</script>
 </body>
 </html>
