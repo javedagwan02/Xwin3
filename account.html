@@ -12,94 +12,76 @@ body{
   margin:0;
   font-family:Arial,sans-serif;
   color:#fff;
-  padding-bottom:95px;
-  background:
-    radial-gradient(circle at top,#0b4ecb 0%,#062f88 35%,#05205c 70%,#031338 100%);
+  padding-bottom:78px;
+  background:linear-gradient(#073f9f,#0b72d8,#063d91);
 }
 
 .page{
   max-width:430px;
   margin:auto;
   min-height:100vh;
-  padding:8px;
+  padding:7px;
 }
 
+/* TOP */
 .top-banner{
-  height:105px;
-  margin:0 -8px 8px;
+  height:82px;
+  margin:0 -7px 8px;
   background:linear-gradient(#071c64,#0b63d8);
-  position:relative;
-  overflow:hidden;
-  border-bottom:5px solid #4aa8ff;
+  border-bottom:4px solid #4aa8ff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
 }
 
 .banner-title{
-  position:absolute;
-  left:50%;
-  top:26px;
-  transform:translateX(-50%);
   width:72%;
-  padding:12px;
+  padding:10px;
   text-align:center;
   border-radius:16px;
   background:linear-gradient(135deg,#7d5cff,#d58cff);
   border:3px solid #9be1ff;
   color:#fff141;
-  font-size:28px;
+  font-size:25px;
   font-weight:900;
   text-shadow:2px 3px #6d1bb5;
-  box-shadow:0 4px 0 #3157b8,0 0 18px #7ee6ff;
+  box-shadow:0 4px 0 #3157b8,0 0 14px #7ee6ff;
 }
 
-.top-icon{
-  position:absolute;
-  top:30px;
-  width:48px;
-  height:48px;
-  border-radius:15px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  background:linear-gradient(#6bd5ff,#174da8);
-  border:3px solid #bdefff;
-  font-size:24px;
-}
-
-.top-icon.left{left:18px}
-.top-icon.right{right:18px}
-
+/* CARD */
 .card{
-  border-radius:18px;
+  border-radius:16px;
   background:linear-gradient(#1c74e7,#073b9a);
-  border:5px solid #4ba6ff;
-  box-shadow:0 5px 0 #072e78,inset 0 0 20px rgba(255,255,255,.15);
+  border:4px solid #4ba6ff;
+  box-shadow:0 4px 0 #072e78,inset 0 0 15px rgba(255,255,255,.15);
 }
 
+/* PROFILE */
 .profile-card{
-  padding:16px;
+  padding:12px;
   display:flex;
-  gap:14px;
+  gap:12px;
   align-items:center;
 }
 
-.profile img{
-  width:82px;
-  height:82px;
+.profile-card img{
+  width:72px;
+  height:72px;
   border-radius:50%;
-  border:5px solid #fff;
+  border:4px solid #fff;
   box-shadow:0 0 0 4px #25c45a;
 }
 
 .profile-info h2{
   margin:0;
-  font-size:24px;
+  font-size:22px;
   font-weight:900;
   text-shadow:2px 2px #06337d;
 }
 
 .profile-info p{
-  margin:8px 0 0;
-  font-size:15px;
+  margin:5px 0 0;
+  font-size:14px;
   color:#d9ecff;
   font-weight:bold;
 }
@@ -108,20 +90,21 @@ body{
   color:#29eaff;
 }
 
+/* BALANCE */
 .balance-card{
-  margin-top:12px;
-  padding:18px;
+  margin-top:10px;
+  padding:13px;
 }
 
 .balance-title{
-  font-size:22px;
+  font-size:20px;
   font-weight:900;
   text-shadow:2px 2px #06337d;
 }
 
 .balance-amount{
-  margin:8px 0;
-  font-size:48px;
+  margin:5px 0;
+  font-size:42px;
   font-weight:900;
   color:#ffd21f;
   text-shadow:3px 4px #9b4400;
@@ -129,13 +112,12 @@ body{
 
 .bonus-pill{
   display:inline-block;
-  padding:8px 18px;
-  border-radius:28px;
+  padding:6px 14px;
+  border-radius:25px;
   background:linear-gradient(#7d5cff,#5322be);
   border:3px solid #6cd9ff;
-  font-size:17px;
+  font-size:16px;
   font-weight:900;
-  color:#fff;
 }
 
 .bonus-pill span{
@@ -143,8 +125,8 @@ body{
 }
 
 .balance-actions{
-  margin-top:18px;
-  padding-top:16px;
+  margin-top:12px;
+  padding-top:12px;
   border-top:2px solid rgba(255,255,255,.3);
   display:grid;
   grid-template-columns:repeat(3,1fr);
@@ -152,47 +134,47 @@ body{
 
 .action{
   text-align:center;
-  font-size:17px;
+  font-size:16px;
   font-weight:900;
   cursor:pointer;
   text-shadow:1px 2px #06337d;
 }
 
 .action-icon{
-  width:62px;
-  height:62px;
-  margin:0 auto 6px;
+  width:54px;
+  height:54px;
+  margin:0 auto 5px;
   border-radius:50%;
   display:flex;
   align-items:center;
   justify-content:center;
   background:linear-gradient(#5fd6ff,#0c59d9);
   border:4px solid #65c9ff;
-  font-size:30px;
+  font-size:27px;
   box-shadow:0 4px 0 #06337d;
 }
 
+/* BUTTON GRID */
 .grid{
-  margin-top:14px;
+  margin-top:12px;
   display:grid;
   grid-template-columns:1fr 1fr;
-  gap:12px;
+  gap:10px;
 }
 
 .big-btn{
-  min-height:86px;
+  min-height:64px;
   border:none;
-  border-radius:16px;
-  padding:12px;
+  border-radius:15px;
+  padding:8px;
   color:white;
-  font-size:18px;
+  font-size:17px;
   font-weight:900;
-  text-align:left;
   display:flex;
-  gap:10px;
+  gap:8px;
   align-items:center;
   justify-content:center;
-  box-shadow:0 5px 0 rgba(0,0,0,.35),0 0 12px rgba(255,255,255,.25);
+  box-shadow:0 4px 0 rgba(0,0,0,.35);
   text-shadow:1px 2px rgba(0,0,0,.4);
 }
 
@@ -202,19 +184,20 @@ body{
 
 .full-btn{
   width:100%;
-  margin-top:14px;
-  padding:17px;
+  margin-top:10px;
+  padding:13px;
   border:none;
-  border-radius:18px;
+  border-radius:16px;
   color:white;
-  font-size:22px;
+  font-size:20px;
   font-weight:900;
-  box-shadow:0 5px 0 rgba(0,0,0,.35);
+  box-shadow:0 4px 0 rgba(0,0,0,.35);
 }
 
 .logout{background:linear-gradient(#ff5555,#e60028)}
 .change-pass{background:linear-gradient(#1fd3ff,#0066e8)}
 
+/* NAV */
 .bottom-nav{
   position:fixed;
   bottom:0;
@@ -225,28 +208,29 @@ body{
   background:linear-gradient(#0645b5,#06246c);
   border:4px solid #4ba6ff;
   border-bottom:none;
-  border-radius:22px 22px 0 0;
+  border-radius:20px 20px 0 0;
   display:grid;
   grid-template-columns:repeat(4,1fr);
-  box-shadow:0 -3px 15px rgba(0,0,0,.4);
+  z-index:50;
 }
 
 .nav-item{
   text-align:center;
-  padding:10px 0;
+  padding:7px 0;
   color:#cce7ff;
   font-size:12px;
   font-weight:bold;
 }
 
 .nav-item div{
-  font-size:25px;
+  font-size:23px;
 }
 
 .nav-item.active{
   color:#ffe620;
 }
 
+/* POPUPS */
 .popup{
   position:fixed;
   inset:0;
@@ -301,6 +285,18 @@ body{
   border-bottom:1px solid rgba(255,255,255,.25);
   font-size:14px;
 }
+
+@media(max-height:740px){
+  .top-banner{height:70px}
+  .banner-title{font-size:22px;padding:8px}
+  .profile-card img{width:62px;height:62px}
+  .profile-info h2{font-size:20px}
+  .profile-info p{font-size:13px}
+  .balance-amount{font-size:36px}
+  .action-icon{width:48px;height:48px;font-size:24px}
+  .big-btn{min-height:56px;font-size:15px}
+  .full-btn{padding:11px;font-size:18px}
+}
 </style>
 </head>
 
@@ -309,15 +305,11 @@ body{
 <div class="page">
 
   <div class="top-banner">
-    <div class="top-icon left">💬</div>
     <div class="banner-title">MY ACCOUNT</div>
-    <div class="top-icon right">!</div>
   </div>
 
   <div class="card profile-card">
-    <div class="profile">
-      <img src="https://i.imgur.com/6VBx3io.png">
-    </div>
+    <img src="https://i.imgur.com/6VBx3io.png">
     <div class="profile-info">
       <h2 id="userName">USER</h2>
       <p>UID: <span id="uid"></span></p>
