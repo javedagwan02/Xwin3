@@ -6,352 +6,339 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <style>
+*{box-sizing:border-box}
 
 body{
   margin:0;
-  font-family:Arial;
-  background: radial-gradient(circle at top,#1a0033,#0a001a);
+  font-family:Arial,sans-serif;
   color:#fff;
   padding-bottom:90px;
+  background:radial-gradient(circle at top,#0b4ecb,#062f88 45%,#031338);
 }
 
-/* HEADER */
-.header{
-  padding:18px;
-  font-size:24px;
-  font-weight:bold;
+.page{
+  max-width:430px;
+  margin:auto;
+  padding:8px;
+}
+
+.top-banner{
+  height:92px;
+  margin:0 -8px 10px;
+  background:linear-gradient(#071c64,#0b63d8);
+  border-bottom:5px solid #4aa8ff;
   display:flex;
-  justify-content:center;
   align-items:center;
+  justify-content:center;
 }
 
-/* WALLET CARD */
-.wallet-card{
-  margin:15px;
-  border-radius:20px;
-  padding:22px;
+.banner-title{
+  width:78%;
+  padding:12px;
   text-align:center;
+  border-radius:18px;
+  background:linear-gradient(135deg,#7d5cff,#d58cff);
+  border:4px solid #9be1ff;
+  color:#fff141;
+  font-size:30px;
+  font-weight:900;
+  text-shadow:2px 3px #6d1bb5;
+  box-shadow:0 4px 0 #3157b8,0 0 18px #7ee6ff;
+}
 
-  background: linear-gradient(135deg,#ff00cc,#7b00ff,#0044ff);
+.card{
+  border-radius:18px;
+  background:linear-gradient(#1c74e7,#073b9a);
+  border:5px solid #4ba6ff;
+  box-shadow:0 5px 0 #072e78,inset 0 0 20px rgba(255,255,255,.15);
+  padding:14px;
+  margin-bottom:14px;
+}
 
-  box-shadow:
-    0 0 30px rgba(255,0,255,0.3),
-    inset 0 0 20px rgba(255,255,255,0.08);
+.wallet-card{
+  text-align:center;
+}
+
+.wallet-title{
+  font-size:22px;
+  font-weight:900;
+  text-shadow:2px 2px #06337d;
 }
 
 .wallet-card h1{
-  font-size:36px;
-  margin:10px 0;
+  margin:8px 0;
+  font-size:50px;
+  font-weight:900;
+  color:#ffd21f;
+  text-shadow:3px 4px #9b4400;
 }
 
-.wallet-card p{
-  font-size:14px;
-  opacity:0.9;
+.bonus-pill{
+  display:inline-block;
+  padding:8px 18px;
+  border-radius:28px;
+  background:linear-gradient(#7d5cff,#5322be);
+  border:3px solid #6cd9ff;
+  font-size:18px;
+  font-weight:900;
 }
 
-/* BONUS */
-.wallet-card h2{
-  margin:5px 0;
-  color:#ffd700;
+.bonus-pill span{
+  color:#ffe620;
 }
 
-/* STATS */
 .stats{
-  display:flex;
-  justify-content:space-between;
-  margin-top:15px;
+  margin-top:16px;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
 }
 
 .stat{
-  flex:1;
+  padding:12px;
+  border-radius:14px;
+  background:#dcecff;
+  color:#195aa2;
+  border:4px solid #4ba6ff;
+  font-weight:900;
 }
 
 .stat h3{
   margin:0;
-  font-size:18px;
+  color:#ff9f13;
+  font-size:24px;
+  text-shadow:1px 1px #8a3b00;
 }
 
 .stat span{
-  font-size:12px;
-  opacity:0.8;
+  font-size:13px;
 }
 
-/* ACTIONS */
 .actions{
-  margin:15px;
-  border-radius:18px;
-  padding:18px;
-
-  background: rgba(255,255,255,0.05);
-  backdrop-filter: blur(12px);
-
-  border:1px solid rgba(255,255,255,0.1);
-
   display:grid;
   grid-template-columns:repeat(4,1fr);
-  gap:12px;
+  gap:10px;
 }
 
 .action{
   text-align:center;
-  font-size:13px;
+  font-size:12px;
+  font-weight:900;
+  color:#fff;
   cursor:pointer;
+  text-shadow:1px 2px #06337d;
 }
 
 .action div{
-  width:50px;
-  height:50px;
+  width:58px;
+  height:58px;
   margin:auto;
+  margin-bottom:6px;
   border-radius:50%;
+  background:linear-gradient(#5fd6ff,#0c59d9);
+  border:4px solid #65c9ff;
+  box-shadow:0 4px 0 #06337d;
   display:flex;
   align-items:center;
   justify-content:center;
-  font-size:20px;
-  margin-bottom:6px;
-
-  background: linear-gradient(45deg,#ff00cc,#7b00ff);
-  box-shadow:0 0 10px #ff00cc;
+  font-size:27px;
 }
 
-/* TRANSFER BOX */
-.transfer-box{
-  margin:15px;
-  border-radius:20px;
-  padding:18px;
-
-  background: rgba(255,255,255,0.05);
-  backdrop-filter: blur(12px);
-
-  border:1px solid rgba(255,255,255,0.1);
+.section-title{
+  font-size:22px;
+  font-weight:900;
+  text-shadow:2px 2px #06337d;
+  margin-bottom:12px;
 }
 
-/* INPUT */
 input{
   width:100%;
   padding:14px;
-  margin:10px 0;
-  border-radius:12px;
+  margin-top:10px;
   border:none;
-  font-size:15px;
-
-  box-sizing:border-box;   /* 🔥 MAIN FIX */
+  border-radius:14px;
+  font-size:16px;
+  font-weight:bold;
+  color:#174d91;
+  background:#dce8ff;
 }
 
-/* BUTTON */
 .send-btn{
   width:100%;
   padding:16px;
-  margin-top:15px;
-
-  background: linear-gradient(45deg,#ff00cc,#7b00ff);
+  margin-top:14px;
   border:none;
-  border-radius:14px;
-
-  font-size:16px;
-  font-weight:bold;
-  color:#fff;
-
-  box-shadow:0 0 15px #ff00cc;
+  border-radius:18px;
+  font-size:20px;
+  font-weight:900;
+  color:#9b3b00;
+  background:linear-gradient(#fff06a,#ff9f13);
+  box-shadow:0 5px 0 #b86400;
 }
 
-/* RULE BOX */
 .rules{
-  margin-top:15px;
-  padding:12px;
-  border-radius:12px;
-  font-size:13px;
-
-  background: rgba(255,255,255,0.08);
-  border:1px solid rgba(255,255,255,0.1);
+  margin-top:14px;
+  padding:14px;
+  border-radius:16px;
+  background:#dcecff;
+  color:#195aa2;
+  font-size:14px;
+  font-weight:bold;
+  line-height:1.7;
+  border:4px solid #4ba6ff;
 }
 
-/* NAV */
 .bottom-nav{
   position:fixed;
   bottom:0;
   left:0;
   right:0;
-  background:#0d0d0d;
-  display:flex;
-  border-top:1px solid #222;
+  max-width:430px;
+  margin:auto;
+  background:linear-gradient(#0645b5,#06246c);
+  border:4px solid #4ba6ff;
+  border-bottom:none;
+  border-radius:22px 22px 0 0;
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
 }
 
 .nav-btn{
-  flex:1;
-  padding:10px 0;
   text-align:center;
+  padding:9px 0;
+  color:#cce7ff;
   font-size:12px;
-  color:#aaa;
-}
-
-.nav-btn.active{
-  color:#ff00cc;
   font-weight:bold;
 }
 
 .nav-btn div{
-  font-size:20px;
+  font-size:24px;
+}
+
+.nav-btn.active{
+  color:#ffe620;
+}
+
+.popup{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.75);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:9999;
+}
+
+.popup-box{
+  width:85%;
+  max-width:320px;
+  padding:22px;
+  border-radius:18px;
+  text-align:center;
+  background:linear-gradient(#1c74e7,#073b9a);
+  border:5px solid #4ba6ff;
+  color:white;
+  box-shadow:0 0 25px rgba(0,150,255,.6);
+}
+
+.popup-box button{
+  width:100%;
+  padding:12px;
+  margin-top:14px;
+  border:none;
+  border-radius:12px;
+  background:#18c757;
+  color:white;
+  font-weight:bold;
 }
 </style>
 </head>
-<div id="customPopup" style="
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,0.6);
-  display:none;
-  align-items:center;
-  justify-content:center;
-  z-index:9999;
-">
-
-  <div style="
-    background:#1e293b;
-    padding:25px;
-    border-radius:18px;
-    width:280px;
-    text-align:center;
-    color:#fff;
-    box-shadow:0 10px 30px rgba(0,0,0,0.5);
-    animation:scaleIn 0.3s ease;
-  ">
-
-    <div style="font-size:30px;">✅</div>
-
-    <div id="popupMsg" style="margin-top:10px;font-size:16px;"></div>
-
-    <button onclick="closePopup()" style="
-      margin-top:15px;
-      padding:10px 20px;
-      border:none;
-      border-radius:10px;
-      background:#00c853;
-      color:#fff;
-      font-weight:bold;
-      cursor:pointer;
-    ">
-      OK
-    </button>
-
-  </div>
-</div>
-
-<style>
-@keyframes scaleIn{
-  from{transform:scale(0.7);opacity:0;}
-  to{transform:scale(1);opacity:1;}
-}
-</style>
 
 <body>
 
-<div class="header">💰 Wallet</div>
+<div class="page">
 
-<!-- WALLET CARD -->
-<div class="wallet-card">
-  <p>Total Balance</p>
-  <h1>₹<span id="balance">0.00</span></h1>
+  <div class="top-banner">
+    <div class="banner-title">WALLET</div>
+  </div>
 
-  <p>Bonus Balance</p>
-  <h2>₹<span id="bonusBalance">0.00</span></h2>
+  <div class="card wallet-card">
+    <div class="wallet-title">Total Balance</div>
 
-  <div class="stats">
-    <div class="stat">
-      <h3 id="withdrawTotal">0</h3>
-      <span>Total Withdraw</span>
+    <h1>₹<span id="balance">0.00</span></h1>
+
+    <div class="bonus-pill">
+      🎁 Bonus: ₹<span id="bonusBalance">0.00</span>
     </div>
-    <div class="stat">
-      <h3 id="depositTotal">0</h3>
-      <span>Total Deposit</span>
+
+    <div class="stats">
+      <div class="stat">
+        <h3 id="withdrawTotal">0</h3>
+        <span>Total Withdraw</span>
+      </div>
+
+      <div class="stat">
+        <h3 id="depositTotal">0</h3>
+        <span>Total Deposit</span>
+      </div>
     </div>
   </div>
-</div>
 
-<!-- ACTION BUTTONS -->
-<div class="actions">
-  <div class="action" onclick="location.href='deposit.html'">
-    <div>💰</div>
-    Deposit
+  <div class="card">
+    <div class="actions">
+      <div class="action" onclick="location.href='deposit.html'">
+        <div>💰</div>
+        Deposit
+      </div>
+
+      <div class="action" onclick="location.href='withdraw.html'">
+        <div>🏦</div>
+        Withdraw
+      </div>
+
+      <div class="action" onclick="location.href='deposit-history.html'">
+        <div>📥</div>
+        Deposit History
+      </div>
+
+      <div class="action" onclick="location.href='withdraw-history.html'">
+        <div>📤</div>
+        Withdraw History
+      </div>
+    </div>
   </div>
 
-  <div class="action" onclick="location.href='withdraw.html'">
-    <div>🏦</div>
-    Withdraw
-  </div>
+  <div class="card">
 
-  <div class="action" onclick="location.href='deposit-history.html'">
-    <div>📥</div>
-    Deposit History
-  </div>
+    <div class="section-title">💸 Transfer Money</div>
 
-  <div class="action" onclick="location.href='withdraw-history.html'">
-    <div>📤</div>
-    Withdraw History
-  </div>
-</div>
+    <input type="email" id="receiverEmail" placeholder="Enter Friend Email">
 
-<!-- TRANSFER MONEY -->
-<div class="transfer-box">
+    <input type="number" id="transferAmount" placeholder="Enter Amount">
 
-  <h3>💸 Transfer Money</h3>
-
-  <input type="email" id="receiverEmail" placeholder="Enter Friend Email">
-
-  <input type="number" id="transferAmount" placeholder="Enter Amount">
-
-  <button onclick="sendMoney()" class="send-btn">
-    Send Money
-  </button>
-
-  <!-- RULES -->
-  <div class="rules">
-    ⚠️ Transfer Fees:<br><br>
-    • ₹1 – ₹100 → 23% fee<br>
-    • ₹100 – ₹10,000 → 18% fee<br>
-    • ₹10,000 – ₹50,000 → 12% fee
-  </div>
-
-</div>
-
-<!-- POPUP -->
-<div id="customPopup" style="
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,0.6);
-  display:none;
-  align-items:center;
-  justify-content:center;
-  z-index:9999;
-">
-
-  <div style="
-    background:#1e293b;
-    padding:25px;
-    border-radius:18px;
-    width:280px;
-    text-align:center;
-    color:#fff;
-  ">
-
-    <div style="font-size:30px;">✅</div>
-
-    <div id="popupMsg" style="margin-top:10px;"></div>
-
-    <button onclick="closePopup()" style="
-      margin-top:15px;
-      padding:10px 20px;
-      border:none;
-      border-radius:10px;
-      background:#00c853;
-      color:#fff;
-      font-weight:bold;
-    ">
-      OK
+    <button onclick="sendMoney()" class="send-btn">
+      Send Money
     </button>
 
+    <div class="rules">
+      ⚠️ Transfer Fees:<br><br>
+      • ₹1 – ₹100 → 23% fee<br>
+      • ₹100 – ₹10,000 → 18% fee<br>
+      • ₹10,000 – ₹50,000 → 12% fee
+    </div>
+
+  </div>
+
+</div>
+
+<div id="customPopup" class="popup">
+  <div class="popup-box">
+    <div style="font-size:34px;">✅</div>
+    <div id="popupMsg" style="margin-top:10px;font-size:17px;font-weight:bold;"></div>
+    <button onclick="closePopup()">OK</button>
   </div>
 </div>
 
-<!-- BOTTOM NAV -->
 <div class="bottom-nav">
   <div class="nav-btn" onclick="location.href='index.html'">
     <div>🏠</div>Home
@@ -369,7 +356,6 @@ input{
     <div>👤</div>Account
   </div>
 </div>
-
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
@@ -393,77 +379,78 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 const userEmail = localStorage.getItem("userEmail");
-  
-let balance = 0; // ✅ GLOBAL
+
+let balance = 0;
+
 async function loadWallet(){
+
   let totalDeposit = 0;
   let totalWithdraw = 0;
   let bonus = 0;
-let firstDepositDone = false;
+  let firstDepositDone = false;
 
-  /* USER BALANCE */
   const userSnap = await getDocs(
     query(collection(db,"users"), where("email","==",userEmail))
   );
-  userSnap.forEach(d=>{
-  balance = d.data().balance || 0;
-  bonus = d.data().bonusBalance || 0;
-  firstDepositDone = d.data().firstDepositDone || false;
-});
-  localStorage.setItem("firstDepositDone", firstDepositDone);
-// 🔥 SYNC BALANCE TO LOCALSTORAGE (IMPORTANT)
-localStorage.setItem("wallet", balance);
-localStorage.setItem("coin_wallet", balance);
 
-// 🔥 FLAG FOR INDEX POPUP
-localStorage.setItem("walletUpdated", "1");
-  /* DEPOSITS */
+  userSnap.forEach(d=>{
+    balance = d.data().balance || 0;
+    bonus = d.data().bonusBalance || 0;
+    firstDepositDone = d.data().firstDepositDone || false;
+  });
+
+  localStorage.setItem("firstDepositDone", firstDepositDone);
+  localStorage.setItem("wallet", balance);
+  localStorage.setItem("coin_wallet", balance);
+  localStorage.setItem("walletUpdated", "1");
+
   const depSnap = await getDocs(
     query(collection(db,"deposits"), where("email","==",userEmail))
   );
+
   depSnap.forEach(d=>{
-    const x=d.data();
-    if(x.status==="APPROVED"){
+    const x = d.data();
+    if(x.status === "APPROVED"){
       totalDeposit += Number(x.amount);
     }
   });
-  // 🔥 ADD THIS
-localStorage.setItem("totalDeposit", totalDeposit);
 
-  /* ✅ WITHDRAWS (🔥 FIXED – FIRESTORE) */
+  localStorage.setItem("totalDeposit", totalDeposit);
+
   const wdSnap = await getDocs(
     query(collection(db,"withdraws"), where("email","==",userEmail))
   );
+
   wdSnap.forEach(d=>{
-    const w=d.data();
-    if(w.status==="APPROVED"){
+    const w = d.data();
+    if(w.status === "APPROVED"){
       totalWithdraw += Number(w.amount);
     }
   });
 
-  document.getElementById("balance").innerText = balance.toFixed(2);
+  document.getElementById("balance").innerText = Number(balance).toFixed(2);
   document.getElementById("depositTotal").innerText = totalDeposit;
   document.getElementById("withdrawTotal").innerText = totalWithdraw;
-  document.getElementById("bonusBalance").innerText = bonus.toFixed(2);
+  document.getElementById("bonusBalance").innerText = Number(bonus).toFixed(2);
 }
 
 loadWallet();
-  window.sendMoney = async function(){
 
-  let receiver = document.getElementById("receiverEmail").value;
+window.sendMoney = async function(){
+
+  let receiver = document.getElementById("receiverEmail").value.trim();
   let amount = Number(document.getElementById("transferAmount").value);
 
   if(!receiver || amount <= 0){
-    alert("Enter valid details");
+    showPopup("Enter valid details");
     return;
   }
 
   if(amount > Number(balance)){
-  alert("Insufficient balance");
-  return;
-}
+    showPopup("Insufficient balance");
+    return;
+  }
 
-  // 🔥 FEES CALCULATION
   let feePercent = 0;
 
   if(amount >= 1 && amount <= 100){
@@ -476,34 +463,32 @@ loadWallet();
     feePercent = 12;
   }
   else{
-    alert("Max transfer limit ₹50,000");
+    showPopup("Max transfer limit ₹50,000");
     return;
   }
 
   let fee = (amount * feePercent) / 100;
   let finalAmount = amount - fee;
 
-  // 🔥 GET RECEIVER
   const userSnap = await getDocs(
     query(collection(db,"users"), where("email","==",receiver))
   );
 
   if(userSnap.empty){
-    alert("User not found");
+    showPopup("User not found");
     return;
   }
 
-let receiverId = "";
-let receiverBalance = 0;
-let receiverWager = 0;
+  let receiverId = "";
+  let receiverBalance = 0;
+  let receiverWager = 0;
 
   userSnap.forEach(d=>{
-  receiverId = d.id;
-  receiverBalance = d.data().balance || 0;
-  receiverWager = d.data().wagerRequired || 0;
-});
+    receiverId = d.id;
+    receiverBalance = d.data().balance || 0;
+    receiverWager = d.data().wagerRequired || 0;
+  });
 
-  // 🔥 SENDER UPDATE
   const senderSnap = await getDocs(
     query(collection(db,"users"), where("email","==",userEmail))
   );
@@ -514,25 +499,29 @@ let receiverWager = 0;
     senderId = d.id;
   });
 
-  // 🔥 UPDATE BOTH
   let newSenderBalance = balance - amount;
 
-await updateDoc(doc(db,"users",senderId),{
-  balance: newSenderBalance
-});
-    balance = newSenderBalance;
+  await updateDoc(doc(db,"users",senderId),{
+    balance: newSenderBalance
+  });
 
-  let wagerAdd = finalAmount * 0.5; // sirf wager
+  balance = newSenderBalance;
 
-await updateDoc(doc(db,"users",receiverId),{
-  balance: receiverBalance + finalAmount, // FULL AMOUNT
-  wagerRequired: (receiverWager || 0) + wagerAdd
-});
+  let wagerAdd = finalAmount * 0.5;
 
-  showPopup(`Sent ₹${finalAmount} (Fee ₹${fee}) 💸`);
-  location.reload();
+  await updateDoc(doc(db,"users",receiverId),{
+    balance: receiverBalance + finalAmount,
+    wagerRequired: (receiverWager || 0) + wagerAdd
+  });
+
+  showPopup(`Sent ₹${finalAmount.toFixed(2)} (Fee ₹${fee.toFixed(2)}) 💸`);
+
+  setTimeout(()=>{
+    location.reload();
+  },1200);
 }
-  window.showPopup = function(msg){
+
+window.showPopup = function(msg){
   document.getElementById("popupMsg").innerText = msg;
   document.getElementById("customPopup").style.display = "flex";
 }
