@@ -1705,23 +1705,6 @@ Number(balance).toLocaleString(undefined, {
   
 // 🔥 CALL AFTER FIREBASE READY  
 loadBalance();  
-   async function settlePreviousGame(){
-  const userEmail = localStorage.getItem("userEmail");
-  if(!userEmail) return;
-
-  try{
-    await fetch(
-      "https://jili-backend.onrender.com/settle-game?userId=" +
-      encodeURIComponent(userEmail)
-    );
-
-    await loadBalance();
-  }catch(e){
-    console.log("Settle error", e);
-  }
-}
-
-settlePreviousGame();
   // 🔥 MASTER FUNCTION
 async function openJiliGame(gameId){
 
@@ -1769,10 +1752,6 @@ async function openJiliGame(gameId){
       "https://jili-backend.onrender.com/ping"
     );
 
-     await fetch(
-  "https://jili-backend.onrender.com/settle-game?userId=" +
-  encodeURIComponent(userEmail)
-);
     // 🔥 LOADING
     document.body.style.opacity = "0.7";
 
@@ -2446,7 +2425,10 @@ async function loadAutoGames(){
         return;  
       }  
   
-      openJiliGame(g.uid);
+      window.location.href =  
+      "https://jili-backend.onrender.com/start-game?userId="  
+      + userEmail +  
+      "&gameId=" + g.uid;  
     };  
   
     container.appendChild(div);  
