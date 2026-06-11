@@ -6,41 +6,80 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <style>
+*{box-sizing:border-box}
+
 body{
   margin:0;
-  font-family:Arial;
-  background:radial-gradient(circle at top,#24004a,#080014);
+  font-family:Arial,sans-serif;
   color:#fff;
+  min-height:100vh;
+  background:radial-gradient(circle at top,#168cff,#064bb5 45%,#03143f);
+}
+
+.page{
+  max-width:430px;
+  margin:auto;
+  padding:10px;
+}
+
+.title{
+  margin:12px auto 18px;
+  width:85%;
+  padding:13px;
+  text-align:center;
+  border-radius:18px;
+  background:linear-gradient(135deg,#7d5cff,#d58cff);
+  border:4px solid #9be1ff;
+  color:#fff141;
+  font-size:26px;
+  font-weight:900;
+  text-shadow:2px 3px #6d1bb5;
 }
 
 .box{
-  margin:20px;
-  padding:18px;
+  padding:16px;
   border-radius:22px;
-  background:rgba(255,255,255,.06);
-  box-shadow:0 0 25px rgba(255,0,255,.3);
   text-align:center;
+  background:linear-gradient(#1d85ff,#073b9a);
+  border:5px solid #62caff;
+  box-shadow:0 6px 0 #062b78;
 }
 
-h1{
-  color:#ffd633;
+.info{
+  background:#dcecff;
+  color:#195aa2;
+  padding:12px;
+  border-radius:14px;
+  border:4px solid #75cfff;
+  font-size:18px;
+  font-weight:900;
+}
+
+.info span{
+  color:#ff9f13;
 }
 
 .qr{
+  margin-top:16px;
   background:#fff;
-  padding:8px;
-  border-radius:14px;
+  padding:10px;
+  border-radius:16px;
   width:260px;
-  max-width:90%;
+  max-width:95%;
+  border:5px solid #fff;
+  box-shadow:0 6px 0 #062b78;
 }
 
 .upi{
-  background:#07000d;
+  background:#dcecff;
+  color:#073b9a;
   padding:14px;
-  border-radius:12px;
+  border-radius:14px;
   margin-top:14px;
   font-size:20px;
-  font-weight:bold;
+  font-weight:900;
+  border:4px solid #75cfff;
+  word-break:break-word;
 }
 
 input{
@@ -48,9 +87,11 @@ input{
   padding:15px;
   margin-top:14px;
   border:none;
-  border-radius:12px;
-  box-sizing:border-box;
+  border-radius:14px;
+  background:#dcecff;
+  color:#174d91;
   font-size:16px;
+  font-weight:bold;
 }
 
 button{
@@ -58,29 +99,27 @@ button{
   padding:15px;
   margin-top:12px;
   border:none;
-  border-radius:12px;
+  border-radius:16px;
   font-size:18px;
-  font-weight:bold;
+  font-weight:900;
 }
 
 .copy{
-  background:linear-gradient(45deg,#ff00cc,#7b00ff);
+  background:linear-gradient(#7d5cff,#5322be);
   color:#fff;
-}
-
-.submit{
-  background:#22c55e;
-  color:#fff;
+  box-shadow:0 5px 0 #321278;
 }
 
 .payapp{
-  background:#ffd21f;
-  color:#8a3200;
+  background:linear-gradient(#fff36b,#ff9f13);
+  color:#9b3b00;
+  box-shadow:0 5px 0 #b86400;
 }
 
-.info{
-  margin-top:12px;
-  color:#ddd;
+.submit{
+  background:linear-gradient(#6dff5c,#11b51b);
+  color:#fff;
+  box-shadow:0 5px 0 #087c12;
 }
 
 .popup{
@@ -90,40 +129,52 @@ button{
   display:none;
   justify-content:center;
   align-items:center;
+  z-index:9999;
 }
 
 .popup div{
-  background:#1a0033;
+  background:linear-gradient(#1d85ff,#073b9a);
+  border:5px solid #62caff;
   padding:22px;
-  border-radius:14px;
-  width:80%;
+  border-radius:18px;
+  width:85%;
   text-align:center;
+  color:#fff;
+}
+
+.popup button{
+  background:linear-gradient(#fff36b,#ff9f13);
+  color:#9b3b00;
 }
 </style>
 </head>
 
 <body>
 
-<div class="box">
-  <h1>Complete Payment</h1>
+<div class="page">
 
-  <div class="info">
-    Amount: ₹<span id="amountText"></span><br>
-    Method: <span id="methodText"></span>
+  <div class="title">COMPLETE PAYMENT</div>
+
+  <div class="box">
+
+    <div class="info">
+      Amount: ₹<span id="amountText"></span><br>
+      Method: <span id="methodText"></span>
+    </div>
+
+    <img id="qrImg" class="qr">
+
+    <div class="upi" id="upiText"></div>
+
+    <button class="copy" onclick="copyUPI()">Copy UPI</button>
+    <button class="payapp" onclick="openUPIApp()">Open Payment App</button>
+
+    <input type="text" id="utr" placeholder="Enter UTR Number">
+
+    <button class="submit" onclick="submitUTR()">Submit UTR</button>
+
   </div>
 
-  <br>
-
-  <img id="qrImg" class="qr">
-
-  <div class="upi" id="upiText"></div>
-
-  <button class="copy" onclick="copyUPI()">Copy UPI</button>
-  <button class="payapp" onclick="openUPIApp()">Open Payment App</button>
-
-  <input type="text" id="utr" placeholder="Enter UTR Number">
-
-  <button class="submit" onclick="submitUTR()">Submit UTR</button>
 </div>
 
 <div class="popup" id="popup">
