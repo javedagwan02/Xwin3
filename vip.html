@@ -6,262 +6,271 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <style>
-
 *{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Arial;
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:Arial,sans-serif;
+  -webkit-tap-highlight-color:transparent;
 }
 
 body{
-background: radial-gradient(circle at top,#1a0033,#0a001a);
-color:#fff;
-padding:15px;
-padding-bottom:100px;
+  color:#fff;
+  padding:10px;
+  padding-bottom:100px;
+  background:radial-gradient(circle at top,#168cff,#064bb5 45%,#03143f);
 }
 
 .vip-header{
-background:linear-gradient(135deg,#ff00cc,#7b00ff,#0044ff);
-padding:20px;
-border-radius:22px;
-box-shadow:0 0 25px rgba(255,0,255,0.3);
+  padding:18px;
+  border-radius:22px;
+  background:linear-gradient(#1d85ff,#073b9a);
+  border:5px solid #62caff;
+  box-shadow:0 6px 0 #062b78;
 }
 
 .profile{
-display:flex;
-align-items:center;
-gap:15px;
+  display:flex;
+  align-items:center;
+  gap:14px;
 }
 
 .profile img{
-width:75px;
-height:75px;
-border-radius:50%;
-border:3px solid #fff;
+  width:74px;
+  height:74px;
+  border-radius:50%;
+  border:5px solid #fff;
 }
 
 .profile h2{
-font-size:28px;
+  font-size:27px;
+  color:#ffe620;
+  text-shadow:2px 2px #06337d;
 }
 
 .profile p{
-margin-top:5px;
-opacity:0.9;
+  margin-top:5px;
+  color:#dcecff;
+  font-weight:bold;
+  font-size:13px;
 }
 
 .timer-box{
-margin-top:18px;
-padding:15px;
-border-radius:16px;
-background:rgba(255,255,255,0.08);
-text-align:center;
+  margin-top:16px;
+  padding:14px;
+  border-radius:16px;
+  background:#dcecff;
+  border:4px solid #75cfff;
+  text-align:center;
+  color:#195aa2;
 }
 
 .timer-title{
-font-size:14px;
-opacity:0.9;
-margin-bottom:8px;
+  font-size:14px;
+  font-weight:900;
+  margin-bottom:6px;
 }
 
 #timer{
-font-size:24px;
-font-weight:bold;
-color:#ffd700;
+  font-size:24px;
+  font-weight:900;
+  color:#ff9f13;
+  text-shadow:1px 1px #8a3b00;
 }
 
 .vip-card{
-background:rgba(255,255,255,0.06);
-backdrop-filter:blur(12px);
-border:1px solid rgba(255,255,255,0.1);
-padding:18px;
-border-radius:22px;
-margin-top:20px;
+  padding:16px;
+  border-radius:22px;
+  margin-top:18px;
+  background:linear-gradient(#1d85ff,#073b9a);
+  border:5px solid #62caff;
+  box-shadow:0 6px 0 #062b78;
 }
 
 .top{
-display:flex;
-justify-content:space-between;
-align-items:center;
-margin-bottom:15px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  margin-bottom:14px;
 }
 
 .vip-name{
-font-size:32px;
-font-weight:bold;
-color:#ff4dff;
+  font-size:34px;
+  font-weight:900;
+  color:#ffe620;
+  text-shadow:2px 3px #9b4400;
 }
 
 .deposit-box{
-background:rgba(255,255,255,0.08);
-padding:10px 14px;
-border-radius:12px;
-font-weight:bold;
-color:#ffd700;
+  background:linear-gradient(#fff36b,#ff9f13);
+  color:#9b3b00;
+  padding:9px 12px;
+  border-radius:16px;
+  border:3px solid #fff;
+  font-size:13px;
+  font-weight:900;
+  box-shadow:0 4px 0 #b86400;
 }
 
 .progress-title{
-margin-bottom:10px;
-font-size:17px;
+  margin-bottom:9px;
+  font-size:17px;
+  font-weight:900;
+  text-shadow:1px 2px #06337d;
 }
 
 .progress{
-width:100%;
-height:12px;
-background:#333;
-border-radius:20px;
-overflow:hidden;
+  width:100%;
+  height:15px;
+  background:#dcecff;
+  border-radius:20px;
+  overflow:hidden;
+  border:3px solid #fff;
 }
 
 .progress-bar{
-height:100%;
-background:linear-gradient(90deg,#ff00cc,#7b00ff);
+  height:100%;
+  background:linear-gradient(#6dff5c,#11b51b);
+  border-radius:20px;
 }
 
 .reward-grid{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:12px;
-margin-top:18px;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+  margin-top:16px;
 }
 
 .reward{
-background:rgba(255,255,255,0.05);
-padding:15px;
-border-radius:18px;
-transition:0.3s;
-border:1px solid rgba(255,255,255,0.08);
+  background:#dcecff;
+  color:#195aa2;
+  padding:13px;
+  border-radius:18px;
+  border:4px solid #75cfff;
+  box-shadow:0 4px 0 #0752a6;
 }
 
 .reward.active{
-background:#00c853;
+  background:linear-gradient(#6dff5c,#11b51b);
+  color:#fff;
+  border-color:#fff;
 }
 
 .reward h3{
-font-size:18px;
-margin-bottom:8px;
+  font-size:17px;
+  margin-bottom:7px;
+  font-weight:900;
 }
 
 .reward p{
-font-size:13px;
-line-height:21px;
-opacity:0.9;
+  font-size:12px;
+  line-height:18px;
+  font-weight:bold;
 }
 
 .amount{
-font-size:30px;
-font-weight:bold;
-margin-top:15px;
+  font-size:27px;
+  font-weight:900;
+  margin-top:12px;
+  color:#ff9f13;
+  text-shadow:1px 2px #8a3b00;
+}
+
+.reward.active .amount{
+  color:#ffe620;
+  text-shadow:1px 2px #087c12;
 }
 
 .claim-btn{
-width:100%;
-padding:12px;
-margin-top:14px;
-border:none;
-border-radius:12px;
-font-size:15px;
-font-weight:bold;
-background:linear-gradient(45deg,#ff00cc,#7b00ff);
-color:#fff;
-}
-
-.reward.active .claim-btn{
-background:#fff;
-color:#00c853;
+  width:100%;
+  padding:11px;
+  margin-top:12px;
+  border:none;
+  border-radius:14px;
+  font-size:14px;
+  font-weight:900;
+  background:linear-gradient(#fff36b,#ff9f13);
+  color:#9b3b00;
+  box-shadow:0 4px 0 #b86400;
 }
 
 .note{
-margin-top:15px;
-font-size:13px;
-line-height:22px;
-opacity:0.9;
+  margin-top:14px;
+  font-size:13px;
+  line-height:21px;
+  font-weight:bold;
+  color:#dcecff;
 }
 
 .locked{
-opacity:0.45;
+  opacity:.55;
 }
 
 .popup{
-position:fixed;
-inset:0;
-background:rgba(0,0,0,0.7);
-display:none;
-justify-content:center;
-align-items:center;
-z-index:9999;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.75);
+  display:none;
+  justify-content:center;
+  align-items:center;
+  z-index:9999;
 }
 
 .popup-box{
-background:#1c1c1c;
-padding:25px;
-border-radius:18px;
-width:85%;
-max-width:320px;
-text-align:center;
+  background:linear-gradient(#1d85ff,#073b9a);
+  border:5px solid #62caff;
+  padding:22px;
+  border-radius:20px;
+  width:85%;
+  max-width:320px;
+  text-align:center;
+  color:#fff;
 }
 
 .popup-box h3{
-margin-bottom:10px;
+  margin-bottom:10px;
+  color:#ffe620;
+  text-shadow:2px 2px #06337d;
 }
 
 .popup-box button{
-margin-top:15px;
-width:100%;
-padding:12px;
-border:none;
-border-radius:12px;
-background:#00c853;
-color:#fff;
-font-weight:bold;
+  margin-top:15px;
+  width:100%;
+  padding:13px;
+  border:none;
+  border-radius:15px;
+  background:linear-gradient(#fff36b,#ff9f13);
+  color:#9b3b00;
+  font-weight:900;
 }
-
 </style>
 </head>
 
 <body>
 
 <div class="vip-header">
+  <div class="profile">
+    <img src="https://i.pravatar.cc/150?img=12">
+    <div>
+      <h2>MR VIP 👑</h2>
+      <p>Deposit More & Unlock VIP Rewards</p>
+    </div>
+  </div>
 
-<div class="profile">
-
-<img src="https://i.pravatar.cc/150?img=12">
-
-<div>
-<h2>MR VIP 👑</h2>
-<p>Deposit More & Unlock VIP Rewards</p>
-</div>
-
-</div>
-
-<div class="timer-box">
-
-<div class="timer-title">
-Next Monthly Reward In
-</div>
-
-<div id="timer">
-Loading...
-</div>
-
-</div>
-
+  <div class="timer-box">
+    <div class="timer-title">Next Monthly Reward In</div>
+    <div id="timer">Loading...</div>
+  </div>
 </div>
 
 <div id="vipContainer"></div>
 
 <div class="popup" id="popup">
-
-<div class="popup-box">
-
-<h3 id="popupText">Success</h3>
-
-<button onclick="closePopup()">
-OK
-</button>
-
-</div>
-
+  <div class="popup-box">
+    <h3 id="popupText">Success</h3>
+    <button onclick="closePopup()">OK</button>
+  </div>
 </div>
 
 <script type="module">
@@ -290,329 +299,180 @@ const db = getFirestore(app);
 const userEmail = localStorage.getItem("userEmail");
 
 const vipData = [
-
-{
-vip:1,
-depositNeed:1000,
-monthlyReward:30,
-levelReward:60
-},
-
-{
-vip:2,
-depositNeed:3000,
-monthlyReward:90,
-levelReward:180
-},
-
-{
-vip:3,
-depositNeed:40000,
-monthlyReward:290,
-levelReward:690
-},
-
-{
-vip:4,
-depositNeed:4000000,
-monthlyReward:690,
-levelReward:1690
-},
-
-{
-vip:5,
-depositNeed:20000000,
-monthlyReward:1690,
-levelReward:6900
-},
-
-{
-vip:6,
-depositNeed:80000000,
-monthlyReward:6900,
-levelReward:16900
-},
-
-{
-vip:7,
-depositNeed:300000000,
-monthlyReward:16900,
-levelReward:69000
-},
-
-{
-vip:8,
-depositNeed:1000000000,
-monthlyReward:69000,
-levelReward:169000
-},
-
-{
-vip:9,
-depositNeed:5000000000,
-monthlyReward:169000,
-levelReward:690000
-},
-
-{
-vip:10,
-depositNeed:9999999999,
-monthlyReward:690000,
-levelReward:1690000
-}
-
+{vip:1,depositNeed:1000,monthlyReward:30,levelReward:60},
+{vip:2,depositNeed:3000,monthlyReward:90,levelReward:180},
+{vip:3,depositNeed:40000,monthlyReward:290,levelReward:690},
+{vip:4,depositNeed:4000000,monthlyReward:690,levelReward:1690},
+{vip:5,depositNeed:20000000,monthlyReward:1690,levelReward:6900},
+{vip:6,depositNeed:80000000,monthlyReward:6900,levelReward:16900},
+{vip:7,depositNeed:300000000,monthlyReward:16900,levelReward:69000},
+{vip:8,depositNeed:1000000000,monthlyReward:69000,levelReward:169000},
+{vip:9,depositNeed:5000000000,monthlyReward:169000,levelReward:690000},
+{vip:10,depositNeed:9999999999,monthlyReward:690000,levelReward:1690000}
 ];
 
 let currentUserId = "";
 let userData = {};
 
 async function loadUser(){
+  const snap = await getDocs(
+    query(collection(db,"users"),where("email","==",userEmail))
+  );
 
-const snap = await getDocs(
-query(collection(db,"users"),where("email","==",userEmail))
-);
+  snap.forEach(d=>{
+    currentUserId = d.id;
+    userData = d.data();
+  });
 
-snap.forEach(d=>{
-
-currentUserId = d.id;
-userData = d.data();
-
-});
-
-renderVIP();
-
+  renderVIP();
 }
 
 loadUser();
 
 function renderVIP(){
+  const container = document.getElementById("vipContainer");
+  container.innerHTML = "";
 
-const container = document.getElementById("vipContainer");
+  vipData.forEach(item=>{
+    let unlocked = (userData.vipLevel || 0) >= item.vip;
+    let claimed = userData["vipLevelClaimed"+item.vip] || false;
 
-container.innerHTML = "";
+    let progress = unlocked ? 100 : ((userData.totalDeposit || 0) / item.depositNeed) * 100;
+    if(progress > 100) progress = 100;
 
-vipData.forEach(item=>{
+    container.innerHTML += `
+      <div class="vip-card ${unlocked ? '' : 'locked'}">
 
-let unlocked = (userData.vipLevel || 0) >= item.vip;
+        <div class="top">
+          <div class="vip-name">VIP${item.vip}</div>
+          <div class="deposit-box">Deposit ₹${item.depositNeed.toLocaleString()}</div>
+        </div>
 
-let claimed =
-userData["vipLevelClaimed"+item.vip] || false;
+        <div class="progress-title">VIP Level Progress</div>
 
-container.innerHTML += `
+        <div class="progress">
+          <div class="progress-bar" style="width:${progress}%;"></div>
+        </div>
 
-<div class="vip-card ${unlocked ? '' : 'locked'}">
+        <div class="reward-grid">
 
-<div class="top">
+          <div class="reward ${unlocked ? 'active' : ''}">
+            <h3>Monthly Reward</h3>
+            <p>Har month active VIP users ko reward milega.</p>
+            <div class="amount">₹${item.monthlyReward.toLocaleString()}</div>
+            <button class="claim-btn" onclick="claimMonthly(${item.vip})">Claim Monthly</button>
+          </div>
 
-<div class="vip-name">
-VIP${item.vip}
-</div>
+          <div class="reward ${claimed ? '' : unlocked ? 'active' : ''}">
+            <h3>Level Up Reward</h3>
+            <p>Sirf 1 baar milega VIP complete hone per.</p>
+            <div class="amount">₹${item.levelReward.toLocaleString()}</div>
+            <button class="claim-btn" onclick="claimLevelReward(${item.vip})">
+              ${claimed ? 'Claimed' : 'Claim Reward'}
+            </button>
+          </div>
 
-<div class="deposit-box">
-Deposit ₹${item.depositNeed.toLocaleString()}
-</div>
+        </div>
 
-</div>
+        <div class="note">
+          Deposit complete hone per VIP unlock hoga.
+          Claimed reward direct wallet balance me add ho jayega.
+        </div>
 
-<div class="progress-title">
-VIP Level Progress
-</div>
-
-<div class="progress">
-
-<div class="progress-bar"
-style="
-width:${unlocked ? '100' : ((userData.totalDeposit || 0)/item.depositNeed)*100}%;
-">
-</div>
-
-</div>
-
-<div class="reward-grid">
-
-<div class="reward ${unlocked ? 'active' : ''}">
-
-<h3>Monthly Reward</h3>
-
-<p>
-Har month active VIP users ko reward milega.
-</p>
-
-<div class="amount">
-₹${item.monthlyReward.toLocaleString()}
-</div>
-
-<button class="claim-btn"
-onclick="claimMonthly(${item.vip})">
-Claim Monthly
-</button>
-
-</div>
-
-<div class="reward ${claimed ? '' : unlocked ? 'active' : ''}">
-
-<h3>Level Up Reward</h3>
-
-<p>
-Sirf 1 baar milega VIP complete hone per.
-</p>
-
-<div class="amount">
-₹${item.levelReward.toLocaleString()}
-</div>
-
-<button class="claim-btn"
-onclick="claimLevelReward(${item.vip})">
-
-${claimed ? 'Claimed' : 'Claim Reward'}
-
-</button>
-
-</div>
-
-</div>
-
-<div class="note">
-Deposit complete hone per VIP unlock hoga.
-Claimed reward direct wallet balance me add ho jayega.
-</div>
-
-</div>
-
-`;
-
-});
-
+      </div>
+    `;
+  });
 }
 
 window.claimMonthly = async function(level){
+  if((userData.vipLevel || 0) < level){
+    showPopup("VIP Locked ❌");
+    return;
+  }
 
-if((userData.vipLevel || 0) < level){
+  let reward = vipData[level-1].monthlyReward;
+  let lastClaim = userData["monthlyClaim"+level] || 0;
+  let now = Date.now();
+  let nextMonth = 30*24*60*60*1000;
 
-showPopup("VIP Locked ❌");
-return;
+  if(now - lastClaim < nextMonth){
+    showPopup("Already Claimed This Month ❌");
+    return;
+  }
 
-}
+  let balance = userData.balance || 0;
 
-let reward = vipData[level-1].monthlyReward;
+  await updateDoc(doc(db,"users",currentUserId),{
+    balance: balance + reward,
+    ["monthlyClaim"+level]: now
+  });
 
-let lastClaim =
-userData["monthlyClaim"+level] || 0;
+  showPopup("Monthly Reward Claimed ✅");
 
-let now = Date.now();
-
-let nextMonth = 30*24*60*60*1000;
-
-if(now - lastClaim < nextMonth){
-
-showPopup("Already Claimed This Month ❌");
-return;
-
-}
-
-let balance = userData.balance || 0;
-
-await updateDoc(doc(db,"users",currentUserId),{
-
-balance: balance + reward,
-
-["monthlyClaim"+level]: now
-
-});
-
-showPopup("Monthly Reward Claimed ✅");
-
-setTimeout(()=>{
-location.reload();
-},1200);
-
+  setTimeout(()=>{
+    location.reload();
+  },1200);
 }
 
 window.claimLevelReward = async function(level){
+  if((userData.vipLevel || 0) < level){
+    showPopup("VIP Locked ❌");
+    return;
+  }
 
-if((userData.vipLevel || 0) < level){
+  let claimed = userData["vipLevelClaimed"+level] || false;
 
-showPopup("VIP Locked ❌");
-return;
+  if(claimed){
+    showPopup("Already Claimed ❌");
+    return;
+  }
 
-}
+  let reward = vipData[level-1].levelReward;
+  let balance = userData.balance || 0;
 
-let claimed =
-userData["vipLevelClaimed"+level] || false;
+  await updateDoc(doc(db,"users",currentUserId),{
+    balance: balance + reward,
+    ["vipLevelClaimed"+level]: true
+  });
 
-if(claimed){
+  showPopup("VIP Reward Claimed ✅");
 
-showPopup("Already Claimed ❌");
-return;
-
-}
-
-let reward = vipData[level-1].levelReward;
-
-let balance = userData.balance || 0;
-
-await updateDoc(doc(db,"users",currentUserId),{
-
-balance: balance + reward,
-
-["vipLevelClaimed"+level]: true
-
-});
-
-showPopup("VIP Reward Claimed ✅");
-
-setTimeout(()=>{
-location.reload();
-},1200);
-
+  setTimeout(()=>{
+    location.reload();
+  },1200);
 }
 
 window.showPopup = function(msg){
-
-document.getElementById("popupText").innerText = msg;
-
-document.getElementById("popup").style.display = "flex";
-
+  document.getElementById("popupText").innerText = msg;
+  document.getElementById("popup").style.display = "flex";
 }
 
 window.closePopup = function(){
-
-document.getElementById("popup").style.display = "none";
-
+  document.getElementById("popup").style.display = "none";
 }
 
 function updateTimer(){
+  const now = new Date();
 
-const now = new Date();
+  let nextMonth = new Date(
+    now.getFullYear(),
+    now.getMonth()+1,
+    1,
+    0,0,0
+  );
 
-let nextMonth = new Date(
-now.getFullYear(),
-now.getMonth()+1,
-1,
-0,0,0
-);
+  const diff = nextMonth - now;
 
-const diff = nextMonth - now;
+  const days = Math.floor(diff/(1000*60*60*24));
+  const hours = Math.floor((diff/(1000*60*60))%24);
+  const mins = Math.floor((diff/(1000*60))%60);
+  const secs = Math.floor((diff/1000)%60);
 
-const days =
-Math.floor(diff/(1000*60*60*24));
-
-const hours =
-Math.floor((diff/(1000*60*60))%24);
-
-const mins =
-Math.floor((diff/(1000*60))%60);
-
-const secs =
-Math.floor((diff/1000)%60);
-
-document.getElementById("timer").innerHTML =
-`${days}D ${hours}H ${mins}M ${secs}S`;
-
+  document.getElementById("timer").innerHTML =
+  `${days}D ${hours}H ${mins}M ${secs}S`;
 }
 
 setInterval(updateTimer,1000);
-
 updateTimer();
 
 </script>
