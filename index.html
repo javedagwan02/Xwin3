@@ -1705,56 +1705,99 @@ Number(balance).toLocaleString(undefined, {
   
 // 🔥 CALL AFTER FIREBASE READY  
 loadBalance();  
-  // 🔥 MASTER FUNCTION
 
+// 🔥 MASTER FUNCTION
 async function openJiliGame(gameId){
 
-  try{
+try{
 
-    const userEmail = localStorage.getItem("userEmail");
+const userEmail =  
+  localStorage.getItem("userEmail");  
 
-    if(!userEmail){
-      alert("Login required");
-      return;
-    }
+if(!userEmail){  
 
-    // balance check same as before...
+  alert("Login required");  
+  return;  
+}  
 
-    document.body.style.opacity = "0.7";
+// 🔥 GET USER  
+const userSnap = await getDocs(  
+  query(  
+    collection(db,"users"),  
+    where("email","==",userEmail)  
+  )  
+);  
 
-    const res = await fetch(
-      "https://jili-backend.onrender.com/api/game/launch",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          uid: userEmail,
-          game_uid: gameId,
-          home_url: window.location.origin,
-          platform: 1,
-          language: "en"
-        })
-      }
-    );
+let balance = 0;  
 
-    const data = await res.json();
+userSnap.forEach(d=>{  
 
-    document.body.style.opacity = "1";
+  balance = Number(  
+    d.data().balance || 0  
+  );  
 
-    if(!data.success){
-      alert(data.msg || "Game launch failed");
-      return;
-    }
+});  
 
-    window.location.href = data.game_url;
+// 🔥 MIN BALANCE CHECK  
+if(balance < 10){  
 
-  }catch(e){
-    console.log(e);
-    alert("Server Error");
-    document.body.style.opacity = "1";
-  }
+  document.getElementById(  
+    "depositPopup"  
+  ).style.display = "flex";  
+
+  return;  
+}  
+
+// 🔥 WAKE RENDER  
+await fetch(  
+  "https://jili-backend.onrender.com/ping"  
+);  
+
+// 🔥 LOADING  
+document.body.style.opacity = "0.7";  
+
+// 🔥 BACKEND CALL  
+const res = await fetch(  
+
+  "https://jili-backend.onrender.com/start-game?userId="  
+  + encodeURIComponent(userEmail)  
+  + "&gameId="  
+  + encodeURIComponent(gameId)  
+
+);  
+
+const data = await res.json();  
+
+console.log(data);  
+
+document.body.style.opacity = "1";  
+
+// ❌ ERROR  
+if(!data.success){  
+
+  alert(  
+    data.error ||  
+    "Game launch failed"  
+  );  
+
+  console.log(data);  
+
+  return;  
+}  
+
+// ✅ OPEN GAME  
+window.location.href = data.url;
+
+}catch(e){
+
+console.log(e);  
+
+alert("Server Error");  
+
+document.body.style.opacity = "1";
+
+}
+
 }
 
 // 🔥 SLOTS GAME 1
